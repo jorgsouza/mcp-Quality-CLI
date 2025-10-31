@@ -372,7 +372,7 @@ async function ensureTestScripts(repoPath: string, framework: string) {
       packageJson.scripts = {};
     }
 
-    const scripts: Record<string, string> = {
+    const scripts: Record<string, Record<string, string>> = {
       vitest: {
         'test': 'vitest',
         'test:ui': 'vitest --ui',

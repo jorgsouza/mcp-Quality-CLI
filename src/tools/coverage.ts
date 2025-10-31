@@ -329,8 +329,8 @@ function generateCoverageMarkdown(result: CoverageResult, product: string): stri
 
 \`\`\`
 IDEAL                  ATUAL
-  ▲                      ${e2ePct >= 30 ? '▼' : '▲'}
- / \\                    ${e2ePct >= 30 ? '/ \\' : '/ \\'}
+  ▲                      ${parseFloat(e2ePct) >= 30 ? '▼' : '▲'}
+ / \\                    ${parseFloat(e2ePct) >= 30 ? '/ \\' : '/ \\'}
 /E2E\\  10%            /E2E\\  ${e2ePct}%
 ────────              ────────
  /INT\\  20%           /INT\\  ${intPct}%

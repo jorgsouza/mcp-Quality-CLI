@@ -11,7 +11,10 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "start": "node dist/server.js",
-    "cli": "node dist/cli.js"
+    "cli": "node dist/cli.js",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage"
   },
   "keywords": [
     "mcp",
@@ -38,4 +41,3 @@
     "node": ">=20.0.0"
   }
 }
-

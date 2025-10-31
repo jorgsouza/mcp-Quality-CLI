@@ -1,0 +1,46 @@
+{
+  "summary": "\nPirâmide de Testes - Quality-MCP\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nUnit:        0 testes (0.0%)\nIntegration: 0 testes (0.0%)\nE2E:         0 testes (0.0%)\nTotal:       0 testes\n\nStatus: ⚠️ PRECISA ATENÇÃO\n\nArquivos sem testes: 18\n",
+  "pyramid": {
+    "unit": {
+      "files_found": 0,
+      "test_files": [],
+      "missing_tests": [
+        "src/server.ts",
+        "src/cli.ts",
+        "src/utils/fs.ts",
+        "src/tools/scaffold.ts",
+        "src/tools/scaffold-unit.ts",
+        "src/tools/scaffold-integration.ts",
+        "src/tools/run.ts",
+        "src/tools/report.ts",
+        "src/tools/pyramid-report.ts",
+        "src/tools/plan.ts",
+        "src/tools/dashboard.ts",
+        "src/tools/coverage.ts",
+        "src/tools/catalog.ts",
+        "src/tools/analyze.ts",
+        "src/detectors/tests.ts",
+        "src/detectors/next.ts",
+        "src/detectors/express.ts",
+        "src/detectors/events.ts"
+      ]
+    },
+    "integration": {
+      "files_found": 0,
+      "test_files": [],
+      "api_endpoints_tested": 0
+    },
+    "e2e": {
+      "files_found": 0,
+      "scenarios": 0,
+      "test_files": []
+    }
+  },
+  "health": "needs_attention",
+  "recommendations": [
+    "📈 Aumente a cobertura de testes unitários. Atual: 0.0%, Ideal: 70%",
+    "📝 18 arquivos sem testes. Execute 'quality scaffold-unit' para gerar.",
+    "🔗 Considere adicionar mais testes de integração/API para o meio da pirâmide."
+  ],
+  "analysis_path": "tests/analyses/coverage-analysis.json"
+}

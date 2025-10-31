@@ -6,6 +6,11 @@ import { generatePlan } from './tools/plan.js';
 import { scaffoldPlaywright } from './tools/scaffold.js';
 import { runPlaywright } from './tools/run.js';
 import { buildReport } from './tools/report.js';
+import { analyzeTestCoverage } from './tools/coverage.js';
+import { scaffoldUnitTests } from './tools/scaffold-unit.js';
+import { scaffoldIntegrationTests } from './tools/scaffold-integration.js';
+import { generatePyramidReport } from './tools/pyramid-report.js';
+import { catalogScenarios } from './tools/catalog.js';
 
 const program = new Command();
 
@@ -247,6 +252,137 @@ program
 
     } catch (error: any) {
       console.error('\n❌ Pipeline falhou:', error.message);
+      process.exit(1);
+    }
+  });
+
+// Comando: coverage
+program
+  .command('coverage')
+  .description('Analisa cobertura completa da pirâmide de testes')
+  .requiredOption('--repo <path>', 'Caminho do repositório')
+  .requiredOption('--product <name>', 'Nome do produto')
+  .option('--target-coverage <json>', 'JSON com alvos de cobertura por camada')
+  .action(async (options) => {
+    try {
+      const params = {
+        repo: options.repo,
+        product: options.product,
+        target_coverage: options.targetCoverage ? JSON.parse(options.targetCoverage) : undefined
+      };
+
+      console.log('📊 Analisando cobertura da pirâmide...\n');
+      const result = await analyzeTestCoverage(params);
+      
+      console.log('\n✅ Análise completa!');
+      console.log(result.summary);
+    } catch (error: any) {
+      console.error('❌ Erro:', error.message);
+      process.exit(1);
+    }
+  });
+
+// Comando: scaffold-unit
+program
+  .command('scaffold-unit')
+  .description('Gera testes unitários automaticamente')
+  .requiredOption('--repo <path>', 'Caminho do repositório')
+  .option('--files <items>', 'Arquivos específicos separados por vírgula')
+  .option('--framework <name>', 'Framework de teste (jest|vitest|mocha)')
+  .action(async (options) => {
+    try {
+      const params = {
+        repo: options.repo,
+        files: options.files ? options.files.split(',').map((s: string) => s.trim()) : undefined,
+        framework: options.framework as 'jest' | 'vitest' | 'mocha' | undefined
+      };
+
+      console.log('🧪 Gerando testes unitários...\n');
+      const result = await scaffoldUnitTests(params);
+      
+      console.log(`\n✅ ${result.generated.length} testes gerados com ${result.framework}!`);
+    } catch (error: any) {
+      console.error('❌ Erro:', error.message);
+      process.exit(1);
+    }
+  });
+
+// Comando: scaffold-integration
+program
+  .command('scaffold-integration')
+  .description('Gera testes de integração/API automaticamente')
+  .requiredOption('--repo <path>', 'Caminho do repositório')
+  .requiredOption('--product <name>', 'Nome do produto')
+  .option('--base-url <url>', 'URL base da API')
+  .action(async (options) => {
+    try {
+      const params = {
+        repo: options.repo,
+        product: options.product,
+        base_url: options.baseUrl
+      };
+
+      console.log('🔗 Gerando testes de integração...\n');
+      const result = await scaffoldIntegrationTests(params);
+      
+      console.log(`\n✅ ${result.generated.length} arquivos gerados!`);
+      console.log(`   Diretório: ${result.test_dir}`);
+    } catch (error: any) {
+      console.error('❌ Erro:', error.message);
+      process.exit(1);
+    }
+  });
+
+// Comando: pyramid
+program
+  .command('pyramid')
+  .description('Gera visualização da pirâmide de testes')
+  .requiredOption('--repo <path>', 'Caminho do repositório')
+  .requiredOption('--product <name>', 'Nome do produto')
+  .option('--format <type>', 'Formato de saída (markdown|html|json)', 'markdown')
+  .action(async (options) => {
+    try {
+      const params = {
+        repo: options.repo,
+        product: options.product,
+        output_format: options.format as 'markdown' | 'html' | 'json'
+      };
+
+      console.log('📊 Gerando visualização da pirâmide...\n');
+      const result = await generatePyramidReport(params);
+      
+      console.log(`\n✅ Relatório gerado: ${result.report_path}`);
+    } catch (error: any) {
+      console.error('❌ Erro:', error.message);
+      process.exit(1);
+    }
+  });
+
+// Comando: catalog
+program
+  .command('catalog')
+  .description('Cataloga cenários de teste para governança multi-squad')
+  .requiredOption('--repo <path>', 'Caminho do repositório')
+  .requiredOption('--product <name>', 'Nome do produto')
+  .option('--squads <items>', 'Squads separadas por vírgula')
+  .action(async (options) => {
+    try {
+      const params = {
+        repo: options.repo,
+        product: options.product,
+        squads: options.squads ? options.squads.split(',').map((s: string) => s.trim()) : undefined
+      };
+
+      console.log('📚 Catalogando cenários...\n');
+      const result = await catalogScenarios(params);
+      
+      console.log(`\n✅ Catálogo gerado!`);
+      console.log(`   Total de cenários: ${result.total_scenarios}`);
+      console.log(`   Squads: ${Object.keys(result.by_squad).length}`);
+      console.log(`   Cross-squad: ${result.cross_squad_scenarios.length}`);
+      console.log(`   Duplicatas: ${result.duplicates.length}`);
+    } catch (error: any) {
+      console.error('❌ Erro:', error.message);
       process.exit(1);
     }
   });
