@@ -19,6 +19,7 @@ import { scaffoldIntegrationTests, type ScaffoldIntegrationParams } from './tool
 import { generatePyramidReport, type PyramidReportParams } from './tools/pyramid-report.js';
 import { catalogScenarios, type CatalogParams } from './tools/catalog.js';
 import { recommendTestStrategy } from './tools/recommend-strategy.js';
+import { runCoverageAnalysis, type RunCoverageParams } from './tools/run-coverage.js';
 
 // Schemas Zod para validação
 const AnalyzeSchema = z.object({
@@ -104,6 +105,16 @@ const RecommendStrategySchema = z.object({
   repo: z.string().describe('Caminho do repositório'),
   product: z.string().describe('Nome do produto'),
   auto_generate: z.boolean().optional().describe('Gerar automaticamente sem confirmar')
+});
+
+const RunCoverageSchema = z.object({
+  repo: z.string().describe('Caminho do repositório'),
+  thresholds: z.object({
+    lines: z.number().optional().describe('Threshold mínimo de linhas (padrão: 70)'),
+    functions: z.number().optional().describe('Threshold mínimo de funções (padrão: 70)'),
+    branches: z.number().optional().describe('Threshold mínimo de branches (padrão: 70)'),
+    statements: z.number().optional().describe('Threshold mínimo de statements (padrão: 70)')
+  }).optional()
 });
 
 class QualityMCPServer {
@@ -311,6 +322,26 @@ class QualityMCPServer {
             },
             required: ['repo', 'product']
           }
+        },
+        {
+          name: 'run_coverage_analysis',
+          description: 'Executa npm run test:coverage e analisa automaticamente os resultados, identificando gaps e recomendando melhorias',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              repo: { type: 'string', description: 'Caminho do repositório' },
+              thresholds: {
+                type: 'object',
+                properties: {
+                  lines: { type: 'number', description: 'Threshold mínimo de linhas (padrão: 70)' },
+                  functions: { type: 'number', description: 'Threshold mínimo de funções (padrão: 70)' },
+                  branches: { type: 'number', description: 'Threshold mínimo de branches (padrão: 70)' },
+                  statements: { type: 'number', description: 'Threshold mínimo de statements (padrão: 70)' }
+                }
+              }
+            },
+            required: ['repo']
+          }
         }
       ]
     }));
@@ -452,6 +483,19 @@ class QualityMCPServer {
           case 'recommend_test_strategy': {
             const params = RecommendStrategySchema.parse(request.params.arguments);
             const result = await recommendTestStrategy(params);
+            return {
+              content: [
+                {
+                  type: 'text',
+                  text: JSON.stringify(result, null, 2)
+                }
+              ]
+            };
+          }
+
+          case 'run_coverage_analysis': {
+            const params = RunCoverageSchema.parse(request.params.arguments);
+            const result = await runCoverageAnalysis(params);
             return {
               content: [
                 {

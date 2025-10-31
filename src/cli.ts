@@ -430,5 +430,48 @@ program
     }
   });
 
+// Comando: run-coverage
+program
+  .command('run-coverage')
+  .description('Executa npm run test:coverage e analisa automaticamente os resultados')
+  .requiredOption('-r, --repo <path>', 'Caminho do repositório')
+  .option('--lines <number>', 'Threshold mínimo de linhas (padrão: 70)', '70')
+  .option('--functions <number>', 'Threshold mínimo de funções (padrão: 70)', '70')
+  .option('--branches <number>', 'Threshold mínimo de branches (padrão: 70)', '70')
+  .option('--statements <number>', 'Threshold mínimo de statements (padrão: 70)', '70')
+  .action(async (options) => {
+    try {
+      const { runCoverageAnalysis } = await import('./tools/run-coverage.js');
+      
+      const params = {
+        repo: options.repo,
+        thresholds: {
+          lines: parseInt(options.lines),
+          functions: parseInt(options.functions),
+          branches: parseInt(options.branches),
+          statements: parseInt(options.statements)
+        }
+      };
+
+      const result = await runCoverageAnalysis(params);
+      
+      if (result.ok) {
+        console.log(`\n✅ Análise de cobertura completa!`);
+        console.log(`📄 Relatório: ${result.reportPath}`);
+        console.log(`\n📊 Status: ${result.analysis.status.toUpperCase()}`);
+        console.log(`   Atende thresholds: ${result.analysis.meetsThresholds ? '✅' : '❌'}`);
+        
+        if (result.analysis.priorities.length > 0) {
+          console.log(`\n🎯 Arquivos prioritários: ${result.analysis.priorities.length}`);
+        }
+      } else {
+        console.log(`\n❌ Erro ao executar cobertura`);
+      }
+    } catch (error: any) {
+      console.error('❌ Erro:', error.message);
+      process.exit(1);
+    }
+  });
+
 program.parse();
 
