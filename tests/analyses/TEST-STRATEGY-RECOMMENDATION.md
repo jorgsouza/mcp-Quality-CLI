@@ -105,22 +105,22 @@ E2E:         0-2 testes (0%)
 **Motivo:** Lógica complexa de parsing
 
 
-### 3. `src/detectors/next.ts` 🔴
+### 3. `src/detectors/language.ts` 🔴
 
 **Prioridade:** HIGH  
 **Motivo:** Lógica complexa de parsing
 
 
-### 4. `src/detectors/tests.ts` 🔴
+### 4. `src/detectors/next.ts` 🔴
 
 **Prioridade:** HIGH  
 **Motivo:** Lógica complexa de parsing
 
 
-### 5. `src/utils/fs.ts` 🟡
+### 5. `src/detectors/tests.ts` 🔴
 
-**Prioridade:** MEDIUM  
-**Motivo:** Funções utilitárias reutilizadas
+**Prioridade:** HIGH  
+**Motivo:** Lógica complexa de parsing
 
 
 ### 6. `src/cli.ts` 🟢
@@ -166,7 +166,7 @@ E2E:         0-2 testes (0%)
    quality scaffold-unit --repo . --framework vitest
    ```
 
-2. Implementar casos de teste para os 4 arquivos de ALTA prioridade
+2. Implementar casos de teste para os 5 arquivos de ALTA prioridade
 
 3. Executar e verificar cobertura
    ```bash
@@ -216,7 +216,7 @@ npm start
 
 CLI Tool + MCP Server tem características que justificam uma pirâmide **muito focada em unit tests**.
 
-**Priorize:** 4 arquivos de alta prioridade primeiro!
+**Priorize:** 5 arquivos de alta prioridade primeiro!
 
 ---
 
