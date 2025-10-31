@@ -11,6 +11,7 @@ import { scaffoldUnitTests } from './tools/scaffold-unit.js';
 import { scaffoldIntegrationTests } from './tools/scaffold-integration.js';
 import { generatePyramidReport } from './tools/pyramid-report.js';
 import { catalogScenarios } from './tools/catalog.js';
+import { recommendTestStrategy } from './tools/recommend-strategy.js';
 
 const program = new Command();
 
@@ -381,6 +382,48 @@ program
       console.log(`   Squads: ${Object.keys(result.by_squad).length}`);
       console.log(`   Cross-squad: ${result.cross_squad_scenarios.length}`);
       console.log(`   Duplicatas: ${result.duplicates.length}`);
+    } catch (error: any) {
+      console.error('❌ Erro:', error.message);
+      process.exit(1);
+    }
+  });
+
+// Comando: recommend
+program
+  .command('recommend')
+  .description('🎯 Analisa o tipo de aplicação e recomenda estratégia de testes ideal')
+  .requiredOption('--repo <path>', 'Caminho do repositório')
+  .requiredOption('--product <name>', 'Nome do produto')
+  .option('--auto', 'Gerar automaticamente sem perguntar')
+  .action(async (options) => {
+    try {
+      const params = {
+        repo: options.repo,
+        product: options.product,
+        auto_generate: options.auto ?? false
+      };
+
+      const result = await recommendTestStrategy(params);
+      
+      if (result.ok) {
+        console.log(`\n✅ Análise completa!`);
+        if (result.file) {
+          console.log(`📄 Recomendação: ${result.file}`);
+        }
+        if (result.recommendation) {
+          console.log(`\n📊 Tipo: ${result.recommendation.appType}`);
+          console.log(`📊 Complexidade: ${result.recommendation.complexity.toUpperCase()}`);
+          console.log(`\n🎯 Estratégia Recomendada:`);
+          console.log(`   Unit:        ${result.recommendation.strategy.unit}`);
+          console.log(`   Integration: ${result.recommendation.strategy.integration}`);
+          console.log(`   E2E:         ${result.recommendation.strategy.e2e}`);
+        }
+        if (result.exists) {
+          console.log(`\n${result.message}`);
+        }
+      } else {
+        console.log(`\n⚠️  ${result.message}`);
+      }
     } catch (error: any) {
       console.error('❌ Erro:', error.message);
       process.exit(1);

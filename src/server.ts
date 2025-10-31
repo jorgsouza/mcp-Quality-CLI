@@ -18,6 +18,7 @@ import { scaffoldUnitTests, type ScaffoldUnitParams } from './tools/scaffold-uni
 import { scaffoldIntegrationTests, type ScaffoldIntegrationParams } from './tools/scaffold-integration.js';
 import { generatePyramidReport, type PyramidReportParams } from './tools/pyramid-report.js';
 import { catalogScenarios, type CatalogParams } from './tools/catalog.js';
+import { recommendTestStrategy } from './tools/recommend-strategy.js';
 
 // Schemas Zod para validação
 const AnalyzeSchema = z.object({
@@ -97,6 +98,12 @@ const CatalogSchema = z.object({
   repo: z.string().describe('Caminho do repositório'),
   product: z.string().describe('Nome do produto'),
   squads: z.array(z.string()).optional().describe('Lista de squads do produto')
+});
+
+const RecommendStrategySchema = z.object({
+  repo: z.string().describe('Caminho do repositório'),
+  product: z.string().describe('Nome do produto'),
+  auto_generate: z.boolean().optional().describe('Gerar automaticamente sem confirmar')
 });
 
 class QualityMCPServer {
@@ -291,6 +298,19 @@ class QualityMCPServer {
             },
             required: ['repo', 'product']
           }
+        },
+        {
+          name: 'recommend_test_strategy',
+          description: 'Analisa o tipo de aplicação e recomenda estratégia de testes ideal (unit/integration/E2E)',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              repo: { type: 'string', description: 'Caminho do repositório' },
+              product: { type: 'string', description: 'Nome do produto' },
+              auto_generate: { type: 'boolean', description: 'Gerar automaticamente sem perguntar', default: false }
+            },
+            required: ['repo', 'product']
+          }
         }
       ]
     }));
@@ -419,6 +439,19 @@ class QualityMCPServer {
           case 'catalog_scenarios': {
             const params = CatalogSchema.parse(request.params.arguments);
             const result = await catalogScenarios(params);
+            return {
+              content: [
+                {
+                  type: 'text',
+                  text: JSON.stringify(result, null, 2)
+                }
+              ]
+            };
+          }
+
+          case 'recommend_test_strategy': {
+            const params = RecommendStrategySchema.parse(request.params.arguments);
+            const result = await recommendTestStrategy(params);
             return {
               content: [
                 {
