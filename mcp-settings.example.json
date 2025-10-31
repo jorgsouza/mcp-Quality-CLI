@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "quality": {
+      "command": "node",
+      "args": ["/absolute/path/to/mcp-Quality-CLI/dist/server.js"],
+      "env": {
+        "E2E_BASE_URL": "https://staging.example.com",
+        "E2E_USER": "test@example.com",
+        "E2E_PASS": "your-test-password"
+      }
+    }
+  }
+}
+

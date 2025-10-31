@@ -1,0 +1,125 @@
+name: Nightly Product Suite
+
+on:
+  schedule:
+    # Executa todos os dias às 2h UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch: # Permite execução manual
+
+jobs:
+  nightly-full-suite:
+    name: Full E2E Test Suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    strategy:
+      matrix:
+        browser: [chromium, firefox, webkit]
+      fail-fast: false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Quality MCP
+        run: npm run build
+
+      - name: Run full quality pipeline
+        env:
+          E2E_BASE_URL: ${{ secrets.E2E_BASE_URL_STAGING }}
+          E2E_USER: ${{ secrets.E2E_USER }}
+          E2E_PASS: ${{ secrets.E2E_PASS }}
+          CI: true
+        run: |
+          node dist/cli.js full \
+            --repo . \
+            --product "${{ github.repository }}" \
+            --base-url "${{ secrets.E2E_BASE_URL_STAGING }}" \
+            --domains "auth,core,api,search,payments" \
+            --critical-flows "login,signup,checkout,payment,search" \
+            --targets '{"ci_p95_min":15,"flaky_pct_max":3,"diff_coverage_min":60}' \
+            --e2e-dir packages/product-e2e
+        continue-on-error: true
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-report-${{ matrix.browser }}
+          path: |
+            reports/
+            SUMMARY.md
+            plan/
+          retention-days: 90
+
+      - name: Publish test results
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: E2E Tests (${{ matrix.browser }})
+          path: reports/junit/*.xml
+          reporter: java-junit
+
+      - name: Send Slack notification on failure
+        if: failure()
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "text": "🚨 Nightly E2E tests failed for ${{ github.repository }} (${{ matrix.browser }})",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Nightly E2E Test Failure*\n\n*Repository:* ${{ github.repository }}\n*Browser:* ${{ matrix.browser }}\n*Run:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Details>"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  aggregate-results:
+    name: Aggregate Results
+    needs: [nightly-full-suite]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: all-reports
+
+      - name: Aggregate and analyze
+        run: |
+          echo "📊 Aggregating results from all browsers..."
+          ls -R all-reports/
+          
+          # Aqui você pode adicionar lógica para agregar resultados
+          # e gerar um relatório consolidado cross-browser
+
+      - name: Create summary issue
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const date = new Date().toISOString().split('T')[0];
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[Nightly] E2E Test Failures - ${date}`,
+              body: `Nightly E2E tests failed on ${date}.\n\nSee workflow run: ${context.payload.repository.html_url}/actions/runs/${context.runId}`,
+              labels: ['e2e', 'test-failure', 'nightly']
+            });
+
