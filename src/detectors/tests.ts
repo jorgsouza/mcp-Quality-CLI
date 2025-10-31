@@ -38,8 +38,12 @@ export async function findExistingTests(repoPath: string): Promise<TestCoverage>
     const testPatterns = [
       '**/*.test.{ts,tsx,js,jsx}',
       '**/*.spec.{ts,tsx,js,jsx}',
-      '**/__tests__/**/*.{ts,tsx,js,jsx}'
+      '**/__tests__/**/*.{ts,tsx,js,jsx}',
+      '**/*Test.{ts,tsx,js,jsx}' // Padrão Mocha/Java-style
     ];
+
+    // Usar Set para evitar duplicatas
+    const processedFiles = new Set<string>();
 
     for (const pattern of testPatterns) {
       const files = await glob(pattern, {
@@ -48,6 +52,12 @@ export async function findExistingTests(repoPath: string): Promise<TestCoverage>
       });
 
       for (const file of files) {
+        // Evita processar o mesmo arquivo múltiplas vezes
+        if (processedFiles.has(file)) {
+          continue;
+        }
+        processedFiles.add(file);
+
         const fullPath = join(repoPath, file);
         const content = await fs.readFile(fullPath, 'utf8');
         

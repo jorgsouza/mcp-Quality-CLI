@@ -213,6 +213,7 @@ describe('recommendTestStrategy', () => {
 
     // Criar arquivos fonte
     await fs.mkdir(join(testDir, 'src/detectors'), { recursive: true });
+    await fs.mkdir(join(testDir, 'src/utils'), { recursive: true });
     await fs.writeFile(join(testDir, 'src/detectors/parser.ts'), 'export function parse() {}');
     await fs.writeFile(join(testDir, 'src/utils/helper.ts'), 'export function help() {}');
 

@@ -26,7 +26,11 @@ export async function findEvents(repoPath: string): Promise<string[]> {
       // AWS SQS/SNS
       const sqsRegex = /(?:sendMessage|subscribe)\s*\(\s*[{]?\s*(?:QueueUrl|TopicArn):\s*['"`]([^'"`]+)['"`]/gi;
       while ((match = sqsRegex.exec(content)) !== null) {
-        const eventName = match[1].split('/').pop() || match[1];
+        // Para ARN (arn:aws:sns:region:account:topic-name), pega o último segmento após ':'
+        // Para URL (https://sqs.../queue-name), pega o último segmento após '/'
+        const eventName = match[1].includes('arn:') 
+          ? match[1].split(':').pop() 
+          : match[1].split('/').pop() || match[1];
         events.push(`aws:${eventName}`);
       }
 

@@ -115,10 +115,22 @@ describe('Fluxo: Coverage → Recommendations', () => {
     if (htmlExists) {
       const htmlContent = await fs.readFile(htmlPath, 'utf-8');
       
-      // HTML deve conter visualização da pirâmide
-      expect(htmlContent).toContain('Pirâmide') || expect(htmlContent).toContain('Pyramid');
-      expect(htmlContent).toContain('Unit') || expect(htmlContent).toContain('unit');
-      expect(htmlContent).toContain('E2E') || expect(htmlContent).toContain('e2e');
+      // HTML deve conter visualização da pirâmide (aceita maiúsculo ou minúsculo)
+      expect(
+        htmlContent.includes('Pirâmide') || 
+        htmlContent.includes('Pyramid')
+      ).toBe(true);
+      
+      expect(
+        htmlContent.includes('Unit') || 
+        htmlContent.includes('unit') || 
+        htmlContent.includes('UNIT')
+      ).toBe(true);
+      
+      expect(
+        htmlContent.includes('E2E') || 
+        htmlContent.includes('e2e')
+      ).toBe(true);
       
       // Deve ter dados de cobertura
       expect(htmlContent.length).toBeGreaterThan(500);
