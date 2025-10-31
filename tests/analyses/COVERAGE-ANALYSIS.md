@@ -10,29 +10,30 @@
 
 | Métrica | Cobertura | Coberto | Total | Threshold | Status |
 |---------|-----------|---------|-------|-----------|--------|
-| **Lines** | 46.42% | 1057 | 2277 | 70% | ❌ |
-| **Functions** | 64.40% | 38 | 59 | 70% | ❌ |
-| **Branches** | 74.81% | 297 | 397 | 70% | ✅ |
-| **Statements** | 46.42% | 1057 | 2277 | 70% | ❌ |
+| **Lines** | 39.17% | 1057 | 2698 | 70% | ❌ |
+| **Functions** | 63.33% | 38 | 60 | 70% | ❌ |
+| **Branches** | 74.62% | 297 | 398 | 70% | ✅ |
+| **Statements** | 39.17% | 1057 | 2698 | 70% | ❌ |
 
-**Média Geral:** 58.01%
+**Média Geral:** 54.07%
 
 ---
 
 ## ⚠️ Gaps Detectados
 
-- ❌ Cobertura de linhas (46.4%) abaixo do threshold (70%)
-- ❌ Cobertura de funções (64.4%) abaixo do threshold (70%)
-- ❌ Cobertura de statements (46.4%) abaixo do threshold (70%)
+- ❌ Cobertura de linhas (39.2%) abaixo do threshold (70%)
+- ❌ Cobertura de funções (63.3%) abaixo do threshold (70%)
+- ❌ Cobertura de statements (39.2%) abaixo do threshold (70%)
 
 ---
 
 ## 💡 Recomendações
 
-1. Adicionar testes para cobrir mais 537 linhas
+1. Adicionar testes para cobrir mais 832 linhas
 2. Testar mais 4 funções
 3. Priorize adicionar testes para arquivos críticos (detectores, tools)
 4. Foque em testar happy path + edge cases + error handling
+5. 11 arquivos precisam de mais testes - priorize os 5 primeiros
 
 ---
 
@@ -41,16 +42,16 @@
 
 | # | Arquivo | Cobertura | Prioridade | Razão |
 |---|---------|-----------|------------|-------|
-| 1 | `/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/tools/catalog.ts` | 0.0% | 🔴 HIGH | Cobertura crítica (<50%) |
-| 2 | `/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/tools/dashboard.ts` | 0.0% | 🔴 HIGH | Cobertura crítica (<50%) |
-| 3 | `/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/tools/report.ts` | 0.0% | 🔴 HIGH | Cobertura crítica (<50%) |
-| 4 | `/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/tools/run-coverage.ts` | 0.0% | 🔴 HIGH | Cobertura crítica (<50%) |
-| 5 | `/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/tools/run.ts` | 0.0% | 🔴 HIGH | Cobertura crítica (<50%) |
-| 6 | `/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/tools/scaffold-integration.ts` | 0.0% | 🔴 HIGH | Cobertura crítica (<50%) |
-| 7 | `/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/tools/scaffold.ts` | 0.0% | 🔴 HIGH | Cobertura crítica (<50%) |
-| 8 | `/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/tools/scaffold-unit.ts` | 24.4% | 🔴 HIGH | Cobertura crítica (<50%) |
-| 9 | `/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/utils/fs.ts` | 74.1% | 🟢 LOW | Cobertura boa, pode melhorar |
-| 10 | `/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/detectors/tests.ts` | 74.1% | 🟢 LOW | Cobertura boa, pode melhorar |
+| 1 | `/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/detectors/language.ts` | 0.0% | 🔴 HIGH | Cobertura crítica (<50%) |
+| 2 | `/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/tools/catalog.ts` | 0.0% | 🔴 HIGH | Cobertura crítica (<50%) |
+| 3 | `/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/tools/dashboard.ts` | 0.0% | 🔴 HIGH | Cobertura crítica (<50%) |
+| 4 | `/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/tools/report.ts` | 0.0% | 🔴 HIGH | Cobertura crítica (<50%) |
+| 5 | `/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/tools/run-coverage.ts` | 0.0% | 🔴 HIGH | Cobertura crítica (<50%) |
+| 6 | `/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/tools/run.ts` | 0.0% | 🔴 HIGH | Cobertura crítica (<50%) |
+| 7 | `/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/tools/scaffold-integration.ts` | 0.0% | 🔴 HIGH | Cobertura crítica (<50%) |
+| 8 | `/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/tools/scaffold.ts` | 0.0% | 🔴 HIGH | Cobertura crítica (<50%) |
+| 9 | `/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/tools/scaffold-unit.ts` | 24.4% | 🔴 HIGH | Cobertura crítica (<50%) |
+| 10 | `/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/utils/fs.ts` | 74.1% | 🟢 LOW | Cobertura boa, pode melhorar |
 
 
 ---
@@ -58,10 +59,11 @@
 ## 📊 Cobertura por Arquivo (Todos)
 
 <details>
-<summary>Ver todos os arquivos (18)</summary>
+<summary>Ver todos os arquivos (19)</summary>
 
 | Arquivo | Lines | Functions | Branches | Statements |
 |---------|-------|-----------|----------|------------|
+| `/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/detectors/language.ts` | 0.0% | 0.0% | 0.0% | 0.0% |
 | `/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/tools/catalog.ts` | 0.0% | 0.0% | 0.0% | 0.0% |
 | `/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/tools/dashboard.ts` | 0.0% | 0.0% | 0.0% | 0.0% |
 | `/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/tools/report.ts` | 0.0% | 0.0% | 0.0% | 0.0% |

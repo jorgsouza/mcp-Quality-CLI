@@ -3,8 +3,245 @@ import { promisify } from 'node:util';
 import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
 import { writeFileSafe } from '../utils/fs.js';
+import { detectLanguage, type LanguageDetection } from '../detectors/language.js';
 
 const exec = promisify(execFile);
+
+// Parser para diferentes formatos de cobertura
+async function parseCoverageFile(filePath: string, lang: LanguageDetection): Promise<any> {
+  const content = await fs.readFile(filePath, 'utf-8');
+
+  switch (lang.framework) {
+    case 'vitest':
+    case 'jest':
+    case 'mocha':
+      // JSON format (Istanbul/NYC)
+      return JSON.parse(content);
+
+    case 'junit':
+      // JaCoCo XML format
+      return parseJaCoCoXML(content);
+
+    case 'go-test':
+      // Go coverage.out format
+      return parseGoCoverage(content);
+
+    case 'rspec':
+    case 'minitest':
+      // SimpleCov JSON format
+      return parseSimpleCov(content);
+
+    case 'pytest':
+      // Coverage.py JSON format
+      return parsePytestCoverage(content);
+
+    case 'nunit':
+      // Cobertura XML format
+      return parseCoberturaXML(content);
+
+    case 'phpunit':
+      // Clover XML format
+      return parseCloverXML(content);
+
+    case 'cargo-test':
+      // Tarpaulin JSON format
+      return JSON.parse(content);
+
+    default:
+      // Tentar JSON primeiro
+      try {
+        return JSON.parse(content);
+      } catch {
+        throw new Error(`Formato de cobertura não suportado para ${lang.framework}`);
+      }
+  }
+}
+
+function parseJaCoCoXML(xml: string): any {
+  // Simplificado: extrair métricas do XML JaCoCo
+  const lines = xml.match(/<counter type="LINE" missed="(\d+)" covered="(\d+)"\/>/);
+  const branches = xml.match(/<counter type="BRANCH" missed="(\d+)" covered="(\d+)"\/>/);
+  const methods = xml.match(/<counter type="METHOD" missed="(\d+)" covered="(\d+)"\/>/);
+
+  const linesMissed = lines ? parseInt(lines[1]) : 0;
+  const linesCovered = lines ? parseInt(lines[2]) : 0;
+  const linesTotal = linesMissed + linesCovered;
+
+  const branchesMissed = branches ? parseInt(branches[1]) : 0;
+  const branchesCovered = branches ? parseInt(branches[2]) : 0;
+  const branchesTotal = branchesMissed + branchesCovered;
+
+  const methodsMissed = methods ? parseInt(methods[1]) : 0;
+  const methodsCovered = methods ? parseInt(methods[2]) : 0;
+  const methodsTotal = methodsMissed + methodsCovered;
+
+  return {
+    total: {
+      lines: {
+        total: linesTotal,
+        covered: linesCovered,
+        pct: linesTotal > 0 ? (linesCovered / linesTotal) * 100 : 0
+      },
+      functions: {
+        total: methodsTotal,
+        covered: methodsCovered,
+        pct: methodsTotal > 0 ? (methodsCovered / methodsTotal) * 100 : 0
+      },
+      branches: {
+        total: branchesTotal,
+        covered: branchesCovered,
+        pct: branchesTotal > 0 ? (branchesCovered / branchesTotal) * 100 : 0
+      },
+      statements: {
+        total: linesTotal,
+        covered: linesCovered,
+        pct: linesTotal > 0 ? (linesCovered / linesTotal) * 100 : 0
+      }
+    }
+  };
+}
+
+function parseGoCoverage(content: string): any {
+  // Parse Go coverage.out format
+  const lines = content.split('\n').filter(l => l && !l.startsWith('mode:'));
+  let totalStatements = 0;
+  let coveredStatements = 0;
+
+  for (const line of lines) {
+    const parts = line.split(' ');
+    if (parts.length >= 3) {
+      const count = parseInt(parts[2]);
+      totalStatements++;
+      if (count > 0) coveredStatements++;
+    }
+  }
+
+  const pct = totalStatements > 0 ? (coveredStatements / totalStatements) * 100 : 0;
+
+  return {
+    total: {
+      lines: { total: totalStatements, covered: coveredStatements, pct },
+      functions: { total: 0, covered: 0, pct: 0 },
+      branches: { total: 0, covered: 0, pct: 0 },
+      statements: { total: totalStatements, covered: coveredStatements, pct }
+    }
+  };
+}
+
+function parseSimpleCov(content: string): any {
+  // Parse SimpleCov JSON format
+  const data = JSON.parse(content);
+  const coverage = data.coverage || data;
+  
+  let totalLines = 0;
+  let coveredLines = 0;
+
+  for (const file in coverage) {
+    const fileCoverage = coverage[file];
+    if (Array.isArray(fileCoverage)) {
+      for (const line of fileCoverage) {
+        if (line !== null) {
+          totalLines++;
+          if (line > 0) coveredLines++;
+        }
+      }
+    }
+  }
+
+  const pct = totalLines > 0 ? (coveredLines / totalLines) * 100 : 0;
+
+  return {
+    total: {
+      lines: { total: totalLines, covered: coveredLines, pct },
+      functions: { total: 0, covered: 0, pct: 0 },
+      branches: { total: 0, covered: 0, pct: 0 },
+      statements: { total: totalLines, covered: coveredLines, pct }
+    }
+  };
+}
+
+function parsePytestCoverage(content: string): any {
+  // Parse coverage.py JSON format
+  const data = JSON.parse(content);
+  const totals = data.totals;
+
+  return {
+    total: {
+      lines: {
+        total: totals.num_statements,
+        covered: totals.covered_lines,
+        pct: totals.percent_covered
+      },
+      functions: { total: 0, covered: 0, pct: 0 },
+      branches: {
+        total: totals.num_branches || 0,
+        covered: totals.covered_branches || 0,
+        pct: totals.num_branches > 0 ? (totals.covered_branches / totals.num_branches) * 100 : 0
+      },
+      statements: {
+        total: totals.num_statements,
+        covered: totals.covered_lines,
+        pct: totals.percent_covered
+      }
+    }
+  };
+}
+
+function parseCoberturaXML(xml: string): any {
+  // Parse Cobertura XML format (usado por .NET)
+  const lineRate = xml.match(/line-rate="([\d.]+)"/);
+  const branchRate = xml.match(/branch-rate="([\d.]+)"/);
+  
+  const linePct = lineRate ? parseFloat(lineRate[1]) * 100 : 0;
+  const branchPct = branchRate ? parseFloat(branchRate[1]) * 100 : 0;
+
+  return {
+    total: {
+      lines: { total: 100, covered: Math.round(linePct), pct: linePct },
+      functions: { total: 0, covered: 0, pct: 0 },
+      branches: { total: 100, covered: Math.round(branchPct), pct: branchPct },
+      statements: { total: 100, covered: Math.round(linePct), pct: linePct }
+    }
+  };
+}
+
+function parseCloverXML(xml: string): any {
+  // Parse Clover XML format (usado por PHPUnit)
+  const metrics = xml.match(/<metrics\s+([^>]+)>/);
+  
+  if (!metrics) {
+    return {
+      total: {
+        lines: { total: 0, covered: 0, pct: 0 },
+        functions: { total: 0, covered: 0, pct: 0 },
+        branches: { total: 0, covered: 0, pct: 0 },
+        statements: { total: 0, covered: 0, pct: 0 }
+      }
+    };
+  }
+
+  const elements = metrics[1].match(/elements="(\d+)"/);
+  const coveredElements = metrics[1].match(/coveredelements="(\d+)"/);
+  const statements = metrics[1].match(/statements="(\d+)"/);
+  const coveredStatements = metrics[1].match(/coveredstatements="(\d+)"/);
+
+  const elementsTotal = elements ? parseInt(elements[1]) : 0;
+  const elementsCovered = coveredElements ? parseInt(coveredElements[1]) : 0;
+  const statementsTotal = statements ? parseInt(statements[1]) : 0;
+  const statementsCovered = coveredStatements ? parseInt(coveredStatements[1]) : 0;
+
+  const elementsPct = elementsTotal > 0 ? (elementsCovered / elementsTotal) * 100 : 0;
+  const statementsPct = statementsTotal > 0 ? (statementsCovered / statementsTotal) * 100 : 0;
+
+  return {
+    total: {
+      lines: { total: elementsTotal, covered: elementsCovered, pct: elementsPct },
+      functions: { total: 0, covered: 0, pct: 0 },
+      branches: { total: 0, covered: 0, pct: 0 },
+      statements: { total: statementsTotal, covered: statementsCovered, pct: statementsPct }
+    }
+  };
+}
 
 export interface RunCoverageParams {
   repo: string;
@@ -57,24 +294,33 @@ export async function runCoverageAnalysis(input: RunCoverageParams): Promise<Cov
   };
 
   try {
+    // Detectar linguagem e framework
+    const lang = await detectLanguage(input.repo);
+    console.log(`📦 Linguagem: ${lang.primary}`);
+    console.log(`🧪 Framework: ${lang.framework}`);
+    console.log(`⚙️  Comando: ${lang.coverageCommand}`);
+
     // Executar testes com cobertura
-    const { stdout, stderr } = await exec('npm', ['run', 'test:coverage'], {
+    const [command, ...args] = lang.coverageCommand.split(' ');
+    const { stdout, stderr } = await exec(command, args, {
       cwd: input.repo,
       env: { ...process.env, CI: 'true' },
-      maxBuffer: 10 * 1024 * 1024 // 10MB
+      maxBuffer: 10 * 1024 * 1024, // 10MB
+      shell: true
     });
 
     console.log(`✅ Testes executados com sucesso!`);
 
-    // Ler coverage-summary.json
-    const coveragePath = join(input.repo, 'coverage', 'coverage-summary.json');
+    // Ler arquivo de cobertura
+    const coveragePath = join(input.repo, lang.coverageFile);
     const coverageExists = await fs.access(coveragePath).then(() => true).catch(() => false);
 
     if (!coverageExists) {
-      throw new Error('Arquivo coverage-summary.json não encontrado. Certifique-se de que o Vitest está configurado para gerar cobertura.');
+      throw new Error(`Arquivo de cobertura não encontrado: ${lang.coverageFile}. Certifique-se de que ${lang.framework} está configurado para gerar cobertura.`);
     }
 
-    const coverageData = JSON.parse(await fs.readFile(coveragePath, 'utf-8'));
+    // Parsear cobertura baseado na linguagem
+    const coverageData = await parseCoverageFile(coveragePath, lang);
 
     // Extrair dados de cobertura total
     const total = coverageData.total;
