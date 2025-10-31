@@ -1,16 +1,21 @@
 {
-  "summary": "\nPirâmide de Testes - Quality-MCP\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nUnit:        0 testes (0.0%)\nIntegration: 0 testes (0.0%)\nE2E:         0 testes (0.0%)\nTotal:       0 testes\n\nStatus: ⚠️ PRECISA ATENÇÃO\n\nArquivos sem testes: 18\n",
+  "summary": "\nPirâmide de Testes - Quality-MCP\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nUnit:        5 testes (100.0%)\nIntegration: 0 testes (0.0%)\nE2E:         0 testes (0.0%)\nTotal:       5 testes\n\nStatus: ✅ SAUDÁVEL\n\nArquivos sem testes: 13\n",
   "pyramid": {
     "unit": {
-      "files_found": 0,
-      "test_files": [],
+      "files_found": 5,
+      "test_files": [
+        "src/utils/__tests__/fs.test.ts",
+        "src/tools/__tests__/scaffold.test.ts",
+        "src/tools/__tests__/scaffold-unit.test.ts",
+        "src/tools/__tests__/scaffold-integration.test.ts",
+        "src/detectors/__tests__/tests.test.ts"
+      ],
       "missing_tests": [
         "src/server.ts",
         "src/cli.ts",
-        "src/utils/fs.ts",
-        "src/tools/scaffold.ts",
-        "src/tools/scaffold-unit.ts",
-        "src/tools/scaffold-integration.ts",
+        "src/detectors/next.ts",
+        "src/detectors/express.ts",
+        "src/detectors/events.ts",
         "src/tools/run.ts",
         "src/tools/report.ts",
         "src/tools/pyramid-report.ts",
@@ -18,11 +23,7 @@
         "src/tools/dashboard.ts",
         "src/tools/coverage.ts",
         "src/tools/catalog.ts",
-        "src/tools/analyze.ts",
-        "src/detectors/tests.ts",
-        "src/detectors/next.ts",
-        "src/detectors/express.ts",
-        "src/detectors/events.ts"
+        "src/tools/analyze.ts"
       ]
     },
     "integration": {
@@ -36,10 +37,9 @@
       "test_files": []
     }
   },
-  "health": "needs_attention",
+  "health": "healthy",
   "recommendations": [
-    "📈 Aumente a cobertura de testes unitários. Atual: 0.0%, Ideal: 70%",
-    "📝 18 arquivos sem testes. Execute 'quality scaffold-unit' para gerar.",
+    "📝 13 arquivos sem testes. Execute 'quality scaffold-unit' para gerar.",
     "🔗 Considere adicionar mais testes de integração/API para o meio da pirâmide."
   ],
   "analysis_path": "tests/analyses/coverage-analysis.json"

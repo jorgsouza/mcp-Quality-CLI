@@ -30,7 +30,7 @@
     .header .status {
       display: inline-block;
       padding: 0.5rem 1.5rem;
-      background: #f59e0b;
+      background: #22c55e;
       border-radius: 50px;
       font-weight: 600;
       margin-top: 1rem;
@@ -106,7 +106,7 @@
     <div class="header">
       <h1>🏛️ Pirâmide de Testes</h1>
       <h2>Quality-MCP</h2>
-      <div class="status">⚠️ PRECISA ATENÇÃO</div>
+      <div class="status">✅ SAUDÁVEL</div>
       <p style="margin-top: 1rem; opacity: 0.9;">31/10/2025</p>
     </div>
 
@@ -120,35 +120,34 @@
         </div>
         <div class="pyramid">
           <div class="pyramid-label">ATUAL</div>
-          <div class="pyramid-layer e2e">E2E 0%</div>
-          <div class="pyramid-layer integration">INT 0%</div>
-          <div class="pyramid-layer unit">UNIT 0%</div>
+          <div class="pyramid-layer e2e">E2E 0.0%</div>
+          <div class="pyramid-layer integration">INT 0.0%</div>
+          <div class="pyramid-layer unit">UNIT 100.0%</div>
         </div>
       </div>
 
       <div class="metrics">
         <div class="metric-card unit">
           <h3>TESTES UNITÁRIOS</h3>
-          <div class="value">0</div>
-          <div class="percentage">0% do total</div>
+          <div class="value">5</div>
+          <div class="percentage">100.0% do total</div>
         </div>
         <div class="metric-card integration">
           <h3>TESTES DE INTEGRAÇÃO</h3>
           <div class="value">0</div>
-          <div class="percentage">0% do total</div>
+          <div class="percentage">0.0% do total</div>
         </div>
         <div class="metric-card e2e">
           <h3>TESTES E2E</h3>
           <div class="value">0</div>
-          <div class="percentage">0% do total</div>
+          <div class="percentage">0.0% do total</div>
         </div>
       </div>
 
       <div class="recommendations">
         <h2>💡 Recomendações</h2>
         <ul>
-          <li>📈 Aumente a cobertura de testes unitários. Atual: 0.0%, Ideal: 70%</li>
-          <li>📝 18 arquivos sem testes. Execute 'quality scaffold-unit' para gerar.</li>
+          <li>📝 13 arquivos sem testes. Execute 'quality scaffold-unit' para gerar.</li>
           <li>🔗 Considere adicionar mais testes de integração/API para o meio da pirâmide.</li>
         </ul>
       </div>
@@ -157,11 +156,11 @@
 
   <script>
     console.log('Quality MCP - Pyramid Report v0.2.0');
-    console.log('Health:', 'needs_attention');
+    console.log('Health:', 'healthy');
     console.log('Distribution:', {
-      unit: 0,
-      integration: 0,
-      e2e: 0
+      unit: 100.0,
+      integration: 0.0,
+      e2e: 0.0
     });
   </script>
 </body>

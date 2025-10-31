@@ -1,0 +1,17 @@
+{
+  "summary": "Encontradas 0 rotas web, 0 endpoints e 0 eventos.",
+  "findings": {
+    "routes": [],
+    "endpoints": [],
+    "events": [],
+    "risk_map": []
+  },
+  "recommendations": [
+    "Priorizar E2E para fluxos críticos (login, abrir_reclamacao, busca_empresa).",
+    "Adicionar CDC (Contract-Driven Development) para endpoints de alto acoplamento inter-squad.",
+    "Cobertura por diff-coverage ≥ 80%; CI p95 ≤ 10min; flaky ≤ 2%.",
+    "Considerar adicionar especificação OpenAPI para documentação de contratos.",
+    "Foco nos domínios: tools, detectors, utils, server, cli",
+    "Produto: Quality-MCP - Base URL: não especificada"
+  ]
+}

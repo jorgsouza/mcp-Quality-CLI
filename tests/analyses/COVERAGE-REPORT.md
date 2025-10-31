@@ -6,14 +6,14 @@
 
 | Camada | Testes | Proporção | Status |
 |--------|--------|-----------|--------|
-| **Unit** | 0 | 0% | ⚠️ |
-| **Integration** | 0 | 0% | ⚠️ |
-| **E2E** | 0 | 0% | ⚠️ |
-| **TOTAL** | **0** | **100%** | **⚠️** |
+| **Unit** | 5 | 100.0% | ⚠️ |
+| **Integration** | 0 | 0.0% | ⚠️ |
+| **E2E** | 0 | 0.0% | ⚠️ |
+| **TOTAL** | **5** | **100%** | **✅** |
 
 ## 🏥 Saúde da Pirâmide
 
-**Status:** ⚠️ PRECISA ATENÇÃO
+**Status:** ✅ SAUDÁVEL
 
 ### Pirâmide Ideal vs Atual
 
@@ -21,11 +21,11 @@
 IDEAL                  ATUAL
   ▲                      ▲
  / \                    / \
-/E2E\  10%            /E2E\  0%
+/E2E\  10%            /E2E\  0.0%
 ────────              ────────
- /INT\  20%           /INT\  0%
+ /INT\  20%           /INT\  0.0%
 ────────              ────────
-/UNIT\  70%          /UNIT\  0%
+/UNIT\  70%          /UNIT\  100.0%
 ────────              ────────
 ```
 
@@ -33,19 +33,19 @@ IDEAL                  ATUAL
 
 ### Base: Testes Unitários
 
-- **Total:** 0 arquivos
+- **Total:** 5 arquivos
 - **Cobertura:** N/A
-- **Arquivos sem testes:** 18
+- **Arquivos sem testes:** 13
 
 
 **Top 5 arquivos prioritários para testar:**
 - `src/server.ts`
 - `src/cli.ts`
-- `src/utils/fs.ts`
-- `src/tools/scaffold.ts`
-- `src/tools/scaffold-unit.ts`
+- `src/detectors/next.ts`
+- `src/detectors/express.ts`
+- `src/detectors/events.ts`
 
-Execute: `quality scaffold-unit --files "src/server.ts src/cli.ts src/utils/fs.ts src/tools/scaffold.ts src/tools/scaffold-unit.ts"`
+Execute: `quality scaffold-unit --files "src/server.ts src/cli.ts src/detectors/next.ts src/detectors/express.ts src/detectors/events.ts"`
 
 
 ### Meio: Testes de Integração
@@ -69,8 +69,7 @@ quality scaffold-integration --repo . --product "Quality-MCP"
 
 ## 💡 Recomendações
 
-- 📈 Aumente a cobertura de testes unitários. Atual: 0.0%, Ideal: 70%
-- 📝 18 arquivos sem testes. Execute 'quality scaffold-unit' para gerar.
+- 📝 13 arquivos sem testes. Execute 'quality scaffold-unit' para gerar.
 - 🔗 Considere adicionar mais testes de integração/API para o meio da pirâmide.
 
 ## 🎯 Plano de Ação
@@ -105,4 +104,4 @@ quality scaffold-integration --repo . --product "Quality-MCP"
 ---
 
 **Gerado por:** Quality MCP v0.2.0  
-**Timestamp:** 2025-10-31T21:40:02.836Z
+**Timestamp:** 2025-10-31T21:45:46.125Z
