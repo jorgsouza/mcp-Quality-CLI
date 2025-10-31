@@ -36,6 +36,7 @@ quality recommend --repo . --product "Quality-MCP" --auto
 ```
 
 **Saída:**
+
 ```
 🔍 Analisando Quality-MCP...
 
@@ -81,12 +82,12 @@ Analise meu projeto e me diga qual estratégia de testes eu deveria seguir
 ```
 
 ```
-Use o Quality MCP para recomendar qual proporção de unit/integration/E2E 
+Use o Quality MCP para recomendar qual proporção de unit/integration/E2E
 tests eu preciso para o projeto em /home/jorgesouza/meu-app
 ```
 
 ```
-Tenho uma API REST com Express e Prisma. Preciso saber se devo fazer 
+Tenho uma API REST com Express e Prisma. Preciso saber se devo fazer
 testes E2E ou apenas unit tests
 ```
 
@@ -108,20 +109,23 @@ Use a tool recommend_test_strategy do MCP Quality com:
 ### Exemplos Práticos
 
 **Exemplo 1: Analisar o Quality MCP**
+
 ```
-Analise o Quality MCP e me diga qual estratégia de testes 
+Analise o Quality MCP e me diga qual estratégia de testes
 eu deveria seguir (se preciso de E2E, integration, etc.)
 ```
 
 **Exemplo 2: Analisar Outro Projeto**
+
 ```
 Tenho um projeto React em /home/jorgesouza/meu-frontend.
 Use o Quality MCP para me dizer se preciso de testes E2E.
 ```
 
 **Exemplo 3: Comparar com Situação Atual**
+
 ```
-Use o Quality MCP para ver minha cobertura atual e recomendar 
+Use o Quality MCP para ver minha cobertura atual e recomendar
 se estou no caminho certo ou preciso mudar a estratégia.
 ```
 
@@ -150,32 +154,39 @@ se estou no caminho certo ou preciso mudar a estratégia.
 Arquivo `tests/analyses/TEST-STRATEGY-RECOMMENDATION.md` com:
 
 - ✅ **Características da Aplicação**
+
   - Tipo detectado (CLI, Web App, API, Library, etc.)
   - Complexidade (LOW, MEDIUM, HIGH)
   - Checklist de features (✅ tem DB, ❌ não tem Auth, etc.)
 
 - ✅ **Estratégia Recomendada**
+
   - Pirâmide visual (ASCII art)
   - Proporção unit/integration/E2E
   - Quantidade de testes sugerida
 
 - ✅ **Justificativa Técnica**
+
   - Por quê essa proporção?
   - Quais os riscos de não seguir?
 
 - ✅ **ROI (Return on Investment)**
+
   - Tempo para criar cada tipo
   - Custo de manutenção
   - Cobertura de bugs esperada
 
 - ✅ **Situação Atual vs Recomendada**
+
   - Se já tiver cobertura, mostra comparação
 
 - ✅ **Top 10 Arquivos Prioritários**
+
   - Quais arquivos testar primeiro
   - Classificação HIGH/MEDIUM/LOW
 
 - ✅ **Plano de Ação**
+
   - Fase 1: Unit tests (quantos dias)
   - Fase 2: Integration tests (quantos dias)
   - Fase 3: E2E tests (ou pular)
@@ -213,8 +224,9 @@ quality recommend --repo . --product "App Existente" --auto
 ### 3. **Dúvida sobre E2E**
 
 Via chat:
+
 ```
-Meu projeto é uma CLI tool. Use o Quality MCP para me dizer 
+Meu projeto é uma CLI tool. Use o Quality MCP para me dizer
 se eu realmente preciso de testes E2E ou se unit tests são suficientes.
 ```
 
@@ -233,16 +245,16 @@ quality recommend --repo . --product "Feature X" --auto
 
 O Quality MCP analisa seu `package.json` e detecta:
 
-| Detecta | Se encontrar | Impacto na Recomendação |
-|---------|--------------|-------------------------|
-| **CLI Tool** | `commander`, `yargs`, `bin` | ↑ Unit 90%, ↓ E2E 0% |
-| **MCP Server** | `@modelcontextprotocol/sdk` | ↑ Unit 90%, ↓ E2E 0% |
-| **Web Frontend** | `react`, `next`, `vue`, `angular` | ↑ E2E 10-15% |
-| **Backend API** | `express`, `fastify`, `nestjs`, `koa` | ↑ Integration 20-25% |
-| **Database** | `prisma`, `typeorm`, `mongoose`, `sequelize` | ↑ Integration 20-25% |
-| **Auth** | `passport`, `jsonwebtoken`, `auth0` | ↑ Integration 20-25% |
-| **Integrações** | `axios`, `kafkajs`, `@aws-sdk`, `redis` | ↑ Integration 20-25% |
-| **Library** | `main` sem `bin`, sem UI | ↑ Unit 85-90% |
+| Detecta          | Se encontrar                                 | Impacto na Recomendação |
+| ---------------- | -------------------------------------------- | ----------------------- |
+| **CLI Tool**     | `commander`, `yargs`, `bin`                  | ↑ Unit 90%, ↓ E2E 0%    |
+| **MCP Server**   | `@modelcontextprotocol/sdk`                  | ↑ Unit 90%, ↓ E2E 0%    |
+| **Web Frontend** | `react`, `next`, `vue`, `angular`            | ↑ E2E 10-15%            |
+| **Backend API**  | `express`, `fastify`, `nestjs`, `koa`        | ↑ Integration 20-25%    |
+| **Database**     | `prisma`, `typeorm`, `mongoose`, `sequelize` | ↑ Integration 20-25%    |
+| **Auth**         | `passport`, `jsonwebtoken`, `auth0`          | ↑ Integration 20-25%    |
+| **Integrações**  | `axios`, `kafkajs`, `@aws-sdk`, `redis`      | ↑ Integration 20-25%    |
+| **Library**      | `main` sem `bin`, sem UI                     | ↑ Unit 85-90%           |
 
 **Cálculo de Complexidade:**
 
@@ -250,7 +262,7 @@ O Quality MCP analisa seu `package.json` e detecta:
 Score = (tem Web UI?) + (tem API?) + (tem DB?) + (tem Auth?) + (tem Integrações?)
 
 Se Score >= 4: HIGH complexidade
-Se Score >= 2: MEDIUM complexidade  
+Se Score >= 2: MEDIUM complexidade
 Se Score < 2: LOW complexidade
 ```
 
@@ -403,7 +415,7 @@ cat tests/analyses/TEST-STRATEGY-RECOMMENDATION.md
 ### Via Chat (aqui mesmo)
 
 ```
-Use o Quality MCP para analisar o projeto Quality-MCP 
+Use o Quality MCP para analisar o projeto Quality-MCP
 e me dizer se a estratégia de testes está correta
 ```
 
@@ -412,4 +424,3 @@ e me dizer se a estratégia de testes está correta
 **Última atualização:** 2025-10-31  
 **Versão Quality MCP:** v0.2.0  
 **Funcionalidade:** `recommend_test_strategy`
-
