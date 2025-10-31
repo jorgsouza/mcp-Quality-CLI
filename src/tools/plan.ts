@@ -17,7 +17,7 @@ export async function generatePlan(input: PlanParams): Promise<{ ok: boolean; pl
   let analyzeData: AnalyzeResult | undefined = input.analyze_result;
   
   if (!analyzeData) {
-    const analyzePath = join(input.repo, 'plan', 'analyze.json');
+    const analyzePath = join(input.repo, 'tests', 'analyses', 'analyze.json');
     if (await fileExists(analyzePath)) {
       const content = await readFile(analyzePath);
       analyzeData = JSON.parse(content);
@@ -237,7 +237,7 @@ test.describe('Busca', () => {
 4. ⏳ Relatório para release (executar \`quality report\`)
 `;
 
-  const out = join(input.repo, input.out_dir, 'TEST-PLAN.md');
+  const out = join(input.repo, 'tests', 'analyses', 'TEST-PLAN.md');
   await writeFileSafe(out, md);
   
   console.log(`✅ Plano gerado: ${out}`);

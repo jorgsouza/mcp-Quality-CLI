@@ -13,6 +13,11 @@ import { generatePlan, type PlanParams } from './tools/plan.js';
 import { scaffoldPlaywright, type ScaffoldParams } from './tools/scaffold.js';
 import { runPlaywright, type RunParams } from './tools/run.js';
 import { buildReport, type BuildReportParams } from './tools/report.js';
+import { analyzeTestCoverage, type CoverageParams } from './tools/coverage.js';
+import { scaffoldUnitTests, type ScaffoldUnitParams } from './tools/scaffold-unit.js';
+import { scaffoldIntegrationTests, type ScaffoldIntegrationParams } from './tools/scaffold-integration.js';
+import { generatePyramidReport, type PyramidReportParams } from './tools/pyramid-report.js';
+import { catalogScenarios, type CatalogParams } from './tools/catalog.js';
 
 // Schemas Zod para validação
 const AnalyzeSchema = z.object({
@@ -56,6 +61,42 @@ const ReportSchema = z.object({
     flaky_pct_max: z.number().optional(),
     diff_coverage_min: z.number().optional()
   }).optional()
+});
+
+const CoverageSchema = z.object({
+  repo: z.string().describe('Caminho do repositório'),
+  product: z.string().describe('Nome do produto'),
+  target_coverage: z.object({
+    unit: z.number().optional(),
+    integration: z.number().optional(),
+    e2e: z.number().optional()
+  }).optional()
+});
+
+const ScaffoldUnitSchema = z.object({
+  repo: z.string().describe('Caminho do repositório'),
+  files: z.array(z.string()).optional().describe('Arquivos específicos para gerar testes'),
+  framework: z.enum(['jest', 'vitest', 'mocha']).optional(),
+  auto_detect: z.boolean().optional()
+});
+
+const ScaffoldIntegrationSchema = z.object({
+  repo: z.string().describe('Caminho do repositório'),
+  product: z.string().describe('Nome do produto'),
+  base_url: z.string().optional(),
+  endpoints: z.array(z.string()).optional()
+});
+
+const PyramidReportSchema = z.object({
+  repo: z.string().describe('Caminho do repositório'),
+  product: z.string().describe('Nome do produto'),
+  output_format: z.enum(['markdown', 'html', 'json']).optional()
+});
+
+const CatalogSchema = z.object({
+  repo: z.string().describe('Caminho do repositório'),
+  product: z.string().describe('Nome do produto'),
+  squads: z.array(z.string()).optional().describe('Lista de squads do produto')
 });
 
 class QualityMCPServer {
@@ -176,6 +217,80 @@ class QualityMCPServer {
             },
             required: ['in_dir']
           }
+        },
+        {
+          name: 'analyze_test_coverage',
+          description: 'Analisa cobertura completa da pirâmide de testes (unit, integration, e2e)',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              repo: { type: 'string', description: 'Caminho do repositório' },
+              product: { type: 'string', description: 'Nome do produto' },
+              target_coverage: {
+                type: 'object',
+                properties: {
+                  unit: { type: 'number' },
+                  integration: { type: 'number' },
+                  e2e: { type: 'number' }
+                }
+              }
+            },
+            required: ['repo', 'product']
+          }
+        },
+        {
+          name: 'scaffold_unit_tests',
+          description: 'Gera testes unitários automaticamente para arquivos fonte',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              repo: { type: 'string', description: 'Caminho do repositório' },
+              files: { type: 'array', items: { type: 'string' }, description: 'Arquivos específicos' },
+              framework: { type: 'string', enum: ['jest', 'vitest', 'mocha'] },
+              auto_detect: { type: 'boolean' }
+            },
+            required: ['repo']
+          }
+        },
+        {
+          name: 'scaffold_integration_tests',
+          description: 'Gera testes de integração/API automaticamente',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              repo: { type: 'string', description: 'Caminho do repositório' },
+              product: { type: 'string', description: 'Nome do produto' },
+              base_url: { type: 'string', description: 'URL base da API' },
+              endpoints: { type: 'array', items: { type: 'string' } }
+            },
+            required: ['repo', 'product']
+          }
+        },
+        {
+          name: 'generate_pyramid_report',
+          description: 'Gera visualização da pirâmide de testes (Markdown ou HTML)',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              repo: { type: 'string', description: 'Caminho do repositório' },
+              product: { type: 'string', description: 'Nome do produto' },
+              output_format: { type: 'string', enum: ['markdown', 'html', 'json'] }
+            },
+            required: ['repo', 'product']
+          }
+        },
+        {
+          name: 'catalog_scenarios',
+          description: 'Cataloga cenários de teste para governança multi-squad',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              repo: { type: 'string', description: 'Caminho do repositório' },
+              product: { type: 'string', description: 'Nome do produto' },
+              squads: { type: 'array', items: { type: 'string' }, description: 'Lista de squads' }
+            },
+            required: ['repo', 'product']
+          }
         }
       ]
     }));
@@ -239,6 +354,71 @@ class QualityMCPServer {
           case 'build_report': {
             const params = ReportSchema.parse(request.params.arguments);
             const result = await buildReport(params);
+            return {
+              content: [
+                {
+                  type: 'text',
+                  text: JSON.stringify(result, null, 2)
+                }
+              ]
+            };
+          }
+
+          case 'analyze_test_coverage': {
+            const params = CoverageSchema.parse(request.params.arguments);
+            const result = await analyzeTestCoverage(params);
+            return {
+              content: [
+                {
+                  type: 'text',
+                  text: JSON.stringify(result, null, 2)
+                }
+              ]
+            };
+          }
+
+          case 'scaffold_unit_tests': {
+            const params = ScaffoldUnitSchema.parse(request.params.arguments);
+            const result = await scaffoldUnitTests(params);
+            return {
+              content: [
+                {
+                  type: 'text',
+                  text: JSON.stringify(result, null, 2)
+                }
+              ]
+            };
+          }
+
+          case 'scaffold_integration_tests': {
+            const params = ScaffoldIntegrationSchema.parse(request.params.arguments);
+            const result = await scaffoldIntegrationTests(params);
+            return {
+              content: [
+                {
+                  type: 'text',
+                  text: JSON.stringify(result, null, 2)
+                }
+              ]
+            };
+          }
+
+          case 'generate_pyramid_report': {
+            const params = PyramidReportSchema.parse(request.params.arguments);
+            const result = await generatePyramidReport(params);
+            return {
+              content: [
+                {
+                  type: 'text',
+                  text: JSON.stringify(result, null, 2)
+                }
+              ]
+            };
+          }
+
+          case 'catalog_scenarios': {
+            const params = CatalogSchema.parse(request.params.arguments);
+            const result = await catalogScenarios(params);
             return {
               content: [
                 {

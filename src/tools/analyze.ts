@@ -98,7 +98,7 @@ export async function analyze(input: AnalyzeParams): Promise<AnalyzeResult> {
 
   // Salva snapshot em JSON
   await writeFileSafe(
-    join(input.repo, 'plan', 'analyze.json'),
+    join(input.repo, 'tests', 'analyses', 'analyze.json'),
     JSON.stringify({ summary, findings, recommendations }, null, 2)
   );
 
@@ -108,7 +108,7 @@ export async function analyze(input: AnalyzeParams): Promise<AnalyzeResult> {
     summary,
     findings,
     recommendations,
-    plan_path: 'plan/TEST-PLAN.md'
+    plan_path: 'tests/analyses/TEST-PLAN.md'
   };
 }
 
