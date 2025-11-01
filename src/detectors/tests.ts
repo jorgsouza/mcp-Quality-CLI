@@ -34,12 +34,45 @@ export async function findExistingTests(repoPath: string): Promise<TestCoverage>
   const component: TestFile[] = [];
 
   try {
-    // Padrões de arquivos de teste
+    // Padrões de arquivos de teste (AGNÓSTICO DE LINGUAGEM)
     const testPatterns = [
+      // JavaScript/TypeScript
       '**/*.test.{ts,tsx,js,jsx}',
       '**/*.spec.{ts,tsx,js,jsx}',
       '**/__tests__/**/*.{ts,tsx,js,jsx}',
-      '**/*Test.{ts,tsx,js,jsx}' // Padrão Mocha/Java-style
+      '**/*[Tt]est.{ts,tsx,js,jsx}', // Aceita Test ou test
+      
+      // Go
+      '**/*_test.go',
+      
+      // Java/Kotlin  
+      '**/*Test.java',
+      '**/*Tests.java',
+      '**/*Test.kt',
+      '**/*Tests.kt',
+      '**/src/test/**/*.java',
+      '**/src/test/**/*.kt',
+      
+      // Python
+      '**/test_*.py',
+      '**/*_test.py',
+      '**/tests/**/*.py',
+      
+      // Ruby
+      '**/*_spec.rb',
+      '**/spec/**/*.rb',
+      
+      // C#
+      '**/*Test.cs',
+      '**/*Tests.cs',
+      
+      // PHP
+      '**/*Test.php',
+      '**/tests/**/*.php',
+      
+      // Rust
+      '**/*_test.rs',
+      '**/tests/**/*.rs'
     ];
 
     // Usar Set para evitar duplicatas
@@ -125,9 +158,10 @@ export async function findExistingTests(repoPath: string): Promise<TestCoverage>
 }
 
 /**
- * Detecta o framework de teste usado
+ * Detecta o framework de teste usado (MULTI-LINGUAGEM)
  */
 function detectFramework(content: string): string {
+  // JavaScript/TypeScript
   if (content.includes('@playwright/test')) return 'playwright';
   if (content.includes('vitest')) return 'vitest';
   if (content.includes('@testing-library/react')) return 'react-testing-library';
@@ -135,16 +169,77 @@ function detectFramework(content: string): string {
   if (content.includes('mocha')) return 'mocha';
   if (content.includes('cypress')) return 'cypress';
   if (content.includes('supertest')) return 'supertest';
+  
+  // Go
+  if (content.includes('testing.T') || content.includes('testing.B')) return 'go-test';
+  if (content.includes('github.com/stretchr/testify')) return 'testify';
+  
+  // Java/Kotlin
+  if (content.includes('@Test') && content.includes('org.junit')) return 'junit';
+  if (content.includes('@Test') && content.includes('org.testng')) return 'testng';
+  if (content.includes('io.kotest')) return 'kotest';
+  
+  // Python
+  if (content.includes('import pytest') || content.includes('from pytest')) return 'pytest';
+  if (content.includes('import unittest') || content.includes('from unittest')) return 'unittest';
+  
+  // Ruby
+  if (content.includes('RSpec')) return 'rspec';
+  
+  // C#
+  if (content.includes('[Test]') || content.includes('[Fact]')) return 'nunit/xunit';
+  
+  // PHP
+  if (content.includes('PHPUnit')) return 'phpunit';
+  
+  // Rust
+  if (content.includes('#[test]')) return 'rust-test';
+  
   return 'unknown';
 }
 
 /**
- * Conta número de testes no arquivo
+ * Conta número de testes no arquivo (MULTI-LINGUAGEM)
  */
 function countTests(content: string): number {
-  const testRegex = /\b(test|it)\s*\(/g;
-  const matches = content.match(testRegex);
-  return matches ? matches.length : 0;
+  let count = 0;
+  
+  // JavaScript/TypeScript: test(), it()
+  const jsTestRegex = /\b(test|it)\s*\(/g;
+  const jsMatches = content.match(jsTestRegex);
+  if (jsMatches) count += jsMatches.length;
+  
+  // Go: func Test...
+  const goTestRegex = /func\s+Test\w+\s*\(/g;
+  const goMatches = content.match(goTestRegex);
+  if (goMatches) count += goMatches.length;
+  
+  // Java/Kotlin: @Test
+  const javaTestRegex = /@Test[\s\n]+(?:public\s+)?(?:void\s+)?\w+\s*\(/g;
+  const javaMatches = content.match(javaTestRegex);
+  if (javaMatches) count += javaMatches.length;
+  
+  // Python: def test_...
+  const pythonTestRegex = /def\s+test_\w+\s*\(/g;
+  const pythonMatches = content.match(pythonTestRegex);
+  if (pythonMatches) count += pythonMatches.length;
+  
+  // Ruby: it "..." do
+  const rubyTestRegex = /\bit\s+["']/g;
+  const rubyMatches = content.match(rubyTestRegex);
+  if (rubyMatches) count += rubyMatches.length;
+  
+  // C#: [Test] ou [Fact]
+  const csharpTestRegex = /\[(Test|Fact)\]/g;
+  const csharpMatches = content.match(csharpTestRegex);
+  if (csharpMatches) count += csharpMatches.length;
+  
+  // Rust: #[test]
+  const rustTestRegex = /#\[test\]/g;
+  const rustMatches = content.match(rustTestRegex);
+  if (rustMatches) count += rustMatches.length;
+  
+  return count > 0 ? count : 1; // Pelo menos 1 se for arquivo de teste
 }
 
 /**

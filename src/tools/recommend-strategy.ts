@@ -32,7 +32,7 @@ interface TestStrategy {
 }
 
 /**
- * Detecta características da aplicação analisando o código
+ * Detecta características da aplicação analisando o código (AGNÓSTICO DE LINGUAGEM)
  */
 async function detectAppCharacteristics(repo: string): Promise<AppCharacteristics> {
   const characteristics: AppCharacteristics = {
@@ -49,58 +49,184 @@ async function detectAppCharacteristics(repo: string): Promise<AppCharacteristic
   };
 
   try {
-    // Verificar package.json
-    const pkgPath = join(repo, 'package.json');
-    const pkgContent = await readFile(pkgPath, 'utf-8');
-    const pkg = JSON.parse(pkgContent);
+    const files = await readdir(repo);
+    
+    // === JAVASCRIPT/TYPESCRIPT ===
+    if (files.includes('package.json')) {
+      const pkgPath = join(repo, 'package.json');
+      const pkgContent = await readFile(pkgPath, 'utf-8');
+      const pkg = JSON.parse(pkgContent);
 
-    // Detectar CLI
-    if (pkg.bin || pkgContent.includes('commander') || pkgContent.includes('yargs')) {
-      characteristics.isCLI = true;
+      // Detectar CLI
+      if (pkg.bin || pkgContent.includes('commander') || pkgContent.includes('yargs')) {
+        characteristics.isCLI = true;
+      }
+
+      // Detectar MCP Server
+      if (pkgContent.includes('@modelcontextprotocol/sdk')) {
+        characteristics.isMCPServer = true;
+      }
+
+      // Detectar Web UI (React, Next.js, Vue, Angular)
+      const webFrameworks = ['react', 'next', 'vue', 'angular', '@angular', 'svelte'];
+      if (webFrameworks.some(fw => pkgContent.includes(`"${fw}"`) || pkgContent.includes(`"@${fw}`))) {
+        characteristics.hasWebUI = true;
+      }
+
+      // Detectar Backend API (Express, Fastify, Koa, NestJS)
+      const backendFrameworks = ['express', 'fastify', 'koa', '@nestjs', 'hapi'];
+      if (backendFrameworks.some(fw => pkgContent.includes(`"${fw}"`))) {
+        characteristics.hasBackendAPI = true;
+      }
+
+      // Detectar Database
+      const dbLibs = ['prisma', 'sequelize', 'typeorm', 'mongoose', 'knex', 'pg', 'mysql', 'mongodb'];
+      if (dbLibs.some(lib => pkgContent.includes(`"${lib}"`))) {
+        characteristics.hasDatabase = true;
+      }
+
+      // Detectar Auth
+      const authLibs = ['passport', 'jsonwebtoken', 'bcrypt', 'next-auth', 'auth0', 'firebase'];
+      if (authLibs.some(lib => pkgContent.includes(`"${lib}"`))) {
+        characteristics.hasAuth = true;
+      }
+
+      // Detectar integrações externas
+      const integrationLibs = ['axios', 'node-fetch', 'kafkajs', '@aws-sdk', 'redis', 'amqplib'];
+      if (integrationLibs.some(lib => pkgContent.includes(`"${lib}"`))) {
+        characteristics.hasExternalIntegrations = true;
+      }
+
+      // Detectar se é biblioteca
+      if (pkg.main && !pkg.bin && !characteristics.hasWebUI) {
+        characteristics.isLibrary = true;
+      }
     }
-
-    // Detectar MCP Server
-    if (pkgContent.includes('@modelcontextprotocol/sdk')) {
-      characteristics.isMCPServer = true;
+    
+    // === GO ===
+    if (files.includes('go.mod')) {
+      const goModPath = join(repo, 'go.mod');
+      const goModContent = await readFile(goModPath, 'utf-8');
+      
+      // Detectar CLI (presença de cmd/ ou main.go)
+      const hasCmdDir = files.includes('cmd');
+      const hasMainGo = files.includes('main.go');
+      if (hasCmdDir || hasMainGo) {
+        characteristics.isCLI = true;
+      }
+      
+      // Detectar Backend API (Gin, Echo, Fiber, Chi)
+      const goWebFrameworks = ['gin-gonic/gin', 'labstack/echo', 'gofiber/fiber', 'go-chi/chi'];
+      if (goWebFrameworks.some(fw => goModContent.includes(fw))) {
+        characteristics.hasBackendAPI = true;
+      }
+      
+      // Detectar Database
+      const goDbLibs = ['gorm.io/gorm', 'database/sql', 'go-sql-driver/mysql', 'lib/pq', 'mongodb/mongo-go-driver'];
+      if (goDbLibs.some(lib => goModContent.includes(lib))) {
+        characteristics.hasDatabase = true;
+      }
+      
+      // Detectar integrações
+      const goIntegrations = ['aws-sdk-go', 'kafka-go', 'go-redis/redis'];
+      if (goIntegrations.some(lib => goModContent.includes(lib))) {
+        characteristics.hasExternalIntegrations = true;
+      }
     }
-
-    // Detectar Web UI (React, Next.js, Vue, Angular)
-    const webFrameworks = ['react', 'next', 'vue', 'angular', '@angular', 'svelte'];
-    if (webFrameworks.some(fw => pkgContent.includes(`"${fw}"`) || pkgContent.includes(`"@${fw}`))) {
-      characteristics.hasWebUI = true;
+    
+    // === JAVA/KOTLIN ===
+    if (files.includes('pom.xml') || files.includes('build.gradle') || files.includes('build.gradle.kts')) {
+      // Detectar CLI (presença de src/main/java)
+      const srcMainExists = files.includes('src');
+      if (srcMainExists) {
+        characteristics.isCLI = true; // Assumir CLI por padrão para Java
+      }
+      
+      // Detectar Web (Spring Boot, Micronaut, Quarkus)
+      let buildContent = '';
+      if (files.includes('pom.xml')) {
+        buildContent = await readFile(join(repo, 'pom.xml'), 'utf-8');
+      } else if (files.includes('build.gradle')) {
+        buildContent = await readFile(join(repo, 'build.gradle'), 'utf-8');
+      }
+      
+      if (buildContent.includes('spring-boot-starter-web') || 
+          buildContent.includes('micronaut') ||
+          buildContent.includes('quarkus')) {
+        characteristics.hasBackendAPI = true;
+      }
+      
+      if (buildContent.includes('spring-boot-starter-data') ||
+          buildContent.includes('hibernate') ||
+          buildContent.includes('jdbc')) {
+        characteristics.hasDatabase = true;
+      }
     }
-
-    // Detectar Backend API (Express, Fastify, Koa, NestJS)
-    const backendFrameworks = ['express', 'fastify', 'koa', '@nestjs', 'hapi'];
-    if (backendFrameworks.some(fw => pkgContent.includes(`"${fw}"`))) {
-      characteristics.hasBackendAPI = true;
+    
+    // === PYTHON ===
+    if (files.includes('requirements.txt') || files.includes('pyproject.toml') || files.includes('setup.py')) {
+      let pythonContent = '';
+      
+      if (files.includes('requirements.txt')) {
+        pythonContent = await readFile(join(repo, 'requirements.txt'), 'utf-8');
+      } else if (files.includes('pyproject.toml')) {
+        pythonContent = await readFile(join(repo, 'pyproject.toml'), 'utf-8');
+      }
+      
+      // Detectar CLI (presença de main.py ou __main__.py)
+      if (files.includes('main.py') || files.includes('__main__.py')) {
+        characteristics.isCLI = true;
+      }
+      
+      // Detectar Web (Flask, Django, FastAPI)
+      if (pythonContent.includes('flask') || 
+          pythonContent.includes('django') ||
+          pythonContent.includes('fastapi')) {
+        characteristics.hasBackendAPI = true;
+      }
+      
+      // Detectar Database
+      if (pythonContent.includes('sqlalchemy') ||
+          pythonContent.includes('django.db') ||
+          pythonContent.includes('psycopg') ||
+          pythonContent.includes('pymongo')) {
+        characteristics.hasDatabase = true;
+      }
     }
-
-    // Detectar Database
-    const dbLibs = ['prisma', 'sequelize', 'typeorm', 'mongoose', 'knex', 'pg', 'mysql', 'mongodb'];
-    if (dbLibs.some(lib => pkgContent.includes(`"${lib}"`))) {
-      characteristics.hasDatabase = true;
+    
+    // === RUST ===
+    if (files.includes('Cargo.toml')) {
+      const cargoContent = await readFile(join(repo, 'Cargo.toml'), 'utf-8');
+      
+      // Detectar CLI (presença de [[bin]])
+      if (cargoContent.includes('[[bin]]')) {
+        characteristics.isCLI = true;
+      }
+      
+      // Detectar Web (Actix, Rocket, Axum)
+      if (cargoContent.includes('actix-web') ||
+          cargoContent.includes('rocket') ||
+          cargoContent.includes('axum')) {
+        characteristics.hasBackendAPI = true;
+      }
     }
-
-    // Detectar Auth
-    const authLibs = ['passport', 'jsonwebtoken', 'bcrypt', 'next-auth', 'auth0', 'firebase'];
-    if (authLibs.some(lib => pkgContent.includes(`"${lib}"`))) {
-      characteristics.hasAuth = true;
-    }
-
-    // Detectar integrações externas
-    const integrationLibs = ['axios', 'node-fetch', 'kafkajs', '@aws-sdk', 'redis', 'amqplib'];
-    if (integrationLibs.some(lib => pkgContent.includes(`"${lib}"`))) {
-      characteristics.hasExternalIntegrations = true;
-    }
-
-    // Detectar se é biblioteca
-    if (pkg.main && !pkg.bin && !characteristics.hasWebUI) {
-      characteristics.isLibrary = true;
+    
+    // === C# ===
+    if (files.some(f => f.endsWith('.csproj')) || files.includes('Program.cs')) {
+      characteristics.isCLI = true; // Assumir CLI por padrão
+      
+      // Detectar ASP.NET
+      const csprojFiles = files.filter(f => f.endsWith('.csproj'));
+      for (const csproj of csprojFiles) {
+        const content = await readFile(join(repo, csproj), 'utf-8');
+        if (content.includes('Microsoft.AspNetCore') || content.includes('Microsoft.NET.Sdk.Web')) {
+          characteristics.hasBackendAPI = true;
+        }
+      }
     }
 
   } catch (err) {
-    console.warn('Erro ao analisar package.json:', err);
+    console.warn('⚠️  Erro ao analisar características:', err);
   }
 
   // Determinar complexidade
