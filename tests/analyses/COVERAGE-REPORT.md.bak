@@ -1,4 +1,4 @@
-# Análise da Pirâmide de Testes - QualityMCP
+# Análise da Pirâmide de Testes - Quality MCP CLI
 
 **Data:** 2025-11-01
 
@@ -6,10 +6,10 @@
 
 | Camada | Test Cases | Arquivos | Proporção | Status |
 |--------|-----------|----------|-----------|--------|
-| **Unit** | 166 | 19 | 94.3% | ✅ |
-| **Integration** | 10 | 3 | 5.7% | ✅ |
+| **Unit** | 153 | 17 | 94.4% | ✅ |
+| **Integration** | 9 | 3 | 5.6% | ✅ |
 | **E2E** | 0 | 0 | 0.0% | ⚠️ |
-| **TOTAL** | **176** | **22** | **100%** | **✅** |
+| **TOTAL** | **162** | **20** | **100%** | **✅** |
 
 ## 🏥 Saúde da Pirâmide
 
@@ -23,9 +23,9 @@ IDEAL                  ATUAL
  / \                    / \
 /E2E\  10%            /E2E\  0.0%
 ────────              ────────
- /INT\  20%           /INT\  5.7%
+ /INT\  20%           /INT\  5.6%
 ────────              ────────
-/UNIT\  70%          /UNIT\  94.3%
+/UNIT\  70%          /UNIT\  94.4%
 ────────              ────────
 ```
 
@@ -33,25 +33,24 @@ IDEAL                  ATUAL
 
 ### Base: Testes Unitários
 
-- **Test Cases:** 166
-- **Arquivos:** 19
-- **Cobertura:** 74.1%
-- **Arquivos sem testes:** 5
+- **Test Cases:** 153
+- **Arquivos:** 17
+- **Cobertura:** 80.5%
+- **Arquivos sem testes:** 4
 
 
 **Top 5 arquivos prioritários para testar:**
 - `src/server.ts`
 - `src/cli.ts`
-- `src/utils/config.ts`
 - `src/tools/pyramid-report.ts`
 - `src/tools/plan.ts`
 
-Execute: `quality scaffold-unit --files "src/server.ts src/cli.ts src/utils/config.ts src/tools/pyramid-report.ts src/tools/plan.ts"`
+Execute: `quality scaffold-unit --files "src/server.ts src/cli.ts src/tools/pyramid-report.ts src/tools/plan.ts"`
 
 
 ### Meio: Testes de Integração
 
-- **Test Cases:** 10
+- **Test Cases:** 9
 - **Arquivos:** 3
 - **Endpoints testados:** 2
 - **Cobertura de API:** ✅
@@ -67,7 +66,7 @@ Execute: `quality scaffold-unit --files "src/server.ts src/cli.ts src/utils/conf
 
 ## 💡 Recomendações
 
-- 📝 5 arquivos sem testes. Execute 'quality scaffold-unit' para gerar.
+- 📝 4 arquivos sem testes. Execute 'quality scaffold-unit' para gerar.
 - 🔗 Considere adicionar mais testes de integração/API para o meio da pirâmide.
 
 ## 🎯 Plano de Ação
@@ -102,4 +101,4 @@ Execute: `quality scaffold-unit --files "src/server.ts src/cli.ts src/utils/conf
 ---
 
 **Gerado por:** Quality MCP v0.2.0  
-**Timestamp:** 2025-11-01T14:43:12.113Z
+**Timestamp:** 2025-11-01T01:31:37.154Z

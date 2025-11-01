@@ -1,21 +1,19 @@
 {
-  "summary": "\nPirâmide de Testes - QualityMCP\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nUnit:        166 testes (94.3%) [19 arquivos]\nIntegration: 10 testes (5.7%) [3 arquivos]\nE2E:         0 testes (0.0%) [0 arquivos]\nTotal:       176 test cases em 22 arquivos\n\nStatus: ✅ SAUDÁVEL\n\nArquivos sem testes: 5\n",
+  "summary": "\nPirâmide de Testes - Quality MCP CLI\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nUnit:        153 testes (94.4%) [17 arquivos]\nIntegration: 9 testes (5.6%) [3 arquivos]\nE2E:         0 testes (0.0%) [0 arquivos]\nTotal:       162 test cases em 20 arquivos\n\nStatus: ✅ SAUDÁVEL\n\nArquivos sem testes: 4\n",
   "pyramid": {
     "unit": {
-      "files_found": 19,
-      "test_cases": 166,
-      "coverage_percent": 74.13,
+      "files_found": 17,
+      "test_cases": 153,
+      "coverage_percent": 80.5,
       "test_files": [
         "src/utils/__tests__/fs.test.ts",
         "src/tools/__tests__/scaffold.test.ts",
         "src/tools/__tests__/scaffold-unit.test.ts",
         "src/tools/__tests__/scaffold-integration.test.ts",
         "src/tools/__tests__/run.test.ts",
-        "src/tools/__tests__/run-diff-coverage.test.ts",
         "src/tools/__tests__/run-coverage.test.ts",
         "src/tools/__tests__/report.test.ts",
         "src/tools/__tests__/recommend-strategy.test.ts",
-        "src/tools/__tests__/init-product.test.ts",
         "src/tools/__tests__/dashboard.test.ts",
         "src/tools/__tests__/coverage.test.ts",
         "src/tools/__tests__/catalog.test.ts",
@@ -29,14 +27,13 @@
       "missing_tests": [
         "src/server.ts",
         "src/cli.ts",
-        "src/utils/config.ts",
         "src/tools/pyramid-report.ts",
         "src/tools/plan.ts"
       ]
     },
     "integration": {
       "files_found": 3,
-      "test_cases": 10,
+      "test_cases": 9,
       "test_files": [
         "tests/integration/recommend-to-scaffold.test.ts",
         "tests/integration/coverage-to-recommendations.test.ts",
@@ -53,7 +50,7 @@
   },
   "health": "healthy",
   "recommendations": [
-    "📝 5 arquivos sem testes. Execute 'quality scaffold-unit' para gerar.",
+    "📝 4 arquivos sem testes. Execute 'quality scaffold-unit' para gerar.",
     "🔗 Considere adicionar mais testes de integração/API para o meio da pirâmide."
   ],
   "analysis_path": "tests/analyses/coverage-analysis.json"

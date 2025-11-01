@@ -597,3 +597,85 @@ quality diff-coverage --repo=. --product=ReclameAQUI
 **Registrado como:** `diff_coverage` tool no MCP Server
 
 ---
+
+---
+
+## 📊 Auto-Análise via Quality MCP (01/11/2025)
+
+### Análise Executada
+
+Utilizamos o próprio **Quality MCP CLI** para analisar o projeto e identificar gaps de cobertura:
+
+```bash
+quality coverage --repo=. --product=QualityMCP
+quality analyze --repo=. --product=QualityMCP
+quality plan --repo=. --product=QualityMCP
+```
+
+### 📈 Resultados da Análise
+
+**Status Atual:**
+- ✅ **176 testes** passando (22 arquivos)
+- ✅ Pirâmide: 94.3% Unit | 5.7% Integration | 0% E2E
+- ✅ **Status: SAUDÁVEL** (base forte de unit tests)
+- ⚠️ **5 arquivos sem testes**
+- ⚠️ **0 testes E2E** (crítico para ferramenta CLI)
+
+**Arquivos Prioritários Sem Testes:**
+1. ⚠️ `src/server.ts` - **CRÍTICO** (ponto de entrada MCP)
+2. ⚠️ `src/cli.ts` - **ALTO** (interface CLI)
+3. ⚠️ `src/utils/config.ts` - **MÉDIO** (config centralizada)
+4. ⚠️ `src/tools/pyramid-report.ts` - **BAIXO**
+5. ⚠️ `src/tools/plan.ts` - **MÉDIO**
+
+### 🎯 Plano de Ação (Próximas 3 Semanas)
+
+#### Semana 1 - Prioridade Crítica
+- [ ] Criar testes para `config.ts` (8-10 testes unitários)
+- [ ] Criar 3 testes E2E básicos (init-product, analyze→coverage, diff-coverage)
+- [ ] Criar testes de integração para `server.ts` (6-8 testes)
+- **Meta:** +20 testes | Cobertura: Unit 95%+ | E2E 3 testes
+
+#### Semana 2 - Alta Prioridade
+- [ ] Criar testes E2E do CLI (10 testes cobrindo todos comandos)
+- [ ] Melhorar testes de integração (pipeline completo, config flow)
+- [ ] Criar testes para `plan.ts` (6-8 testes)
+- **Meta:** +21 testes | Integration 15 testes | E2E 13 testes
+
+#### Semana 3 - Consolidação
+- [ ] Criar testes para `pyramid-report.ts` (4-6 testes)
+- [ ] Aumentar cobertura de integração (edge cases, contratos)
+- [ ] Configurar CI para E2E no GitHub Actions
+- **Meta:** +10 testes | Total 226 testes | CI configurado
+
+### 📊 Metas de Cobertura
+
+**Curto Prazo (1 mês):**
+| Camada | Atual | Meta | Δ |
+|--------|-------|------|---|
+| Unit | 166 (94.3%) | 176 (95%+) | +10 |
+| Integration | 10 (5.7%) | 20 (10%) | +10 |
+| E2E | 0 (0%) | 10 (5%) | +10 |
+| **Total** | **176** | **206** | **+30** |
+
+**Médio Prazo (3 meses):**
+- Unit: 95%+ | Integration: 15% | E2E: 10%
+- Total: 230+ testes
+- Proporção ideal: 70:20:10
+
+### 📝 Documentação Gerada
+
+- ✅ `tests/analyses/coverage-analysis.json` - Análise completa da pirâmide
+- ✅ `tests/analyses/COVERAGE-REPORT.md` - Relatório de cobertura detalhado
+- ✅ `tests/analyses/analyze.json` - Análise de riscos e endpoints
+- ✅ `tests/analyses/TEST-PLAN.md` - Plano de testes gerado automaticamente
+- ✅ `tests/analyses/PLANO-TESTES-ATUALIZADO.md` - Plano de ação priorizado
+
+### 🎯 Próxima Ação
+
+Implementar Prioridade 1 (Semana 1) começando por:
+1. Criar `src/utils/__tests__/config.test.ts`
+2. Criar `tests/e2e/init-product-flow.spec.ts`
+3. Criar `src/server/__tests__/server.integration.test.ts`
+
+---
