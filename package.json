@@ -1,7 +1,7 @@
 {
   "name": "quality-mcp",
-  "version": "0.1.0",
-  "description": "MCP server para análise de repositórios e geração automatizada de testes Playwright",
+  "version": "0.3.0",
+  "description": "MCP server com comandos em linguagem natural para análise de repositórios e geração automatizada de testes (Playwright, Vitest, Jest)",
   "type": "module",
   "main": "dist/server.js",
   "bin": {
@@ -18,11 +18,20 @@
   },
   "keywords": [
     "mcp",
+    "natural-language",
+    "one-shot",
+    "orchestrator",
     "playwright",
+    "vitest",
+    "jest",
     "e2e",
+    "unit-tests",
+    "integration-tests",
     "testing",
     "quality",
-    "automation"
+    "automation",
+    "test-strategy",
+    "test-pyramid"
   ],
   "author": "",
   "license": "MIT",
