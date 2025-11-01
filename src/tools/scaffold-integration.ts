@@ -1,10 +1,11 @@
 import { join } from 'node:path';
 import { writeFileSafe, ensureDir, readFile, fileExists } from '../utils/fs.js';
+import { loadMCPSettings, mergeSettings } from '../utils/config.js';
 import { findExpressRoutes, findOpenAPI, type Endpoint } from '../detectors/express.js';
 
 export interface ScaffoldIntegrationParams {
   repo: string;
-  product: string;
+  product?: string;
   base_url?: string;
   endpoints?: string[];  // Endpoints específicos ou auto-detect
 }
@@ -14,14 +15,18 @@ export async function scaffoldIntegrationTests(input: ScaffoldIntegrationParams)
   test_dir: string;
   generated: string[];
 }> {
-  console.log(`🔗 Gerando testes de integração para ${input.product}...`);
+  // Carrega e mescla configurações
+  const fileSettings = await loadMCPSettings(input.repo, input.product);
+  const settings = mergeSettings(fileSettings, input);
+
+  console.log(`🔗 Gerando testes de integração para ${settings.product}...`);
 
   // Valida base_url se fornecida
-  if (input.base_url && input.base_url !== '') {
+  if (settings.base_url && settings.base_url !== '') {
     try {
-      new URL(input.base_url);
+      new URL(settings.base_url);
     } catch (error) {
-      throw new Error(`URL inválida: ${input.base_url}`);
+      throw new Error(`URL inválida: ${settings.base_url}`);
     }
   }
 
@@ -58,7 +63,7 @@ export async function scaffoldIntegrationTests(input: ScaffoldIntegrationParams)
   }
 
   // Gera configuração base
-  await generateIntegrationSetup(input.repo, testDir, input.base_url);
+  await generateIntegrationSetup(input.repo, testDir, settings.base_url);
   generated.push('tests/integration/setup.ts');
 
   // Gera helpers
@@ -73,7 +78,7 @@ export async function scaffoldIntegrationTests(input: ScaffoldIntegrationParams)
       testDir,
       domain,
       domainEndpoints,
-      input.base_url
+      settings.base_url
     );
     generated.push(testFile);
   }
@@ -89,7 +94,7 @@ export async function scaffoldIntegrationTests(input: ScaffoldIntegrationParams)
   }
 
   // Gera guia
-  await generateIntegrationGuide(input.repo, input.product);
+  await generateIntegrationGuide(input.repo, settings.product || 'Product');
   generated.push('tests/analyses/INTEGRATION-TESTING-GUIDE.md');
 
   // Atualiza package.json com scripts de integração

@@ -1,9 +1,10 @@
 import { join, writeFileSafe, readFile, fileExists } from '../utils/fs.js';
+import { loadMCPSettings, mergeSettings } from '../utils/config.js';
 import { spawn } from 'node:child_process';
 
 export interface DashboardParams {
   repo: string;
-  product?: string; // "ReclameAQUI"
+  product?: string;
   port?: number;
   open_browser?: boolean;
 }
@@ -16,20 +17,24 @@ export async function generateDashboard(input: DashboardParams): Promise<{
   dashboard_path: string;
   url?: string;
 }> {
+  // Carrega e mescla configurações
+  const fileSettings = await loadMCPSettings(input.repo, input.product);
+  const settings = mergeSettings(fileSettings, input);
+
   console.log(`📊 Gerando dashboard da pirâmide de testes...`);
 
   // Carrega dados de análises
-  const data = await loadAnalysisData(input.repo, input.product);
+  const data = await loadAnalysisData(input.repo, settings.product);
 
   // Gera HTML do dashboard
-  const html = generateDashboardHTML(data, input);
+  const html = generateDashboardHTML(data, settings);
 
   // Salva dashboard
   const dashboardPath = join(input.repo, 'tests', 'analyses', 'dashboard.html');
   await writeFileSafe(dashboardPath, html);
 
   // Opcionalmente abre no navegador
-  if (input.open_browser) {
+  if (settings.open_browser) {
     openBrowser(`file://${dashboardPath}`);
   }
 
@@ -38,7 +43,7 @@ export async function generateDashboard(input: DashboardParams): Promise<{
   return {
     ok: true,
     dashboard_path: dashboardPath,
-    url: input.port ? `http://localhost:${input.port}` : undefined
+    url: settings.port ? `http://localhost:${settings.port}` : undefined
   };
 }
 
@@ -79,7 +84,7 @@ async function loadAnalysisData(repoPath: string, product?: string): Promise<any
 /**
  * Gera HTML interativo do dashboard
  */
-function generateDashboardHTML(data: any, input: DashboardParams): string {
+function generateDashboardHTML(data: any, settings: any): string {
   const coverageData = data['coverage-data'] || {};
   const catalogData = data['test-catalog'] || {};
   const analyzeData = data.analyze || {};
@@ -283,7 +288,7 @@ function generateDashboardHTML(data: any, input: DashboardParams): string {
 <body>
   <div class="container">
     <div class="header">
-      <h1>🎯 Quality Dashboard - ${input.product}</h1>
+      <h1>🎯 Quality Dashboard - ${settings.product || 'Product'}</h1>
       <p class="subtitle">Pirâmide de Testes - Gerado em ${new Date().toLocaleString('pt-BR')}</p>
     </div>
 

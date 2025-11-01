@@ -1,9 +1,11 @@
 import { promises as fs } from 'node:fs';
 import { join, dirname, basename } from 'node:path';
 import { writeFileSafe, readFile, fileExists } from '../utils/fs.js';
+import { loadMCPSettings, mergeSettings } from '../utils/config.js';
 
 export interface ScaffoldUnitParams {
   repo: string;
+  product?: string;
   files?: string[];  // Arquivos específicos ou todos
   framework?: 'jest' | 'vitest' | 'mocha';
   auto_detect?: boolean;
@@ -14,6 +16,10 @@ export async function scaffoldUnitTests(input: ScaffoldUnitParams): Promise<{
   generated: string[];
   framework: string;
 }> {
+  // Carrega e mescla configurações
+  const fileSettings = await loadMCPSettings(input.repo, input.product);
+  const settings = mergeSettings(fileSettings, input);
+
   console.log(`🧪 Gerando testes unitários...`);
 
   const framework = input.framework || await detectTestFramework(input.repo);

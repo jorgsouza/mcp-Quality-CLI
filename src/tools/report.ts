@@ -1,6 +1,9 @@
 import { readFile, writeFileSafe, join, fileExists } from '../utils/fs.js';
+import { loadMCPSettings, mergeSettings } from '../utils/config.js';
 
 export interface BuildReportParams {
+  repo?: string;
+  product?: string;
   in_dir: string;
   out_file: string;
   thresholds?: {
@@ -20,6 +23,13 @@ export interface ReportStats {
 }
 
 export async function buildReport(input: BuildReportParams): Promise<{ ok: boolean; out: string; stats?: ReportStats }> {
+  // Carrega e mescla configurações se repo e product fornecidos
+  let settings = input;
+  if (input.repo && input.product) {
+    const fileSettings = await loadMCPSettings(input.repo, input.product);
+    settings = mergeSettings(fileSettings, input);
+  }
+
   console.log(`📊 Gerando relatório consolidado...`);
 
   const resultJsonPath = join(input.in_dir, 'json', 'results.json');
@@ -60,9 +70,11 @@ export async function buildReport(input: BuildReportParams): Promise<{ ok: boole
   const flakyPct = stats.total > 0 ? ((stats.flaky / stats.total) * 100).toFixed(2) : '0.00';
   const passRate = stats.total > 0 ? ((stats.passed / stats.total) * 100).toFixed(2) : '0.00';
   
+  // Acessa targets se disponível via any cast
+  const settingsAny = settings as any;
   const thresholds = {
-    flaky_pct_max: input.thresholds?.flaky_pct_max ?? 3,
-    diff_coverage_min: input.thresholds?.diff_coverage_min ?? 60
+    flaky_pct_max: settings.thresholds?.flaky_pct_max ?? settingsAny.targets?.flaky_pct_max ?? 3,
+    diff_coverage_min: settings.thresholds?.diff_coverage_min ?? settingsAny.targets?.diff_coverage_min ?? 60
   };
 
   const flakyExceeded = parseFloat(flakyPct) > thresholds.flaky_pct_max;

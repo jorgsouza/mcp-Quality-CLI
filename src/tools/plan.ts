@@ -1,17 +1,22 @@
 import { writeFileSafe, join, readFile, fileExists } from '../utils/fs.js';
+import { loadMCPSettings, mergeSettings } from '../utils/config.js';
 import type { AnalyzeResult } from './analyze.js';
 
 export interface PlanParams {
   repo: string;
   analyze_result?: AnalyzeResult;
-  product: string;
-  base_url: string;
+  product?: string;
+  base_url?: string;
   include_examples?: boolean;
-  out_dir: string;
+  out_dir?: string;
 }
 
 export async function generatePlan(input: PlanParams): Promise<{ ok: boolean; plan: string }> {
-  console.log(`📋 Gerando plano de testes para ${input.product}...`);
+  // Carrega e mescla configurações
+  const fileSettings = await loadMCPSettings(input.repo, input.product);
+  const settings = mergeSettings(fileSettings, input);
+
+  console.log(`📋 Gerando plano de testes para ${settings.product}...`);
 
   // Tenta carregar resultado da análise se não foi passado
   let analyzeData: AnalyzeResult | undefined = input.analyze_result;
@@ -29,9 +34,9 @@ export async function generatePlan(input: PlanParams): Promise<{ ok: boolean; pl
     .map(r => r.area)
     .slice(0, 5) || [];
 
-  const md = `# Plano de Testes E2E — ${input.product}
+  const md = `# Plano de Testes E2E — ${settings.product}
 
-**Base URL:** ${input.base_url}
+**Base URL:** ${settings.base_url}
 
 **Data:** ${new Date().toISOString().split('T')[0]}
 
@@ -237,11 +242,11 @@ test.describe('Busca', () => {
 4. ⏳ Relatório para release (executar \`quality report\`)
 `;
 
-  const out = join(input.repo, 'tests', 'analyses', 'TEST-PLAN.md');
+  const outDir = settings.out_dir || 'tests/analyses';
+  const out = join(input.repo, outDir, 'TEST-PLAN.md');
   await writeFileSafe(out, md);
   
   console.log(`✅ Plano gerado: ${out}`);
   
   return { ok: true, plan: out };
 }
-

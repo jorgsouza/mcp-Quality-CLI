@@ -1,10 +1,12 @@
 import { spawn } from 'node:child_process';
 import { join, ensureDir } from '../utils/fs.js';
+import { loadMCPSettings, mergeSettings } from '../utils/config.js';
 
 export interface RunParams {
   repo: string;
-  e2e_dir: string;
-  report_dir: string;
+  product?: string;
+  e2e_dir?: string;
+  report_dir?: string;
   headless?: boolean;
 }
 
@@ -25,9 +27,16 @@ export interface RunResult {
 }
 
 export async function runPlaywright(input: RunParams): Promise<RunResult> {
-  console.log(`🧪 Executando testes Playwright em ${input.e2e_dir}...`);
+  // Carrega e mescla configurações
+  const fileSettings = await loadMCPSettings(input.repo, input.product);
+  const settings = mergeSettings(fileSettings, input);
 
-  const reportRoot = join(input.repo, input.report_dir);
+  const e2eDir = settings.e2e_dir || 'tests/e2e';
+  const reportDir = settings.report_dir || 'tests/reports';
+
+  console.log(`🧪 Executando testes Playwright em ${e2eDir}...`);
+
+  const reportRoot = join(input.repo, reportDir);
   
   // Criar diretórios de relatório
   await ensureDir(join(reportRoot, 'html'));
@@ -37,10 +46,10 @@ export async function runPlaywright(input: RunParams): Promise<RunResult> {
 
   const env = {
     ...process.env,
-    E2E_BASE_URL: process.env.E2E_BASE_URL ?? 'http://localhost:3000',
+    E2E_BASE_URL: process.env.E2E_BASE_URL ?? settings.base_url ?? 'http://localhost:3000',
     E2E_USER: process.env.E2E_USER ?? 'test@example.com',
     E2E_PASS: process.env.E2E_PASS ?? 'test123',
-    HEADLESS: input.headless !== false ? '1' : '0',
+    HEADLESS: settings.headless !== false ? '1' : '0',
     FORCE_COLOR: '1'
   };
 
@@ -48,14 +57,14 @@ export async function runPlaywright(input: RunParams): Promise<RunResult> {
     // Instala browsers se necessário
     console.log('📦 Instalando browsers Playwright...');
     await runCommand('npx', ['playwright', 'install', '--with-deps', 'chromium'], {
-      cwd: input.e2e_dir,
+      cwd: join(input.repo, e2eDir),
       env
     });
 
     // Executa testes
     console.log('▶️  Executando testes...');
     await runCommand('npx', ['playwright', 'test', '--reporter=list,html,junit,json'], {
-      cwd: input.e2e_dir,
+      cwd: join(input.repo, e2eDir),
       env
     });
 
@@ -64,9 +73,9 @@ export async function runPlaywright(input: RunParams): Promise<RunResult> {
     return {
       ok: true,
       reports: {
-        html: `${input.report_dir}/html/index.html`,
-        junit: `${input.report_dir}/junit/results.xml`,
-        json: `${input.report_dir}/json/results.json`
+        html: `${reportDir}/html/index.html`,
+        junit: `${reportDir}/junit/results.xml`,
+        json: `${reportDir}/json/results.json`
       }
     };
   } catch (error: any) {
@@ -75,9 +84,9 @@ export async function runPlaywright(input: RunParams): Promise<RunResult> {
     return {
       ok: false,
       reports: {
-        html: `${input.report_dir}/html/index.html`,
-        junit: `${input.report_dir}/junit/results.xml`,
-        json: `${input.report_dir}/json/results.json`
+        html: `${reportDir}/html/index.html`,
+        junit: `${reportDir}/junit/results.xml`,
+        json: `${reportDir}/json/results.json`
       },
       error: error.message
     };
