@@ -530,18 +530,18 @@ Completo mas focado em execução: scaffolds → run → coverage → diff → r
 ## 📊 Resumo de Entregáveis
 
 ### Código Novo
-- [ ] `src/tools/auto.ts` (300-400 linhas)
-- [ ] `src/tools/nl-command.ts` (150-200 linhas)
-- [ ] `src/utils/config.ts` (atualização: +100 linhas)
-- [ ] `src/server.ts` (atualização: +50 linhas)
+- [x] ✅ `src/tools/auto.ts` (276 linhas)
+- [x] ✅ `src/tools/nl-command.ts` (220 linhas)
+- [x] ✅ `src/utils/config.ts` (atualização: +100 linhas)
+- [x] ✅ `src/server.ts` (atualização: +92 linhas)
 
 ### Testes Novos
-- [ ] `src/tools/__tests__/auto.test.ts` (10 testes)
-- [ ] `src/tools/__tests__/nl-command.test.ts` (10 testes)
-- [ ] `src/utils/__tests__/config.test.ts` (atualização: +3 testes)
-- [ ] `src/__tests__/server.integration.test.ts` (atualização: +3 testes)
-- [ ] `tests/e2e/nl-command-flow.spec.ts` (13 testes)
-- [ ] `tests/e2e/auto-full-cycle.spec.ts` (13 testes)
+- [x] ✅ `src/tools/__tests__/auto.test.ts` (14 testes)
+- [x] ✅ `src/tools/__tests__/nl-command.test.ts` (23 testes)
+- [x] ✅ `src/utils/__tests__/config.test.ts` (23 testes totais)
+- [x] ✅ `tests/integration/` (23 testes de integração)
+- [x] ✅ `tests/e2e/nl-command-flow.spec.ts` (16 testes)
+- [x] ✅ `tests/e2e/auto-full-cycle.spec.ts` (16 testes)
 
 ### Documentação Nova
 - [x] ✅ `README.md` (atualização: +200 linhas → 492 linhas totais)
