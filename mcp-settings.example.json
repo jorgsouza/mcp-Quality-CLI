@@ -1,14 +1,31 @@
 {
-  "mcpServers": {
-    "quality": {
-      "command": "node",
-      "args": ["/absolute/path/to/mcp-Quality-CLI/dist/server.js"],
-      "env": {
-        "E2E_BASE_URL": "https://staging.example.com",
-        "E2E_USER": "test@example.com",
-        "E2E_PASS": "your-test-password"
-      }
+  "product": "ReclameAQUI",
+  "base_url": "https://www.reclameaqui.com.br",
+  "domains": ["auth", "search", "claim", "profile"],
+  "critical_flows": [
+    "login",
+    "buscar_empresa",
+    "abrir_reclamacao",
+    "responder_reclamacao"
+  ],
+  "targets": {
+    "diff_coverage_min": 80,
+    "flaky_pct_max": 5,
+    "ci_p95_min": 8
+  },
+  "environments": {
+    "dev": {
+      "url": "https://dev.reclameaqui.com.br"
+    },
+    "stg": {
+      "url": "https://stg.reclameaqui.com.br"
+    },
+    "prod": {
+      "url": "https://www.reclameaqui.com.br"
     }
+  },
+  "auth": {
+    "strategy": "storageState",
+    "storageStatePath": "fixtures/auth/storageState.json"
   }
 }
-

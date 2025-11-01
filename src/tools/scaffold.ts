@@ -38,24 +38,38 @@ export default defineConfig({
     ['list']
   ],
   use: {
-    baseURL: process.env.E2E_BASE_URL || 'http://localhost:3000',
+    baseURL: process.env.BASE_URL ?? process.env.E2E_BASE_URL ?? 'http://localhost:3000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     actionTimeout: 10_000,
+    // Storage state para reutilizar autenticação
+    storageState: process.env.STORAGE_STATE ?? 'fixtures/auth/storageState.json',
   },
   projects: [
+    // Setup project para autenticação
+    {
+      name: 'setup',
+      testMatch: /.*\\.setup\\.ts/,
+    },
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
-    },
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      dependencies: ['setup'],
     },
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
+      dependencies: ['setup'],
+    },
+    {
+      name: 'mobile-chrome',
+      use: { 
+        ...devices['Pixel 7'],
+        // Mobile pode precisar de autenticação separada
+        storageState: undefined,
+      },
+      dependencies: ['setup'],
     },
   ],
   webServer: process.env.E2E_START_SERVER ? {
@@ -93,35 +107,45 @@ E2E_PASS=your-test-password
 E2E_START_SERVER=false
 `);
 
-  // Fixture de autenticação
-  await writeFileSafe(join(root, 'fixtures', 'auth.ts'), `import { test as base } from '@playwright/test';
-import { readFileSync, existsSync } from 'fs';
+  // Auth setup file (global setup)
+  await writeFileSafe(join(root, 'tests', 'auth.setup.ts'), `import { test as setup, expect } from '@playwright/test';
 import { join } from 'path';
 
-const authFile = join(__dirname, '..', '.auth.json');
+const authFile = join(__dirname, '..', 'fixtures', 'auth', 'storageState.json');
 
-export const test = base.extend<{}, { authenticatedContext: void }>({
-  authenticatedContext: [async ({ browser }, use) => {
-    // Setup autenticação se necessário
-    if (!existsSync(authFile)) {
-      const context = await browser.newContext();
-      const page = await context.newPage();
-      
-      await page.goto(process.env.E2E_BASE_URL!);
-      await page.getByLabel('Email').fill(process.env.E2E_USER!);
-      await page.getByLabel('Senha').fill(process.env.E2E_PASS!);
-      await page.getByRole('button', { name: /entrar/i }).click();
-      
-      // Aguarda navegação pós-login
-      await page.waitForURL('**/dashboard', { timeout: 10000 }).catch(() => {});
-      
-      // Salva estado autenticado
-      await context.storageState({ path: authFile });
-      await context.close();
-    }
-    
-    await use();
-  }, { scope: 'worker', auto: true }],
+setup('authenticate', async ({ page }) => {
+  // Navega para página de login
+  await page.goto('/login');
+  
+  // Preenche credenciais
+  await page.getByLabel('Email').fill(process.env.E2E_USER ?? 'test@example.com');
+  await page.getByLabel('Senha').fill(process.env.E2E_PASS ?? 'password');
+  
+  // Faz login
+  await page.getByRole('button', { name: /entrar|login/i }).click();
+  
+  // Aguarda estar autenticado
+  await page.waitForURL('**/dashboard', { timeout: 10000 }).catch(() => {
+    // Fallback: verifica se tem algum elemento que indica auth
+    return expect(page.getByRole('button', { name: /sair|logout/i })).toBeVisible({ timeout: 5000 });
+  });
+  
+  // Salva estado autenticado
+  await page.context().storageState({ path: authFile });
+  
+  console.log('✅ Authentication state saved to:', authFile);
+});
+`);
+
+  // Fixture de autenticação (deprecated - usar auth.setup.ts)
+  await writeFileSafe(join(root, 'fixtures', 'auth.ts'), `import { test as base } from '@playwright/test';
+
+/**
+ * @deprecated Use global setup (tests/auth.setup.ts) instead
+ * This fixture is kept for backward compatibility
+ */
+export const test = base.extend({
+  // Nenhuma fixture necessária - autenticação é feita no setup global
 });
 
 export const expect = test.expect;

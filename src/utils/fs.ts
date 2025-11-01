@@ -7,8 +7,20 @@ export async function ensureDir(dir: string) {
   await fs.mkdir(dir, { recursive: true });
 }
 
-export async function writeFileSafe(file: string, data: string) {
+export async function writeFileSafe(file: string, data: string, createBackup = true) {
   await ensureDir(pathJoin(file, '..'));
+  
+  // Se o arquivo já existe e createBackup=true, cria backup
+  if (createBackup && await fileExists(file)) {
+    const backupPath = `${file}.bak`;
+    try {
+      await fs.copyFile(file, backupPath);
+      console.log(`📦 Backup created: ${backupPath}`);
+    } catch (error) {
+      console.warn(`⚠️ Failed to create backup for ${file}`);
+    }
+  }
+  
   await fs.writeFile(file, data, 'utf8');
 }
 
