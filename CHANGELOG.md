@@ -5,6 +5,61 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# Changelog
+
+## [0.3.1] - 2025-11-01
+
+### 🌍 Multi-Language Support (MAJOR UPDATE)
+
+#### Added
+- ✨ **Suporte Multi-Linguagem**: MCP agora é agnóstico de linguagem!
+  - Go: Detecta `*_test.go`, `go.mod`, frameworks (Gin, Echo, Fiber, GORM)
+  - Java/Kotlin: Detecta `*Test.java`, `pom.xml`, `build.gradle`, Spring Boot, JUnit
+  - Python: Detecta `test_*.py`, `requirements.txt`, Flask, Django, FastAPI, pytest
+  - Ruby: Detecta `*_spec.rb`, RSpec
+  - C#: Detecta `*Test.cs`, `.csproj`, ASP.NET, NUnit, xUnit
+  - PHP: Detecta `*Test.php`, PHPUnit
+  - Rust: Detecta `*_test.rs`, `Cargo.toml`, `#[test]`, Actix, Rocket
+
+- 🎯 **Coverage Multi-Linguagem** (`coverage.ts`):
+  - Detecção automática de linguagem com `detectLanguage()`
+  - Padrões de teste específicos por linguagem (24+ padrões)
+  - Contagem inteligente de testes com sintaxe nativa
+  - Execução de testes nativos (`go test`, `mvn test`, `pytest`, etc)
+  - Mapeamento correto de arquivos fonte → teste por linguagem
+  - Detecção de testes de integração por linguagem
+  - Detecção de testes E2E por linguagem
+  - Suporte a 9 test runners nativos
+
+- 📚 **Documentação**:
+  - `docs/features/MULTI-LANGUAGE-COVERAGE.md` - Guia completo de cobertura multi-linguagem
+  - `MCP-AGNOSTICO-RESUMO.md` - Resumo executivo das mudanças
+
+#### Changed
+- 🔧 `tests.ts`: Expandido de 4 para 20+ padrões de teste
+- 🔧 `recommend-strategy.ts`: Detecção agnóstica de características de app
+- 🔧 `coverage.ts`: Completamente refatorado para multi-linguagem
+  - `detectUnitTests()`: Aceita parâmetro `language`
+  - `detectIntegrationTests()`: Aceita parâmetro `language`
+  - `detectE2ETests()`: Aceita parâmetro `language`
+  - `detectSourceFiles()`: Estrutura de diretórios por linguagem
+  - `findMissingTests()`: Convenções de nomenclatura por linguagem
+  - `getActualTestCount()`: Comandos de teste nativos
+  - Nova função `countTestCasesInFile()`: Regex específico por linguagem
+
+#### Fixed
+- 🐛 Projetos Go não eram detectados corretamente
+- 🐛 Testes Java/Python eram ignorados
+- 🐛 Coverage.ts só funcionava com JavaScript/TypeScript
+- 🐛 Contagem de testes usava apenas sintaxe JS (`test()`, `it()`)
+- 🐛 Arquivos fonte eram detectados apenas em estrutura JS/TS (`src/**/*.ts`)
+- 🐛 Mapeamento teste→fonte assumia convenções JavaScript
+- 🐛 Recomendações incorretas para CLIs não-JavaScript
+
+### 📚 Documentation
+- 📝 Adicionado `MULTI-LANGUAGE-SUPPORT.md` com guia completo
+- 📝 Atualizada descrição do package.json
+
 ## [0.3.0] - 2025-11-01
 
 ### 🎉 Major Features

@@ -4,6 +4,7 @@ import { glob } from 'glob';
 import { spawn } from 'node:child_process';
 import { writeFileSafe, fileExists, readFile } from '../utils/fs.js';
 import { loadMCPSettings, mergeSettings } from '../utils/config.js';
+import { detectLanguage } from '../detectors/language.js';
 
 export interface CoverageParams {
   repo: string;
@@ -55,20 +56,25 @@ export async function analyzeTestCoverage(input: CoverageParams): Promise<Covera
     console.log(`✅ Using settings from mcp-settings.json`);
   }
 
+  // Detecta a linguagem do projeto
+  const languageDetection = await detectLanguage(settings.repo);
+  const language = languageDetection.primary;
+  console.log(`🔍 Linguagem detectada: ${language}`);
+
   const analysesDir = join(settings.repo, 'tests', 'analyses');
   await writeFileSafe(join(analysesDir, '.gitkeep'), '');
 
   // Tenta obter contagem precisa do test runner
-  const actualTestCount = await getActualTestCount(settings.repo);
+  const actualTestCount = await getActualTestCount(settings.repo, language);
 
   // Detecta testes unitários
-  const unitTests = await detectUnitTests(settings.repo);
+  const unitTests = await detectUnitTests(settings.repo, language);
   
   // Detecta testes de integração
-  const integrationTests = await detectIntegrationTests(settings.repo);
+  const integrationTests = await detectIntegrationTests(settings.repo, language);
   
   // Detecta testes E2E
-  const e2eTests = await detectE2ETests(settings.repo);
+  const e2eTests = await detectE2ETests(settings.repo, language);
 
   // Usa a contagem real se disponível, senão usa a soma manual
   let totalTestCases = actualTestCount || (unitTests.test_cases + integrationTests.test_cases + e2eTests.test_cases);
@@ -83,8 +89,8 @@ export async function analyzeTestCoverage(input: CoverageParams): Promise<Covera
   }
 
   // Detecta arquivos fonte que precisam de testes
-  const sourceFiles = await detectSourceFiles(settings.repo);
-  const missingTests = findMissingTests(sourceFiles, unitTests.test_files);
+  const sourceFiles = await detectSourceFiles(settings.repo, language);
+  const missingTests = findMissingTests(sourceFiles, unitTests.test_files, language);
 
   // Calcula saúde da pirâmide usando test cases
   const totalFiles = unitTests.files_found + integrationTests.files_found + e2eTests.files_found;
@@ -172,19 +178,154 @@ Arquivos sem testes: ${missingTests.length}
   return result;
 }
 
-async function detectUnitTests(repoPath: string) {
-  const testPatterns = [
-    '**/*.test.{ts,tsx,js,jsx}',
-    '**/*.spec.{ts,tsx,js,jsx}',
-    '**/__tests__/**/*.{ts,tsx,js,jsx}'
-  ];
+function countTestCasesInFile(content: string, language: string): number {
+  // Remove comentários e strings para evitar falsos positivos
+  const cleanContent = content
+    .replace(/\/\*[\s\S]*?\*\//g, '') // Remove /* */ comments  
+    .replace(/\/\/.*/g, '') // Remove // comments
+    .replace(/#.*/g, '') // Remove # comments (Python, Ruby)
+    .replace(/'[^']*'/g, "''") // Remove single-quoted strings
+    .replace(/"[^"]*"/g, '""') // Remove double-quoted strings
+    .replace(/`[^`]*`/g, '``'); // Remove template literals
 
+  let count = 0;
+  const lines = cleanContent.split('\n');
+
+  switch (language) {
+    case 'javascript':
+    case 'typescript':
+      // Conta it( e test( no início de linhas
+      for (const line of lines) {
+        if (line.match(/^\s*(it|test)\s*\(/)) {
+          count++;
+        }
+      }
+      break;
+
+    case 'go':
+      // func TestXxx(t *testing.T)
+      for (const line of lines) {
+        if (line.match(/^\s*func\s+Test\w+\s*\(/)) {
+          count++;
+        }
+      }
+      break;
+
+    case 'java':
+    case 'kotlin':
+      // @Test
+      const javaMatches = content.match(/@Test\s/g);
+      count = javaMatches ? javaMatches.length : 0;
+      break;
+
+    case 'python':
+      // def test_xxx():
+      for (const line of lines) {
+        if (line.match(/^\s*def\s+test_\w+\s*\(/)) {
+          count++;
+        }
+      }
+      break;
+
+    case 'ruby':
+      // it "..." do
+      for (const line of lines) {
+        if (line.match(/^\s*(it|test)\s+["']/)) {
+          count++;
+        }
+      }
+      break;
+
+    case 'csharp':
+      // [Test] ou [Fact]
+      const csharpMatches = content.match(/\[(Test|Fact)\]/g);
+      count = csharpMatches ? csharpMatches.length : 0;
+      break;
+
+    case 'php':
+      // public function testXxx()
+      for (const line of lines) {
+        if (line.match(/^\s*public\s+function\s+test\w+\s*\(/)) {
+          count++;
+        }
+      }
+      break;
+
+    case 'rust':
+      // #[test]
+      const rustMatches = content.match(/#\[test\]/g);
+      count = rustMatches ? rustMatches.length : 0;
+      break;
+
+    default:
+      // Fallback para padrão JS/TS
+      for (const line of lines) {
+        if (line.match(/^\s*(it|test)\s*\(/)) {
+          count++;
+        }
+      }
+  }
+
+  return count;
+}
+
+async function detectUnitTests(repoPath: string, language: string) {
+  // Padrões de teste por linguagem
+  const testPatterns: Record<string, string[]> = {
+    'javascript': [
+      '**/*.test.{ts,tsx,js,jsx}',
+      '**/*.spec.{ts,tsx,js,jsx}',
+      '**/__tests__/**/*.{ts,tsx,js,jsx}'
+    ],
+    'typescript': [
+      '**/*.test.{ts,tsx,js,jsx}',
+      '**/*.spec.{ts,tsx,js,jsx}',
+      '**/__tests__/**/*.{ts,tsx,js,jsx}'
+    ],
+    'go': [
+      '**/*_test.go'
+    ],
+    'java': [
+      '**/*Test.java',
+      '**/*Tests.java',
+      '**/src/test/**/*.java'
+    ],
+    'kotlin': [
+      '**/*Test.kt',
+      '**/*Tests.kt',
+      '**/src/test/**/*.kt'
+    ],
+    'python': [
+      '**/test_*.py',
+      '**/*_test.py',
+      '**/tests/**/*.py'
+    ],
+    'ruby': [
+      '**/*_spec.rb',
+      '**/spec/**/*.rb'
+    ],
+    'csharp': [
+      '**/*Test.cs',
+      '**/*Tests.cs'
+    ],
+    'php': [
+      '**/*Test.php',
+      '**/tests/**/*.php'
+    ],
+    'rust': [
+      '**/*_test.rs',
+      '**/tests/**/*.rs'
+    ]
+  };
+
+  const patterns = testPatterns[language] || testPatterns['javascript'];
+  
   let allTests: string[] = [];
   
-  for (const pattern of testPatterns) {
+  for (const pattern of patterns) {
     const tests = await glob(pattern, {
       cwd: repoPath,
-      ignore: ['**/node_modules/**', '**/dist/**', '**/e2e/**', '**/integration/**']
+      ignore: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/target/**', '**/e2e/**', '**/integration/**', '**/.venv/**', '**/vendor/**']
     });
     allTests.push(...tests);
   }
@@ -195,21 +336,7 @@ async function detectUnitTests(repoPath: string) {
   let totalTestCases = 0;
   for (const testFile of allTests) {
     const content = await readFile(join(repoPath, testFile)).catch(() => '');
-    // Remove comentários e strings para evitar falsos positivos
-    const cleanContent = content
-      .replace(/\/\*[\s\S]*?\*\//g, '') // Remove /* */ comments
-      .replace(/\/\/.*/g, '') // Remove // comments
-      .replace(/'[^']*'/g, "''") // Remove single-quoted strings
-      .replace(/"[^"]*"/g, '""') // Remove double-quoted strings
-      .replace(/`[^`]*`/g, '``'); // Remove template literals
-    
-    // Conta apenas it( e test( no início de linhas (com espaços)
-    const lines = cleanContent.split('\n');
-    for (const line of lines) {
-      if (line.match(/^\s*(it|test)\s*\(/)) {
-        totalTestCases++;
-      }
-    }
+    totalTestCases += countTestCasesInFile(content, language);
   }
 
   // Tenta detectar cobertura existente
@@ -232,34 +359,89 @@ async function detectUnitTests(repoPath: string) {
   };
 }
 
-async function detectIntegrationTests(repoPath: string) {
-  const integrationTests = await glob('**/{integration,api}/**/*.{test,spec}.{ts,tsx,js,jsx}', {
-    cwd: repoPath,
-    ignore: ['**/node_modules/**', '**/dist/**']
-  });
+async function detectIntegrationTests(repoPath: string, language: string) {
+  let integrationTests: string[] = [];
+
+  // Padrões específicos por linguagem
+  switch (language) {
+    case 'javascript':
+    case 'typescript':
+      integrationTests = await glob('**/{integration,api}/**/*.{test,spec}.{ts,tsx,js,jsx}', {
+        cwd: repoPath,
+        ignore: ['**/node_modules/**', '**/dist/**']
+      });
+      break;
+
+    case 'go':
+      // Go normalmente coloca testes de integração junto com _test.go
+      // mas podemos procurar por arquivos que chamam testing.Short()
+      integrationTests = await glob('**/*_integration_test.go', {
+        cwd: repoPath,
+        ignore: ['**/vendor/**']
+      });
+      break;
+
+    case 'java':
+    case 'kotlin':
+      integrationTests = await glob('**/src/test/**/integration/**/*.{java,kt}', {
+        cwd: repoPath,
+        ignore: ['**/target/**', '**/build/**']
+      });
+      break;
+
+    case 'python':
+      integrationTests = await glob('**/tests/integration/**/*.py', {
+        cwd: repoPath,
+        ignore: ['**/.venv/**', '**/venv/**', '**/__pycache__/**']
+      });
+      break;
+
+    case 'ruby':
+      integrationTests = await glob('**/spec/integration/**/*_spec.rb', {
+        cwd: repoPath,
+        ignore: ['**/vendor/**']
+      });
+      break;
+
+    case 'csharp':
+      integrationTests = await glob('**/{Integration,IntegrationTests}/**/*Tests.cs', {
+        cwd: repoPath,
+        ignore: ['**/bin/**', '**/obj/**']
+      });
+      break;
+
+    case 'php':
+      integrationTests = await glob('**/tests/Integration/**/*Test.php', {
+        cwd: repoPath,
+        ignore: ['**/vendor/**']
+      });
+      break;
+
+    case 'rust':
+      integrationTests = await glob('**/tests/**/*.rs', {
+        cwd: repoPath,
+        ignore: ['**/target/**']
+      });
+      break;
+
+    default:
+      integrationTests = await glob('**/{integration,api}/**/*.{test,spec}.{ts,tsx,js,jsx}', {
+        cwd: repoPath,
+        ignore: ['**/node_modules/**', '**/dist/**']
+      });
+  }
 
   // Conta test cases individuais e endpoints testados
   let totalTestCases = 0;
   let endpointsTested = 0;
   for (const testFile of integrationTests) {
     const content = await readFile(join(repoPath, testFile)).catch(() => '');
-    // Remove comentários e strings
-    const cleanContent = content
-      .replace(/\/\*[\s\S]*?\*\//g, '')
-      .replace(/\/\/.*/g, '')
-      .replace(/'[^']*'/g, "''")
-      .replace(/"[^"]*"/g, '""')
-      .replace(/`[^`]*`/g, '``');
+    totalTestCases += countTestCasesInFile(content, language);
     
-    const lines = cleanContent.split('\n');
-    for (const line of lines) {
-      if (line.match(/^\s*(it|test)\s*\(/)) {
-        totalTestCases++;
-      }
-    }
-    // Conta quantas chamadas de API existem
+    // Conta quantas chamadas de API/HTTP existem
     const apiCalls = (content.match(/\.(get|post|put|patch|delete)\(/gi) || []).length;
-    endpointsTested += apiCalls;
+    const httpCalls = (content.match(/(GET|POST|PUT|PATCH|DELETE|http\.NewRequest)/gi) || []).length;
+    endpointsTested += Math.max(apiCalls, httpCalls);
   }
 
   return {
@@ -271,29 +453,84 @@ async function detectIntegrationTests(repoPath: string) {
   };
 }
 
-async function detectE2ETests(repoPath: string) {
-  const e2eTests = await glob('**/{e2e,playwright,cypress}/**/*.{test,spec}.{ts,tsx,js,jsx}', {
-    cwd: repoPath,
-    ignore: ['**/node_modules/**', '**/dist/**']
-  });
+async function detectE2ETests(repoPath: string, language: string) {
+  let e2eTests: string[] = [];
+
+  // Padrões específicos por linguagem
+  switch (language) {
+    case 'javascript':
+    case 'typescript':
+      e2eTests = await glob('**/{e2e,playwright,cypress}/**/*.{test,spec}.{ts,tsx,js,jsx}', {
+        cwd: repoPath,
+        ignore: ['**/node_modules/**', '**/dist/**']
+      });
+      break;
+
+    case 'go':
+      // Go pode ter testes E2E com tags
+      e2eTests = await glob('**/*_e2e_test.go', {
+        cwd: repoPath,
+        ignore: ['**/vendor/**']
+      });
+      break;
+
+    case 'java':
+    case 'kotlin':
+      e2eTests = await glob('**/src/test/**/e2e/**/*.{java,kt}', {
+        cwd: repoPath,
+        ignore: ['**/target/**', '**/build/**']
+      });
+      break;
+
+    case 'python':
+      e2eTests = await glob('**/tests/{e2e,end_to_end}/**/*.py', {
+        cwd: repoPath,
+        ignore: ['**/.venv/**', '**/venv/**', '**/__pycache__/**']
+      });
+      break;
+
+    case 'ruby':
+      e2eTests = await glob('**/spec/{e2e,features}/**/*_spec.rb', {
+        cwd: repoPath,
+        ignore: ['**/vendor/**']
+      });
+      break;
+
+    case 'csharp':
+      e2eTests = await glob('**/{E2E,EndToEnd}/**/*Tests.cs', {
+        cwd: repoPath,
+        ignore: ['**/bin/**', '**/obj/**']
+      });
+      break;
+
+    case 'php':
+      e2eTests = await glob('**/tests/{E2E,Feature}/**/*Test.php', {
+        cwd: repoPath,
+        ignore: ['**/vendor/**']
+      });
+      break;
+
+    case 'rust':
+      // Rust geralmente coloca todos os testes em tests/
+      // E2E podem ser identificados por nome
+      e2eTests = await glob('**/tests/**/*e2e*.rs', {
+        cwd: repoPath,
+        ignore: ['**/target/**']
+      });
+      break;
+
+    default:
+      e2eTests = await glob('**/{e2e,playwright,cypress}/**/*.{test,spec}.{ts,tsx,js,jsx}', {
+        cwd: repoPath,
+        ignore: ['**/node_modules/**', '**/dist/**']
+      });
+  }
 
   // Conta cenários (test cases individuais)
   let totalTestCases = 0;
   for (const testFile of e2eTests) {
     const content = await readFile(join(repoPath, testFile)).catch(() => '');
-    const cleanContent = content
-      .replace(/\/\*[\s\S]*?\*\//g, '')
-      .replace(/\/\/.*/g, '')
-      .replace(/'[^']*'/g, "''")
-      .replace(/"[^"]*"/g, '""')
-      .replace(/`[^`]*`/g, '``');
-    
-    const lines = cleanContent.split('\n');
-    for (const line of lines) {
-      if (line.match(/^\s*(it|test)\s*\(/)) {
-        totalTestCases++;
-      }
-    }
+    totalTestCases += countTestCasesInFile(content, language);
   }
 
   return {
@@ -304,74 +541,262 @@ async function detectE2ETests(repoPath: string) {
   };
 }
 
-async function detectSourceFiles(repoPath: string) {
-  const sourceFiles = await glob('**/{src,lib,app}/**/*.{ts,tsx,js,jsx}', {
-    cwd: repoPath,
-    ignore: [
-      '**/node_modules/**',
-      '**/dist/**',
-      '**/*.test.*',
-      '**/*.spec.*',
-      '**/__tests__/**',
-      '**/*.d.ts'
-    ]
-  });
+async function detectSourceFiles(repoPath: string, language: string) {
+  const sourcePatterns: Record<string, string[]> = {
+    'javascript': ['**/{src,lib,app}/**/*.{ts,tsx,js,jsx}'],
+    'typescript': ['**/{src,lib,app}/**/*.{ts,tsx,js,jsx}'],
+    'go': ['**/*.go'],
+    'java': ['**/src/main/**/*.java'],
+    'kotlin': ['**/src/main/**/*.kt'],
+    'python': ['**/*.py'],
+    'ruby': ['**/{lib,app}/**/*.rb'],
+    'csharp': ['**/*.cs'],
+    'php': ['**/{src,app}/**/*.php'],
+    'rust': ['**/src/**/*.rs']
+  };
 
-  return sourceFiles;
+  const ignorePatterns: Record<string, string[]> = {
+    'javascript': ['**/node_modules/**', '**/dist/**', '**/*.test.*', '**/*.spec.*', '**/__tests__/**', '**/*.d.ts'],
+    'typescript': ['**/node_modules/**', '**/dist/**', '**/*.test.*', '**/*.spec.*', '**/__tests__/**', '**/*.d.ts'],
+    'go': ['**/vendor/**', '**/*_test.go'],
+    'java': ['**/target/**', '**/build/**', '**/*Test.java', '**/*Tests.java'],
+    'kotlin': ['**/target/**', '**/build/**', '**/*Test.kt', '**/*Tests.kt'],
+    'python': ['**/.venv/**', '**/venv/**', '**/__pycache__/**', '**/test_*.py', '**/*_test.py'],
+    'ruby': ['**/vendor/**', '**/*_spec.rb'],
+    'csharp': ['**/bin/**', '**/obj/**', '**/*Test.cs', '**/*Tests.cs'],
+    'php': ['**/vendor/**', '**/*Test.php'],
+    'rust': ['**/target/**', '**/*_test.rs', '**/tests/**']
+  };
+
+  const patterns = sourcePatterns[language] || sourcePatterns['javascript'];
+  const ignore = ignorePatterns[language] || ignorePatterns['javascript'];
+
+  let sourceFiles: string[] = [];
+  
+  for (const pattern of patterns) {
+    const files = await glob(pattern, {
+      cwd: repoPath,
+      ignore
+    });
+    sourceFiles.push(...files);
+  }
+
+  return [...new Set(sourceFiles)];
 }
 
-function findMissingTests(sourceFiles: string[], testFiles: string[]): string[] {
-  const testedFiles = new Set(
-    testFiles.map(test => {
-      return test
+function findMissingTests(sourceFiles: string[], testFiles: string[], language: string): string[] {
+  // Mapeia como os arquivos de teste são nomeados por linguagem
+  const testSuffixMap: Record<string, (file: string) => string[]> = {
+    'javascript': (file) => [
+      file.replace(/\.(ts|tsx|js|jsx)$/, '.test.$1'),
+      file.replace(/\.(ts|tsx|js|jsx)$/, '.spec.$1'),
+      file.replace(/^src\//, '__tests__/')
+    ],
+    'typescript': (file) => [
+      file.replace(/\.(ts|tsx|js|jsx)$/, '.test.$1'),
+      file.replace(/\.(ts|tsx|js|jsx)$/, '.spec.$1'),
+      file.replace(/^src\//, '__tests__/')
+    ],
+    'go': (file) => [
+      file.replace(/\.go$/, '_test.go')
+    ],
+    'java': (file) => [
+      file.replace(/\.java$/, 'Test.java'),
+      file.replace(/\.java$/, 'Tests.java'),
+      file.replace(/src\/main\//, 'src/test/')
+    ],
+    'kotlin': (file) => [
+      file.replace(/\.kt$/, 'Test.kt'),
+      file.replace(/\.kt$/, 'Tests.kt'),
+      file.replace(/src\/main\//, 'src/test/')
+    ],
+    'python': (file) => [
+      file.replace(/\.py$/, '_test.py'),
+      file.replace(/([^\/]+)\.py$/, 'test_$1.py')
+    ],
+    'ruby': (file) => [
+      file.replace(/\.rb$/, '_spec.rb'),
+      file.replace(/^lib\//, 'spec/')
+    ],
+    'csharp': (file) => [
+      file.replace(/\.cs$/, 'Test.cs'),
+      file.replace(/\.cs$/, 'Tests.cs')
+    ],
+    'php': (file) => [
+      file.replace(/\.php$/, 'Test.php'),
+      file.replace(/^src\//, 'tests/')
+    ],
+    'rust': (file) => [
+      file.replace(/\.rs$/, '_test.rs'),
+      'tests/' + file
+    ]
+  };
+
+  const getSuffixes = testSuffixMap[language] || testSuffixMap['javascript'];
+  
+  const testedFiles = new Set<string>();
+  for (const testFile of testFiles) {
+    // Adiciona o arquivo de teste normalizado
+    testedFiles.add(testFile);
+    
+    // Tenta inferir o arquivo fonte do teste
+    let sourceFile = testFile;
+    if (language === 'javascript' || language === 'typescript') {
+      sourceFile = testFile
         .replace(/\.(test|spec)\.(ts|tsx|js|jsx)$/, '.$2')
         .replace(/__tests__\//, '');
-    })
-  );
+    } else if (language === 'go') {
+      sourceFile = testFile.replace(/_test\.go$/, '.go');
+    } else if (language === 'java' || language === 'kotlin') {
+      sourceFile = testFile
+        .replace(/Test\.(java|kt)$/, '.$1')
+        .replace(/Tests\.(java|kt)$/, '.$1')
+        .replace(/src\/test\//, 'src/main/');
+    } else if (language === 'python') {
+      sourceFile = testFile
+        .replace(/_test\.py$/, '.py')
+        .replace(/test_(.+)\.py$/, '$1.py');
+    } else if (language === 'ruby') {
+      sourceFile = testFile
+        .replace(/_spec\.rb$/, '.rb')
+        .replace(/^spec\//, 'lib/');
+    } else if (language === 'csharp') {
+      sourceFile = testFile.replace(/Tests?\.cs$/, '.cs');
+    } else if (language === 'php') {
+      sourceFile = testFile
+        .replace(/Test\.php$/, '.php')
+        .replace(/^tests\//, 'src/');
+    } else if (language === 'rust') {
+      sourceFile = testFile
+        .replace(/_test\.rs$/, '.rs')
+        .replace(/^tests\//, 'src/');
+    }
+    testedFiles.add(sourceFile);
+  }
 
   return sourceFiles.filter(source => {
-    const normalizedSource = source.replace(/^src\//, '');
-    return !testedFiles.has(normalizedSource) && !testedFiles.has(source);
+    // Verifica se o arquivo está testado
+    if (testedFiles.has(source)) return false;
+    
+    // Verifica se alguma variante do teste existe
+    const possibleTests = getSuffixes(source);
+    return !possibleTests.some(test => testedFiles.has(test));
   });
 }
 
-async function getActualTestCount(repoPath: string): Promise<number | null> {
+async function getActualTestCount(repoPath: string, language: string): Promise<number | null> {
   return new Promise((resolve) => {
-    // Tenta usar npx vitest para obter contagem real
-    const vitestProcess = spawn('npx', ['vitest', 'run'], {
+    let command: string;
+    let args: string[];
+    let outputPattern: RegExp;
+
+    // Comandos específicos por linguagem
+    switch (language) {
+      case 'javascript':
+      case 'typescript':
+        // Tenta vitest primeiro, depois jest
+        command = 'npx';
+        args = ['vitest', 'run'];
+        outputPattern = /Tests\s+(\d+)\s+passed/;
+        break;
+
+      case 'go':
+        command = 'go';
+        args = ['test', '-v', './...'];
+        outputPattern = /PASS|FAIL/g; // Conta testes individuais
+        break;
+
+      case 'java':
+        // Maven ou Gradle
+        command = 'mvn';
+        args = ['test', '-q'];
+        outputPattern = /Tests run: (\d+)/;
+        break;
+
+      case 'kotlin':
+        command = './gradlew';
+        args = ['test', '--quiet'];
+        outputPattern = /(\d+) tests completed/;
+        break;
+
+      case 'python':
+        command = 'pytest';
+        args = ['--collect-only', '-q'];
+        outputPattern = /(\d+) tests? collected/;
+        break;
+
+      case 'ruby':
+        command = 'rspec';
+        args = ['--format', 'documentation'];
+        outputPattern = /(\d+) examples?/;
+        break;
+
+      case 'csharp':
+        command = 'dotnet';
+        args = ['test', '--verbosity', 'quiet'];
+        outputPattern = /Passed!\s+-\s+Failed:\s+0,\s+Passed:\s+(\d+)/;
+        break;
+
+      case 'php':
+        command = './vendor/bin/phpunit';
+        args = ['--testdox'];
+        outputPattern = /Tests:\s+(\d+)/;
+        break;
+
+      case 'rust':
+        command = 'cargo';
+        args = ['test', '--', '--nocapture'];
+        outputPattern = /test result:.+?(\d+)\s+passed/;
+        break;
+
+      default:
+        // Fallback para vitest
+        command = 'npx';
+        args = ['vitest', 'run'];
+        outputPattern = /Tests\s+(\d+)\s+passed/;
+    }
+
+    const testProcess = spawn(command, args, {
       cwd: repoPath,
-      stdio: 'pipe'
+      stdio: 'pipe',
+      shell: true
     });
 
     let output = '';
     
-    vitestProcess.stdout?.on('data', (data) => {
+    testProcess.stdout?.on('data', (data) => {
       output += data.toString();
     });
     
-    vitestProcess.stderr?.on('data', (data) => {
+    testProcess.stderr?.on('data', (data) => {
       output += data.toString();
     });
 
-    vitestProcess.on('close', () => {
-      // Procura por padrão "Tests  XXX passed"
-      const match = output.match(/Tests\s+(\d+)\s+passed/);
+    testProcess.on('close', () => {
+      const match = output.match(outputPattern);
       if (match) {
-        resolve(parseInt(match[1], 10));
+        if (language === 'go') {
+          // Para Go, conta o número de matches (cada teste)
+          const matches = output.match(outputPattern);
+          resolve(matches ? matches.length : null);
+        } else {
+          // Para outras linguagens, extrai o número
+          resolve(parseInt(match[1], 10));
+        }
       } else {
         resolve(null);
       }
     });
 
-    vitestProcess.on('error', () => {
+    testProcess.on('error', () => {
       resolve(null);
     });
 
-    // Timeout de 30 segundos
+    // Timeout de 60 segundos (testes multi-linguagem podem demorar mais)
     setTimeout(() => {
-      vitestProcess.kill();
+      testProcess.kill();
       resolve(null);
-    }, 30000);
+    }, 60000);
   });
 }
 
