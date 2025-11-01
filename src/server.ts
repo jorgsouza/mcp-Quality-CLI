@@ -21,6 +21,7 @@ import { catalogScenarios, type CatalogParams } from './tools/catalog.js';
 import { recommendTestStrategy } from './tools/recommend-strategy.js';
 import { runCoverageAnalysis, type RunCoverageParams } from './tools/run-coverage.js';
 import { initProduct, type InitProductParams } from './tools/init-product.js';
+import { runDiffCoverage, type DiffCoverageParams } from './tools/run-diff-coverage.js';
 import { fileExists } from './utils/fs.js';
 
 // Schemas Zod para validação
@@ -142,6 +143,16 @@ const InitProductSchema = z.object({
     .describe('URL base do ambiente'),
   domains: z.array(z.string()).optional().describe('Domínios do produto'),
   critical_flows: z.array(z.string()).optional().describe('Fluxos críticos do produto')
+});
+
+const DiffCoverageSchema = z.object({
+  repo: z.string()
+    .min(1, 'Repository path is required')
+    .describe('Caminho do repositório'),
+  product: z.string().optional().describe('Nome do produto'),
+  base_branch: z.string().optional().default('main').describe('Branch base para comparação'),
+  target_min: z.number().min(0).max(100).optional().describe('Cobertura mínima exigida (%)'),
+  fail_on_low: z.boolean().optional().default(true).describe('Falhar se cobertura < target')
 });
 
 class QualityMCPServer {
@@ -384,6 +395,21 @@ class QualityMCPServer {
             },
             required: ['repo', 'product', 'base_url']
           }
+        },
+        {
+          name: 'diff_coverage',
+          description: 'Calcula cobertura de testes apenas das linhas modificadas (git diff). Valida contra target mínimo e falha se não atingir. Ideal para gates de PR/CI.',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              repo: { type: 'string', description: 'Caminho do repositório' },
+              product: { type: 'string', description: 'Nome do produto (opcional, carrega do mcp-settings.json)' },
+              base_branch: { type: 'string', description: 'Branch base para comparação (padrão: main)', default: 'main' },
+              target_min: { type: 'number', description: 'Cobertura mínima exigida em % (padrão: 60)', minimum: 0, maximum: 100 },
+              fail_on_low: { type: 'boolean', description: 'Falhar se cobertura < target (padrão: true)', default: true }
+            },
+            required: ['repo']
+          }
         }
       ]
     }));
@@ -557,6 +583,26 @@ class QualityMCPServer {
             }
             
             const result = await initProduct(params);
+            return {
+              content: [
+                {
+                  type: 'text',
+                  text: JSON.stringify(result, null, 2)
+                }
+              ]
+            };
+          }
+
+          case 'diff_coverage': {
+            const params = DiffCoverageSchema.parse(request.params.arguments);
+            
+            // Validar que o repositório existe
+            if (!(await fileExists(params.repo))) {
+              throw new Error(`Repository path does not exist: ${params.repo}`);
+            }
+            
+            const result = await runDiffCoverage(params);
+            
             return {
               content: [
                 {

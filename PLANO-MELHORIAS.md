@@ -568,3 +568,32 @@ quality analyze --repo . --product ReclameAQUI
 **Status:** Fase 1 completa (6/14 itens)  
 **Próximo:** Integrar config nas tools existentes  
 **Data:** 2025-11-01
+
+---
+
+## 🎉 Atualização - Diff Coverage Implementado
+
+**Data:** 01/11/2025  
+**Versão:** 0.2.0
+
+### ✅ Diff-Coverage (Funcionalidade #12) - COMPLETO
+
+Implementada ferramenta de **cobertura diferencial** que analisa apenas as linhas modificadas:
+
+**Recursos:**
+- ✅ Detecta arquivos via `git diff --numstat`
+- ✅ Executa testes com `vitest --coverage`
+- ✅ Calcula cobertura apenas das mudanças
+- ✅ Valida contra `targets.diff_coverage_min`
+- ✅ Gera relatório DIFF-COVERAGE-REPORT.md
+- ✅ Falha automaticamente se < target (gate de CI)
+- ✅ 6 testes unitários (176/176 passing)
+
+**Uso:**
+```bash
+quality diff-coverage --repo=. --product=ReclameAQUI
+```
+
+**Registrado como:** `diff_coverage` tool no MCP Server
+
+---
