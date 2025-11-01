@@ -2,12 +2,7 @@
   "mcpServers": {
     "quality": {
       "command": "node",
-      "args": ["/Volumes/Dev/mcp-Quality-CLI/dist/server.js"],
-      "env": {
-        "E2E_BASE_URL": "http://localhost:3000",
-        "E2E_USER": "test@example.com",
-        "E2E_PASS": "test123"
-      }
+      "args": ["/Volumes/Dev/mcp-Quality-CLI/dist/server.js"]
     }
   }
 }

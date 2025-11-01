@@ -3,10 +3,6 @@
   "findings": {
     "routes": [],
     "endpoints": [
-      "GET /api/users",
-      "POST /api/users",
-      "GET /api/health",
-      "GET /api/users",
       "GET /path",
       "GET /users",
       "POST /path",
@@ -20,7 +16,11 @@
       "GET /single",
       "POST /double",
       "GET /health",
-      "OPTIONS /api/*"
+      "OPTIONS /api/*",
+      "GET /api/users",
+      "POST /api/users",
+      "GET /api/health",
+      "GET /api/users"
     ],
     "events": [
       "aws:my-queue",
@@ -42,26 +42,6 @@
       "kafka:user-created"
     ],
     "risk_map": [
-      {
-        "area": "endpoint:GET /api/users",
-        "risk": "med",
-        "rationale": "sem verificação de contrato detectada"
-      },
-      {
-        "area": "endpoint:POST /api/users",
-        "risk": "med",
-        "rationale": "sem verificação de contrato detectada"
-      },
-      {
-        "area": "endpoint:GET /api/health",
-        "risk": "med",
-        "rationale": "sem verificação de contrato detectada"
-      },
-      {
-        "area": "endpoint:GET /api/users",
-        "risk": "med",
-        "rationale": "sem verificação de contrato detectada"
-      },
       {
         "area": "endpoint:GET /path",
         "risk": "med",
@@ -129,6 +109,26 @@
       },
       {
         "area": "endpoint:OPTIONS /api/*",
+        "risk": "med",
+        "rationale": "sem verificação de contrato detectada"
+      },
+      {
+        "area": "endpoint:GET /api/users",
+        "risk": "med",
+        "rationale": "sem verificação de contrato detectada"
+      },
+      {
+        "area": "endpoint:POST /api/users",
+        "risk": "med",
+        "rationale": "sem verificação de contrato detectada"
+      },
+      {
+        "area": "endpoint:GET /api/health",
+        "risk": "med",
+        "rationale": "sem verificação de contrato detectada"
+      },
+      {
+        "area": "endpoint:GET /api/users",
         "risk": "med",
         "rationale": "sem verificação de contrato detectada"
       },
@@ -225,6 +225,6 @@
     "Cobertura por diff-coverage ≥ 60%; CI p95 ≤ 15min; flaky ≤ 3%.",
     "Considerar adicionar especificação OpenAPI para documentação de contratos.",
     "Foco nos domínios: todos",
-    "Produto: Quality MCP CLI - Base URL: não especificada"
+    "Produto: Test - Base URL: https://test.app"
   ]
 }

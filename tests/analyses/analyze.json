@@ -3,10 +3,6 @@
   "findings": {
     "routes": [],
     "endpoints": [
-      "GET /api/users",
-      "POST /api/users",
-      "GET /api/health",
-      "GET /api/users",
       "GET /path",
       "GET /users",
       "POST /path",
@@ -20,7 +16,11 @@
       "GET /single",
       "POST /double",
       "GET /health",
-      "OPTIONS /api/*"
+      "OPTIONS /api/*",
+      "GET /api/users",
+      "POST /api/users",
+      "GET /api/health",
+      "GET /api/users"
     ],
     "events": [
       "aws:my-queue",
@@ -42,26 +42,6 @@
       "kafka:user-created"
     ],
     "risk_map": [
-      {
-        "area": "endpoint:GET /api/users",
-        "risk": "med",
-        "rationale": "sem verificação de contrato detectada"
-      },
-      {
-        "area": "endpoint:POST /api/users",
-        "risk": "med",
-        "rationale": "sem verificação de contrato detectada"
-      },
-      {
-        "area": "endpoint:GET /api/health",
-        "risk": "med",
-        "rationale": "sem verificação de contrato detectada"
-      },
-      {
-        "area": "endpoint:GET /api/users",
-        "risk": "med",
-        "rationale": "sem verificação de contrato detectada"
-      },
       {
         "area": "endpoint:GET /path",
         "risk": "med",
@@ -129,6 +109,26 @@
       },
       {
         "area": "endpoint:OPTIONS /api/*",
+        "risk": "med",
+        "rationale": "sem verificação de contrato detectada"
+      },
+      {
+        "area": "endpoint:GET /api/users",
+        "risk": "med",
+        "rationale": "sem verificação de contrato detectada"
+      },
+      {
+        "area": "endpoint:POST /api/users",
+        "risk": "med",
+        "rationale": "sem verificação de contrato detectada"
+      },
+      {
+        "area": "endpoint:GET /api/health",
+        "risk": "med",
+        "rationale": "sem verificação de contrato detectada"
+      },
+      {
+        "area": "endpoint:GET /api/users",
         "risk": "med",
         "rationale": "sem verificação de contrato detectada"
       },
@@ -224,7 +224,7 @@
     "Adicionar CDC (Contract-Driven Development) para endpoints de alto acoplamento inter-squad.",
     "Cobertura por diff-coverage ≥ 60%; CI p95 ≤ 15min; flaky ≤ 3%.",
     "Considerar adicionar especificação OpenAPI para documentação de contratos.",
-    "Foco nos domínios: tools, detectors, utils",
-    "Produto: QualityMCP - Base URL: https://github.com/jorgsouza/mcp-Quality-CLI"
+    "Foco nos domínios: todos",
+    "Produto: Test - Base URL: https://test.app"
   ]
 }
