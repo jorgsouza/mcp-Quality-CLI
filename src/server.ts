@@ -20,25 +20,36 @@ import { generatePyramidReport, type PyramidReportParams } from './tools/pyramid
 import { catalogScenarios, type CatalogParams } from './tools/catalog.js';
 import { recommendTestStrategy } from './tools/recommend-strategy.js';
 import { runCoverageAnalysis, type RunCoverageParams } from './tools/run-coverage.js';
+import { initProduct, type InitProductParams } from './tools/init-product.js';
+import { fileExists } from './utils/fs.js';
 
 // Schemas Zod para validação
 const AnalyzeSchema = z.object({
-  repo: z.string().describe('Caminho do repositório'),
-  product: z.string().describe('Nome do produto'),
+  repo: z.string()
+    .min(1, 'Repository path is required')
+    .describe('Caminho do repositório'),
+  product: z.string()
+    .min(1, 'Product name is required')
+    .max(50, 'Product name too long')
+    .describe('Nome do produto'),
   domains: z.array(z.string()).optional().describe('Domínios do produto'),
   critical_flows: z.array(z.string()).optional().describe('Fluxos críticos'),
   targets: z.object({
-    ci_p95_min: z.number().optional().describe('CI p95 máximo em minutos'),
-    flaky_pct_max: z.number().optional().describe('Percentual máximo de flaky'),
-    diff_coverage_min: z.number().optional().describe('Cobertura mínima de diff')
+    ci_p95_min: z.number().min(0).optional().describe('CI p95 máximo em minutos'),
+    flaky_pct_max: z.number().min(0).max(100).optional().describe('Percentual máximo de flaky'),
+    diff_coverage_min: z.number().min(0).max(100).optional().describe('Cobertura mínima de diff')
   }).optional(),
-  base_url: z.string().optional().describe('URL base do ambiente')
+  base_url: z.string().url().optional().describe('URL base do ambiente')
 });
 
 const PlanSchema = z.object({
-  repo: z.string().describe('Caminho do repositório'),
-  product: z.string().describe('Nome do produto'),
-  base_url: z.string().describe('URL base do ambiente'),
+  repo: z.string()
+    .min(1, 'Repository path is required')
+    .describe('Caminho do repositório'),
+  product: z.string()
+    .min(1, 'Product name is required')
+    .describe('Nome do produto'),
+  base_url: z.string().url('Base URL must be valid').describe('URL base do ambiente'),
   include_examples: z.boolean().optional().describe('Incluir exemplos no plano'),
   out_dir: z.string().default('plan').describe('Diretório de saída')
 });
@@ -115,6 +126,22 @@ const RunCoverageSchema = z.object({
     branches: z.number().optional().describe('Threshold mínimo de branches (padrão: 70)'),
     statements: z.number().optional().describe('Threshold mínimo de statements (padrão: 70)')
   }).optional()
+});
+
+const InitProductSchema = z.object({
+  repo: z.string()
+    .min(1, 'Repository path is required')
+    .describe('Caminho do repositório'),
+  product: z.string()
+    .min(1, 'Product name is required')
+    .max(50, 'Product name too long')
+    .regex(/^[a-zA-Z0-9-_]+$/, 'Product name must contain only alphanumeric characters, hyphens and underscores')
+    .describe('Nome do produto'),
+  base_url: z.string()
+    .url('Base URL must be valid')
+    .describe('URL base do ambiente'),
+  domains: z.array(z.string()).optional().describe('Domínios do produto'),
+  critical_flows: z.array(z.string()).optional().describe('Fluxos críticos do produto')
 });
 
 class QualityMCPServer {
@@ -342,6 +369,21 @@ class QualityMCPServer {
             },
             required: ['repo']
           }
+        },
+        {
+          name: 'init_product',
+          description: 'Inicializa estrutura QA completa para um produto em /qa/<PRODUTO>/ com mcp-settings.json, diretórios de testes, GETTING_STARTED.md',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              repo: { type: 'string', description: 'Caminho do repositório' },
+              product: { type: 'string', description: 'Nome do produto (alphanumeric, hyphens, underscores)' },
+              base_url: { type: 'string', description: 'URL base do ambiente (ex: https://www.exemplo.com.br)' },
+              domains: { type: 'array', items: { type: 'string' }, description: 'Domínios do produto (ex: auth, search, claim)' },
+              critical_flows: { type: 'array', items: { type: 'string' }, description: 'Fluxos críticos (ex: login, checkout)' }
+            },
+            required: ['repo', 'product', 'base_url']
+          }
         }
       ]
     }));
@@ -496,6 +538,25 @@ class QualityMCPServer {
           case 'run_coverage_analysis': {
             const params = RunCoverageSchema.parse(request.params.arguments);
             const result = await runCoverageAnalysis(params);
+            return {
+              content: [
+                {
+                  type: 'text',
+                  text: JSON.stringify(result, null, 2)
+                }
+              ]
+            };
+          }
+
+          case 'init_product': {
+            const params = InitProductSchema.parse(request.params.arguments);
+            
+            // Validar que o repositório existe
+            if (!(await fileExists(params.repo))) {
+              throw new Error(`Repository path does not exist: ${params.repo}`);
+            }
+            
+            const result = await initProduct(params);
             return {
               content: [
                 {

@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { glob } from 'glob';
 import { spawn } from 'node:child_process';
 import { writeFileSafe, fileExists, readFile } from '../utils/fs.js';
+import { loadMCPSettings, mergeSettings } from '../utils/config.js';
 
 export interface CoverageParams {
   repo: string;
@@ -44,22 +45,30 @@ export interface CoverageResult {
 }
 
 export async function analyzeTestCoverage(input: CoverageParams): Promise<CoverageResult> {
-  console.log(`📊 Analisando cobertura de testes completa para ${input.product}...`);
+  // Carregar configuração centralizada
+  const fileSettings = await loadMCPSettings(input.repo, input.product);
+  const settings = mergeSettings(fileSettings, input);
+  
+  console.log(`📊 Analisando cobertura de testes completa para ${settings.product}...`);
+  
+  if (fileSettings) {
+    console.log(`✅ Using settings from mcp-settings.json`);
+  }
 
-  const analysesDir = join(input.repo, 'tests', 'analyses');
+  const analysesDir = join(settings.repo, 'tests', 'analyses');
   await writeFileSafe(join(analysesDir, '.gitkeep'), '');
 
   // Tenta obter contagem precisa do test runner
-  const actualTestCount = await getActualTestCount(input.repo);
+  const actualTestCount = await getActualTestCount(settings.repo);
 
   // Detecta testes unitários
-  const unitTests = await detectUnitTests(input.repo);
+  const unitTests = await detectUnitTests(settings.repo);
   
   // Detecta testes de integração
-  const integrationTests = await detectIntegrationTests(input.repo);
+  const integrationTests = await detectIntegrationTests(settings.repo);
   
   // Detecta testes E2E
-  const e2eTests = await detectE2ETests(input.repo);
+  const e2eTests = await detectE2ETests(settings.repo);
 
   // Usa a contagem real se disponível, senão usa a soma manual
   let totalTestCases = actualTestCount || (unitTests.test_cases + integrationTests.test_cases + e2eTests.test_cases);
@@ -74,7 +83,7 @@ export async function analyzeTestCoverage(input: CoverageParams): Promise<Covera
   }
 
   // Detecta arquivos fonte que precisam de testes
-  const sourceFiles = await detectSourceFiles(input.repo);
+  const sourceFiles = await detectSourceFiles(settings.repo);
   const missingTests = findMissingTests(sourceFiles, unitTests.test_files);
 
   // Calcula saúde da pirâmide usando test cases
@@ -99,11 +108,11 @@ export async function analyzeTestCoverage(input: CoverageParams): Promise<Covera
     integrationPercent,
     e2ePercent,
     missingTests,
-    targets: input.target_coverage
+    targets: settings.target_coverage
   });
 
   const summary = `
-Pirâmide de Testes - ${input.product}
+Pirâmide de Testes - ${settings.product}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Unit:        ${unitTests.test_cases} testes (${unitPercent.toFixed(1)}%) [${unitTests.files_found} arquivos]
 Integration: ${integrationTests.test_cases} testes (${integrationPercent.toFixed(1)}%) [${integrationTests.files_found} arquivos]
@@ -146,14 +155,14 @@ Arquivos sem testes: ${missingTests.length}
 
   // Salva análise
   await writeFileSafe(
-    join(input.repo, 'tests', 'analyses', 'coverage-analysis.json'),
+    join(settings.repo, 'tests', 'analyses', 'coverage-analysis.json'),
     JSON.stringify(result, null, 2)
   );
 
   // Salva relatório em markdown
-  const markdown = generateCoverageMarkdown(result, input.product);
+  const markdown = generateCoverageMarkdown(result, settings.product);
   await writeFileSafe(
-    join(input.repo, 'tests', 'analyses', 'COVERAGE-REPORT.md'),
+    join(settings.repo, 'tests', 'analyses', 'COVERAGE-REPORT.md'),
     markdown
   );
 

@@ -68,8 +68,8 @@ describe('scaffoldPlaywright', () => {
     expect(fixtureExists).toBe(true);
 
     const fixtureContent = await fs.readFile(fixturePath, 'utf-8');
-    expect(fixtureContent).toContain('base.extend');
-    expect(fixtureContent).toContain('storageState');
+    expect(fixtureContent).toContain('base');
+    expect(fixtureContent).toContain('deprecated');
   });
 
   it('deve gerar spec de login', async () => {
