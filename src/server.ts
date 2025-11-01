@@ -22,6 +22,8 @@ import { recommendTestStrategy } from './tools/recommend-strategy.js';
 import { runCoverageAnalysis, type RunCoverageParams } from './tools/run-coverage.js';
 import { initProduct, type InitProductParams } from './tools/init-product.js';
 import { runDiffCoverage, type DiffCoverageParams } from './tools/run-diff-coverage.js';
+import { autoQualityRun, type AutoOptions } from './tools/auto.js';
+import { nlCommand, type NLCommandParams } from './tools/nl-command.js';
 import { fileExists } from './utils/fs.js';
 
 // Schemas Zod para validação
@@ -155,6 +157,27 @@ const DiffCoverageSchema = z.object({
   fail_on_low: z.boolean().optional().default(true).describe('Falhar se cobertura < target')
 });
 
+const AutoSchema = z.object({
+  mode: z.enum(['full', 'analyze', 'plan', 'scaffold', 'run']).optional().describe('Modo de execução'),
+  repo: z.string().optional().describe('Caminho do repositório (auto-detecta se omitido)'),
+  product: z.string().optional().describe('Nome do produto (infere do package.json se omitido)'),
+  skipScaffold: z.boolean().optional().describe('Pular geração de scaffolds'),
+  skipRun: z.boolean().optional().describe('Pular execução de testes')
+});
+
+const NLCommandSchema = z.object({
+  query: z.string()
+    .min(1, 'Query cannot be empty')
+    .describe('Comando em linguagem natural (PT/EN)'),
+  defaults: z.object({
+    mode: z.enum(['full', 'analyze', 'plan', 'scaffold', 'run']).optional(),
+    repo: z.string().optional(),
+    product: z.string().optional(),
+    skipScaffold: z.boolean().optional(),
+    skipRun: z.boolean().optional()
+  }).optional().describe('Defaults globais opcionais')
+});
+
 class QualityMCPServer {
   private server: Server;
 
@@ -190,6 +213,49 @@ class QualityMCPServer {
     // Lista de ferramentas disponíveis
     this.server.setRequestHandler(ListToolsRequestSchema, async () => ({
       tools: [
+        {
+          name: 'nl_command',
+          description: '🧠 Atalho semântico em linguagem natural (PT/EN). Entende comandos como "analise meu repositório", "criar plano de testes", "rodar testes" e executa o fluxo apropriado automaticamente.',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              query: { 
+                type: 'string', 
+                description: 'Comando em linguagem natural. Exemplos: "analise meu repositório", "criar plano", "rodar testes", "scaffold templates", "mapear endpoints"' 
+              },
+              defaults: {
+                type: 'object',
+                properties: {
+                  mode: { type: 'string', enum: ['full', 'analyze', 'plan', 'scaffold', 'run'], description: 'Modo padrão' },
+                  repo: { type: 'string', description: 'Repo padrão' },
+                  product: { type: 'string', description: 'Produto padrão' },
+                  skipScaffold: { type: 'boolean', description: 'Pular scaffold por padrão' },
+                  skipRun: { type: 'boolean', description: 'Pular run por padrão' }
+                },
+                description: 'Defaults globais opcionais para sobrescrever valores detectados'
+              }
+            },
+            required: ['query']
+          }
+        },
+        {
+          name: 'auto',
+          description: '🚀 Orquestrador completo: auto-detecta contexto e executa fluxo de qualidade. Modos: full (tudo), analyze (só análise), plan (análise+plano), scaffold (até templates), run (testes+coverage).',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              mode: { 
+                type: 'string', 
+                enum: ['full', 'analyze', 'plan', 'scaffold', 'run'], 
+                description: 'Modo de execução (default: full)' 
+              },
+              repo: { type: 'string', description: 'Caminho do repositório (auto-detecta se omitido)' },
+              product: { type: 'string', description: 'Nome do produto (infere de package.json se omitido)' },
+              skipScaffold: { type: 'boolean', description: 'Pular geração de scaffolds (útil se já existem testes)' },
+              skipRun: { type: 'boolean', description: 'Pular execução de testes (útil para análise rápida)' }
+            }
+          }
+        },
         {
           name: 'analyze_codebase',
           description: 'Analisa o repositório para detectar rotas, endpoints, eventos e riscos',
@@ -418,6 +484,32 @@ class QualityMCPServer {
     this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
       try {
         switch (request.params.name) {
+          case 'nl_command': {
+            const params = NLCommandSchema.parse(request.params.arguments);
+            const result = await nlCommand(params);
+            return {
+              content: [
+                {
+                  type: 'text',
+                  text: JSON.stringify(result, null, 2)
+                }
+              ]
+            };
+          }
+
+          case 'auto': {
+            const params = AutoSchema.parse(request.params.arguments);
+            const result = await autoQualityRun(params);
+            return {
+              content: [
+                {
+                  type: 'text',
+                  text: JSON.stringify(result, null, 2)
+                }
+              ]
+            };
+          }
+
           case 'analyze_codebase': {
             const params = AnalyzeSchema.parse(request.params.arguments);
             const result = await analyze(params);
