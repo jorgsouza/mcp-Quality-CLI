@@ -1,31 +1,47 @@
 {
-  "product": "ReclameAQUI",
-  "base_url": "https://www.reclameaqui.com.br",
-  "domains": ["auth", "search", "claim", "profile"],
-  "critical_flows": [
-    "login",
-    "buscar_empresa",
-    "abrir_reclamacao",
-    "responder_reclamacao"
-  ],
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "description": "MCP Quality Settings - Generic template for any team/product. Leave domains and critical_flows empty initially - the analyze tool can suggest them after scanning your codebase.",
+  
+  "product": "MyProduct",
+  "base_url": "http://localhost:3000",
+  
+  "domains": [],
+  "critical_flows": [],
+  
   "targets": {
     "diff_coverage_min": 80,
     "flaky_pct_max": 5,
-    "ci_p95_min": 8
+    "ci_p95_min": 10
   },
+  
   "environments": {
     "dev": {
-      "url": "https://dev.reclameaqui.com.br"
+      "url": "http://localhost:3000"
     },
     "stg": {
-      "url": "https://stg.reclameaqui.com.br"
+      "url": "http://localhost:3001"
     },
     "prod": {
-      "url": "https://www.reclameaqui.com.br"
+      "url": "https://myproduct.example.com"
     }
   },
+  
   "auth": {
     "strategy": "storageState",
     "storageStatePath": "fixtures/auth/storageState.json"
+  },
+  
+  "_examples": {
+    "product": "The name of your product/application (auto-detected from package.json if not set)",
+    "base_url": "Base URL for your application (used by E2E tests)",
+    "domains": ["Example: billing, users, catalog, orders - detected by analyze tool"],
+    "critical_flows": ["Example: login, checkout, reset_password - detected by analyze tool"],
+    "targets": {
+      "diff_coverage_min": "Minimum coverage % for PR diffs (default: 80)",
+      "flaky_pct_max": "Maximum % of flaky tests allowed (default: 5)",
+      "ci_p95_min": "Maximum P95 CI time in minutes (default: 10)"
+    },
+    "auth_strategies": ["storageState (recommended)", "credentials", "token"],
+    "note": "This is a generic template. After running 'analyze', populate domains and critical_flows with suggestions."
   }
 }
