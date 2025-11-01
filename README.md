@@ -2,8 +2,109 @@
 
 **Quality CLI** é um servidor MCP (Model Context Protocol) que automatiza a análise de repositórios e a geração de testes E2E com Playwright.
 
-## 🚀 Funcionalidades
+## ⚡ Quickstart (v0.3.0 - One-Shot com Linguagem Natural)
 
+### 🧠 Comandos em Linguagem Natural
+
+A forma mais fácil de usar o Quality MCP é através de **comandos em linguagem natural** (PT ou EN):
+
+```json
+// No seu cliente MCP (Claude, Cline, etc):
+{
+  "tool": "nl_command",
+  "params": {
+    "query": "analise meu repositório"
+  }
+}
+```
+
+**Exemplos de comandos:**
+
+```javascript
+// Análise completa (auto-detecta tudo)
+"analise meu repositório"
+"auditar o projeto"
+"run everything"
+
+// Apenas análise do código
+"apenas analisar o código"
+"só mapear endpoints"
+"only scan the repo"
+
+// Criar plano de testes
+"criar plano de testes"
+"gerar estratégia de qualidade"
+"create test plan"
+
+// Gerar templates
+"scaffold de testes"
+"gerar templates de unit tests"
+"create test structures"
+
+// Executar testes + cobertura
+"rodar testes e calcular cobertura"
+"executar testes"
+"run tests and validate coverage"
+```
+
+### 🚀 Orquestrador Auto
+
+Para controle mais fino, use a tool `auto` diretamente:
+
+```json
+{
+  "tool": "auto",
+  "params": {
+    "mode": "full"  // ou: analyze, plan, scaffold, run
+  }
+}
+```
+
+**Modos disponíveis:**
+
+- **`full`** (padrão): Análise completa → Plano → Scaffold → Testes → Cobertura → Relatórios
+- **`analyze`**: Apenas análise do código (rotas, endpoints, eventos)
+- **`plan`**: Análise + Geração de plano de testes
+- **`scaffold`**: Análise + Plano + Templates de testes
+- **`run`**: Executa testes existentes + Cobertura + Relatórios
+
+### 🎯 O que o One-Shot faz automaticamente:
+
+1. **Detecta** o repositório (busca por `.git` ou `package.json`)
+2. **Infere** o produto do `package.json` (ou usa nome da pasta)
+3. **Cria** `qa/<product>/mcp-settings.json` (se não existir)
+4. **Analisa** código (endpoints, eventos, testes existentes)
+5. **Recomenda** estratégia (% unit/integration/e2e ideal)
+6. **Gera** plano de testes estruturado
+7. **Cria** scaffolds (unit, integration, e2e)
+8. **Executa** testes com cobertura
+9. **Calcula** cobertura total + diff vs branch base
+10. **Gera** relatório executivo em `SUMMARY.md`
+
+### � Artifacts Gerados
+
+Tudo é salvo em `qa/<produto>/tests/analyses/`:
+
+```
+qa/
+└── my-product/
+    ├── mcp-settings.json          # Configuração (auto-gerada)
+    └── tests/
+        └── analyses/
+            ├── analyze.json        # Mapeamento do código
+            ├── pyramid-report.json # Visualização da pirâmide
+            ├── TEST-PLAN.md        # Plano de testes
+            ├── coverage-analysis.json  # Cobertura atual
+            ├── diff-coverage.json      # Cobertura do diff
+            └── SUMMARY.md          # Resumo executivo
+```
+
+---
+
+## �🚀 Funcionalidades
+
+- **🧠 Linguagem Natural**: Comandos em PT/EN ("analise meu repositório")
+- **🚀 Orquestrador One-Shot**: Zero-setup, detecta tudo automaticamente
 - **Análise Automática**: Detecta rotas, endpoints, eventos e riscos no seu código
 - **Geração de Plano**: Cria plano de testes estruturado por domínio/produto
 - **Scaffold Inteligente**: Gera estrutura completa de testes Playwright
