@@ -1,6 +1,7 @@
 import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
 import { glob } from 'glob';
+import { spawn } from 'node:child_process';
 import { writeFileSafe, fileExists, readFile } from '../utils/fs.js';
 
 export interface CoverageParams {
@@ -18,18 +19,21 @@ export interface CoverageResult {
   pyramid: {
     unit: {
       files_found: number;
+      test_cases: number;
       coverage_percent?: number;
       test_files: string[];
       missing_tests: string[];
     };
     integration: {
       files_found: number;
+      test_cases: number;
       coverage_percent?: number;
       test_files: string[];
       api_endpoints_tested: number;
     };
     e2e: {
       files_found: number;
+      test_cases: number;
       scenarios: number;
       test_files: string[];
     };
@@ -45,6 +49,9 @@ export async function analyzeTestCoverage(input: CoverageParams): Promise<Covera
   const analysesDir = join(input.repo, 'tests', 'analyses');
   await writeFileSafe(join(analysesDir, '.gitkeep'), '');
 
+  // Tenta obter contagem precisa do test runner
+  const actualTestCount = await getActualTestCount(input.repo);
+
   // Detecta testes unitários
   const unitTests = await detectUnitTests(input.repo);
   
@@ -54,15 +61,27 @@ export async function analyzeTestCoverage(input: CoverageParams): Promise<Covera
   // Detecta testes E2E
   const e2eTests = await detectE2ETests(input.repo);
 
+  // Usa a contagem real se disponível, senão usa a soma manual
+  let totalTestCases = actualTestCount || (unitTests.test_cases + integrationTests.test_cases + e2eTests.test_cases);
+  
+  // Se temos a contagem real, ajusta as proporções mantendo a distribuição
+  if (actualTestCount && actualTestCount !== (unitTests.test_cases + integrationTests.test_cases + e2eTests.test_cases)) {
+    const ratio = actualTestCount / (unitTests.test_cases + integrationTests.test_cases + e2eTests.test_cases);
+    unitTests.test_cases = Math.round(unitTests.test_cases * ratio);
+    integrationTests.test_cases = Math.round(integrationTests.test_cases * ratio);
+    e2eTests.test_cases = Math.round(e2eTests.test_cases * ratio);
+    totalTestCases = unitTests.test_cases + integrationTests.test_cases + e2eTests.test_cases;
+  }
+
   // Detecta arquivos fonte que precisam de testes
   const sourceFiles = await detectSourceFiles(input.repo);
   const missingTests = findMissingTests(sourceFiles, unitTests.test_files);
 
-  // Calcula saúde da pirâmide
-  const totalTests = unitTests.files_found + integrationTests.files_found + e2eTests.files_found;
-  const unitPercent = totalTests > 0 ? (unitTests.files_found / totalTests) * 100 : 0;
-  const integrationPercent = totalTests > 0 ? (integrationTests.files_found / totalTests) * 100 : 0;
-  const e2ePercent = totalTests > 0 ? (e2eTests.files_found / totalTests) * 100 : 0;
+  // Calcula saúde da pirâmide usando test cases
+  const totalFiles = unitTests.files_found + integrationTests.files_found + e2eTests.files_found;
+  const unitPercent = totalTestCases > 0 ? (unitTests.test_cases / totalTestCases) * 100 : 0;
+  const integrationPercent = totalTestCases > 0 ? (integrationTests.test_cases / totalTestCases) * 100 : 0;
+  const e2ePercent = totalTestCases > 0 ? (e2eTests.test_cases / totalTestCases) * 100 : 0;
 
   let health: 'healthy' | 'inverted' | 'needs_attention';
   
@@ -86,10 +105,10 @@ export async function analyzeTestCoverage(input: CoverageParams): Promise<Covera
   const summary = `
 Pirâmide de Testes - ${input.product}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Unit:        ${unitTests.files_found} testes (${unitPercent.toFixed(1)}%)
-Integration: ${integrationTests.files_found} testes (${integrationPercent.toFixed(1)}%)
-E2E:         ${e2eTests.files_found} testes (${e2ePercent.toFixed(1)}%)
-Total:       ${totalTests} testes
+Unit:        ${unitTests.test_cases} testes (${unitPercent.toFixed(1)}%) [${unitTests.files_found} arquivos]
+Integration: ${integrationTests.test_cases} testes (${integrationPercent.toFixed(1)}%) [${integrationTests.files_found} arquivos]
+E2E:         ${e2eTests.test_cases} testes (${e2ePercent.toFixed(1)}%) [${e2eTests.files_found} arquivos]
+Total:       ${totalTestCases} test cases em ${totalFiles} arquivos
 
 Status: ${health === 'healthy' ? '✅ SAUDÁVEL' : health === 'inverted' ? '❌ INVERTIDA' : '⚠️ PRECISA ATENÇÃO'}
 
@@ -101,18 +120,21 @@ Arquivos sem testes: ${missingTests.length}
     pyramid: {
       unit: {
         files_found: unitTests.files_found,
+        test_cases: unitTests.test_cases,
         coverage_percent: unitTests.coverage,
         test_files: unitTests.test_files,
         missing_tests: missingTests
       },
       integration: {
         files_found: integrationTests.files_found,
+        test_cases: integrationTests.test_cases,
         coverage_percent: integrationTests.coverage,
         test_files: integrationTests.test_files,
         api_endpoints_tested: integrationTests.endpoints_tested
       },
       e2e: {
         files_found: e2eTests.files_found,
+        test_cases: e2eTests.test_cases,
         scenarios: e2eTests.scenarios,
         test_files: e2eTests.test_files
       }
@@ -160,6 +182,27 @@ async function detectUnitTests(repoPath: string) {
 
   allTests = [...new Set(allTests)];
 
+  // Conta test cases individuais nos arquivos
+  let totalTestCases = 0;
+  for (const testFile of allTests) {
+    const content = await readFile(join(repoPath, testFile)).catch(() => '');
+    // Remove comentários e strings para evitar falsos positivos
+    const cleanContent = content
+      .replace(/\/\*[\s\S]*?\*\//g, '') // Remove /* */ comments
+      .replace(/\/\/.*/g, '') // Remove // comments
+      .replace(/'[^']*'/g, "''") // Remove single-quoted strings
+      .replace(/"[^"]*"/g, '""') // Remove double-quoted strings
+      .replace(/`[^`]*`/g, '``'); // Remove template literals
+    
+    // Conta apenas it( e test( no início de linhas (com espaços)
+    const lines = cleanContent.split('\n');
+    for (const line of lines) {
+      if (line.match(/^\s*(it|test)\s*\(/)) {
+        totalTestCases++;
+      }
+    }
+  }
+
   // Tenta detectar cobertura existente
   let coverage: number | undefined;
   const coveragePath = join(repoPath, 'coverage', 'coverage-summary.json');
@@ -174,6 +217,7 @@ async function detectUnitTests(repoPath: string) {
 
   return {
     files_found: allTests.length,
+    test_cases: totalTestCases,
     test_files: allTests,
     coverage
   };
@@ -185,10 +229,25 @@ async function detectIntegrationTests(repoPath: string) {
     ignore: ['**/node_modules/**', '**/dist/**']
   });
 
-  // Detecta endpoints testados
+  // Conta test cases individuais e endpoints testados
+  let totalTestCases = 0;
   let endpointsTested = 0;
   for (const testFile of integrationTests) {
     const content = await readFile(join(repoPath, testFile)).catch(() => '');
+    // Remove comentários e strings
+    const cleanContent = content
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/\/\/.*/g, '')
+      .replace(/'[^']*'/g, "''")
+      .replace(/"[^"]*"/g, '""')
+      .replace(/`[^`]*`/g, '``');
+    
+    const lines = cleanContent.split('\n');
+    for (const line of lines) {
+      if (line.match(/^\s*(it|test)\s*\(/)) {
+        totalTestCases++;
+      }
+    }
     // Conta quantas chamadas de API existem
     const apiCalls = (content.match(/\.(get|post|put|patch|delete)\(/gi) || []).length;
     endpointsTested += apiCalls;
@@ -196,6 +255,7 @@ async function detectIntegrationTests(repoPath: string) {
 
   return {
     files_found: integrationTests.length,
+    test_cases: totalTestCases,
     test_files: integrationTests,
     endpoints_tested: endpointsTested,
     coverage: undefined
@@ -208,18 +268,30 @@ async function detectE2ETests(repoPath: string) {
     ignore: ['**/node_modules/**', '**/dist/**']
   });
 
-  // Conta cenários (testes dentro dos arquivos)
-  let scenarios = 0;
+  // Conta cenários (test cases individuais)
+  let totalTestCases = 0;
   for (const testFile of e2eTests) {
     const content = await readFile(join(repoPath, testFile)).catch(() => '');
-    const testCases = (content.match(/test\(/g) || []).length;
-    scenarios += testCases;
+    const cleanContent = content
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/\/\/.*/g, '')
+      .replace(/'[^']*'/g, "''")
+      .replace(/"[^"]*"/g, '""')
+      .replace(/`[^`]*`/g, '``');
+    
+    const lines = cleanContent.split('\n');
+    for (const line of lines) {
+      if (line.match(/^\s*(it|test)\s*\(/)) {
+        totalTestCases++;
+      }
+    }
   }
 
   return {
     files_found: e2eTests.length,
+    test_cases: totalTestCases,
     test_files: e2eTests,
-    scenarios
+    scenarios: totalTestCases
   };
 }
 
@@ -251,6 +323,46 @@ function findMissingTests(sourceFiles: string[], testFiles: string[]): string[] 
   return sourceFiles.filter(source => {
     const normalizedSource = source.replace(/^src\//, '');
     return !testedFiles.has(normalizedSource) && !testedFiles.has(source);
+  });
+}
+
+async function getActualTestCount(repoPath: string): Promise<number | null> {
+  return new Promise((resolve) => {
+    // Tenta usar npx vitest para obter contagem real
+    const vitestProcess = spawn('npx', ['vitest', 'run'], {
+      cwd: repoPath,
+      stdio: 'pipe'
+    });
+
+    let output = '';
+    
+    vitestProcess.stdout?.on('data', (data) => {
+      output += data.toString();
+    });
+    
+    vitestProcess.stderr?.on('data', (data) => {
+      output += data.toString();
+    });
+
+    vitestProcess.on('close', () => {
+      // Procura por padrão "Tests  XXX passed"
+      const match = output.match(/Tests\s+(\d+)\s+passed/);
+      if (match) {
+        resolve(parseInt(match[1], 10));
+      } else {
+        resolve(null);
+      }
+    });
+
+    vitestProcess.on('error', () => {
+      resolve(null);
+    });
+
+    // Timeout de 30 segundos
+    setTimeout(() => {
+      vitestProcess.kill();
+      resolve(null);
+    }, 30000);
   });
 }
 
@@ -299,10 +411,11 @@ function generateRecommendations(data: {
 function generateCoverageMarkdown(result: CoverageResult, product: string): string {
   const { pyramid, health, recommendations } = result;
   
-  const total = pyramid.unit.files_found + pyramid.integration.files_found + pyramid.e2e.files_found;
-  const unitPct = total > 0 ? ((pyramid.unit.files_found / total) * 100).toFixed(1) : '0';
-  const intPct = total > 0 ? ((pyramid.integration.files_found / total) * 100).toFixed(1) : '0';
-  const e2ePct = total > 0 ? ((pyramid.e2e.files_found / total) * 100).toFixed(1) : '0';
+  const totalTestCases = pyramid.unit.test_cases + pyramid.integration.test_cases + pyramid.e2e.test_cases;
+  const totalFiles = pyramid.unit.files_found + pyramid.integration.files_found + pyramid.e2e.files_found;
+  const unitPct = totalTestCases > 0 ? ((pyramid.unit.test_cases / totalTestCases) * 100).toFixed(1) : '0';
+  const intPct = totalTestCases > 0 ? ((pyramid.integration.test_cases / totalTestCases) * 100).toFixed(1) : '0';
+  const e2ePct = totalTestCases > 0 ? ((pyramid.e2e.test_cases / totalTestCases) * 100).toFixed(1) : '0';
 
   return `# Análise da Pirâmide de Testes - ${product}
 
@@ -310,12 +423,12 @@ function generateCoverageMarkdown(result: CoverageResult, product: string): stri
 
 ## 📊 Visão Geral
 
-| Camada | Testes | Proporção | Status |
-|--------|--------|-----------|--------|
-| **Unit** | ${pyramid.unit.files_found} | ${unitPct}% | ${pyramid.unit.files_found >= 10 ? '✅' : '⚠️'} |
-| **Integration** | ${pyramid.integration.files_found} | ${intPct}% | ${pyramid.integration.files_found >= 3 ? '✅' : '⚠️'} |
-| **E2E** | ${pyramid.e2e.files_found} | ${e2ePct}% | ${pyramid.e2e.files_found >= 1 ? '✅' : '⚠️'} |
-| **TOTAL** | **${total}** | **100%** | **${health === 'healthy' ? '✅' : '⚠️'}** |
+| Camada | Test Cases | Arquivos | Proporção | Status |
+|--------|-----------|----------|-----------|--------|
+| **Unit** | ${pyramid.unit.test_cases} | ${pyramid.unit.files_found} | ${unitPct}% | ${pyramid.unit.test_cases >= 10 ? '✅' : '⚠️'} |
+| **Integration** | ${pyramid.integration.test_cases} | ${pyramid.integration.files_found} | ${intPct}% | ${pyramid.integration.test_cases >= 3 ? '✅' : '⚠️'} |
+| **E2E** | ${pyramid.e2e.test_cases} | ${pyramid.e2e.files_found} | ${e2ePct}% | ${pyramid.e2e.test_cases >= 1 ? '✅' : '⚠️'} |
+| **TOTAL** | **${totalTestCases}** | **${totalFiles}** | **100%** | **${health === 'healthy' ? '✅' : '⚠️'}** |
 
 ## 🏥 Saúde da Pirâmide
 
@@ -343,7 +456,8 @@ IDEAL                  ATUAL
 
 ### Base: Testes Unitários
 
-- **Total:** ${pyramid.unit.files_found} arquivos
+- **Test Cases:** ${pyramid.unit.test_cases}
+- **Arquivos:** ${pyramid.unit.files_found}
 - **Cobertura:** ${pyramid.unit.coverage_percent ? pyramid.unit.coverage_percent.toFixed(1) + '%' : 'N/A'}
 - **Arquivos sem testes:** ${pyramid.unit.missing_tests.length}
 
@@ -356,7 +470,8 @@ Execute: \`quality scaffold-unit --files "${pyramid.unit.missing_tests.slice(0, 
 
 ### Meio: Testes de Integração
 
-- **Total:** ${pyramid.integration.files_found} arquivos
+- **Test Cases:** ${pyramid.integration.test_cases}
+- **Arquivos:** ${pyramid.integration.files_found}
 - **Endpoints testados:** ${pyramid.integration.api_endpoints_tested}
 - **Cobertura de API:** ${pyramid.integration.api_endpoints_tested > 0 ? '✅' : '⚠️ Nenhum endpoint testado'}
 
@@ -369,9 +484,10 @@ quality scaffold-integration --repo . --product "${product}"
 
 ### Topo: Testes E2E
 
-- **Total:** ${pyramid.e2e.files_found} arquivos
+- **Test Cases:** ${pyramid.e2e.test_cases}
+- **Arquivos:** ${pyramid.e2e.files_found}
 - **Cenários:** ${pyramid.e2e.scenarios}
-- **Média por arquivo:** ${pyramid.e2e.files_found > 0 ? (pyramid.e2e.scenarios / pyramid.e2e.files_found).toFixed(1) : '0'}
+- **Média por arquivo:** ${pyramid.e2e.files_found > 0 ? (pyramid.e2e.test_cases / pyramid.e2e.files_found).toFixed(1) : '0'}
 
 ## 💡 Recomendações
 
