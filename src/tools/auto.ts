@@ -21,8 +21,11 @@ import { scaffoldUnitTests } from './scaffold-unit.js';
 import { runCoverageAnalysis } from './run-coverage.js';
 import { generatePyramidReport } from './pyramid-report.js';
 import { generateDashboard } from './dashboard.js';
+import { analyzeTestCoverage } from './coverage.js';
+import { recommendTestStrategy } from './recommend-strategy.js';
 import { loadMCPSettings, inferProductFromPackageJson } from '../utils/config.js';
 import { fileExists } from '../utils/fs.js';
+import { detectLanguage } from '../detectors/language.js';
 
 export type AutoMode = 'full' | 'analyze' | 'plan' | 'scaffold' | 'run';
 
@@ -49,23 +52,51 @@ export interface RepoContext {
 export async function detectRepoContext(repoPath: string): Promise<RepoContext> {
   const absolutePath = repoPath.startsWith('/') ? repoPath : join(process.cwd(), repoPath);
   
-  // Tentar inferir produto do package.json
+  // Detectar linguagem usando o detector multi-linguagem
+  const languageDetection = await detectLanguage(absolutePath);
+  const language = languageDetection.primary;
+  
+  // Tentar inferir produto do package.json ou go.mod
   let product = await inferProductFromPackageJson(absolutePath);
+  if (!product) {
+    // Tentar inferir de go.mod
+    const goModPath = join(absolutePath, 'go.mod');
+    if (await fileExists(goModPath)) {
+      const content = await fs.readFile(goModPath, 'utf-8');
+      const match = content.match(/module\s+([^\s]+)/);
+      if (match) {
+        product = match[1].split('/').pop() || 'GoProject';
+      }
+    }
+  }
   if (!product) {
     product = 'AutoDetected';
   }
   
   // Detectar se já tem testes
-  const hasTests = await detectExistingTests(absolutePath);
+  const hasTests = await detectExistingTests(absolutePath, language);
   
   // Detectar package.json
   const hasPackageJson = await fileExists(join(absolutePath, 'package.json'));
   
-  // Detectar framework/linguagem (simplificado aqui, pode usar detectLanguage depois)
+  // Detectar framework/linguagem
   let testFramework: string | undefined;
-  let language: string | undefined;
   
-  if (hasPackageJson) {
+  if (language === 'go') {
+    testFramework = 'go-test';
+  } else if (language === 'java' || language === 'kotlin') {
+    testFramework = 'junit';
+  } else if (language === 'python') {
+    testFramework = 'pytest';
+  } else if (language === 'ruby') {
+    testFramework = 'rspec';
+  } else if (language === 'csharp') {
+    testFramework = 'nunit';
+  } else if (language === 'php') {
+    testFramework = 'phpunit';
+  } else if (language === 'rust') {
+    testFramework = 'rust-test';
+  } else if (hasPackageJson) {
     try {
       const pkgContent = await fs.readFile(join(absolutePath, 'package.json'), 'utf-8');
       const pkg = JSON.parse(pkgContent);
@@ -75,10 +106,6 @@ export async function detectRepoContext(repoPath: string): Promise<RepoContext> 
       if (deps.vitest) testFramework = 'vitest';
       else if (deps.jest) testFramework = 'jest';
       else if (deps.mocha) testFramework = 'mocha';
-      
-      // Detectar linguagem
-      if (deps.typescript || pkg.devDependencies?.typescript) language = 'typescript';
-      else language = 'javascript';
     } catch (error) {
       // Ignora erros de parsing
     }
@@ -97,17 +124,37 @@ export async function detectRepoContext(repoPath: string): Promise<RepoContext> 
 /**
  * Detecta se o repositório já tem testes
  */
-async function detectExistingTests(repoPath: string): Promise<boolean> {
-  const testDirs = ['tests', 'test', '__tests__', 'spec', 'qa'];
+async function detectExistingTests(repoPath: string, language?: string): Promise<boolean> {
+  // Padrões de diretórios de teste por linguagem
+  const testDirs: Record<string, string[]> = {
+    'go': [''], // Go coloca testes ao lado dos arquivos
+    'java': ['src/test', 'test'],
+    'kotlin': ['src/test', 'test'],
+    'python': ['tests', 'test'],
+    'ruby': ['spec', 'test'],
+    'csharp': ['Tests', 'test'],
+    'php': ['tests', 'test'],
+    'rust': ['tests'],
+    'javascript': ['tests', 'test', '__tests__', 'spec'],
+    'typescript': ['tests', 'test', '__tests__', 'spec']
+  };
   
-  for (const dir of testDirs) {
+  const dirs = language ? (testDirs[language] || testDirs['javascript']) : ['tests', 'test', '__tests__', 'spec'];
+  
+  // Para Go, procurar arquivos *_test.go em qualquer lugar
+  if (language === 'go') {
+    return await checkForGoTestFiles(repoPath);
+  }
+  
+  for (const dir of dirs) {
+    if (!dir) continue; // Skip empty strings
     const testPath = join(repoPath, dir);
     if (await fileExists(testPath)) {
       try {
         const stat = await fs.stat(testPath);
         if (stat.isDirectory()) {
           // Verificar arquivos de teste recursivamente
-          const hasTests = await checkForTestFiles(testPath);
+          const hasTests = await checkForTestFiles(testPath, language);
           if (hasTests) {
             return true;
           }
@@ -122,21 +169,60 @@ async function detectExistingTests(repoPath: string): Promise<boolean> {
 }
 
 /**
- * Verifica recursivamente se há arquivos de teste em um diretório
+ * Verifica se há arquivos de teste Go
  */
-async function checkForTestFiles(dir: string): Promise<boolean> {
+async function checkForGoTestFiles(dir: string): Promise<boolean> {
   try {
     const entries = await fs.readdir(dir, { withFileTypes: true });
     
     for (const entry of entries) {
+      if (entry.isFile() && entry.name.endsWith('_test.go')) {
+        return true;
+      } else if (entry.isDirectory() && !entry.name.startsWith('.') && entry.name !== 'vendor') {
+        const hasTests = await checkForGoTestFiles(join(dir, entry.name));
+        if (hasTests) return true;
+      }
+    }
+  } catch {
+    // Ignora erros
+  }
+  
+  return false;
+}
+
+/**
+ * Verifica recursivamente se há arquivos de teste em um diretório
+ */
+async function checkForTestFiles(dir: string, language?: string): Promise<boolean> {
+  try {
+    const entries = await fs.readdir(dir, { withFileTypes: true });
+    
+    // Padrões de arquivos de teste por linguagem
+    const testPatterns: Record<string, RegExp[]> = {
+      'go': [/_test\.go$/],
+      'java': [/Test\.java$/, /Tests\.java$/],
+      'kotlin': [/Test\.kt$/, /Tests\.kt$/],
+      'python': [/^test_.*\.py$/, /_test\.py$/],
+      'ruby': [/_spec\.rb$/],
+      'csharp': [/Test\.cs$/, /Tests\.cs$/],
+      'php': [/Test\.php$/],
+      'rust': [/_test\.rs$/, /tests\/.*\.rs$/],
+      'javascript': [/\.(test|spec)\.(js|jsx|ts|tsx)$/],
+      'typescript': [/\.(test|spec)\.(js|jsx|ts|tsx)$/]
+    };
+    
+    const patterns = language ? (testPatterns[language] || testPatterns['javascript']) : [/\.(test|spec)\./];
+    
+    for (const entry of entries) {
       if (entry.isFile()) {
         // Verifica se é arquivo de teste
-        if (entry.name.includes('.test.') || entry.name.includes('.spec.')) {
+        const isTestFile = patterns.some(pattern => pattern.test(entry.name));
+        if (isTestFile) {
           return true;
         }
-      } else if (entry.isDirectory()) {
+      } else if (entry.isDirectory() && !entry.name.startsWith('.') && entry.name !== 'node_modules' && entry.name !== 'vendor') {
         // Recursão em subdiretórios
-        const hasTests = await checkForTestFiles(join(dir, entry.name));
+        const hasTests = await checkForTestFiles(join(dir, entry.name), language);
         if (hasTests) {
           return true;
         }
@@ -188,7 +274,7 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<{
   try {
     // 2. ANALYZE (todos os modos começam com análise)
     if (['full', 'analyze', 'plan', 'scaffold'].includes(mode)) {
-      console.log('🔍 [1/5] Analisando repositório...');
+      console.log('🔍 [1/6] Analisando repositório...');
       const analyzeResult = await analyze({
         repo: repoPath,
         product
@@ -198,9 +284,43 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<{
       console.log(`✅ Análise completa: ${analyzeResult.plan_path}\n`);
     }
     
+    // 2.5. COVERAGE ANALYSIS (análise de cobertura e pirâmide de testes)
+    if (['full', 'plan', 'scaffold', 'run'].includes(mode)) {
+      console.log('📊 [2/6] Analisando cobertura de testes...');
+      try {
+        const coverageResult = await analyzeTestCoverage({
+          repo: repoPath,
+          product
+        });
+        steps.push('coverage-analysis');
+        outputs.coverageAnalysis = 'tests/analyses/coverage-analysis.json';
+        console.log(`✅ Cobertura analisada: ${coverageResult.health}\n`);
+        console.log(coverageResult.summary);
+      } catch (error) {
+        console.log(`⚠️  Erro na análise de cobertura: ${error instanceof Error ? error.message : error}\n`);
+      }
+    }
+    
+    // 2.6. RECOMMEND STRATEGY (recomendação de estratégia de testes)
+    if (['full', 'plan', 'scaffold'].includes(mode)) {
+      console.log('🎯 [3/6] Gerando recomendação de estratégia...');
+      try {
+        const recommendResult = await recommendTestStrategy({
+          repo: repoPath,
+          product
+        });
+        steps.push('recommend-strategy');
+        outputs.recommendStrategy = 'tests/analyses/TEST-STRATEGY-RECOMMENDATION.md';
+        console.log(`✅ Recomendação gerada!\n`);
+        console.log(recommendResult.summary);
+      } catch (error) {
+        console.log(`⚠️  Erro na recomendação: ${error instanceof Error ? error.message : error}\n`);
+      }
+    }
+    
     // 3. PLAN (se mode >= plan)
     if (['full', 'plan', 'scaffold'].includes(mode)) {
-      console.log('📋 [2/5] Gerando plano de testes...');
+      console.log('📋 [4/6] Gerando plano de testes...');
       const planResult = await generatePlan({
         repo: repoPath,
         product
@@ -212,7 +332,7 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<{
     
     // 4. SCAFFOLD (se mode >= scaffold e não skipScaffold)
     if (['full', 'scaffold'].includes(mode) && !options.skipScaffold) {
-      console.log('🏗️  [3/5] Gerando scaffold de testes...');
+      console.log('🏗️  [5/6] Gerando scaffold de testes...');
       
       // Decidir tipo de scaffold baseado no contexto
       if (!context.hasTests) {
@@ -233,33 +353,45 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<{
     // 5. RUN (se mode == full ou run, e não skipRun)
     if (['full', 'run'].includes(mode) && !options.skipRun) {
       if (context.hasTests || steps.includes('scaffold-unit')) {
-        console.log('🧪 [4/5] Executando testes e análise de cobertura...');
+        console.log('🧪 [6/6] Executando testes e gerando relatórios...');
         
-        // Run coverage analysis
-        const coverageResult = await runCoverageAnalysis({
-          repo: repoPath
-        });
-        steps.push('coverage');
-        outputs.coverage = coverageResult.reportPath;
-        console.log(`✅ Cobertura analisada: ${coverageResult.analysis.status}\n`);
+        try {
+          // Run coverage analysis
+          const coverageResult = await runCoverageAnalysis({
+            repo: repoPath
+          });
+          steps.push('coverage');
+          outputs.coverage = coverageResult.reportPath;
+          console.log(`✅ Cobertura analisada: ${coverageResult.analysis.status}\n`);
+        } catch (error) {
+          console.log(`⚠️  Erro ao executar testes: ${error instanceof Error ? error.message : error}\n`);
+        }
         
-        // Generate pyramid report
-        console.log('📊 [5/5] Gerando relatórios visuais...');
-        const pyramidResult = await generatePyramidReport({
-          repo: repoPath,
-          product
-        });
-        steps.push('pyramid-report');
-        outputs.pyramidReport = pyramidResult.report_path;
+        try {
+          // Generate pyramid report
+          const pyramidResult = await generatePyramidReport({
+            repo: repoPath,
+            product
+          });
+          steps.push('pyramid-report');
+          outputs.pyramidReport = pyramidResult.report_path;
+          console.log(`✅ Pirâmide de testes gerada!\n`);
+        } catch (error) {
+          console.log(`⚠️  Erro ao gerar pirâmide: ${error instanceof Error ? error.message : error}\n`);
+        }
         
-        // Generate dashboard
-        const dashboardResult = await generateDashboard({
-          repo: repoPath,
-          product
-        });
-        steps.push('dashboard');
-        outputs.dashboard = dashboardResult.dashboard_path;
-        console.log(`✅ Relatórios gerados!\n`);
+        try {
+          // Generate dashboard
+          const dashboardResult = await generateDashboard({
+            repo: repoPath,
+            product
+          });
+          steps.push('dashboard');
+          outputs.dashboard = dashboardResult.dashboard_path;
+          console.log(`✅ Dashboard gerado!\n`);
+        } catch (error) {
+          console.log(`⚠️  Erro ao gerar dashboard: ${error instanceof Error ? error.message : error}\n`);
+        }
       } else {
         console.log(`⚠️  Nenhum teste encontrado, pulando execução\n`);
       }

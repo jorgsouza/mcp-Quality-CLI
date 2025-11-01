@@ -1,6 +1,34 @@
-# 🚀 Guia do Orquestrador Auto
+# 🚀 Guia do Orquestrador Auto - O Comando Mágico!
 
-Este guia explica como usar a tool `auto` do Quality MCP para executar análises de qualidade automatizadas com **zero-setup**.
+Este guia explica como usar a tool `auto` do Quality MCP para executar análises de qualidade automatizadas com **zero-setup** e suporte para **8+ linguagens**.
+
+**NOVO v0.3.1**: 🌍 **Suporte Multi-Linguagem!** Agora funciona com Go, Java, Python, Ruby, C#, PHP, Rust, além de JavaScript/TypeScript!
+
+---
+
+## 🎯 O Comando Mágico (TL;DR)
+
+```bash
+# Para qualquer projeto (detecta linguagem automaticamente)
+quality auto --repo /path/to/projeto --product "nome-projeto"
+
+# Exemplo Go
+quality auto --repo /Volumes/Dev/npm-malicious-scanner --product "npm-malicious-scanner"
+
+# Exemplo JavaScript/TypeScript
+quality auto --repo . --product "meu-app"
+```
+
+**O que acontece:**
+1. ✅ Detecta linguagem (Go, Java, Python, etc)
+2. ✅ Analisa todo o código
+3. ✅ Calcula cobertura de testes
+4. ✅ Mostra pirâmide de testes
+5. ✅ Recomenda estratégia
+6. ✅ Gera plano detalhado
+7. ✅ Mostra o que precisa ser testado
+
+**Tudo isso em UM ÚNICO COMANDO! 🎉**
 
 ---
 
