@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
 
 export interface LanguageDetection {
-  primary: string; // 'typescript' | 'javascript' | 'java' | 'golang' | 'ruby' | 'python' | 'csharp' | 'php'
+  primary: string; // 'typescript' | 'javascript' | 'java' | 'go' | 'ruby' | 'python' | 'csharp' | 'php'
   framework?: string; // 'vitest' | 'jest' | 'junit' | 'go-test' | 'rspec' | 'pytest' | 'nunit' | 'phpunit'
   testCommand: string;
   coverageCommand: string;
@@ -102,7 +102,7 @@ export async function detectLanguage(repoPath: string): Promise<LanguageDetectio
   if (files.includes('go.mod')) {
     console.log('✅ Detectado: Go');
     return {
-      primary: 'golang',
+      primary: 'go',
       framework: 'go-test',
       testCommand: 'go test ./...',
       coverageCommand: 'go test -coverprofile=coverage.out ./... && go tool cover -func=coverage.out',
@@ -217,7 +217,7 @@ export function getTestFileExtension(language: string): string {
       return '.test.ts';
     case 'java':
       return 'Test.java';
-    case 'golang':
+    case 'go':
       return '_test.go';
     case 'ruby':
       return '_spec.rb';
@@ -284,7 +284,7 @@ class ${functionName}Test {
 }
 `;
 
-    case 'golang':
+    case 'go':
       return `package main
 
 import "testing"

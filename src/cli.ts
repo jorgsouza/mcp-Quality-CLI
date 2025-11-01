@@ -12,6 +12,7 @@ import { scaffoldIntegrationTests } from './tools/scaffold-integration.js';
 import { generatePyramidReport } from './tools/pyramid-report.js';
 import { catalogScenarios } from './tools/catalog.js';
 import { recommendTestStrategy } from './tools/recommend-strategy.js';
+import { autoQualityRun } from './tools/auto.js';
 
 const program = new Command();
 
@@ -467,6 +468,36 @@ program
       } else {
         console.log(`\n❌ Erro ao executar cobertura`);
       }
+    } catch (error: any) {
+      console.error('❌ Erro:', error.message);
+      process.exit(1);
+    }
+  });
+
+// Comando: auto
+program
+  .command('auto')
+  .description('🚀 Orquestrador completo: auto-detecta contexto e executa fluxo de qualidade')
+  .option('--repo <path>', 'Caminho do repositório (auto-detecta se omitido)')
+  .option('--product <name>', 'Nome do produto (infere de package.json se omitido)')
+  .option('--mode <mode>', 'Modo de execução (default: full)', 'full')
+  .option('--skip-run', 'Pular execução de testes (útil para análise rápida)')
+  .option('--skip-scaffold', 'Pular geração de scaffolds (útil se já existem testes)')
+  .action(async (options) => {
+    try {
+      const params = {
+        repo: options.repo,
+        product: options.product,
+        mode: options.mode,
+        skipRun: options.skipRun,
+        skipScaffold: options.skipScaffold
+      };
+
+      console.log('🚀 Iniciando análise mágica de qualidade...\n');
+      const result = await autoQualityRun(params);
+      
+      console.log('\n✨ Análise completa finalizada!');
+      console.log(JSON.stringify(result, null, 2));
     } catch (error: any) {
       console.error('❌ Erro:', error.message);
       process.exit(1);

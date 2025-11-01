@@ -66,15 +66,19 @@ export async function analyzeTestCoverage(input: CoverageParams): Promise<Covera
 
   // Tenta obter contagem precisa do test runner
   const actualTestCount = await getActualTestCount(settings.repo, language);
+  console.log(`🧪 Contagem real de testes: ${actualTestCount || 'não detectada'}`);
 
   // Detecta testes unitários
   const unitTests = await detectUnitTests(settings.repo, language);
+  console.log(`📝 Testes unitários detectados: ${unitTests.test_cases} em ${unitTests.files_found} arquivos`);
   
   // Detecta testes de integração
   const integrationTests = await detectIntegrationTests(settings.repo, language);
+  console.log(`🔗 Testes de integração detectados: ${integrationTests.test_cases} em ${integrationTests.files_found} arquivos`);
   
   // Detecta testes E2E
   const e2eTests = await detectE2ETests(settings.repo, language);
+  console.log(`🎯 Testes E2E detectados: ${e2eTests.test_cases} em ${e2eTests.files_found} arquivos`);
 
   // Usa a contagem real se disponível, senão usa a soma manual
   let totalTestCases = actualTestCount || (unitTests.test_cases + integrationTests.test_cases + e2eTests.test_cases);
@@ -331,6 +335,10 @@ async function detectUnitTests(repoPath: string, language: string) {
   }
 
   allTests = [...new Set(allTests)];
+  console.log(`🔍 [${language}] Arquivos de teste encontrados: ${allTests.length}`);
+  if (allTests.length > 0) {
+    console.log(`📁 Primeiros 5 arquivos: ${allTests.slice(0, 5).join(', ')}`);
+  }
 
   // Conta test cases individuais nos arquivos
   let totalTestCases = 0;
@@ -703,7 +711,7 @@ async function getActualTestCount(repoPath: string, language: string): Promise<n
       case 'go':
         command = 'go';
         args = ['test', '-v', './...'];
-        outputPattern = /PASS|FAIL/g; // Conta testes individuais
+        outputPattern = /^(=== RUN|--- PASS:|--- FAIL:)/gm; // Conta início e fim de testes
         break;
 
       case 'java':
@@ -776,9 +784,9 @@ async function getActualTestCount(repoPath: string, language: string): Promise<n
       const match = output.match(outputPattern);
       if (match) {
         if (language === 'go') {
-          // Para Go, conta o número de matches (cada teste)
-          const matches = output.match(outputPattern);
-          resolve(matches ? matches.length : null);
+          // Para Go, usa o resultado já capturado e conta apenas "--- PASS:" e "--- FAIL:"
+          const testResults = output.match(/^--- (PASS|FAIL):/gm);
+          resolve(testResults ? testResults.length : null);
         } else {
           // Para outras linguagens, extrai o número
           resolve(parseInt(match[1], 10));

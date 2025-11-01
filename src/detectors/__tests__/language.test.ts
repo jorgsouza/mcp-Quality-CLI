@@ -69,7 +69,7 @@ describe('detectLanguage', () => {
 
     const lang = await detectLanguage(testDir);
 
-    expect(lang.primary).toBe('golang');
+    expect(lang.primary).toBe('go');
     expect(lang.framework).toBe('go-test');
     expect(lang.coverageCommand).toContain('go test');
   });
