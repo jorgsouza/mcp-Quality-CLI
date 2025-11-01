@@ -50,3 +50,18 @@ SUMMARY.md
 playwright/.cache/
 .playwright/
 
+# Backup files
+*.bak
+*.backup
+*.tmp
+*~
+
+# Generated analysis outputs (keep example files only)
+tests/analyses/*.json
+tests/analyses/*.md
+tests/analyses/*.html
+!tests/analyses/README.md
+
+# Temp directories from tests
+.test-temp-*/
+
