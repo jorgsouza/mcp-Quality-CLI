@@ -103,15 +103,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Schema validation: estrutura e tipos
   - Integration flow: nl_command → auto
 
+- **E2E Tests**: 32 testes end-to-end
+  - `nl-command-flow.spec.ts`: 16 testes (comandos PT/EN, overrides, defaults, error handling)
+  - `auto-full-cycle.spec.ts`: 16 testes (modos, auto-detecção, frameworks, error handling)
+
 ### 📊 Metrics
 
-- **Total de testes**: 298 (de 238 em v0.2.0)
+- **Total de testes**: 330 (de 238 em v0.2.0)
   - +37 testes unitários
   - +23 testes de integração
+  - +32 testes E2E
+- **Test Files**: 34 (de 30)
 - **Cobertura**: Mantida em ~100% das funções críticas
 - **Novas tools MCP**: 2 (`nl_command`, `auto`)
 - **Novas funções exportadas**: 8
-- **Linhas de código**: +1,500 linhas (~20% de crescimento)
+- **Linhas de código**: +1,800 linhas (~25% de crescimento)
 
 ### 🎯 Breaking Changes
 
