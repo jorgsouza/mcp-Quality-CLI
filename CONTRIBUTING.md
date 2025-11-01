@@ -185,5 +185,5 @@ Para sugerir uma nova funcionalidade:
 
 Abra uma issue ou entre em contato!
 
-Obrigado por contribuir! 🙌
+Obrigado por contribuir! Abraços Jorge Souza 🙌
 

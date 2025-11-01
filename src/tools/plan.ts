@@ -1,5 +1,6 @@
 import { writeFileSafe, join, readFile, fileExists } from '../utils/fs.js';
 import { loadMCPSettings, mergeSettings } from '../utils/config.js';
+import { calculateRiskScore, groupByRiskLevel, type RiskFactors, type RiskScore } from '../utils/risk-calculator.js';
 import type { AnalyzeResult } from './analyze.js';
 
 export interface PlanParams {
@@ -34,11 +35,72 @@ export async function generatePlan(input: PlanParams): Promise<{ ok: boolean; pl
     .map(r => r.area)
     .slice(0, 5) || [];
 
+  // Calculate risk scores for endpoints if we have analyze data
+  let riskScores: RiskScore[] = [];
+  let groupedByRisk: Record<string, RiskScore[]> = {};
+  
+  if (analyzeData?.findings.risk_map) {
+    riskScores = analyzeData.findings.risk_map.map(risk => {
+      const factors: RiskFactors = {
+        filePath: risk.area,
+        testCoverage: 0, // Will be enhanced when coverage data is integrated
+        changeFrequency: risk.risk === 'high' ? 0.8 : risk.risk === 'med' ? 0.5 : 0.3,
+        recentBugs: 0, // Will be enhanced with bug tracking integration
+        complexity: 0.5, // Default medium complexity
+        isCriticalFlow: risk.risk === 'high',
+        isUserFacing: true // Most endpoints are user-facing
+      };
+      return calculateRiskScore(factors);
+    });
+    
+    groupedByRisk = groupByRiskLevel(riskScores);
+  }
+
+  // Auto-generate TODOs based on missing configurations
+  const autoTodos: string[] = [];
+  
+  // Check for OpenAPI spec - simple heuristic
+  const hasOpenAPI = analyzeData?.findings.endpoints && analyzeData.findings.endpoints.length > 0;
+  if (!hasOpenAPI) {
+    autoTodos.push('[ ] TODO: Add OpenAPI spec for automatic contract generation (recommended for API testing)');
+  }
+  
+  // Always suggest auth fixtures for E2E
+  autoTodos.push('[ ] TODO: Create auth fixtures in fixtures/auth/ for session management');
+  
+  // Suggest Testcontainers for integration tests
+  autoTodos.push('[ ] TODO: Consider Testcontainers for integration tests (see docs/SUPERTEST-TESTCONTAINERS.md)');
+  
+  // Suggest CI configuration
+  autoTodos.push('[ ] TODO: Configure CI/CD pipeline for automated test execution');
+
   const md = `# Plano de Testes E2E — ${settings.product}
 
 **Base URL:** ${settings.base_url}
 
 **Data:** ${new Date().toISOString().split('T')[0]}
+
+${autoTodos.length > 0 ? `## 🎯 Ações Recomendadas
+
+${autoTodos.join('\n')}
+
+---
+
+` : ''}
+
+${Object.keys(groupedByRisk).length > 0 ? `## 🔥 Risk Score Analysis
+
+${Object.entries(groupedByRisk).map(([level, scores]) => `
+### ${level === 'CRITICAL' ? '🔴 CRITICAL' : level === 'HIGH' ? '🟠 HIGH' : level === 'MEDIUM' ? '🟡 MEDIUM' : '🟢 LOW'} Risk (${scores.length} endpoints)
+${scores.slice(0, 5).map(s => `- **${s.file}** — Score: ${s.score.toFixed(1)} (Probability: ${(s.probability * 100).toFixed(0)}%, Impact: ${(s.impact * 100).toFixed(0)}%)`).join('\n')}
+${scores.length > 5 ? `\n_...and ${scores.length - 5} more endpoints_` : ''}
+`).join('\n')}
+
+**Recommendation:** Focus on CRITICAL and HIGH risk endpoints first for maximum coverage impact.
+
+---
+
+` : ''}
 
 ## 1) Cenários Canônicos (Produto)
 
@@ -122,7 +184,25 @@ packages/product-e2e/
 - **Flaky Rate:** ≤ 3% (percentual de testes instáveis)
 - **Diff Coverage:** ≥ 60% (cobertura nas mudanças)
 
-## 6) Execução
+## 6) Quality Gates
+
+### Required Coverage
+- **Overall:** ≥ 70% (branches, functions, lines)
+- **New Code:** ≥ ${settings.targets?.diff_coverage_min || 60}% (diff coverage on PRs)
+- **E2E:** ≥ 50% (critical user flows)
+
+### Performance
+- **Test Execution:** 30s max per test, 300s per suite
+- **Flaky Rate:** ≤ ${settings.targets?.flaky_pct_max || 3}% (automatic quarantine)
+- **Build Time:** p95 ≤ ${settings.targets?.ci_p95_min || 15} minutes
+
+### Blocking Criteria
+- ❌ Any test failure in critical flows (auth, payment, checkout)
+- ❌ Coverage below ${settings.targets?.diff_coverage_min || 60}% on changed files
+- ❌ Flaky rate above ${settings.targets?.flaky_pct_max || 3}% for 2+ days
+- ❌ Security vulnerabilities (high/critical severity)
+
+## 7) Execução
 
 ### Ambientes
 - **PR:** Suite reduzida (smoke tests)
@@ -239,7 +319,13 @@ test.describe('Busca', () => {
 1. ✅ Plano aprovado por QA
 2. ⏳ Scaffold dos testes (executar \`quality scaffold\`)
 3. ⏳ Execução e validação (executar \`quality run\`)
-4. ⏳ Relatório para release (executar \`quality report\`)
+4. ⏳ Análise de cobertura (executar \`quality coverage\`)
+5. ⏳ Relatório para release (executar \`quality report\`)
+
+${autoTodos.length > 0 ? `
+**Melhorias Técnicas Sugeridas:**
+${autoTodos.join('\n')}
+` : ''}
 `;
 
   const outDir = settings.out_dir || 'tests/analyses';

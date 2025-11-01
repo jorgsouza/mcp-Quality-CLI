@@ -105,4 +105,74 @@ describe('plan.ts', () => {
     
     expect(result).toBeDefined();
   });
+
+  it('deve incluir TODOs automáticos no plano', async () => {
+    const result = await generatePlan({
+      repo: testRepoPath,
+      product: 'TestProductTODOs',
+      base_url: 'https://test-todos.com'
+    });
+
+    const content = await fs.readFile(result.plan, 'utf-8');
+    
+    // Deve incluir seção de Ações Recomendadas
+    expect(content).toContain('🎯 Ações Recomendadas');
+    
+    // Deve incluir TODOs específicos
+    expect(content).toContain('TODO: Create auth fixtures');
+    expect(content).toContain('TODO: Consider Testcontainers');
+    expect(content).toContain('TODO: Configure CI/CD pipeline');
+  });
+
+  it('deve incluir Quality Gates com thresholds', async () => {
+    const result = await generatePlan({
+      repo: testRepoPath,
+      product: 'TestProductGates',
+      base_url: 'https://test-gates.com'
+    });
+
+    const content = await fs.readFile(result.plan, 'utf-8');
+    
+    // Deve incluir seção de Quality Gates
+    expect(content).toContain('Quality Gates');
+    expect(content).toContain('Required Coverage');
+    expect(content).toContain('Performance');
+    expect(content).toContain('Blocking Criteria');
+  });
+
+  it('deve calcular risk scores quando houver dados de análise', async () => {
+    const mockAnalysis = {
+      findings: {
+        routes: ['/api/login', '/api/checkout'],
+        endpoints: ['POST /api/login', 'POST /api/checkout'],
+        events: [],
+        risk_map: [
+          { area: '/api/login', risk: 'high' as const, rationale: 'Authentication critical flow' },
+          { area: '/api/checkout', risk: 'high' as const, rationale: 'Payment processing' },
+          { area: '/api/products', risk: 'med' as const, rationale: 'Product listing' },
+          { area: '/api/search', risk: 'low' as const, rationale: 'Search functionality' }
+        ]
+      },
+      summary: 'Mock analysis for testing',
+      recommendations: [],
+      plan_path: ''
+    };
+
+    const result = await generatePlan({
+      repo: testRepoPath,
+      product: 'TestProductRisk',
+      base_url: 'https://test-risk.com',
+      analyze_result: mockAnalysis
+    });
+
+    const content = await fs.readFile(result.plan, 'utf-8');
+    
+    // Deve incluir seção de Risk Score Analysis
+    expect(content).toContain('🔥 Risk Score Analysis');
+    
+    // Deve listar endpoints com scores
+    expect(content).toMatch(/Score:/);
+    expect(content).toMatch(/Probability:/);
+    expect(content).toMatch(/Impact:/);
+  });
 });

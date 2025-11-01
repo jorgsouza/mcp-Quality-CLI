@@ -37,6 +37,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Instruções de instalação no console
   - Guia completo em `docs/SUPERTEST-TESTCONTAINERS.md`
 
+#### Risk Score System & Enhanced Test Plans 📊 NEW
+
+- **Sistema de Cálculo de Risco Probabilístico**:
+  - Formula: `Risk Score = Probability × Impact` (0-100)
+  - **Probability** = changeFrequency(40%) + recentBugs(35%) + complexity(25%)
+  - **Impact** = testCoverage(40%) + isCriticalFlow(35%) + isUserFacing(25%)
+  - Níveis: CRITICAL (80+), HIGH (60-79), MEDIUM (40-59), LOW (<40)
+  - Funções: `calculateRiskScore()`, `groupByRiskLevel()`, `estimateComplexity()`
+
+- **Enhanced Test Plans com Risk Scores**:
+  - Seção **Risk Score Analysis** automática nos planos
+  - Endpoints ordenados por criticidade (🔴 CRITICAL → 🟠 HIGH → 🟡 MEDIUM → 🟢 LOW)
+  - Mostra probability, impact e score detalhado para cada endpoint
+  - Recomendação: priorizar endpoints CRITICAL/HIGH primeiro
+
+- **TODOs Automáticos Inteligentes**:
+  - Seção **Ações Recomendadas** gerada automaticamente
+  - Sugere OpenAPI spec para contract testing
+  - Sugere auth fixtures para E2E
+  - Sugere Testcontainers para integração
+  - Sugere configuração de CI/CD
+
+- **Quality Gates Explícitos**:
+  - Thresholds configuráveis (coverage, flaky rate, build time)
+  - Critérios de bloqueio bem definidos
+  - Integração com settings via `targets.diff_coverage_min`, `flaky_pct_max`, `ci_p95_min`
+
 ### ✨ New Features
 
 - **Configuração Agnóstica**: Config genérica funciona para qualquer time/produto
