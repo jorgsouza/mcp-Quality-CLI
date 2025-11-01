@@ -64,7 +64,7 @@ describe('config.ts - loadMCPSettings', () => {
       targets: {
         diff_coverage_min: 80,
         flaky_pct_max: 5,
-        ci_p95_min: 8
+        ci_p95_min: 10
       },
       environments: {},
       auth: {}
@@ -145,7 +145,7 @@ describe('config.ts - loadMCPSettings', () => {
       targets: {
         diff_coverage_min: 80,
         flaky_pct_max: 5,
-        ci_p95_min: 8
+        ci_p95_min: 10
       },
       environments: {},
       auth: {}
@@ -255,7 +255,7 @@ describe('config.ts - createMCPSettingsTemplate', () => {
       targets: {
         diff_coverage_min: 80,
         flaky_pct_max: 5,
-        ci_p95_min: 8
+        ci_p95_min: 10
       }
     });
   });
@@ -270,7 +270,7 @@ describe('config.ts - createMCPSettingsTemplate', () => {
     expect(writeFileSpy).not.toHaveBeenCalled();
   });
 
-  it('should generate correct environment URLs from base_url', async () => {
+  it('should use generic localhost environments (agnóstico)', async () => {
     vi.mocked(fileExists).mockResolvedValue(false);
     
     vi.spyOn(fs, 'mkdir').mockResolvedValue(undefined);
@@ -279,10 +279,11 @@ describe('config.ts - createMCPSettingsTemplate', () => {
     await createMCPSettingsTemplate(mockRepoPath, mockProduct, 'https://www.example.com');
 
     const writtenContent = JSON.parse(writeFileSpy.mock.calls[0][1] as string);
+    // Agora usa localhost genérico independente do base_url
     expect(writtenContent.environments).toEqual({
-      dev: { url: 'https://dev.example.com' },
-      stg: { url: 'https://stg.example.com' },
-      prod: { url: 'https://www.example.com' }
+      dev: { url: 'http://localhost:3000' },
+      stg: { url: 'http://localhost:3001' },
+      prod: { url: 'http://localhost:3002' }
     });
   });
 });
@@ -297,7 +298,7 @@ describe('config.ts - MCPSettingsSchema validation', () => {
       targets: {
         diff_coverage_min: 80,
         flaky_pct_max: 5,
-        ci_p95_min: 8
+        ci_p95_min: 10
       },
       environments: {
         dev: { url: 'https://dev.example.com' }
@@ -357,9 +358,145 @@ describe('config.ts - MCPSettingsSchema validation', () => {
     expect(result.targets).toEqual({
       diff_coverage_min: 80,
       flaky_pct_max: 5,
-      ci_p95_min: 8
+      ci_p95_min: 10
     });
     expect(result.environments).toEqual({});
     expect(result.auth).toEqual({});
+  });
+});
+
+describe('config.ts - inferProductFromPackageJson', () => {
+  const mockRepoPath = '/mock/repo';
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('should infer product name from package.json', async () => {
+    const { inferProductFromPackageJson } = await import('../config.js');
+    
+    vi.mocked(fileExists).mockImplementation(async (path: string) => {
+      return path === join(mockRepoPath, 'package.json');
+    });
+
+    const { readFile } = await import('../fs.js');
+    vi.mocked(readFile).mockResolvedValue(JSON.stringify({
+      name: '@company/my-awesome-product',
+      version: '1.0.0'
+    }));
+
+    const result = await inferProductFromPackageJson(mockRepoPath);
+    expect(result).toBe('company-my-awesome-product'); // sanitized: @ e / removidos, - mantido
+  });
+
+  it('should return null when package.json not found', async () => {
+    const { inferProductFromPackageJson } = await import('../config.js');
+    
+    vi.mocked(fileExists).mockResolvedValue(false);
+
+    const result = await inferProductFromPackageJson(mockRepoPath);
+    expect(result).toBe('repo'); // fallback to dirname
+  });
+
+  it('should handle invalid package.json gracefully', async () => {
+    const { inferProductFromPackageJson } = await import('../config.js');
+    
+    vi.mocked(fileExists).mockResolvedValue(true);
+
+    const { readFile } = await import('../fs.js');
+    vi.mocked(readFile).mockResolvedValue('invalid json {{{');
+
+    const result = await inferProductFromPackageJson(mockRepoPath);
+    expect(result).toBe('repo'); // fallback to dirname
+  });
+});
+
+describe('config.ts - createMCPSettingsTemplate (agnóstico)', () => {
+  let tempDir: string;
+
+  beforeEach(async () => {
+    // Criar diretório temporário para cada teste (usar path ABSOLUTO)
+    const relativeTempDir = '.test-temp-config-' + Date.now();
+    tempDir = join(process.cwd(), relativeTempDir);
+    await fs.mkdir(tempDir, { recursive: true });
+    
+    // IMPORTANTE: Importar as implementações reais de fs.js usando vi.importActual
+    const realFs = await vi.importActual<typeof import('../fs.js')>('../fs.js');
+    
+    // Resetar mocks
+    vi.restoreAllMocks();
+    
+    // Mockar com as implementações reais (passthrough)
+    vi.mocked(fileExists).mockImplementation(realFs.fileExists);
+    const { readFile: readFileFn } = await import('../fs.js');
+    vi.mocked(readFileFn).mockImplementation(realFs.readFile);
+    const { writeFileSafe } = await import('../fs.js');
+    vi.mocked(writeFileSafe).mockImplementation(realFs.writeFileSafe);
+  });
+
+  afterEach(async () => {
+    // Limpar diretório temporário
+    try {
+      await fs.rm(tempDir, { recursive: true, force: true });
+    } catch {}
+  });
+
+  it('should create generic template with localhost defaults', async () => {
+    const { createMCPSettingsTemplate } = await import('../config.js');
+    
+    const settingsPath = await createMCPSettingsTemplate(tempDir, 'TestProduct');
+
+    // Verificar que arquivo foi criado
+    const exists = await fs.access(settingsPath).then(() => true).catch(() => false);
+    expect(exists).toBe(true);
+
+    // Ler e validar conteúdo
+    const content = JSON.parse(await fs.readFile(settingsPath, 'utf-8'));
+    expect(content.product).toBe('TestProduct');
+    expect(content.base_url).toBe('http://localhost:3000');
+    expect(content.domains).toEqual([]);
+    expect(content.critical_flows).toEqual([]);
+    expect(content.targets.diff_coverage_min).toBe(80);
+    expect(content.environments.dev.url).toBe('http://localhost:3000');
+  });
+
+  it('should create mcp-settings.example.json automatically', async () => {
+    const { createMCPSettingsTemplate } = await import('../config.js');
+    
+    await createMCPSettingsTemplate(tempDir, 'TestProduct');
+
+    // Verificar que exemplo foi criado
+    const examplePath = join(tempDir, 'qa', 'TestProduct', 'mcp-settings.example.json');
+    const exists = await fs.access(examplePath).then(() => true).catch(() => false);
+    expect(exists).toBe(true);
+
+    // Ler e validar conteúdo do exemplo
+    const content = JSON.parse(await fs.readFile(examplePath, 'utf-8'));
+    expect(content.product).toBe('MyProduct');
+    expect(content.domains).toContain('billing');
+    expect(content.critical_flows).toContain('login');
+  });
+
+  it('should infer product from package.json when not provided', async () => {
+    const { createMCPSettingsTemplate } = await import('../config.js');
+    
+    // IMPORTANTE: Criar package.json ANTES de chamar createMCPSettingsTemplate
+    const pkgContent = { name: 'my-cool-app', version: '1.0.0' };
+    await fs.writeFile(
+      join(tempDir, 'package.json'),
+      JSON.stringify(pkgContent, null, 2),
+      'utf-8'
+    );
+
+    // Agora chamar sem passar produto explicitamente
+    const settingsPath = await createMCPSettingsTemplate(tempDir);
+
+    // Verificar que produto foi inferido do package.json
+    const content = JSON.parse(await fs.readFile(settingsPath, 'utf-8'));
+    expect(content.product).toBe('my-cool-app');
   });
 });
