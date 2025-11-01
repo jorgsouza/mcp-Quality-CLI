@@ -16,14 +16,46 @@ export async function scaffoldIntegrationTests(input: ScaffoldIntegrationParams)
 }> {
   console.log(`🔗 Gerando testes de integração para ${input.product}...`);
 
+  // Valida base_url se fornecida
+  if (input.base_url && input.base_url !== '') {
+    try {
+      new URL(input.base_url);
+    } catch (error) {
+      throw new Error(`URL inválida: ${input.base_url}`);
+    }
+  }
+
   const testDir = join(input.repo, 'tests', 'integration');
   await ensureDir(testDir);
 
   // Detecta endpoints
-  const endpoints = await findExpressRoutes(input.repo);
+  let endpoints: Endpoint[] = [];
+  if (input.endpoints && input.endpoints.length > 0) {
+    // Usa endpoints específicos se fornecidos
+    endpoints = input.endpoints.map(path => ({
+      method: 'GET',
+      path,
+      handler: '',
+      file: '',
+      line: 0
+    }));
+  } else {
+    // Auto-detecta endpoints
+    endpoints = await findExpressRoutes(input.repo);
+  }
+  
   const openApiSpecs = await findOpenAPI(input.repo);
 
   const generated: string[] = [];
+
+  // Se não há endpoints, não gera nada
+  if (endpoints.length === 0 && input.endpoints !== undefined) {
+    return {
+      ok: true,
+      test_dir: testDir,
+      generated: []
+    };
+  }
 
   // Gera configuração base
   await generateIntegrationSetup(input.repo, testDir, input.base_url);
@@ -46,15 +78,22 @@ export async function scaffoldIntegrationTests(input: ScaffoldIntegrationParams)
     generated.push(testFile);
   }
 
-  // Se tem OpenAPI, gera testes de contrato
-  if (openApiSpecs.length > 0) {
-    await generateContractTests(testDir, openApiSpecs[0], input.repo);
+  // Se tem endpoints, sempre gera testes de contrato
+  if (endpoints.length > 0) {
+    if (openApiSpecs.length > 0) {
+      await generateContractTests(testDir, openApiSpecs[0], input.repo);
+    } else {
+      await generateBasicContractTests(testDir, endpoints);
+    }
     generated.push('tests/integration/contract/api-contract.test.ts');
   }
 
   // Gera guia
   await generateIntegrationGuide(input.repo, input.product);
   generated.push('tests/analyses/INTEGRATION-TESTING-GUIDE.md');
+
+  // Atualiza package.json com scripts de integração
+  await updatePackageJsonWithIntegrationScripts(input.repo);
 
   console.log(`✅ ${generated.length} arquivos de testes de integração gerados!`);
 
@@ -387,12 +426,43 @@ describe('API Contract Tests', () => {
   await writeFileSafe(join(testDir, 'contract', 'api-contract.test.ts'), content);
 }
 
+async function generateBasicContractTests(testDir: string, endpoints: Endpoint[]) {
+  await ensureDir(join(testDir, 'contract'));
+
+  const contractTest = `import { describe, it, expect } from 'vitest';
+import { ApiClient } from '../helpers/api-client';
+
+describe('API Contract Tests', () => {
+  const api = new ApiClient();
+
+${endpoints.map(endpoint => `
+  describe('${endpoint.method} ${endpoint.path}', () => {
+    it('deve retornar estrutura esperada', async () => {
+      // TODO: Implementar teste de contrato para ${endpoint.path}
+      const response = await api.${endpoint.method.toLowerCase()}('${endpoint.path}');
+      
+      expect(response).toBeDefined();
+      expect(response.status).toBeDefined();
+      // TODO: Adicionar validações específicas do contrato
+    });
+    
+    it('deve validar tipos de resposta', async () => {
+      // TODO: Validar tipos específicos da resposta
+    });
+  });
+`).join('')}
+});
+`;
+
+  await writeFileSafe(join(testDir, 'contract', 'api-contract.test.ts'), contractTest);
+}
+
 async function generateIntegrationGuide(repoPath: string, product: string) {
-  const guide = `# Guia de Testes de Integração - ${product}
+  const guide = `# Guia de Integration Testing - ${product}
 
 ## O Que São Testes de Integração?
 
-Testes de integração verificam a comunicação entre diferentes módulos/serviços:
+Testes de integração (Integration Testing) verificam a comunicação entre diferentes módulos/serviços:
 - APIs REST
 - Banco de dados
 - Serviços externos
@@ -591,4 +661,23 @@ Acompanhe:
     join(repoPath, 'tests', 'analyses', 'INTEGRATION-TESTING-GUIDE.md'),
     guide
   );
+}
+
+async function updatePackageJsonWithIntegrationScripts(repoPath: string) {
+  const packageJsonPath = join(repoPath, 'package.json');
+  
+  if (await fileExists(packageJsonPath)) {
+    const content = await readFile(packageJsonPath);
+    const packageJson = JSON.parse(content);
+    
+    if (!packageJson.scripts) {
+      packageJson.scripts = {};
+    }
+    
+    packageJson.scripts['test:integration'] = 'vitest tests/integration';
+    packageJson.scripts['test:integration:watch'] = 'vitest tests/integration --watch';
+    packageJson.scripts['test:integration:coverage'] = 'vitest tests/integration --coverage';
+    
+    await writeFileSafe(packageJsonPath, JSON.stringify(packageJson, null, 2));
+  }
 }

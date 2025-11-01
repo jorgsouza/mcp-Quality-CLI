@@ -19,7 +19,15 @@ export async function scaffoldUnitTests(input: ScaffoldUnitParams): Promise<{
   const framework = input.framework || await detectTestFramework(input.repo);
   console.log(`📦 Framework detectado: ${framework}`);
 
-  const filesToTest = input.files || await getFilesNeedingTests(input.repo);
+  let filesToTest: string[] = [];
+  if (input.files) {
+    filesToTest = input.files;
+  } else if (input.auto_detect) {
+    filesToTest = await autoDetectSourceFiles(input.repo);
+  } else {
+    filesToTest = await getFilesNeedingTests(input.repo);
+  }
+  
   const generated: string[] = [];
 
   for (const sourceFile of filesToTest.slice(0, 20)) { // Limita a 20 por vez
@@ -85,6 +93,31 @@ async function getFilesNeedingTests(repoPath: string): Promise<string[]> {
   }
 
   return [];
+}
+
+async function autoDetectSourceFiles(repoPath: string): Promise<string[]> {
+  const { glob } = await import('glob');
+  
+  // Busca por arquivos .ts, .tsx, .js, .jsx no src/
+  const patterns = [
+    'src/**/*.ts',
+    'src/**/*.tsx', 
+    'src/**/*.js',
+    'src/**/*.jsx'
+  ];
+  
+  const files: string[] = [];
+  for (const pattern of patterns) {
+    const matches = await glob(pattern, { cwd: repoPath });
+    files.push(...matches);
+  }
+  
+  // Filtra arquivos que não são de teste
+  return files.filter(file => 
+    !file.includes('.test.') && 
+    !file.includes('.spec.') &&
+    !file.includes('__tests__')
+  );
 }
 
 async function generateUnitTest(
@@ -399,7 +432,7 @@ async function ensureTestScripts(repoPath: string, framework: string) {
 }
 
 async function generateUnitTestGuide(repoPath: string, framework: string) {
-  const guide = `# Guia de Testes Unitários
+  const guide = `# Guia de Unit Testing (Testes Unitários)
 
 ## Framework: ${framework.toUpperCase()}
 

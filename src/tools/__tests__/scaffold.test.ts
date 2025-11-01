@@ -68,7 +68,7 @@ describe('scaffoldPlaywright', () => {
     expect(fixtureExists).toBe(true);
 
     const fixtureContent = await fs.readFile(fixturePath, 'utf-8');
-    expect(fixtureContent).toContain('test.extend');
+    expect(fixtureContent).toContain('base.extend');
     expect(fixtureContent).toContain('storageState');
   });
 

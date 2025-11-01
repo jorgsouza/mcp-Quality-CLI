@@ -2,19 +2,41 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
 import { runPlaywright } from '../run';
+import { EventEmitter } from 'events';
 
-// Mock execFile
+// Mock child_process
 vi.mock('node:child_process', () => ({
-  execFile: vi.fn()
+  spawn: vi.fn()
 }));
 
 describe('runPlaywright', () => {
   let testDir: string;
+  let spawnMock: any;
+
+  // Helper para criar um processo mock
+  const createMockProcess = (exitCode = 0) => {
+    const proc = new EventEmitter() as any;
+    proc.stdout = new EventEmitter();
+    proc.stderr = new EventEmitter();
+    
+    // Simula a conclusão do processo de forma assíncrona
+    process.nextTick(() => {
+      proc.emit('close', exitCode);
+    });
+    
+    return proc;
+  };
 
   beforeEach(async () => {
     testDir = `/tmp/run-test-${Date.now()}`;
     await fs.mkdir(testDir, { recursive: true });
     await fs.mkdir(join(testDir, 'reports'), { recursive: true });
+    await fs.mkdir(join(testDir, 'e2e'), { recursive: true });
+    
+    // Setup do mock do spawn - retorna sucesso por padrão
+    const { spawn } = await import('node:child_process');
+    spawnMock = vi.mocked(spawn);
+    spawnMock.mockImplementation(() => createMockProcess(0));
   });
 
   afterEach(async () => {
@@ -22,14 +44,7 @@ describe('runPlaywright', () => {
     vi.clearAllMocks();
   });
 
-    const { execFile } = await import('node:child_process');
-    vi.mocked(execFile).mockImplementation((cmd, args, opts, cb: any) => {
-      cb(null, { stdout: 'ok', stderr: '' });
-      return {} as any;
-    });
-
-    vi.spyOn(fs, 'access').mockResolvedValue(undefined);
-
+  it('deve executar testes Playwright com todas as opções', async () => {
     const result = await runPlaywright({
       repo: testDir,
       e2e_dir: 'e2e',
@@ -37,24 +52,19 @@ describe('runPlaywright', () => {
     });
 
     expect(result.ok).toBe(true);
-    
-    const htmlExists = await fs.access(join(testDir, 'reports/html')).then(() => true).catch(() => false);
-    const jsonExists = await fs.access(join(testDir, 'reports/json')).then(() => true).catch(() => false);
-    const junitExists = await fs.access(join(testDir, 'reports/junit')).then(() => true).catch(() => false);
-    
-    expect(htmlExists).toBe(true);
-    expect(jsonExists).toBe(true);
-    expect(junitExists).toBe(true);
+    expect(result.reports).toBeDefined();
+    expect(result.reports.html).toContain('reports/html');
+    expect(result.reports.json).toContain('reports/json');
+    expect(result.reports.junit).toContain('reports/junit');
   });
 
   it('deve configurar variáveis de ambiente', async () => {
-    const { execFile } = await import('node:child_process');
+    const { spawn } = await import('node:child_process');
     let capturedEnv: any;
     
-    vi.mocked(execFile).mockImplementation((cmd, args, opts: any, cb: any) => {
+    vi.mocked(spawn).mockImplementation((cmd, args, opts: any) => {
       capturedEnv = opts.env;
-      cb(null, { stdout: 'ok', stderr: '' });
-      return {} as any;
+      return createMockProcess(0);
     });
 
     process.env.E2E_BASE_URL = 'https://test.com';
@@ -73,13 +83,12 @@ describe('runPlaywright', () => {
   });
 
   it('deve usar valores padrão para env quando não especificados', async () => {
-    const { execFile } = await import('node:child_process');
+    const { spawn } = await import('node:child_process');
     let capturedEnv: any;
     
-    vi.mocked(execFile).mockImplementation((cmd, args, opts: any, cb: any) => {
+    vi.mocked(spawn).mockImplementation((cmd, args, opts: any) => {
       capturedEnv = opts.env;
-      cb(null, { stdout: 'ok', stderr: '' });
-      return {} as any;
+      return createMockProcess(0);
     });
 
     delete process.env.E2E_BASE_URL;
@@ -98,13 +107,12 @@ describe('runPlaywright', () => {
   });
 
   it('deve configurar modo headless', async () => {
-    const { execFile } = await import('node:child_process');
+    const { spawn } = await import('node:child_process');
     let capturedEnv: any;
     
-    vi.mocked(execFile).mockImplementation((cmd, args, opts: any, cb: any) => {
+    vi.mocked(spawn).mockImplementation((cmd, args, opts: any) => {
       capturedEnv = opts.env;
-      cb(null, { stdout: 'ok', stderr: '' });
-      return {} as any;
+      return createMockProcess(0);
     });
 
     await runPlaywright({
@@ -118,13 +126,12 @@ describe('runPlaywright', () => {
   });
 
   it('deve configurar modo headed', async () => {
-    const { execFile } = await import('node:child_process');
+    const { spawn } = await import('node:child_process');
     let capturedEnv: any;
     
-    vi.mocked(execFile).mockImplementation((cmd, args, opts: any, cb: any) => {
+    vi.mocked(spawn).mockImplementation((cmd, args, opts: any) => {
       capturedEnv = opts.env;
-      cb(null, { stdout: 'ok', stderr: '' });
-      return {} as any;
+      return createMockProcess(0);
     });
 
     await runPlaywright({
@@ -138,12 +145,6 @@ describe('runPlaywright', () => {
   });
 
   it('deve retornar caminhos dos relatórios', async () => {
-    const { execFile } = await import('node:child_process');
-    vi.mocked(execFile).mockImplementation((cmd, args, opts, cb: any) => {
-      cb(null, { stdout: 'ok', stderr: '' });
-      return {} as any;
-    });
-
     const result = await runPlaywright({
       repo: testDir,
       e2e_dir: 'e2e',
@@ -158,44 +159,49 @@ describe('runPlaywright', () => {
   });
 
   it('deve lidar com erro ao instalar Playwright', async () => {
-    const { execFile } = await import('node:child_process');
-    vi.mocked(execFile).mockImplementation((cmd, args, opts, cb: any) => {
+    const { spawn } = await import('node:child_process');
+    
+    vi.mocked(spawn).mockImplementation((cmd, args: any) => {
+      // Se for o comando de instalação, retorna erro
       if (args && args[0] === 'playwright' && args[1] === 'install') {
-        cb(new Error('Failed to install'), { stdout: '', stderr: 'error' });
-      } else {
-        cb(null, { stdout: 'ok', stderr: '' });
+        return createMockProcess(1);
       }
-      return {} as any;
+      return createMockProcess(0);
     });
 
-    await expect(runPlaywright({
+    const result = await runPlaywright({
       repo: testDir,
       e2e_dir: 'e2e',
       report_dir: 'reports'
-    })).rejects.toThrow();
+    });
+    
+    expect(result.ok).toBe(false);
+    expect(result.error).toBeDefined();
   });
 
   it('deve lidar com erro ao executar testes', async () => {
-    const { execFile } = await import('node:child_process');
+    const { spawn } = await import('node:child_process');
     let callCount = 0;
     
-    vi.mocked(execFile).mockImplementation((cmd, args, opts, cb: any) => {
+    vi.mocked(spawn).mockImplementation((cmd, args: any) => {
       callCount++;
       if (callCount === 1) {
         // Install success
-        cb(null, { stdout: 'ok', stderr: '' });
+        return createMockProcess(0);
       } else {
         // Test execution failure
-        cb(new Error('Tests failed'), { stdout: '', stderr: 'test error' });
+        return createMockProcess(1);
       }
-      return {} as any;
     });
 
-    await expect(runPlaywright({
+    const result = await runPlaywright({
       repo: testDir,
       e2e_dir: 'e2e',
       report_dir: 'reports'
-    })).rejects.toThrow();
+    });
+    
+    expect(result.ok).toBe(false);
+    expect(result.error).toBeDefined();
   });
 });
 

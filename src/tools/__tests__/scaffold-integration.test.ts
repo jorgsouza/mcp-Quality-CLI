@@ -52,13 +52,17 @@ describe('scaffoldIntegrationTests', () => {
 
     expect(result.ok).toBe(true);
 
-    const clientPath = join(testDir, 'tests/integration/api-client.ts');
+    const clientPath = join(testDir, 'tests/integration/helpers/api-client.ts');
     const exists = await fs.access(clientPath).then(() => true).catch(() => false);
     expect(exists).toBe(true);
 
     const content = await fs.readFile(clientPath, 'utf-8');
     expect(content).toContain('baseURL');
-    expect(content).toContain('https://api.test.com');
+    
+    // Verifica se a URL está no arquivo setup.ts
+    const setupPath = join(testDir, 'tests/integration/setup.ts');
+    const setupContent = await fs.readFile(setupPath, 'utf-8');
+    expect(setupContent).toContain('https://api.test.com');
   });
 
   it('deve adicionar testes de contrato', async () => {
@@ -71,9 +75,10 @@ describe('scaffoldIntegrationTests', () => {
 
     expect(result.ok).toBe(true);
 
-    const files = await fs.readdir(join(testDir, 'tests/integration'));
-    const hasTestFiles = files.some(f => f.endsWith('.test.ts') || f.endsWith('.spec.ts'));
-    expect(hasTestFiles).toBe(true);
+    // Verifica se arquivos de contrato foram criados
+    const contractPath = join(testDir, 'tests/integration/contract/api-contract.test.ts');
+    const contractExists = await fs.access(contractPath).then(() => true).catch(() => false);
+    expect(contractExists).toBe(true);
   });
 
   it('deve atualizar package.json com scripts de integração', async () => {
