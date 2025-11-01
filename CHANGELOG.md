@@ -24,6 +24,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Detecção recursiva de testes existentes
   - Identificação de framework (vitest/jest/mocha) e linguagem (TS/JS)
 
+#### Supertest & Testcontainers Templates 🚀 NEW
+
+- **Templates Avançados para `scaffold-integration`**:
+  - `helpers/supertest-client.ts`: Cliente HTTP para testar Express sem servidor
+  - `helpers/testcontainers.ts`: Manager de containers (PostgreSQL, Redis, MongoDB)
+  - `examples/supertest.example.test.ts`: 6 exemplos práticos de Supertest
+  - `examples/testcontainers.example.test.ts`: 7 exemplos com PostgreSQL real
+
+- **Auto-instalação de Dependências**:
+  - Adiciona `supertest`, `testcontainers`, `pg` ao `package.json` automaticamente
+  - Instruções de instalação no console
+  - Guia completo em `docs/SUPERTEST-TESTCONTAINERS.md`
+
 ### ✨ New Features
 
 - **Configuração Agnóstica**: Config genérica funciona para qualquer time/produto
@@ -89,6 +102,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Artifacts por modo (tabela)
   - Performance e otimizações
   - Integração CI/CD
+
+- **SUPERTEST-TESTCONTAINERS.md**: Guia de templates avançados 🚀 NEW
+  - Quando usar Supertest vs Testcontainers
+  - Instalação e setup
+  - Exemplos práticos (15+ code snippets)
+  - Boas práticas e troubleshooting
+  - Performance tips
 
 ### 🧪 Tests
 

@@ -70,6 +70,16 @@ export async function scaffoldIntegrationTests(input: ScaffoldIntegrationParams)
   await generateTestHelpers(testDir);
   generated.push('tests/integration/helpers/api-client.ts');
 
+  // Gera helpers avançados (Supertest + Testcontainers)
+  await generateAdvancedHelpers(testDir);
+  generated.push('tests/integration/helpers/supertest-client.ts');
+  generated.push('tests/integration/helpers/testcontainers.ts');
+
+  // Gera exemplos práticos de uso
+  await generateAdvancedExamples(testDir);
+  generated.push('tests/integration/examples/supertest.example.test.ts');
+  generated.push('tests/integration/examples/testcontainers.example.test.ts');
+
   // Gera testes por domínio
   const endpointsByDomain = groupEndpointsByDomain(endpoints);
   
@@ -650,22 +660,676 @@ Acompanhe:
 - ✅ Taxa de falhas (< 1%)
 - ✅ Cobertura de casos de erro
 
+## 🚀 Templates Avançados Incluídos
+
+### Supertest
+Cliente HTTP para testar APIs Express sem servidor HTTP:
+- ✅ \`helpers/supertest-client.ts\` - Client helper
+- ✅ \`examples/supertest.example.test.ts\` - Exemplos práticos
+
+**Quando usar:** Testes rápidos de rotas Express, validação de status codes, headers, bodies.
+
+**Instalação:**
+\`\`\`bash
+npm install --save-dev supertest @types/supertest
+\`\`\`
+
+**Exemplo rápido:**
+\`\`\`typescript
+import { SupertestClient } from './helpers/supertest-client';
+import { app } from '../../src/server';
+
+const client = new SupertestClient(app);
+
+it('should create user', async () => {
+  const res = await client.post('/api/users', {
+    name: 'John',
+    email: 'john@example.com'
+  }).expect(201);
+  
+  expect(res.body.id).toBeDefined();
+});
+\`\`\`
+
+### Testcontainers
+Containers Docker reais para testes de integração:
+- ✅ \`helpers/testcontainers.ts\` - Manager para PostgreSQL, Redis, MongoDB
+- ✅ \`examples/testcontainers.example.test.ts\` - Exemplos completos
+
+**Quando usar:** Testes com banco de dados real, Redis, filas, etc. Garante comportamento idêntico ao produção.
+
+**Instalação:**
+\`\`\`bash
+npm install --save-dev testcontainers @testcontainers/postgresql pg @types/pg
+\`\`\`
+
+**Exemplo rápido:**
+\`\`\`typescript
+import { TestContainersManager } from './helpers/testcontainers';
+import { Client } from 'pg';
+
+let containers: TestContainersManager;
+let dbClient: Client;
+
+beforeAll(async () => {
+  containers = new TestContainersManager();
+  const postgres = await containers.startPostgres();
+  
+  dbClient = new Client({
+    connectionString: postgres.getConnectionUri()
+  });
+  await dbClient.connect();
+}, 60000);
+
+afterAll(async () => {
+  await dbClient?.end();
+  await containers.stopAll();
+});
+
+it('should insert data', async () => {
+  await dbClient.query('CREATE TABLE users (id SERIAL, name TEXT)');
+  await dbClient.query('INSERT INTO users (name) VALUES ($1)', ['John']);
+  
+  const result = await dbClient.query('SELECT * FROM users');
+  expect(result.rows).toHaveLength(1);
+});
+\`\`\`
+
 ## Recursos
 
 - [Supertest](https://github.com/visionmedia/supertest)
 - [Pact](https://docs.pact.io/)
 - [TestContainers](https://testcontainers.com/)
 - [MSW](https://mswjs.io/) - Mock Service Worker
+- [PostgreSQL Client (pg)](https://node-postgres.com/)
 
 ---
 
-**Gerado por:** Quality MCP v0.2.0
+**Gerado por:** Quality MCP v0.3.0
 `;
 
   await writeFileSafe(
     join(repoPath, 'tests', 'analyses', 'INTEGRATION-TESTING-GUIDE.md'),
     guide
   );
+}
+
+/**
+ * Gera helpers avançados: Supertest + Testcontainers
+ */
+async function generateAdvancedHelpers(testDir: string) {
+  await ensureDir(join(testDir, 'helpers'));
+
+  // 1. Supertest Client Helper
+  const supertestClient = `import request from 'supertest';
+import type { Express } from 'express';
+
+/**
+ * Cliente Supertest para testes de API
+ * Usa o app Express diretamente sem precisar de servidor HTTP
+ */
+export class SupertestClient {
+  private app: Express;
+  private authToken?: string;
+
+  constructor(app: Express) {
+    this.app = app;
+  }
+
+  setAuthToken(token: string) {
+    this.authToken = token;
+  }
+
+  /**
+   * GET request
+   */
+  get(url: string) {
+    const req = request(this.app).get(url);
+    if (this.authToken) {
+      req.set('Authorization', \`Bearer \${this.authToken}\`);
+    }
+    return req;
+  }
+
+  /**
+   * POST request
+   */
+  post(url: string, data?: any) {
+    const req = request(this.app)
+      .post(url)
+      .send(data);
+    if (this.authToken) {
+      req.set('Authorization', \`Bearer \${this.authToken}\`);
+    }
+    return req;
+  }
+
+  /**
+   * PUT request
+   */
+  put(url: string, data?: any) {
+    const req = request(this.app)
+      .put(url)
+      .send(data);
+    if (this.authToken) {
+      req.set('Authorization', \`Bearer \${this.authToken}\`);
+    }
+    return req;
+  }
+
+  /**
+   * DELETE request
+   */
+  delete(url: string) {
+    const req = request(this.app).delete(url);
+    if (this.authToken) {
+      req.set('Authorization', \`Bearer \${this.authToken}\`);
+    }
+    return req;
+  }
+
+  /**
+   * PATCH request
+   */
+  patch(url: string, data?: any) {
+    const req = request(this.app)
+      .patch(url)
+      .send(data);
+    if (this.authToken) {
+      req.set('Authorization', \`Bearer \${this.authToken}\`);
+    }
+    return req;
+  }
+}
+
+/**
+ * Exemplo de uso:
+ * 
+ * import { app } from '../../../src/server';
+ * import { SupertestClient } from './helpers/supertest-client';
+ * 
+ * describe('Users API', () => {
+ *   const client = new SupertestClient(app);
+ * 
+ *   it('should create user', async () => {
+ *     const res = await client.post('/api/users', {
+ *       name: 'John Doe',
+ *       email: 'john@example.com'
+ *     }).expect(201);
+ * 
+ *     expect(res.body).toHaveProperty('id');
+ *     expect(res.body.name).toBe('John Doe');
+ *   });
+ * });
+ */
+`;
+
+  await writeFileSafe(join(testDir, 'helpers', 'supertest-client.ts'), supertestClient);
+
+  // 2. Testcontainers Helper
+  const testcontainersHelper = `import { 
+  PostgreSqlContainer, 
+  type StartedPostgreSqlContainer 
+} from '@testcontainers/postgresql';
+import { 
+  GenericContainer, 
+  type StartedTestContainer 
+} from 'testcontainers';
+
+/**
+ * Helper para gerenciar containers de teste
+ * Suporta: PostgreSQL, MySQL, MongoDB, Redis, etc.
+ */
+export class TestContainersManager {
+  private containers: Map<string, StartedTestContainer> = new Map();
+
+  /**
+   * Inicia container PostgreSQL
+   */
+  async startPostgres(opts?: {
+    database?: string;
+    username?: string;
+    password?: string;
+  }): Promise<StartedPostgreSqlContainer> {
+    console.log('🐘 Starting PostgreSQL container...');
+    
+    const container = await new PostgreSqlContainer('postgres:15-alpine')
+      .withDatabase(opts?.database || 'test_db')
+      .withUsername(opts?.username || 'test_user')
+      .withPassword(opts?.password || 'test_pass')
+      .withExposedPorts(5432)
+      .start();
+
+    this.containers.set('postgres', container);
+    
+    console.log(\`✅ PostgreSQL started: \${container.getConnectionUri()}\`);
+    return container;
+  }
+
+  /**
+   * Inicia container Redis
+   */
+  async startRedis(): Promise<StartedTestContainer> {
+    console.log('🔴 Starting Redis container...');
+    
+    const container = await new GenericContainer('redis:7-alpine')
+      .withExposedPorts(6379)
+      .start();
+
+    this.containers.set('redis', container);
+    
+    const host = container.getHost();
+    const port = container.getMappedPort(6379);
+    console.log(\`✅ Redis started: redis://\${host}:\${port}\`);
+    
+    return container;
+  }
+
+  /**
+   * Inicia container MongoDB
+   */
+  async startMongo(opts?: {
+    database?: string;
+  }): Promise<StartedTestContainer> {
+    console.log('🍃 Starting MongoDB container...');
+    
+    const container = await new GenericContainer('mongo:7-jammy')
+      .withExposedPorts(27017)
+      .withEnvironment({
+        MONGO_INITDB_DATABASE: opts?.database || 'test_db'
+      })
+      .start();
+
+    this.containers.set('mongo', container);
+    
+    const host = container.getHost();
+    const port = container.getMappedPort(27017);
+    console.log(\`✅ MongoDB started: mongodb://\${host}:\${port}\`);
+    
+    return container;
+  }
+
+  /**
+   * Para todos os containers
+   */
+  async stopAll(): Promise<void> {
+    console.log('🛑 Stopping all containers...');
+    
+    for (const [name, container] of this.containers.entries()) {
+      await container.stop();
+      console.log(\`  ✅ Stopped: \${name}\`);
+    }
+    
+    this.containers.clear();
+  }
+
+  /**
+   * Para um container específico
+   */
+  async stop(name: string): Promise<void> {
+    const container = this.containers.get(name);
+    if (container) {
+      await container.stop();
+      this.containers.delete(name);
+      console.log(\`✅ Stopped: \${name}\`);
+    }
+  }
+
+  /**
+   * Obtém container por nome
+   */
+  get(name: string): StartedTestContainer | undefined {
+    return this.containers.get(name);
+  }
+}
+
+/**
+ * Exemplo de uso:
+ * 
+ * import { TestContainersManager } from './helpers/testcontainers';
+ * import { Client } from 'pg';
+ * 
+ * describe('Database Integration Tests', () => {
+ *   let containers: TestContainersManager;
+ *   let dbClient: Client;
+ * 
+ *   beforeAll(async () => {
+ *     containers = new TestContainersManager();
+ *     const postgres = await containers.startPostgres();
+ * 
+ *     // Conecta ao banco
+ *     dbClient = new Client({
+ *       connectionString: postgres.getConnectionUri()
+ *     });
+ *     await dbClient.connect();
+ *   }, 60000); // Timeout maior para download da imagem
+ * 
+ *   afterAll(async () => {
+ *     await dbClient?.end();
+ *     await containers.stopAll();
+ *   });
+ * 
+ *   it('should insert and query data', async () => {
+ *     await dbClient.query(
+ *       'CREATE TABLE users (id SERIAL PRIMARY KEY, name TEXT)'
+ *     );
+ *     await dbClient.query(
+ *       'INSERT INTO users (name) VALUES ($1)',
+ *       ['John Doe']
+ *     );
+ * 
+ *     const result = await dbClient.query('SELECT * FROM users');
+ *     expect(result.rows).toHaveLength(1);
+ *     expect(result.rows[0].name).toBe('John Doe');
+ *   });
+ * });
+ */
+`;
+
+  await writeFileSafe(join(testDir, 'helpers', 'testcontainers.ts'), testcontainersHelper);
+}
+
+/**
+ * Gera exemplos práticos de testes com Supertest e Testcontainers
+ */
+async function generateAdvancedExamples(testDir: string) {
+  await ensureDir(join(testDir, 'examples'));
+
+  // 1. Exemplo Supertest
+  const supertestExample = `import { describe, it, expect, beforeAll } from 'vitest';
+import { SupertestClient } from '../helpers/supertest-client';
+// import { app } from '../../../src/server'; // Descomente quando tiver o servidor
+
+/**
+ * Exemplo de teste de integração usando Supertest
+ * 
+ * Supertest permite testar APIs Express sem iniciar servidor HTTP
+ * Mais rápido e isolado que testes com servidor real
+ */
+describe('Users API - Supertest Example', () => {
+  // const client = new SupertestClient(app); // Descomente quando tiver o app
+
+  it.skip('should create a new user', async () => {
+    // TODO: Implementar quando tiver o servidor
+    // const res = await client
+    //   .post('/api/users', {
+    //     name: 'John Doe',
+    //     email: 'john@example.com',
+    //     password: 'secure123'
+    //   })
+    //   .expect(201);
+    //
+    // expect(res.body).toHaveProperty('id');
+    // expect(res.body.name).toBe('John Doe');
+    // expect(res.body.email).toBe('john@example.com');
+    // expect(res.body).not.toHaveProperty('password'); // Não deve retornar senha
+  });
+
+  it.skip('should get user by id', async () => {
+    // TODO: Implementar quando tiver o servidor
+    // // Primeiro cria um usuário
+    // const createRes = await client.post('/api/users', {
+    //   name: 'Jane Doe',
+    //   email: 'jane@example.com',
+    //   password: 'secure123'
+    // });
+    //
+    // const userId = createRes.body.id;
+    //
+    // // Depois busca o usuário
+    // const res = await client.get(\`/api/users/\${userId}\`).expect(200);
+    //
+    // expect(res.body.id).toBe(userId);
+    // expect(res.body.name).toBe('Jane Doe');
+  });
+
+  it.skip('should return 404 for non-existent user', async () => {
+    // TODO: Implementar quando tiver o servidor
+    // const res = await client.get('/api/users/99999').expect(404);
+    //
+    // expect(res.body).toHaveProperty('error');
+    // expect(res.body.error).toContain('not found');
+  });
+
+  it.skip('should require authentication for protected routes', async () => {
+    // TODO: Implementar quando tiver o servidor
+    // await client.get('/api/users/me').expect(401);
+  });
+
+  it.skip('should authenticate and access protected route', async () => {
+    // TODO: Implementar quando tiver o servidor
+    // // 1. Login
+    // const loginRes = await client.post('/api/auth/login', {
+    //   email: 'john@example.com',
+    //   password: 'secure123'
+    // }).expect(200);
+    //
+    // const token = loginRes.body.token;
+    // client.setAuthToken(token);
+    //
+    // // 2. Acessar rota protegida
+    // const res = await client.get('/api/users/me').expect(200);
+    //
+    // expect(res.body.email).toBe('john@example.com');
+  });
+
+  it.skip('should validate request body', async () => {
+    // TODO: Implementar quando tiver o servidor
+    // const res = await client.post('/api/users', {
+    //   name: 'Invalid User'
+    //   // email faltando
+    // }).expect(400);
+    //
+    // expect(res.body).toHaveProperty('errors');
+    // expect(res.body.errors).toContain('email is required');
+  });
+});
+`;
+
+  await writeFileSafe(join(testDir, 'examples', 'supertest.example.test.ts'), supertestExample);
+
+  // 2. Exemplo Testcontainers
+  const testcontainersExample = `import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { TestContainersManager } from '../helpers/testcontainers';
+import { Client } from 'pg';
+import type { StartedPostgreSqlContainer } from '@testcontainers/postgresql';
+
+/**
+ * Exemplo de teste de integração usando Testcontainers
+ * 
+ * Testcontainers inicia containers Docker reais para testes
+ * Perfeito para testar integração com bancos de dados, Redis, etc.
+ */
+describe('Database Integration - Testcontainers Example', () => {
+  let containers: TestContainersManager;
+  let postgres: StartedPostgreSqlContainer;
+  let dbClient: Client;
+
+  beforeAll(async () => {
+    // Inicia PostgreSQL container
+    containers = new TestContainersManager();
+    postgres = await containers.startPostgres({
+      database: 'test_db',
+      username: 'test_user',
+      password: 'test_pass'
+    });
+
+    // Conecta ao banco
+    dbClient = new Client({
+      connectionString: postgres.getConnectionUri()
+    });
+    await dbClient.connect();
+
+    // Cria schema
+    await dbClient.query(\`
+      CREATE TABLE users (
+        id SERIAL PRIMARY KEY,
+        name TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW()
+      )
+    \`);
+  }, 60000); // Timeout maior para download da imagem Docker
+
+  afterAll(async () => {
+    // Cleanup
+    await dbClient?.end();
+    await containers.stopAll();
+  });
+
+  it('should insert user into database', async () => {
+    const result = await dbClient.query(
+      'INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *',
+      ['John Doe', 'john@example.com']
+    );
+
+    expect(result.rows).toHaveLength(1);
+    expect(result.rows[0]).toMatchObject({
+      name: 'John Doe',
+      email: 'john@example.com'
+    });
+    expect(result.rows[0].id).toBeDefined();
+  });
+
+  it('should query users from database', async () => {
+    // Insere múltiplos usuários
+    await dbClient.query(
+      'INSERT INTO users (name, email) VALUES ($1, $2)',
+      ['Jane Doe', 'jane@example.com']
+    );
+    await dbClient.query(
+      'INSERT INTO users (name, email) VALUES ($1, $2)',
+      ['Bob Smith', 'bob@example.com']
+    );
+
+    // Consulta todos os usuários
+    const result = await dbClient.query('SELECT * FROM users ORDER BY id');
+
+    expect(result.rows.length).toBeGreaterThanOrEqual(3); // Inclui o John do teste anterior
+    expect(result.rows.some(u => u.email === 'jane@example.com')).toBe(true);
+    expect(result.rows.some(u => u.email === 'bob@example.com')).toBe(true);
+  });
+
+  it('should enforce unique email constraint', async () => {
+    // Primeiro insert deve funcionar
+    await dbClient.query(
+      'INSERT INTO users (name, email) VALUES ($1, $2)',
+      ['User 1', 'duplicate@example.com']
+    );
+
+    // Segundo insert com mesmo email deve falhar
+    await expect(
+      dbClient.query(
+        'INSERT INTO users (name, email) VALUES ($1, $2)',
+        ['User 2', 'duplicate@example.com']
+      )
+    ).rejects.toThrow(/duplicate key value violates unique constraint/);
+  });
+
+  it('should update user', async () => {
+    // Insere usuário
+    const insertResult = await dbClient.query(
+      'INSERT INTO users (name, email) VALUES ($1, $2) RETURNING id',
+      ['Old Name', 'update@example.com']
+    );
+    const userId = insertResult.rows[0].id;
+
+    // Atualiza nome
+    await dbClient.query(
+      'UPDATE users SET name = $1 WHERE id = $2',
+      ['New Name', userId]
+    );
+
+    // Verifica atualização
+    const selectResult = await dbClient.query(
+      'SELECT name FROM users WHERE id = $1',
+      [userId]
+    );
+
+    expect(selectResult.rows[0].name).toBe('New Name');
+  });
+
+  it('should delete user', async () => {
+    // Insere usuário
+    const insertResult = await dbClient.query(
+      'INSERT INTO users (name, email) VALUES ($1, $2) RETURNING id',
+      ['To Delete', 'delete@example.com']
+    );
+    const userId = insertResult.rows[0].id;
+
+    // Deleta
+    await dbClient.query('DELETE FROM users WHERE id = $1', [userId]);
+
+    // Verifica que foi deletado
+    const selectResult = await dbClient.query(
+      'SELECT * FROM users WHERE id = $1',
+      [userId]
+    );
+
+    expect(selectResult.rows).toHaveLength(0);
+  });
+
+  it('should handle transactions', async () => {
+    // Inicia transação
+    await dbClient.query('BEGIN');
+
+    try {
+      await dbClient.query(
+        'INSERT INTO users (name, email) VALUES ($1, $2)',
+        ['Transaction User', 'transaction@example.com']
+      );
+
+      // Simula erro
+      throw new Error('Rollback test');
+    } catch (error) {
+      // Rollback
+      await dbClient.query('ROLLBACK');
+    }
+
+    // Verifica que o insert foi revertido
+    const result = await dbClient.query(
+      'SELECT * FROM users WHERE email = $1',
+      ['transaction@example.com']
+    );
+
+    expect(result.rows).toHaveLength(0);
+  });
+});
+
+/**
+ * Exemplo com Redis (descomente para usar)
+ */
+describe.skip('Redis Integration - Testcontainers Example', () => {
+  let containers: TestContainersManager;
+  // let redisClient: RedisClientType;
+
+  beforeAll(async () => {
+    containers = new TestContainersManager();
+    const redis = await containers.startRedis();
+
+    // const host = redis.getHost();
+    // const port = redis.getMappedPort(6379);
+
+    // redisClient = createClient({
+    //   url: \`redis://\${host}:\${port}\`
+    // });
+    // await redisClient.connect();
+  }, 60000);
+
+  afterAll(async () => {
+    // await redisClient?.quit();
+    await containers.stopAll();
+  });
+
+  it.skip('should set and get value from Redis', async () => {
+    // await redisClient.set('test_key', 'test_value');
+    // const value = await redisClient.get('test_key');
+    // expect(value).toBe('test_value');
+  });
+});
+`;
+
+  await writeFileSafe(join(testDir, 'examples', 'testcontainers.example.test.ts'), testcontainersExample);
 }
 
 async function updatePackageJsonWithIntegrationScripts(repoPath: string) {
@@ -679,10 +1343,42 @@ async function updatePackageJsonWithIntegrationScripts(repoPath: string) {
       packageJson.scripts = {};
     }
     
+    // Adiciona scripts de teste
     packageJson.scripts['test:integration'] = 'vitest tests/integration';
     packageJson.scripts['test:integration:watch'] = 'vitest tests/integration --watch';
     packageJson.scripts['test:integration:coverage'] = 'vitest tests/integration --coverage';
     
+    // Adiciona devDependencies recomendadas (se ainda não existem)
+    if (!packageJson.devDependencies) {
+      packageJson.devDependencies = {};
+    }
+    
+    const recommendedDeps = {
+      'supertest': '^6.3.3',
+      '@types/supertest': '^6.0.2',
+      'testcontainers': '^10.2.1',
+      '@testcontainers/postgresql': '^10.2.1',
+      'pg': '^8.11.3',
+      '@types/pg': '^8.10.9'
+    };
+    
+    let depsAdded = false;
+    for (const [dep, version] of Object.entries(recommendedDeps)) {
+      if (!packageJson.devDependencies[dep] && !packageJson.dependencies?.[dep]) {
+        packageJson.devDependencies[dep] = version;
+        depsAdded = true;
+      }
+    }
+    
     await writeFileSafe(packageJsonPath, JSON.stringify(packageJson, null, 2));
+    
+    if (depsAdded) {
+      console.log('\n📦 Dependências adicionadas ao package.json:');
+      console.log('   - supertest: Testes de API Express');
+      console.log('   - testcontainers: Containers Docker para testes');
+      console.log('   - @testcontainers/postgresql: Helper PostgreSQL');
+      console.log('   - pg: Cliente PostgreSQL');
+      console.log('\n💡 Execute: npm install');
+    }
   }
 }

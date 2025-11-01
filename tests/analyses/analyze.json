@@ -225,6 +225,6 @@
     "Cobertura por diff-coverage ≥ 60%; CI p95 ≤ 15min; flaky ≤ 3%.",
     "Considerar adicionar especificação OpenAPI para documentação de contratos.",
     "Foco nos domínios: todos",
-    "Produto: Test - Base URL: https://test.app"
+    "Produto: AutoDetectTest - Base URL: não especificada"
   ]
 }
