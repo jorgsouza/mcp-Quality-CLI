@@ -1,4 +1,4 @@
-# Análise da Pirâmide de Testes - QualityMCP
+# Análise da Pirâmide de Testes - mcp-Quality-CLI
 
 **Data:** 2025-11-01
 
@@ -6,10 +6,10 @@
 
 | Camada | Test Cases | Arquivos | Proporção | Status |
 |--------|-----------|----------|-----------|--------|
-| **Unit** | 166 | 19 | 94.3% | ✅ |
-| **Integration** | 10 | 3 | 5.7% | ✅ |
-| **E2E** | 0 | 0 | 0.0% | ⚠️ |
-| **TOTAL** | **176** | **22** | **100%** | **✅** |
+| **Unit** | 305 | 28 | 77.4% | ✅ |
+| **Integration** | 36 | 4 | 9.1% | ✅ |
+| **E2E** | 53 | 5 | 13.5% | ✅ |
+| **TOTAL** | **394** | **37** | **100%** | **✅** |
 
 ## 🏥 Saúde da Pirâmide
 
@@ -21,11 +21,11 @@
 IDEAL                  ATUAL
   ▲                      ▲
  / \                    / \
-/E2E\  10%            /E2E\  0.0%
+/E2E\  10%            /E2E\  13.5%
 ────────              ────────
- /INT\  20%           /INT\  5.7%
+ /INT\  20%           /INT\  9.1%
 ────────              ────────
-/UNIT\  70%          /UNIT\  94.3%
+/UNIT\  70%          /UNIT\  77.4%
 ────────              ────────
 ```
 
@@ -33,26 +33,17 @@ IDEAL                  ATUAL
 
 ### Base: Testes Unitários
 
-- **Test Cases:** 166
-- **Arquivos:** 19
-- **Cobertura:** 74.1%
-- **Arquivos sem testes:** 5
+- **Test Cases:** 305
+- **Arquivos:** 28
+- **Cobertura:** 85.0%
+- **Arquivos sem testes:** 0
 
-
-**Top 5 arquivos prioritários para testar:**
-- `src/server.ts`
-- `src/cli.ts`
-- `src/utils/config.ts`
-- `src/tools/pyramid-report.ts`
-- `src/tools/plan.ts`
-
-Execute: `quality scaffold-unit --files "src/server.ts src/cli.ts src/utils/config.ts src/tools/pyramid-report.ts src/tools/plan.ts"`
 
 
 ### Meio: Testes de Integração
 
-- **Test Cases:** 10
-- **Arquivos:** 3
+- **Test Cases:** 36
+- **Arquivos:** 4
 - **Endpoints testados:** 2
 - **Cobertura de API:** ✅
 
@@ -60,14 +51,13 @@ Execute: `quality scaffold-unit --files "src/server.ts src/cli.ts src/utils/conf
 
 ### Topo: Testes E2E
 
-- **Test Cases:** 0
-- **Arquivos:** 0
-- **Cenários:** 0
-- **Média por arquivo:** 0
+- **Test Cases:** 53
+- **Arquivos:** 5
+- **Cenários:** 47
+- **Média por arquivo:** 10.6
 
 ## 💡 Recomendações
 
-- 📝 5 arquivos sem testes. Execute 'quality scaffold-unit' para gerar.
 - 🔗 Considere adicionar mais testes de integração/API para o meio da pirâmide.
 
 ## 🎯 Plano de Ação
@@ -76,7 +66,7 @@ Execute: `quality scaffold-unit --files "src/server.ts src/cli.ts src/utils/conf
 
 1. [ ] Criar testes unitários para os 5 arquivos prioritários
 2. [ ] Aumentar cobertura de integração em 20%
-3. [ ] Criar cenários E2E principais
+3. [ ] Revisar testes E2E existentes
 
 ### Médio Prazo (1 mês)
 
@@ -102,4 +92,4 @@ Execute: `quality scaffold-unit --files "src/server.ts src/cli.ts src/utils/conf
 ---
 
 **Gerado por:** Quality MCP v0.2.0  
-**Timestamp:** 2025-11-01T14:43:12.113Z
+**Timestamp:** 2025-11-01T22:27:23.425Z
