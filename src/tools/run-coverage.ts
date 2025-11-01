@@ -255,6 +255,7 @@ export interface RunCoverageParams {
 
 export interface CoverageResult {
   ok: boolean;
+  error?: string;
   summary: {
     lines: { total: number; covered: number; pct: number };
     functions: { total: number; covered: number; pct: number };
@@ -420,6 +421,7 @@ export async function runCoverageAnalysis(input: RunCoverageParams): Promise<Cov
     // Se falhou, retornar resultado parcial
     return {
       ok: false,
+      error: error.message,
       summary: {
         lines: { total: 0, covered: 0, pct: 0 },
         functions: { total: 0, covered: 0, pct: 0 },

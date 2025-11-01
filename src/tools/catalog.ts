@@ -88,16 +88,15 @@ export async function catalogScenarios(input: CatalogParams): Promise<CatalogRes
 
 async function detectAllTests(repoPath: string): Promise<string[]> {
   const patterns = [
-    '**/*.test.{ts,tsx,js,jsx}',
-    '**/*.spec.{ts,tsx,js,jsx}',
-    '**/tests/**/*.{ts,tsx,js,jsx}'
+    join(repoPath, '**/*.test.{ts,tsx,js,jsx}'),
+    join(repoPath, '**/*.spec.{ts,tsx,js,jsx}'),
+    join(repoPath, '**/tests/**/*.{ts,tsx,js,jsx}')
   ];
 
   let allTests: string[] = [];
 
   for (const pattern of patterns) {
     const tests = await glob(pattern, {
-      cwd: repoPath,
       ignore: ['**/node_modules/**', '**/dist/**']
     });
     allTests.push(...tests);

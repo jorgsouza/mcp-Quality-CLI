@@ -3,7 +3,7 @@ import { spawn } from 'node:child_process';
 
 export interface DashboardParams {
   repo: string;
-  products?: string[]; // ["ReclameAQUI", "HugMe", "TrustVox"]
+  product?: string; // "ReclameAQUI"
   port?: number;
   open_browser?: boolean;
 }
@@ -19,7 +19,7 @@ export async function generateDashboard(input: DashboardParams): Promise<{
   console.log(`📊 Gerando dashboard da pirâmide de testes...`);
 
   // Carrega dados de análises
-  const data = await loadAnalysisData(input.repo, input.products);
+  const data = await loadAnalysisData(input.repo, input.product);
 
   // Gera HTML do dashboard
   const html = generateDashboardHTML(data, input);
@@ -45,7 +45,7 @@ export async function generateDashboard(input: DashboardParams): Promise<{
 /**
  * Carrega dados de todas as análises
  */
-async function loadAnalysisData(repoPath: string, products?: string[]): Promise<any> {
+async function loadAnalysisData(repoPath: string, product?: string): Promise<any> {
   const data: any = {
     products: [],
     summary: {
@@ -283,7 +283,7 @@ function generateDashboardHTML(data: any, input: DashboardParams): string {
 <body>
   <div class="container">
     <div class="header">
-      <h1>🎯 Quality Dashboard</h1>
+      <h1>🎯 Quality Dashboard - ${input.product}</h1>
       <p class="subtitle">Pirâmide de Testes - Gerado em ${new Date().toLocaleString('pt-BR')}</p>
     </div>
 
