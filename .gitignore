@@ -56,12 +56,12 @@ playwright/.cache/
 *.tmp
 *~
 
-# Generated analysis outputs (keep example files only)
-tests/analyses/*.json
-tests/analyses/*.md
-tests/analyses/*.html
-!tests/analyses/README.md
+# QA outputs - gerados automaticamente pelas tools
+# Manter apenas mcp-Quality-CLI (testes do próprio projeto)
+qa/*
+!qa/mcp-Quality-CLI/
 
 # Temp directories from tests
 .test-temp-*/
+.test-auto-run-*/
 

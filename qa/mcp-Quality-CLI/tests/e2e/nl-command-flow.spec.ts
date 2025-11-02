@@ -7,7 +7,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { mkdtemp, rm, writeFile, mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { nlCommand } from '../../src/tools/nl-command.js';
+import { nlCommand } from '../../../../src/tools/nl-command.js';
 
 describe('E2E: nl-command-flow', () => {
   let tempDir: string;

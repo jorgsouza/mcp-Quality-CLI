@@ -11,8 +11,8 @@ describe('pyramid-report.ts', () => {
     testRepoPath = join(tmpdir(), `pyramid-report-test-${Date.now()}`);
     await fs.mkdir(testRepoPath, { recursive: true });
 
-    // Cria análise de cobertura mock com todos os campos necessários
-    const analysesDir = join(testRepoPath, 'tests/analyses');
+    // [FASE 2] Criar estrutura qa/<product>/tests/analyses para getPaths()
+    const analysesDir = join(testRepoPath, 'qa/TestProduct/tests/analyses');
     await fs.mkdir(analysesDir, { recursive: true });
 
     await fs.writeFile(

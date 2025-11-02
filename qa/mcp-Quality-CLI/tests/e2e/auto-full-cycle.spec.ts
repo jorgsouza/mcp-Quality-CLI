@@ -7,7 +7,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { mkdtemp, rm, writeFile, mkdir, access } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { autoQualityRun } from '../../src/tools/auto.js';
+import { autoQualityRun } from '../../../../src/tools/auto.js';
 import { constants } from 'node:fs';
 
 describe('E2E: auto-full-cycle', () => {

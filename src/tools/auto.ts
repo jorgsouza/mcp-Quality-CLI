@@ -413,7 +413,8 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<{
         try {
           // Run coverage analysis
           const coverageResult = await runCoverageAnalysis({
-            repo: repoPath
+            repo: repoPath,
+            product // [FASE 2] Adicionar product para getPaths()
           });
           steps.push('coverage');
           outputs.coverage = coverageResult.reportPath;

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { analyze } from '../../src/tools/analyze.js';
-import { generatePlan } from '../../src/tools/plan.js';
+import { analyze } from '../../../../src/tools/analyze.js';
+import { generatePlan } from '../../../../src/tools/plan.js';
 import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
@@ -49,15 +49,16 @@ describe('Fluxo: Análise → Plano', () => {
     const plan = await generatePlan({
       repo: testDir,
       product: 'Test App',
-      base_url: 'http://test.com',
-      out_dir: 'tests/analyses'
+      base_url: 'http://test.com'
+      // [FASE 2] out_dir removido - plan.ts usa getPaths()
     });
 
     expect(plan.ok).toBe(true);
     expect(plan.plan).toBeDefined();
 
     // Passo 3: Verificar que rotas da análise estão no plano
-    const planPath = join(testDir, 'tests/analyses/TEST-PLAN.md');
+    // [FASE 2] plan.ts agora usa paths.reports e salva como PLAN.md
+    const planPath = join(testDir, 'qa/Test App/tests/reports/PLAN.md');
     const planExists = await fs.access(planPath).then(() => true).catch(() => false);
     
     expect(planExists).toBe(true);
@@ -95,14 +96,15 @@ describe('Fluxo: Análise → Plano', () => {
       repo: testDir,
       product: 'E-commerce',
       base_url: 'http://shop.test',
-      include_examples: true,
-      out_dir: 'tests/analyses'
+      include_examples: true
+      // [FASE 2] out_dir removido - plan.ts usa getPaths()
     });
 
     expect(plan.ok).toBe(true);
 
     // Verificar conteúdo do plano
-    const planPath = join(testDir, 'tests/analyses/TEST-PLAN.md');
+    // [FASE 2] plan.ts agora usa paths.reports e salva como PLAN.md
+    const planPath = join(testDir, 'qa/E-commerce/tests/reports/PLAN.md');
     const planContent = await fs.readFile(planPath, 'utf-8');
 
     // Plano deve ter seções importantes
@@ -133,13 +135,14 @@ describe('Fluxo: Análise → Plano', () => {
     const plan = await generatePlan({
       repo: testDir,
       product: 'Multi Domain App',
-      base_url: 'http://test.com',
-      out_dir: 'tests/analyses'
+      base_url: 'http://test.com'
+      // [FASE 2] out_dir removido - plan.ts usa getPaths()
     });
 
     expect(plan.ok).toBe(true);
 
-    const planContent = await fs.readFile(join(testDir, 'tests/analyses/TEST-PLAN.md'), 'utf-8');
+    // [FASE 2] plan.ts agora usa paths.reports e salva como PLAN.md
+    const planContent = await fs.readFile(join(testDir, 'qa/Multi Domain App/tests/reports/PLAN.md'), 'utf-8');
     
     // Plano deve mencionar domínios ou cenários
     expect(planContent.length).toBeGreaterThan(100);

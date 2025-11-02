@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { recommendTestStrategy } from '../../src/tools/recommend-strategy.js';
-import { scaffoldUnitTests } from '../../src/tools/scaffold-unit.js';
+import { recommendTestStrategy } from '../../../../src/tools/recommend-strategy.js';
+import { scaffoldUnitTests } from '../../../../src/tools/scaffold-unit.js';
 import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';

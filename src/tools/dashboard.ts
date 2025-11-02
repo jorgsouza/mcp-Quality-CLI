@@ -1,5 +1,6 @@
 import { join, writeFileSafe, readFile, fileExists } from '../utils/fs.js';
 import { loadMCPSettings, mergeSettings } from '../utils/config.js';
+import { getPaths, ensurePaths } from '../utils/paths.js';
 import { spawn } from 'node:child_process';
 
 export interface DashboardParams {
@@ -21,16 +22,20 @@ export async function generateDashboard(input: DashboardParams): Promise<{
   const fileSettings = await loadMCPSettings(input.repo, input.product);
   const settings = mergeSettings(fileSettings, input);
 
+  // [FASE 2] Calcular paths padronizados e garantir que existem
+  const paths = getPaths(input.repo, settings.product || 'default', fileSettings || undefined);
+  await ensurePaths(paths);
+
   console.log(`📊 Gerando dashboard da pirâmide de testes...`);
 
-  // Carrega dados de análises
-  const data = await loadAnalysisData(input.repo, settings.product);
+  // Carrega dados de análises usando paths padronizados
+  const data = await loadAnalysisData(paths);
 
   // Gera HTML do dashboard
   const html = generateDashboardHTML(data, settings);
 
-  // Salva dashboard
-  const dashboardPath = join(input.repo, 'tests', 'analyses', 'dashboard.html');
+  // [FASE 2] Salva dashboard em paths.dashboards
+  const dashboardPath = join(paths.dashboards, 'dashboard.html');
   await writeFileSafe(dashboardPath, html);
 
   // Opcionalmente abre no navegador
@@ -49,8 +54,9 @@ export async function generateDashboard(input: DashboardParams): Promise<{
 
 /**
  * Carrega dados de todas as análises
+ * [FASE 2] Agora recebe QAPaths ao invés de string
  */
-async function loadAnalysisData(repoPath: string, product?: string): Promise<any> {
+async function loadAnalysisData(paths: ReturnType<typeof getPaths>): Promise<any> {
   const data: any = {
     products: [],
     summary: {
@@ -73,7 +79,8 @@ async function loadAnalysisData(repoPath: string, product?: string): Promise<any
   ];
 
   for (const file of files) {
-    const filePath = join(repoPath, 'tests', 'analyses', file);
+    // [FASE 2] Usar paths.analyses
+    const filePath = join(paths.analyses, file);
     if (await fileExists(filePath)) {
       try {
         const content = await readFile(filePath);

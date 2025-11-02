@@ -1,5 +1,6 @@
 import { join } from 'node:path';
 import { writeFileSafe, readFile, fileExists } from '../utils/fs.js';
+import { getPaths, ensurePaths } from '../utils/paths.js';
 
 export interface PyramidReportParams {
   repo: string;
@@ -13,8 +14,12 @@ export async function generatePyramidReport(input: PyramidReportParams): Promise
 }> {
   console.log(`📊 Gerando visualização da pirâmide de testes...`);
 
-  // Lê dados da análise de cobertura
-  const coverageAnalysisPath = join(input.repo, 'tests', 'analyses', 'coverage-analysis.json');
+  // [FASE 2] Calcular paths padronizados e garantir que existem
+  const paths = getPaths(input.repo, input.product);
+  await ensurePaths(paths);
+
+  // Lê dados da análise de cobertura usando paths padronizados
+  const coverageAnalysisPath = join(paths.analyses, 'coverage-analysis.json');
   
   if (!await fileExists(coverageAnalysisPath)) {
     throw new Error('Análise de cobertura não encontrada. Execute "quality coverage" primeiro.');
@@ -40,7 +45,8 @@ export async function generatePyramidReport(input: PyramidReportParams): Promise
       extension = 'md';
   }
 
-  const reportPath = join(input.repo, 'tests', 'analyses', `PYRAMID-REPORT.${extension}`);
+  // [FASE 2] Salvar em paths.reports ao invés de hardcoded path
+  const reportPath = join(paths.reports, `PYRAMID-REPORT.${extension}`);
   await writeFileSafe(reportPath, reportContent);
 
   console.log(`✅ Relatório da pirâmide gerado: ${reportPath}`);

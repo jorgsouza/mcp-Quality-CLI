@@ -131,7 +131,8 @@ describe('App', () => {
       ok: true,
       plan: expect.stringMatching(/\.md$/)
     });
-    expect(result.plan).toMatch(/TEST-PLAN/);
+    // [FASE 2] plan.ts salva como PLAN.md, não TEST-PLAN.md
+    expect(result.plan).toMatch(/PLAN/);
 
     // Verifica que arquivo foi criado
     const exists = await fs.stat(result.plan).then(() => true).catch(() => false);

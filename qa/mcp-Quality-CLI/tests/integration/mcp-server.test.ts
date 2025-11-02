@@ -12,8 +12,8 @@ import { tmpdir } from 'node:os';
 
 // Importa o server para testes
 // Vamos criar um helper que instancia o server para testes
-import type { AutoOptions } from '../../src/tools/auto.js';
-import type { NLCommandParams } from '../../src/tools/nl-command.js';
+import type { AutoOptions } from '../../../../src/tools/auto.js';
+import type { NLCommandParams } from '../../../../src/tools/nl-command.js';
 
 describe('MCP Server Integration', () => {
   let tempDir: string;

@@ -47,7 +47,7 @@ describe('runCoverageAnalysis', () => {
       })
     );
 
-    const result = await runCoverageAnalysis({ repo: testDir });
+    const result = await runCoverageAnalysis({ repo: testDir, product: "test-product" });
 
     expect(result.ok).toBe(true);
     expect(result.summary.lines.pct).toBe(85);
@@ -78,7 +78,7 @@ describe('runCoverageAnalysis', () => {
       })
     );
 
-    const result = await runCoverageAnalysis({ repo: testDir });
+    const result = await runCoverageAnalysis({ repo: testDir, product: "test-product" });
 
     expect(result.ok).toBe(true);
     expect(result.analysis.status).toBe('critical');
@@ -110,7 +110,7 @@ describe('runCoverageAnalysis', () => {
       })
     );
 
-    const result = await runCoverageAnalysis({ repo: testDir });
+    const result = await runCoverageAnalysis({ repo: testDir, product: "test-product" });
 
     expect(result.ok).toBe(true);
     expect(result.analysis.status).toBe('good');
@@ -152,7 +152,7 @@ describe('runCoverageAnalysis', () => {
       })
     );
 
-    const result = await runCoverageAnalysis({ repo: testDir });
+    const result = await runCoverageAnalysis({ repo: testDir, product: "test-product" });
 
     expect(result.files.length).toBe(2);
     expect(result.files[0].path).toContain('file1');
@@ -184,7 +184,7 @@ describe('runCoverageAnalysis', () => {
       })
     );
 
-    const result = await runCoverageAnalysis({ repo: testDir });
+    const result = await runCoverageAnalysis({ repo: testDir, product: "test-product" });
 
     expect(result.reportPath).toBeDefined();
     expect(result.reportPath).toContain('COVERAGE-ANALYSIS.md');
@@ -225,6 +225,7 @@ describe('runCoverageAnalysis', () => {
 
     const result = await runCoverageAnalysis({
       repo: testDir,
+      product: 'test-product', // [FASE 2] Necessário para getPaths()
       thresholds: {
         lines: 50,
         functions: 50,
@@ -248,7 +249,7 @@ describe('runCoverageAnalysis', () => {
 
     await fs.mkdir(join(testDir, 'tests/analyses'), { recursive: true });
 
-    const result = await runCoverageAnalysis({ repo: testDir });
+    const result = await runCoverageAnalysis({ repo: testDir, product: "test-product" });
 
     expect(result.ok).toBe(false);
     expect(result.error).toBeDefined();
@@ -277,7 +278,7 @@ describe('runCoverageAnalysis', () => {
       })
     );
 
-    const result = await runCoverageAnalysis({ repo: testDir });
+    const result = await runCoverageAnalysis({ repo: testDir, product: "test-product" });
 
     expect(result.ok).toBe(true);
     const linesGap = result.analysis.recommendations.find(g => g.includes('linhas'));
@@ -314,7 +315,7 @@ describe('runCoverageAnalysis', () => {
       })
     );
 
-    const result = await runCoverageAnalysis({ repo: testDir });
+    const result = await runCoverageAnalysis({ repo: testDir, product: "test-product" });
 
     expect(result.ok).toBe(true);
     expect(result.analysis.recommendations.length).toBeGreaterThan(0);
@@ -362,7 +363,7 @@ describe('runCoverageAnalysis', () => {
       })
     );
 
-    const result = await runCoverageAnalysis({ repo: testDir });
+    const result = await runCoverageAnalysis({ repo: testDir, product: "test-product" });
 
     expect(result.ok).toBe(true);
     expect(result.analysis.priorities.length).toBe(3);
@@ -417,7 +418,7 @@ describe('Parsers Multi-linguagem', () => {
         })
       );
 
-      const result = await runCoverageAnalysis({ repo: testDir });
+      const result = await runCoverageAnalysis({ repo: testDir, product: "test-product" });
 
       expect(result.ok).toBe(true);
       expect(result.summary.lines.pct).toBe(80);
@@ -446,7 +447,7 @@ describe('Parsers Multi-linguagem', () => {
         })
       );
 
-      const result = await runCoverageAnalysis({ repo: testDir });
+      const result = await runCoverageAnalysis({ repo: testDir, product: "test-product" });
 
       expect(result.ok).toBe(true);
       expect(result.summary.lines.pct).toBe(80);
@@ -465,7 +466,7 @@ describe('Parsers Multi-linguagem', () => {
       
       // Como mvn não existe, o teste falhará na execução
       // Mas vamos validar que a detecção funciona
-      const result = await runCoverageAnalysis({ repo: testDir }).catch(e => ({
+      const result = await runCoverageAnalysis({ repo: testDir, product: "test-product" }).catch(e => ({
         ok: false,
         error: e.message,
         summary: { lines: {total: 0, covered: 0, pct: 0}, functions: {total: 0, covered: 0, pct: 0}, branches: {total: 0, covered: 0, pct: 0}, statements: {total: 0, covered: 0, pct: 0} },
@@ -482,7 +483,7 @@ describe('Parsers Multi-linguagem', () => {
       await fs.writeFile(join(testDir, 'build.gradle'), 'apply plugin: "java"');
       await fs.mkdir(join(testDir, 'build/reports/jacoco/test'), { recursive: true });
 
-      const result = await runCoverageAnalysis({ repo: testDir }).catch(e => ({
+      const result = await runCoverageAnalysis({ repo: testDir, product: "test-product" }).catch(e => ({
         ok: false,
         error: e.message,
         summary: { lines: {total: 0, covered: 0, pct: 0}, functions: {total: 0, covered: 0, pct: 0}, branches: {total: 0, covered: 0, pct: 0}, statements: {total: 0, covered: 0, pct: 0} },
@@ -521,7 +522,7 @@ describe('Parsers Multi-linguagem', () => {
         { mode: 0o755 }
       );
 
-      const result = await runCoverageAnalysis({ repo: testDir }).catch(e => ({
+      const result = await runCoverageAnalysis({ repo: testDir, product: "test-product" }).catch(e => ({
         ok: false,
         error: e.message,
         summary: { lines: {total: 0, covered: 0, pct: 0}, functions: {total: 0, covered: 0, pct: 0}, branches: {total: 0, covered: 0, pct: 0}, statements: {total: 0, covered: 0, pct: 0} },
@@ -558,7 +559,7 @@ describe('Parsers Multi-linguagem', () => {
         JSON.stringify(coverageJson)
       );
 
-      const result = await runCoverageAnalysis({ repo: testDir }).catch(e => ({
+      const result = await runCoverageAnalysis({ repo: testDir, product: "test-product" }).catch(e => ({
         ok: false,
         error: e.message,
         summary: { lines: {total: 0, covered: 0, pct: 0}, functions: {total: 0, covered: 0, pct: 0}, branches: {total: 0, covered: 0, pct: 0}, statements: {total: 0, covered: 0, pct: 0} },
@@ -589,7 +590,7 @@ describe('Parsers Multi-linguagem', () => {
         JSON.stringify(coverageJson)
       );
 
-      const result = await runCoverageAnalysis({ repo: testDir }).catch(e => ({
+      const result = await runCoverageAnalysis({ repo: testDir, product: "test-product" }).catch(e => ({
         ok: false,
         error: e.message,
         summary: { lines: {total: 0, covered: 0, pct: 0}, functions: {total: 0, covered: 0, pct: 0}, branches: {total: 0, covered: 0, pct: 0}, statements: {total: 0, covered: 0, pct: 0} },
@@ -615,7 +616,7 @@ github.com/test/main.go:26.1,28.2 1 0`;
 
       await fs.writeFile(join(testDir, 'coverage.out'), coverageOut);
 
-      const result = await runCoverageAnalysis({ repo: testDir }).catch(e => ({
+      const result = await runCoverageAnalysis({ repo: testDir, product: "test-product" }).catch(e => ({
         ok: false,
         error: e.message,
         summary: { lines: {total: 0, covered: 0, pct: 0}, functions: {total: 0, covered: 0, pct: 0}, branches: {total: 0, covered: 0, pct: 0}, statements: {total: 0, covered: 0, pct: 0} },
@@ -635,7 +636,7 @@ github.com/test/file.go:5.1,7.2 1 10`;
 
       await fs.writeFile(join(testDir, 'coverage.out'), coverageOut);
 
-      const result = await runCoverageAnalysis({ repo: testDir }).catch(e => ({
+      const result = await runCoverageAnalysis({ repo: testDir, product: "test-product" }).catch(e => ({
         ok: false,
         error: e.message,
         summary: { lines: {total: 0, covered: 0, pct: 0}, functions: {total: 0, covered: 0, pct: 0}, branches: {total: 0, covered: 0, pct: 0}, statements: {total: 0, covered: 0, pct: 0} },
@@ -651,7 +652,7 @@ github.com/test/file.go:5.1,7.2 1 10`;
       await fs.writeFile(join(testDir, 'go.mod'), 'module test\ngo 1.21');
       await fs.writeFile(join(testDir, 'coverage.out'), 'mode: set\n');
 
-      const result = await runCoverageAnalysis({ repo: testDir }).catch(e => ({
+      const result = await runCoverageAnalysis({ repo: testDir, product: "test-product" }).catch(e => ({
         ok: false,
         error: e.message,
         summary: { lines: {total: 0, covered: 0, pct: 0}, functions: {total: 0, covered: 0, pct: 0}, branches: {total: 0, covered: 0, pct: 0}, statements: {total: 0, covered: 0, pct: 0} },
@@ -681,7 +682,7 @@ github.com/test/file.go:5.1,7.2 1 10`;
         JSON.stringify(simpleCovJson)
       );
 
-      const result = await runCoverageAnalysis({ repo: testDir }).catch(e => ({
+      const result = await runCoverageAnalysis({ repo: testDir, product: "test-product" }).catch(e => ({
         ok: false,
         error: e.message,
         summary: { lines: {total: 0, covered: 0, pct: 0}, functions: {total: 0, covered: 0, pct: 0}, branches: {total: 0, covered: 0, pct: 0}, statements: {total: 0, covered: 0, pct: 0} },
@@ -706,7 +707,7 @@ github.com/test/file.go:5.1,7.2 1 10`;
         JSON.stringify(simpleCovJson)
       );
 
-      const result = await runCoverageAnalysis({ repo: testDir }).catch(e => ({
+      const result = await runCoverageAnalysis({ repo: testDir, product: "test-product" }).catch(e => ({
         ok: false,
         error: e.message,
         summary: { lines: {total: 0, covered: 0, pct: 0}, functions: {total: 0, covered: 0, pct: 0}, branches: {total: 0, covered: 0, pct: 0}, statements: {total: 0, covered: 0, pct: 0} },
@@ -733,7 +734,7 @@ github.com/test/file.go:5.1,7.2 1 10`;
         coberturaXml
       );
 
-      const result = await runCoverageAnalysis({ repo: testDir }).catch((e) => ({
+      const result = await runCoverageAnalysis({ repo: testDir, product: "test-product" }).catch((e) => ({
         ok: false,
         error: e.message,
         summary: { lines: {total: 0, covered: 0, pct: 0}, functions: {total: 0, covered: 0, pct: 0}, branches: {total: 0, covered: 0, pct: 0}, statements: {total: 0, covered: 0, pct: 0} },
@@ -760,7 +761,7 @@ github.com/test/file.go:5.1,7.2 1 10`;
 
       await fs.writeFile(join(testDir, 'coverage.xml'), cloverXml);
 
-      const result = await runCoverageAnalysis({ repo: testDir }).catch((e) => ({
+      const result = await runCoverageAnalysis({ repo: testDir, product: "test-product" }).catch((e) => ({
         ok: false,
         error: e.message,
         summary: { lines: {total: 0, covered: 0, pct: 0}, functions: {total: 0, covered: 0, pct: 0}, branches: {total: 0, covered: 0, pct: 0}, statements: {total: 0, covered: 0, pct: 0} },

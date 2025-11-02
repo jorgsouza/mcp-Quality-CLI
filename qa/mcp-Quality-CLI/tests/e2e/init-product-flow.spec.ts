@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { initProduct } from '../../src/tools/init-product.js';
+import { initProduct } from '../../../../src/tools/init-product.js';
 
 /**
  * E2E Test: init-product flow

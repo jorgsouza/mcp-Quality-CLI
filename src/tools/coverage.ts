@@ -5,6 +5,7 @@ import { spawn } from 'node:child_process';
 import { writeFileSafe, fileExists, readFile } from '../utils/fs.js';
 import { loadMCPSettings, mergeSettings } from '../utils/config.js';
 import { detectLanguage } from '../detectors/language.js';
+import { getPaths, ensurePaths } from '../utils/paths.js';
 
 export interface CoverageParams {
   repo: string;
@@ -56,13 +57,14 @@ export async function analyzeTestCoverage(input: CoverageParams): Promise<Covera
     console.log(`✅ Using settings from mcp-settings.json`);
   }
 
+  // [FASE 2] Calcular e garantir estrutura de paths
+  const paths = getPaths(settings.repo, settings.product, fileSettings || undefined);
+  await ensurePaths(paths);
+
   // Detecta a linguagem do projeto
   const languageDetection = await detectLanguage(settings.repo);
   const language = languageDetection.primary;
   console.log(`🔍 Linguagem detectada: ${language}`);
-
-  const analysesDir = join(settings.repo, 'tests', 'analyses');
-  await writeFileSafe(join(analysesDir, '.gitkeep'), '');
 
   // Tenta obter contagem precisa do test runner
   const actualTestCount = await getActualTestCount(settings.repo, language);
@@ -160,19 +162,22 @@ Arquivos sem testes: ${missingTests.length}
     },
     health,
     recommendations,
-    analysis_path: join('tests', 'analyses', 'coverage-analysis.json')
+    // [FASE 2] Usar paths.analyses relativo ao repo
+    analysis_path: join(paths.analyses.replace(settings.repo + '/', ''), 'coverage-analysis.json')
   };
 
   // Salva análise
+  // [FASE 2] Usar paths.analyses
   await writeFileSafe(
-    join(settings.repo, 'tests', 'analyses', 'coverage-analysis.json'),
+    join(paths.analyses, 'coverage-analysis.json'),
     JSON.stringify(result, null, 2)
   );
 
   // Salva relatório em markdown
   const markdown = generateCoverageMarkdown(result, settings.product);
+  // [FASE 2] Usar paths.reports
   await writeFileSafe(
-    join(settings.repo, 'tests', 'analyses', 'COVERAGE-REPORT.md'),
+    join(paths.reports, 'COVERAGE-REPORT.md'),
     markdown
   );
 

@@ -4,6 +4,7 @@ import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
 import { writeFileSafe } from '../utils/fs.js';
 import { detectLanguage, type LanguageDetection } from '../detectors/language.js';
+import { getPaths, ensurePaths } from '../utils/paths.js';
 
 const exec = promisify(execFile);
 
@@ -245,6 +246,7 @@ export function parseCloverXML(xml: string): any {
 
 export interface RunCoverageParams {
   repo: string;
+  product: string; // [FASE 2] Necessário para getPaths()
   thresholds?: {
     lines?: number;
     functions?: number;
@@ -286,6 +288,10 @@ export interface CoverageResult {
 
 export async function runCoverageAnalysis(input: RunCoverageParams): Promise<CoverageResult> {
   console.log(`📊 Executando testes com cobertura...`);
+
+  // [FASE 2] Calcular paths padronizados e garantir que existem
+  const paths = getPaths(input.repo, input.product);
+  await ensurePaths(paths);
 
   const thresholds = {
     lines: input.thresholds?.lines ?? 70,
@@ -403,8 +409,8 @@ export async function runCoverageAnalysis(input: RunCoverageParams): Promise<Cov
       });
     }
 
-    // Gerar relatório detalhado
-    const reportPath = await generateCoverageReport(input.repo, summary, files, analysis, thresholds);
+    // Gerar relatório detalhado com paths padronizados
+    const reportPath = await generateCoverageReport(input.repo, paths, summary, files, analysis, thresholds);
     console.log(`\n📄 Relatório detalhado: ${reportPath}`);
 
     return {
@@ -550,6 +556,7 @@ function analyzeCoverage(
 
 async function generateCoverageReport(
   repo: string,
+  paths: ReturnType<typeof getPaths>, // [FASE 2] Adicionar paths para salvar no local correto
   summary: CoverageResult['summary'],
   files: CoverageResult['files'],
   analysis: CoverageResult['analysis'],
@@ -668,8 +675,11 @@ npm test -- --watch
 **Status:** ${statusEmoji} **${analysis.status.toUpperCase()}**
 `;
 
-  const reportPath = join(repo, 'tests/analyses/COVERAGE-ANALYSIS.md');
+  // [FASE 2] Salva relatório em Markdown usando paths padronizados
+  const reportPath = join(paths.reports, 'COVERAGE-ANALYSIS.md');
   await writeFileSafe(reportPath, md);
+  
+  console.log(`📄 Relatório de cobertura salvo em: ${reportPath}`);
 
   return reportPath;
 }

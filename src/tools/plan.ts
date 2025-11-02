@@ -1,6 +1,7 @@
 import { writeFileSafe, join, readFile, fileExists } from '../utils/fs.js';
 import { loadMCPSettings, mergeSettings } from '../utils/config.js';
 import { calculateRiskScore, groupByRiskLevel, type RiskFactors, type RiskScore } from '../utils/risk-calculator.js';
+import { getPaths, ensurePaths } from '../utils/paths.js';
 import type { AnalyzeResult } from './analyze.js';
 
 export interface PlanParams {
@@ -17,13 +18,18 @@ export async function generatePlan(input: PlanParams): Promise<{ ok: boolean; pl
   const fileSettings = await loadMCPSettings(input.repo, input.product);
   const settings = mergeSettings(fileSettings, input);
 
+  // [FASE 2] Calcular paths padronizados e garantir que existem
+  const paths = getPaths(settings.repo, settings.product || 'default', fileSettings || undefined);
+  await ensurePaths(paths);
+
   console.log(`📋 Gerando plano de testes para ${settings.product}...`);
 
   // Tenta carregar resultado da análise se não foi passado
   let analyzeData: AnalyzeResult | undefined = input.analyze_result;
   
   if (!analyzeData) {
-    const analyzePath = join(input.repo, 'tests', 'analyses', 'analyze.json');
+    // [FASE 2] Usar paths.analyses ao invés de hardcoded path
+    const analyzePath = join(paths.analyses, 'analyze.json');
     if (await fileExists(analyzePath)) {
       const content = await readFile(analyzePath);
       analyzeData = JSON.parse(content);
@@ -328,8 +334,8 @@ ${autoTodos.join('\n')}
 ` : ''}
 `;
 
-  const outDir = settings.out_dir || 'tests/analyses';
-  const out = join(input.repo, outDir, 'TEST-PLAN.md');
+  // [FASE 2] Salvar em paths.reports ao invés de hardcoded path
+  const out = join(paths.reports, 'PLAN.md');
   await writeFileSafe(out, md);
   
   console.log(`✅ Plano gerado: ${out}`);

@@ -9,13 +9,13 @@ import { describe, it, expect } from 'vitest';
  */
 describe('E2E: quality diff-coverage (CI gate)', () => {
   it('deve ter a tool diff-coverage disponível', async () => {
-    const { runDiffCoverage } = await import('../../src/tools/run-diff-coverage.js');
+    const { runDiffCoverage } = await import('../../../../src/tools/run-diff-coverage.js');
     expect(runDiffCoverage).toBeDefined();
     expect(typeof runDiffCoverage).toBe('function');
   });
 
   it('deve exportar schema de parâmetros', async () => {
-    const module = await import('../../src/tools/run-diff-coverage.js');
+    const module = await import('../../../../src/tools/run-diff-coverage.js');
     expect(module).toBeDefined();
   });
 });

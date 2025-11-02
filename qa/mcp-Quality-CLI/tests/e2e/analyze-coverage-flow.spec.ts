@@ -2,10 +2,10 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { initProduct } from '../../src/tools/init-product.js';
-import { analyze } from '../../src/tools/analyze.js';
-import { analyzeTestCoverage } from '../../src/tools/coverage.js';
-import { generatePlan } from '../../src/tools/plan.js';
+import { initProduct } from '../../../../src/tools/init-product.js';
+import { analyze } from '../../../../src/tools/analyze.js';
+import { analyzeTestCoverage } from '../../../../src/tools/coverage.js';
+import { generatePlan } from '../../../../src/tools/plan.js';
 
 /**
  * E2E Test: analyze → coverage pipeline
@@ -62,7 +62,7 @@ export async function createUser(data: any) {
     await fs.writeFile(
       join(testRepoPath, 'tests/unit/users.test.ts'),
       `import { describe, it, expect } from 'vitest';
-import { getUsers } from '../../src/api/users';
+import { getUsers } from '../../../../src/api/users';
 
 describe('Users API', () => {
   it('should get users', async () => {
@@ -105,7 +105,8 @@ test('should login successfully', async ({ page }) => {
   });
 
   it('deve criar analyze.json com findings', async () => {
-    const analyzePath = join(testRepoPath, 'tests/analyses/analyze.json');
+    // [FASE 2] analyze.ts usa paths.analyses (qa/<product>/tests/analyses)
+    const analyzePath = join(testRepoPath, 'qa/TestApp/tests/analyses/analyze.json');
     const exists = await fs.stat(analyzePath).then(() => true).catch(() => false);
     expect(exists).toBe(true);
 
@@ -126,7 +127,8 @@ test('should login successfully', async ({ page }) => {
   });
 
   it('deve criar coverage-analysis.json com métricas', async () => {
-    const coveragePath = join(testRepoPath, 'tests/analyses/coverage-analysis.json');
+    // [FASE 2] coverage.ts usa paths.analyses (qa/<product>/tests/analyses)
+    const coveragePath = join(testRepoPath, 'qa/TestApp/tests/analyses/coverage-analysis.json');
     const exists = await fs.stat(coveragePath).then(() => true).catch(() => false);
     expect(exists).toBe(true);
 
@@ -139,7 +141,8 @@ test('should login successfully', async ({ page }) => {
   });
 
   it('deve criar COVERAGE-REPORT.md legível', async () => {
-    const reportPath = join(testRepoPath, 'tests/analyses/COVERAGE-REPORT.md');
+    // [FASE 2] coverage.ts usa paths.reports (qa/<product>/tests/reports)
+    const reportPath = join(testRepoPath, 'qa/TestApp/tests/reports/COVERAGE-REPORT.md');
     const exists = await fs.stat(reportPath).then(() => true).catch(() => false);
     expect(exists).toBe(true);
 
@@ -175,9 +178,9 @@ test('should login successfully', async ({ page }) => {
     });
     expect(planResult.plan).toBeDefined();
 
-    // Verifica que arquivos essenciais foram criados
-    const analysesDir = join(testRepoPath, 'tests/analyses');
-    const exists = await fs.stat(analysesDir).then(() => true).catch(() => false);
+    // [FASE 2] Verifica que diretório qa/<product>/tests foi criado
+    const testsDir = join(testRepoPath, 'qa/TestApp/tests');
+    const exists = await fs.stat(testsDir).then(() => true).catch(() => false);
     expect(exists).toBe(true);
   });
 

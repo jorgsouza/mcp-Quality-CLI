@@ -176,9 +176,9 @@ describe('analyzeTestCoverage', () => {
       product: 'Test'
     });
 
-    // Verificar se arquivos foram criados
-    const reportPath = join(testDir, 'tests/analyses/COVERAGE-REPORT.md');
-    const analysisPath = join(testDir, 'tests/analyses/coverage-analysis.json');
+    // [FASE 2] Verificar arquivos na nova estrutura qa/<product>/tests
+    const reportPath = join(testDir, 'qa/Test/tests/reports/COVERAGE-REPORT.md');
+    const analysisPath = join(testDir, 'qa/Test/tests/analyses/coverage-analysis.json');
 
     const reportExists = await fs.access(reportPath).then(() => true).catch(() => false);
     const analysisExists = await fs.access(analysisPath).then(() => true).catch(() => false);

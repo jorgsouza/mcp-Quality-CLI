@@ -3,6 +3,7 @@ import { findExpressRoutes, findOpenAPI } from '../detectors/express.js';
 import { findEvents } from '../detectors/events.js';
 import { writeFileSafe, join } from '../utils/fs.js';
 import { loadMCPSettings, mergeSettings } from '../utils/config.js';
+import { getPaths, ensurePaths } from '../utils/paths.js';
 
 export interface AnalyzeParams {
   repo: string;
@@ -39,6 +40,10 @@ export async function analyze(input: AnalyzeParams): Promise<AnalyzeResult> {
   // Carregar configuração centralizada
   const fileSettings = await loadMCPSettings(input.repo, input.product);
   const settings = mergeSettings(fileSettings, input);
+  
+  // [FASE 2] Calcular paths padronizados usando getPaths() e garantir que existem
+  const paths = getPaths(settings.repo, settings.product, fileSettings || undefined);
+  await ensurePaths(paths);
   
   if (fileSettings) {
     console.log(`✅ Using settings from mcp-settings.json`);
@@ -105,19 +110,28 @@ export async function analyze(input: AnalyzeParams): Promise<AnalyzeResult> {
     `Produto: ${settings.product} - Base URL: ${settings.base_url || 'não especificada'}`
   ];
 
-  // Salva snapshot em JSON
+  // [FASE 2] Salva snapshot em JSON usando paths padronizados
+  const analyzeJsonPath = join(paths.analyses, 'analyze.json');
   await writeFileSafe(
-    join(settings.repo, 'tests', 'analyses', 'analyze.json'),
+    analyzeJsonPath,
+    JSON.stringify({ summary, findings, recommendations }, null, 2)
+  );
+  
+  // Also save in tests/analyses for backward compatibility
+  const legacyAnalyzePath = join(settings.repo, 'tests/analyses/analyze.json');
+  await writeFileSafe(
+    legacyAnalyzePath,
     JSON.stringify({ summary, findings, recommendations }, null, 2)
   );
 
   console.log(`✅ Análise completa. ${routes.length} rotas, ${endpoints.length} endpoints, ${events.length} eventos.`);
+  console.log(`📄 Análise salva em: ${analyzeJsonPath}`);
 
   return {
     summary,
     findings,
     recommendations,
-    plan_path: 'tests/analyses/TEST-PLAN.md'
+    plan_path: join(settings.repo, 'tests/analyses/TEST-PLAN.md')
   };
 }
 

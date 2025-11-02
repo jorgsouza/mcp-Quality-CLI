@@ -24,10 +24,10 @@ _*Cobertura de diferença requer configuração adicional_
 
 ## 📁 Artefatos
 
-- **HTML Report:** [`/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762123519333/tests/analyses/html/index.html`](/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762123519333/tests/analyses/html/index.html)
-- **JUnit XML:** [`/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762123519333/tests/analyses/junit/results.xml`](/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762123519333/tests/analyses/junit/results.xml)
-- **JSON Results:** [`/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762123519333/tests/analyses/json/results.json`](/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762123519333/tests/analyses/json/results.json)
-- **Coverage:** [`/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762123519333/tests/analyses/coverage/`](/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762123519333/tests/analyses/coverage/)
+- **HTML Report:** [`/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762125913679/tests/analyses/html/index.html`](/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762125913679/tests/analyses/html/index.html)
+- **JUnit XML:** [`/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762125913679/tests/analyses/junit/results.xml`](/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762125913679/tests/analyses/junit/results.xml)
+- **JSON Results:** [`/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762125913679/tests/analyses/json/results.json`](/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762125913679/tests/analyses/json/results.json)
+- **Coverage:** [`/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762125913679/tests/analyses/coverage/`](/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762125913679/tests/analyses/coverage/)
 
 
 
@@ -86,4 +86,4 @@ npm run test:debug -- tests/path/to/test.spec.ts
 ---
 
 **Gerado por:** Quality MCP v0.1.0  
-**Timestamp:** 2025-11-02T22:45:21.205Z
+**Timestamp:** 2025-11-02T23:25:15.253Z

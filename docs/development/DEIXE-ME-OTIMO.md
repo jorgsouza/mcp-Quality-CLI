@@ -110,12 +110,16 @@ qa/
 
 ## 🛠 Plano de Implementação
 
-### **FASE 1: Fundação - Paths Centralizados** (Est: 2-3h)
+### **✅ FASE 1: Fundação - Paths Centralizados** (CONCLUÍDA - Commit: 3e85952)
 
-#### 1.1. Schema de Configuração
+**Status**: ✅ COMPLETA  
+**Duração**: 2h  
+**Commit**: `3e85952` - "feat(paths): FASE 1 - infraestrutura de paths centralizados"
+
+#### 1.1. ✅ Schema de Configuração
 **Arquivo**: `src/utils/config.ts`
 
-Adicionar ao `MCPSettingsSchema`:
+~~Adicionar~~ **ADICIONADO** ao `MCPSettingsSchema`:
 ```typescript
 export const MCPSettingsSchema = z.object({
   // ... campos existentes
@@ -125,8 +129,14 @@ export const MCPSettingsSchema = z.object({
 });
 ```
 
-#### 1.2. Helper Central de Paths
-**Arquivo**: `src/utils/paths.ts` (NOVO)
+#### 1.2. ✅ Helper Central de Paths
+**Arquivo**: `src/utils/paths.ts` ~~(NOVO)~~ **CRIADO**
+
+**Implementado com**:
+- Interface `QAPaths` com 11 paths padronizados
+- 5 funções core: `getPaths()`, `ensurePaths()`, `isWithinQARoot()`, `getOutputPath()`, `getRelativePath()`
+- Documentação JSDoc completa
+- Type-safe e cross-platform (Windows/Unix)
 
 ```typescript
 import { join } from 'path';
@@ -194,31 +204,18 @@ export async function ensurePaths(paths: QAPaths): Promise<void> {
 }
 ```
 
-#### 1.3. Adicionar Testes
-**Arquivo**: `src/utils/__tests__/paths.test.ts` (NOVO)
+#### 1.3. ✅ Adicionar Testes
+**Arquivo**: `src/utils/__tests__/paths.test.ts` ~~(NOVO)~~ **CRIADO**
 
-```typescript
-import { describe, it, expect } from 'vitest';
-import { getPaths } from '../paths.js';
-
-describe('getPaths', () => {
-  it('deve usar qa/<product> como padrão', () => {
-    const paths = getPaths('/repo', 'my-app');
-    expect(paths.root).toBe('/repo/qa/my-app');
-    expect(paths.analyses).toBe('/repo/qa/my-app/tests/analyses');
-  });
-
-  it('deve respeitar output_root do settings', () => {
-    const settings = { paths: { output_root: 'custom/output' } };
-    const paths = getPaths('/repo', 'my-app', settings);
-    expect(paths.root).toBe('/repo/custom/output');
-  });
-});
-```
+**Implementado**:
+- 26 testes cobrindo todas as funções
+- Edge cases: espaços, caracteres especiais, Windows/Unix paths
+- Testes de idempotência e validação
+- 100% dos testes passando (601/601 total)
 
 ---
 
-### **FASE 2: Refatoração das Tools** (Est: 4-6h)
+### **FASE 2: Refatoração das Tools** (Est: 4-6h) - 🔄 EM ANDAMENTO
 
 #### 2.1. Analyze Tool
 **Arquivo**: `src/tools/analyze.ts`
@@ -516,9 +513,9 @@ export default defineConfig({
 ## 📅 Cronograma
 
 ### Sprint 1 (Est: 1 semana)
-- ✅ **Dia 1-2**: Fase 1 - Criar `utils/paths.ts` e schema
-- ✅ **Dia 3-4**: Fase 2 - Refatorar 5 tools principais (analyze, coverage, plan, pyramid, dashboard)
-- ✅ **Dia 5**: Fase 3 - Reforçar auto.ts com getPaths()
+- ✅ **Dia 1-2**: Fase 1 - Criar `utils/paths.ts` e schema (**CONCLUÍDA** - 2h, Commit: 3e85952)
+- 🔄 **Dia 3-4**: Fase 2 - Refatorar 5 tools principais (analyze, coverage, plan, pyramid, dashboard) - **EM ANDAMENTO**
+- ⏳ **Dia 5**: Fase 3 - Reforçar auto.ts com getPaths()
 
 ### Sprint 2 (Est: 3-4 dias)
 - ✅ **Dia 1**: Fase 2 cont. - Refatorar tools restantes (scaffold, report, diff-coverage)

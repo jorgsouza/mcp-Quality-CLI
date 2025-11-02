@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { analyzeTestCoverage } from '../../src/tools/coverage.js';
-import { generatePyramidReport } from '../../src/tools/pyramid-report.js';
+import { analyzeTestCoverage } from '../../../../src/tools/coverage.js';
+import { generatePyramidReport } from '../../../../src/tools/pyramid-report.js';
 import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
@@ -106,8 +106,8 @@ describe('Fluxo: Coverage → Recommendations', () => {
     expect(pyramidReport.ok).toBe(true);
     expect(pyramidReport.report_path).toMatch(/PYRAMID-REPORT\.(html|md)$/);
 
-    // Verificar se relatório HTML foi criado
-    const htmlPath = join(testDir, 'tests/analyses/PYRAMID-REPORT.html');
+    // [FASE 2] pyramid-report.ts agora usa paths.reports (qa/<product>/tests/reports)
+    const htmlPath = join(testDir, 'qa/Healthy App/tests/reports/PYRAMID-REPORT.html');
     const htmlExists = await fs.access(htmlPath).then(() => true).catch(() => false);
     
     expect(htmlExists).toBe(true);
@@ -172,7 +172,8 @@ describe('Fluxo: Coverage → Recommendations', () => {
 
     expect(report.ok).toBe(true);
 
-    const mdPath = join(testDir, 'tests/analyses/PYRAMID-REPORT.md');
+    // [FASE 2] pyramid-report.ts agora usa paths.reports (qa/<product>/tests/reports)
+    const mdPath = join(testDir, 'qa/Gap App/tests/reports/PYRAMID-REPORT.md');
     const mdExists = await fs.access(mdPath).then(() => true).catch(() => false);
     
     if (mdExists) {

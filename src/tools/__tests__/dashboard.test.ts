@@ -9,7 +9,8 @@ describe('generateDashboard', () => {
   beforeEach(async () => {
     testDir = `/tmp/dashboard-test-${Date.now()}`;
     await fs.mkdir(testDir, { recursive: true });
-    await fs.mkdir(join(testDir, 'tests/analyses'), { recursive: true });
+    // [FASE 2] Criar estrutura qa/<product>/tests/analyses para getPaths()
+    await fs.mkdir(join(testDir, 'qa/TestApp/tests/analyses'), { recursive: true });
   });
 
   afterEach(async () => {
@@ -17,16 +18,17 @@ describe('generateDashboard', () => {
   });
 
   it('deve coletar métricas de testes', async () => {
+    // [FASE 2] Criar arquivos em qa/<product>/tests/analyses (novo local via getPaths)
     await fs.writeFile(
-      join(testDir, 'tests/analyses/coverage-data.json'),
+      join(testDir, 'qa/TestApp/tests/analyses/coverage-data.json'),
       JSON.stringify({ summary: { totalTests: 10, unit: 5, integration: 3, e2e: 2 }, health: { status: 'healthy', score: 90 } })
     );
     await fs.writeFile(
-      join(testDir, 'tests/analyses/test-catalog.json'),
+      join(testDir, 'qa/TestApp/tests/analyses/test-catalog.json'),
       JSON.stringify({ squads: [{ name: 'Squad A', scenarios: [] }] })
     );
     await fs.writeFile(
-      join(testDir, 'tests/analyses/analyze.json'),
+      join(testDir, 'qa/TestApp/tests/analyses/analyze.json'),
       JSON.stringify({ recommendations: [] })
     );
 
@@ -39,16 +41,17 @@ describe('generateDashboard', () => {
   });
 
   it('deve gerar dashboard HTML', async () => {
+    // [FASE 2] Criar arquivos em qa/<product>/tests/analyses (novo local via getPaths)
     await fs.writeFile(
-      join(testDir, 'tests/analyses/coverage-data.json'),
+      join(testDir, 'qa/TestApp/tests/analyses/coverage-data.json'),
       JSON.stringify({ summary: { totalTests: 10, unit: 5, integration: 3, e2e: 2 }, health: { status: 'healthy', score: 90 } })
     );
     await fs.writeFile(
-      join(testDir, 'tests/analyses/test-catalog.json'),
+      join(testDir, 'qa/TestApp/tests/analyses/test-catalog.json'),
       JSON.stringify({ squads: [{ name: 'Squad A', scenarios: [] }] })
     );
     await fs.writeFile(
-      join(testDir, 'tests/analyses/analyze.json'),
+      join(testDir, 'qa/TestApp/tests/analyses/analyze.json'),
       JSON.stringify({ recommendations: [] })
     );
 
@@ -59,7 +62,8 @@ describe('generateDashboard', () => {
 
     expect(result.ok).toBe(true);
 
-    const dashboardPath = join(testDir, 'tests/analyses/dashboard.html');
+    // [FASE 2] dashboard.ts agora usa paths.dashboards (qa/<product>/dashboards)
+    const dashboardPath = join(testDir, 'qa/TestApp/dashboards/dashboard.html');
     const exists = await fs.access(dashboardPath).then(() => true).catch(() => false);
     expect(exists).toBe(true);
 
@@ -69,8 +73,9 @@ describe('generateDashboard', () => {
   });
 
   it('deve incluir gráficos de cobertura', async () => {
+    // [FASE 2] Criar arquivos em qa/<product>/tests/analyses (novo local via getPaths)
     await fs.writeFile(
-      join(testDir, 'tests/analyses/coverage-analysis.json'),
+      join(testDir, 'qa/TestApp/tests/analyses/coverage-analysis.json'),
       JSON.stringify({
         pyramid: {
           unit: { test_cases: 50, files_found: 10 },
@@ -82,11 +87,11 @@ describe('generateDashboard', () => {
       })
     );
     await fs.writeFile(
-      join(testDir, 'tests/analyses/test-catalog.json'),
+      join(testDir, 'qa/TestApp/tests/analyses/test-catalog.json'),
       JSON.stringify({ squads: [{ name: 'Squad A', scenarios: [] }] })
     );
     await fs.writeFile(
-      join(testDir, 'tests/analyses/analyze.json'),
+      join(testDir, 'qa/TestApp/tests/analyses/analyze.json'),
       JSON.stringify({ recommendations: [] })
     );
 
@@ -97,14 +102,16 @@ describe('generateDashboard', () => {
 
     expect(result.ok).toBe(true);
 
-    const dashboardPath = join(testDir, 'tests/analyses/dashboard.html');
+    // [FASE 2] dashboard.ts agora usa paths.dashboards (qa/<product>/dashboards)
+    const dashboardPath = join(testDir, 'qa/TestApp/dashboards/dashboard.html');
     const content = await fs.readFile(dashboardPath, 'utf-8');
     expect(content).toContain('50:30:20'); // Ratio calculado
   });
 
   it('deve gerar dashboard com visualização da pirâmide', async () => {
+    // [FASE 2] Criar arquivos em qa/<product>/tests/analyses (novo local via getPaths)
     await fs.writeFile(
-      join(testDir, 'tests/analyses/coverage-analysis.json'),
+      join(testDir, 'qa/TestApp/tests/analyses/coverage-analysis.json'),
       JSON.stringify({
         pyramid: {
           unit: { test_cases: 5, files_found: 3 },
@@ -116,11 +123,11 @@ describe('generateDashboard', () => {
       })
     );
     await fs.writeFile(
-      join(testDir, 'tests/analyses/test-catalog.json'),
+      join(testDir, 'qa/TestApp/tests/analyses/test-catalog.json'),
       JSON.stringify({ squads: [{ name: 'Squad A', scenarios: [] }] })
     );
     await fs.writeFile(
-      join(testDir, 'tests/analyses/analyze.json'),
+      join(testDir, 'qa/TestApp/tests/analyses/analyze.json'),
       JSON.stringify({ recommendations: [] })
     );
 
@@ -131,7 +138,8 @@ describe('generateDashboard', () => {
 
     expect(result.ok).toBe(true);
 
-    const dashboardPath = join(testDir, 'tests/analyses/dashboard.html');
+    // [FASE 2] dashboard.ts agora usa paths.dashboards (qa/<product>/dashboards)
+    const dashboardPath = join(testDir, 'qa/TestApp/dashboards/dashboard.html');
     const content = await fs.readFile(dashboardPath, 'utf-8');
     expect(content).toContain('Visualização da Pirâmide');
   });
@@ -146,8 +154,9 @@ describe('generateDashboard', () => {
   });
 
   it('deve exibir status de saúde dos testes', async () => {
+    // [FASE 2] Criar arquivos em qa/<product>/tests/analyses (novo local via getPaths)
     await fs.writeFile(
-      join(testDir, 'tests/analyses/coverage-analysis.json'),
+      join(testDir, 'qa/TestApp/tests/analyses/coverage-analysis.json'),
       JSON.stringify({
         pyramid: {
           unit: { test_cases: 5, files_found: 3 },
@@ -159,11 +168,11 @@ describe('generateDashboard', () => {
       })
     );
     await fs.writeFile(
-      join(testDir, 'tests/analyses/test-catalog.json'),
+      join(testDir, 'qa/TestApp/tests/analyses/test-catalog.json'),
       JSON.stringify({ squads: [{ name: 'Squad A', scenarios: [] }] })
     );
     await fs.writeFile(
-      join(testDir, 'tests/analyses/analyze.json'),
+      join(testDir, 'qa/TestApp/tests/analyses/analyze.json'),
       JSON.stringify({ recommendations: [] })
     );
 
@@ -174,7 +183,8 @@ describe('generateDashboard', () => {
 
     expect(result.ok).toBe(true);
 
-    const dashboardPath = join(testDir, 'tests/analyses/dashboard.html');
+    // [FASE 2] dashboard.ts agora usa paths.dashboards (qa/<product>/dashboards)
+    const dashboardPath = join(testDir, 'qa/TestApp/dashboards/dashboard.html');
     const content = await fs.readFile(dashboardPath, 'utf-8');
     expect(content).toContain('85/100'); // Score 85 para health='healthy'
   });
