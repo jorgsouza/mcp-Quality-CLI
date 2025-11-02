@@ -193,23 +193,13 @@ describe('CLI', () => {
 
   describe('Validação de Comandos Registrados', () => {
     it('deve ter todos os comandos esperados registrados na CLI', async () => {
-      // Lista completa de comandos que devem estar disponíveis
+      // Lista completa de comandos consolidados (5 comandos principais)
       const expectedCommands = [
         'analyze',
-        'plan',
-        'scaffold',
-        'run',
+        'validate',
         'report',
-        'full',
-        'coverage',
-        'scaffold-unit',
-        'scaffold-integration',
-        'pyramid',
-        'catalog',
-        'recommend',
-        'run-coverage',
-        'auto',
-        'analyze-test-logic',
+        'scaffold',
+        'self-check',
         'help'
       ];
 
@@ -236,12 +226,13 @@ describe('CLI', () => {
         cwd: process.cwd()
       });
 
-      // Comandos críticos que devem ter descrições detalhadas
+      // Comandos críticos consolidados (5 comandos principais)
       const criticalCommands = [
-        { name: 'analyze', description: 'Analisa o repositório' },
-        { name: 'plan', description: 'Gera plano de testes' },
-        { name: 'auto', description: 'Orquestrador completo' },
-        { name: 'analyze-test-logic', description: 'Analisa a lógica dos testes' }
+        { name: 'analyze', description: 'Análise inteligente de qualidade' },
+        { name: 'validate', description: 'Gates de qualidade' },
+        { name: 'report', description: 'Relatórios consolidados' },
+        { name: 'scaffold', description: 'Geração de estrutura de testes' },
+        { name: 'self-check', description: 'Verificação de ambiente' }
       ];
 
       for (const cmd of criticalCommands) {
@@ -256,13 +247,17 @@ describe('CLI', () => {
       // Testa se analyze requer --repo e --product
       try {
         execSync('node dist/cli.js analyze 2>&1', { encoding: 'utf8' });
+        // Se não lançar erro, o teste deve falhar
+        expect(true).toBe(false);
       } catch (error: any) {
         expect(error.stdout || error.stderr).toMatch(/required option.*--repo/i);
       }
 
-      // Testa se analyze-test-logic requer --repo e --product
+      // Testa se scaffold requer --repo e --product
       try {
-        execSync('node dist/cli.js analyze-test-logic 2>&1', { encoding: 'utf8' });
+        execSync('node dist/cli.js scaffold 2>&1', { encoding: 'utf8' });
+        // Se não lançar erro, o teste deve falhar
+        expect(true).toBe(false);
       } catch (error: any) {
         expect(error.stdout || error.stderr).toMatch(/required option.*--repo/i);
       }
