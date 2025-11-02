@@ -346,10 +346,32 @@ async function analyzeTests(repo: string, language: string) {
     if (content.match(/error|throw|reject|catch|fail/i)) hasErrorHandling = true;
     
     // Mapear testes por função
-    const describeMatches = content.matchAll(/describe\s*\(\s*['"`](.+?)['"`]/g);
-    for (const match of describeMatches) {
-      const functionName = match[1];
-      functionTests.set(functionName, (functionTests.get(functionName) || 0) + testCount);
+    // Estratégia: procurar por nome de função em describe() ou como chamada de função nos testes
+    const lines = content.split('\n');
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      
+      // Procurar por describe('functionName...')
+      const describeMatch = line.match(/describe\s*\(\s*['"`]([^\s\-\('"` ]+)/);
+      if (describeMatch) {
+        const functionName = describeMatch[1];
+        if (functionName && !functionName.includes(' ')) {
+          functionTests.set(functionName, (functionTests.get(functionName) || 0) + 1);
+        }
+      }
+      
+      // Também procurar por chamadas diretas de função: functionName(...)
+      const functionCallMatches = line.matchAll(/\b([a-z][a-zA-Z0-9]+)\s*\(/g);
+      for (const match of functionCallMatches) {
+        const functionName = match[1];
+        // Ignorar palavras-chave comuns de teste
+        if (!['it', 'test', 'describe', 'expect', 'toBe', 'toEqual', 'beforeEach', 'afterEach', 
+              'beforeAll', 'afterAll', 'jest', 'vi', 'mock', 'spy', 'stub', 'assert'].includes(functionName)) {
+          if (!functionTests.has(functionName)) {
+            functionTests.set(functionName, 0);
+          }
+        }
+      }
     }
   }
   
