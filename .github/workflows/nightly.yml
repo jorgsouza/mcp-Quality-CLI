@@ -33,21 +33,24 @@ jobs:
       - name: Build Quality MCP
         run: npm run build
 
-      - name: Run full quality pipeline
-        env:
-          E2E_BASE_URL: ${{ secrets.E2E_BASE_URL_STAGING }}
-          E2E_USER: ${{ secrets.E2E_USER }}
-          E2E_PASS: ${{ secrets.E2E_PASS }}
-          CI: true
+      - name: Run full test suite
+        run: npm test
+
+      - name: Run full quality analysis
         run: |
-          node dist/cli.js full \
+          node dist/cli.js analyze \
             --repo . \
-            --product "${{ github.repository }}" \
-            --base-url "${{ secrets.E2E_BASE_URL_STAGING }}" \
-            --domains "auth,core,api,search,payments" \
-            --critical-flows "login,signup,checkout,payment,search" \
-            --targets '{"ci_p95_min":15,"flaky_pct_max":3,"diff_coverage_min":60}' \
-            --e2e-dir packages/product-e2e
+            --product "mcp-Quality-CLI" \
+            --mode full
+        continue-on-error: true
+
+      - name: Validate with strict gates
+        run: |
+          node dist/cli.js validate \
+            --repo . \
+            --product "mcp-Quality-CLI" \
+            --min-mutation 70 \
+            --min-branch 80
         continue-on-error: true
 
       - name: Upload reports
@@ -56,32 +59,24 @@ jobs:
         with:
           name: nightly-report-${{ matrix.browser }}
           path: |
-            reports/
-            SUMMARY.md
-            plan/
+            coverage/
+            tests/analyses/
           retention-days: 90
-
-      - name: Publish test results
-        if: always()
-        uses: dorny/test-reporter@v1
-        with:
-          name: E2E Tests (${{ matrix.browser }})
-          path: reports/junit/*.xml
-          reporter: java-junit
 
       - name: Send Slack notification on failure
         if: failure()
         uses: slackapi/slack-github-action@v1
+        continue-on-error: true
         with:
           payload: |
             {
-              "text": "🚨 Nightly E2E tests failed for ${{ github.repository }} (${{ matrix.browser }})",
+              "text": "🚨 Nightly tests failed for ${{ github.repository }} (${{ matrix.browser }})",
               "blocks": [
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*Nightly E2E Test Failure*\n\n*Repository:* ${{ github.repository }}\n*Browser:* ${{ matrix.browser }}\n*Run:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Details>"
+                    "text": "*Nightly Test Failure*\n\n*Repository:* ${{ github.repository }}\n*Browser:* ${{ matrix.browser }}\n*Run:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Details>"
                   }
                 }
               ]

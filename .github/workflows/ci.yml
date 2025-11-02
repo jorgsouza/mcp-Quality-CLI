@@ -28,94 +28,44 @@ jobs:
       - name: Build Quality MCP
         run: npm run build
 
+      - name: Run tests
+        run: npm test
+
       - name: Analyze codebase
         run: |
           node dist/cli.js analyze \
             --repo . \
-            --product "${{ github.repository }}" \
-            --domains "auth,core,api" \
-            --critical-flows "login,signup,checkout" \
-            --targets '{"ci_p95_min":15,"flaky_pct_max":3,"diff_coverage_min":60}' \
-            --base-url "${{ secrets.E2E_BASE_URL || 'http://localhost:3000' }}"
-
-      - name: Generate test plan
-        run: |
-          node dist/cli.js plan \
-            --repo . \
-            --product "${{ github.repository }}" \
-            --base-url "${{ secrets.E2E_BASE_URL || 'http://localhost:3000' }}" \
-            --include-examples
-
-      - name: Scaffold Playwright tests
-        run: |
-          node dist/cli.js scaffold \
-            --repo . \
-            --plan plan/TEST-PLAN.md \
-            --out packages/product-e2e
-
-      - name: Install Playwright dependencies
-        working-directory: packages/product-e2e
-        run: |
-          npm install
-          npx playwright install --with-deps chromium
-
-      - name: Run E2E tests
-        env:
-          E2E_BASE_URL: ${{ secrets.E2E_BASE_URL || 'http://localhost:3000' }}
-          E2E_USER: ${{ secrets.E2E_USER }}
-          E2E_PASS: ${{ secrets.E2E_PASS }}
-          CI: true
-        run: |
-          node dist/cli.js run \
-            --repo . \
-            --e2e packages/product-e2e \
-            --report reports
+            --product "mcp-Quality-CLI" \
+            --mode analyze \
+            --skip-run
         continue-on-error: true
 
-      - name: Build QA summary
+      - name: Validate quality gates
         run: |
-          node dist/cli.js report \
-            --in reports \
-            --out SUMMARY.md \
-            --thresholds '{"flaky_pct_max":3,"diff_coverage_min":60}' \
-            --ci
+          node dist/cli.js validate \
+            --repo . \
+            --product "mcp-Quality-CLI" \
+            --min-mutation 60 \
+            --min-branch 70
+        continue-on-error: true
 
-      - name: Upload HTML report
+      - name: Self-check environment
+        run: |
+          node dist/cli.js self-check --repo .
+
+      - name: Upload coverage reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
-          path: reports/html/
+          name: coverage-report
+          path: coverage/
           retention-days: 30
 
-      - name: Upload test results
+      - name: Upload analysis reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
-          path: |
-            reports/junit/
-            reports/json/
+          name: analysis-reports
+          path: tests/analyses/
           retention-days: 30
-
-      - name: Comment PR with results
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs = require('fs');
-            const summary = fs.readFileSync('SUMMARY.md', 'utf8');
-            
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: summary
-            });
-
-      - name: Check quality gates
-        run: |
-          # Verifica se os gates de qualidade foram atingidos
-          # (pode ser expandido com parsing do SUMMARY.md)
-          echo "Quality gates check completed"
 
