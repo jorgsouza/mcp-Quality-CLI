@@ -23,7 +23,7 @@
 **Status:** ✅ Concluída  
 **Prioridade:** 🔴 ALTA  
 **Estimativa:** 4-6h
-**Tempo Real:** 2h
+**Tempo Real:** 3h
 
 ### Subtarefas
 
@@ -51,6 +51,13 @@
   - [x] Mensagens prescritivas com soluções
   - [x] Flag --fix para correções automáticas
 
+- [x] 1.5 Consolidar MCP Server (ADICIONAL)
+  - [x] Criar `src/mcp-tools.manifest.ts` (5 tools)
+  - [x] Refatorar `src/server.ts` para usar manifesto
+  - [x] Alinhar MCP tools com CLI commands
+  - [x] 9 testes do manifesto MCP (100%)
+  - [x] Reduzir 18 tools → 5 tools consolidados
+
 ### DoD (Definition of Done)
 
 - [x] `node dist/cli.js --help` lista somente os 5 comandos consolidados
@@ -58,6 +65,8 @@
 - [x] Comandos antigos removidos (cli.old.ts deletado)
 - [x] Build limpo sem warnings
 - [x] self-check funcional e testado
+- [x] **MCP Server consolidado (5 tools alinhados com CLI)**
+- [x] **Testes MCP manifest passando (9/9)**
 
 ---
 
@@ -572,8 +581,10 @@ expect(out).toMatchObject({ files: [], totals: { lines: 0, branches: 0 } });
 | 14. Gates de PR | ⏳ Pendente | 🔴 ALTA | 3-4h | 0% |
 
 **Total Estimado:** 61-83 horas  
-**Total Realizado:** 5 horas  
+**Total Realizado:** 6 horas  
 **Progresso Geral:** 21% (3/14 tarefas)
+
+**Nota:** Tarefa 1 expandida para incluir consolidação do MCP Server (18→5 tools)
 
 ---
 
