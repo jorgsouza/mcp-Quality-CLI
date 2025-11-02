@@ -1,0 +1,11 @@
+--- a/src/__tests__/tools/run.test.ts
++++ b/src/__tests__/tools/run.test.ts
+@@ -1,0 +1,9 @@
++
+describe('runPlaywright', () => {
+  it('deve lidar com edge cases (null/undefined/empty)', () => {
+    expect(() => runPlaywright(null)).toThrow();
+    expect(() => runPlaywright(undefined)).toThrow();
+    expect(() => runPlaywright('')).toThrow();
+  });
+});

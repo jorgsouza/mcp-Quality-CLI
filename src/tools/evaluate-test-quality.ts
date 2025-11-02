@@ -346,8 +346,12 @@ async function analyzeTests(repo: string, language: string) {
     if (content.match(/error|throw|reject|catch|fail/i)) hasErrorHandling = true;
     
     // Mapear testes por função
-    // Estratégia: procurar por nome de função em describe() ou como chamada de função nos testes
+    // Estratégia: procurar por nome de função em describe() e contar it/test dentro
     const lines = content.split('\n');
+    let currentDescribeFunction: string | null = null;
+    let braceDepth = 0;
+    let describeStartDepth = 0;
+    
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       
@@ -356,8 +360,27 @@ async function analyzeTests(repo: string, language: string) {
       if (describeMatch) {
         const functionName = describeMatch[1];
         if (functionName && !functionName.includes(' ')) {
-          functionTests.set(functionName, (functionTests.get(functionName) || 0) + 1);
+          currentDescribeFunction = functionName;
+          describeStartDepth = braceDepth;
+          if (!functionTests.has(functionName)) {
+            functionTests.set(functionName, 0);
+          }
         }
+      }
+      
+      // Contar abertura de chaves
+      const openBraces = (line.match(/\{/g) || []).length;
+      const closeBraces = (line.match(/\}/g) || []).length;
+      braceDepth += openBraces - closeBraces;
+      
+      // Se voltou ao nível do describe, encerrar contexto
+      if (currentDescribeFunction && braceDepth <= describeStartDepth) {
+        currentDescribeFunction = null;
+      }
+      
+      // Contar it() e test() dentro do describe atual
+      if (currentDescribeFunction && (line.match(/\b(it|test)\s*\(/))) {
+        functionTests.set(currentDescribeFunction, (functionTests.get(currentDescribeFunction) || 0) + 1);
       }
       
       // Também procurar por chamadas diretas de função: functionName(...)

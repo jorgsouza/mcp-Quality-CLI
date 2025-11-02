@@ -25,6 +25,7 @@ import { runDiffCoverage, type DiffCoverageParams } from './tools/run-diff-cover
 import { autoQualityRun, type AutoOptions } from './tools/auto.js';
 import { nlCommand, type NLCommandParams } from './tools/nl-command.js';
 import { evaluateTestQuality, type TestQualityParams } from './tools/evaluate-test-quality.js';
+import { analyzeTestLogic, type TestLogicParams } from './tools/analyze-test-logic.js';
 import { fileExists } from './utils/fs.js';
 
 // Schemas Zod para validação
@@ -189,6 +190,17 @@ const TestQualitySchema = z.object({
   includeDetails: z.boolean().optional().describe('Incluir detalhes de todas as funções')
 });
 
+const TestLogicSchema = z.object({
+  repo: z.string()
+    .min(1, 'Repository path is required')
+    .describe('Caminho do repositório'),
+  product: z.string()
+    .min(1, 'Product name is required')
+    .describe('Nome do produto'),
+  runMutation: z.boolean().optional().describe('Executar mutation testing'),
+  generatePatches: z.boolean().optional().describe('Gerar patches de testes')
+});
+
 class QualityMCPServer {
   private server: Server;
 
@@ -276,6 +288,20 @@ class QualityMCPServer {
               repo: { type: 'string', description: 'Caminho do repositório' },
               product: { type: 'string', description: 'Nome do produto' },
               includeDetails: { type: 'boolean', description: 'Incluir detalhes de todas as funções (default: true)', default: true }
+            },
+            required: ['repo', 'product']
+          }
+        },
+        {
+          name: 'analyze_test_logic',
+          description: '🧠 Análise lógica profunda dos testes: valida se testes exercitam lógica correta (happy path, edge cases, error handling, side effects), detecta assertions fracas, simula mutation testing, gera patches prontos. Suporta multi-linguagem (TS/JS/Python/Go/Java/etc).',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              repo: { type: 'string', description: 'Caminho do repositório' },
+              product: { type: 'string', description: 'Nome do produto' },
+              runMutation: { type: 'boolean', description: 'Executar mutation testing (experimental)', default: false },
+              generatePatches: { type: 'boolean', description: 'Gerar patches .patch com testes faltantes', default: true }
             },
             required: ['repo', 'product']
           }
@@ -537,6 +563,19 @@ class QualityMCPServer {
           case 'evaluate_test_quality': {
             const params = TestQualitySchema.parse(request.params.arguments);
             const result = await evaluateTestQuality(params);
+            return {
+              content: [
+                {
+                  type: 'text',
+                  text: JSON.stringify(result, null, 2)
+                }
+              ]
+            };
+          }
+
+          case 'analyze_test_logic': {
+            const params = TestLogicSchema.parse(request.params.arguments);
+            const result = await analyzeTestLogic(params);
             return {
               content: [
                 {

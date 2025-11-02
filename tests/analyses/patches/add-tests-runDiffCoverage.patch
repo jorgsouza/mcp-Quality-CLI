@@ -1,0 +1,11 @@
+--- a/src/__tests__/tools/run-diff-coverage.test.ts
++++ b/src/__tests__/tools/run-diff-coverage.test.ts
+@@ -1,0 +1,9 @@
++
+describe('runDiffCoverage', () => {
+  it('deve lidar com edge cases (null/undefined/empty)', () => {
+    expect(() => runDiffCoverage(null)).toThrow();
+    expect(() => runDiffCoverage(undefined)).toThrow();
+    expect(() => runDiffCoverage('')).toThrow();
+  });
+});
