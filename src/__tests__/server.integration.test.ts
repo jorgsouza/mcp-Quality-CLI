@@ -68,7 +68,10 @@ describe('App', () => {
       base_url: 'https://server-test.app'
     });
 
-    expect(result).toBeDefined();
+    expect(result).toMatchObject({
+      ok: true,
+      path: expect.stringContaining('ServerTestApp')
+    });
     expect(result.path).toContain('ServerTestApp');
 
     // Verifica que estrutura foi criada
@@ -86,8 +89,10 @@ describe('App', () => {
       base_url: 'https://server-test.app'
     });
 
-    expect(result).toBeDefined();
-    expect(result.findings).toBeDefined();
+    expect(result).toHaveProperty('findings');
+    expect(result.findings).toHaveProperty('routes');
+    expect(result.findings).toHaveProperty('endpoints');
+    expect(result.findings).toHaveProperty('events');
   });
 
   it('deve executar coverage e calcular pirâmide', async () => {
@@ -98,11 +103,18 @@ describe('App', () => {
       product: 'ServerTestApp'
     });
 
-    expect(result).toBeDefined();
-    expect(result.pyramid).toBeDefined();
-    expect(result.pyramid.unit).toBeDefined();
-    expect(result.pyramid.integration).toBeDefined();
-    expect(result.pyramid.e2e).toBeDefined();
+    expect(result).toHaveProperty('pyramid');
+    expect(result.pyramid).toMatchObject({
+      unit: expect.objectContaining({
+        files_found: expect.any(Number)
+      }),
+      integration: expect.objectContaining({
+        files_found: expect.any(Number)
+      }),
+      e2e: expect.objectContaining({
+        files_found: expect.any(Number)
+      })
+    });
     expect(result.health).toMatch(/healthy|inverted|needs_attention/);
   });
 
@@ -115,8 +127,11 @@ describe('App', () => {
       base_url: 'https://server-test.app'
     });
 
-    expect(result).toBeDefined();
-    expect(result.plan).toBeDefined();
+    expect(result).toMatchObject({
+      ok: true,
+      plan: expect.stringMatching(/\.md$/)
+    });
+    expect(result.plan).toMatch(/TEST-PLAN/);
 
     // Verifica que arquivo foi criado
     const exists = await fs.stat(result.plan).then(() => true).catch(() => false);
@@ -134,7 +149,8 @@ describe('App', () => {
       base_url: 'https://test.app'
     });
     
-    expect(result).toBeDefined();
+    expect(result).toHaveProperty('findings');
+    expect(result.findings).toBeTypeOf('object');
   });
 
   it('deve integrar config centralizado de mcp-settings.json', async () => {
@@ -153,7 +169,8 @@ describe('App', () => {
     });
 
     // Deve carregar settings do arquivo
-    expect(result).toBeDefined();
+    expect(result).toHaveProperty('findings');
+    expect(result.findings).toBeTypeOf('object');
   });
 
   it('deve gerar catalog de cenários', async () => {
@@ -164,8 +181,8 @@ describe('App', () => {
       product: 'ServerTestApp'
     });
 
-    expect(result).toBeDefined();
-    expect(result.product).toBe('ServerTestApp');
+    expect(result).toHaveProperty('product', 'ServerTestApp');
+    expect(result).toHaveProperty('total_scenarios');
     expect(result.total_scenarios).toBeGreaterThanOrEqual(0);
   });
 
@@ -177,13 +194,15 @@ describe('App', () => {
       product: 'ServerTestApp'
     });
 
-    expect(result).toBeDefined();
-    expect(result.recommendation).toBeDefined();
-    
-    if (result.recommendation) {
-      expect(result.recommendation.strategy).toBeDefined();
-      expect(result.recommendation.appType).toBeDefined();
-    }
+    expect(result).toMatchObject({
+      ok: true,
+      recommendation: expect.objectContaining({
+        strategy: expect.any(Object),
+        appType: expect.any(String)
+      })
+    });
+    expect(['api', 'web', 'fullstack', 'library', 'Generic Application', 'API', 'Web Application'])
+      .toContain(result.recommendation.appType);
   });
 
   it('deve scaffold de unit tests funcionar', async () => {
@@ -194,8 +213,10 @@ describe('App', () => {
       product: 'ServerTestApp'
     });
 
-    expect(result).toBeDefined();
-    expect(result.generated).toBeDefined();
+    expect(result).toMatchObject({
+      ok: true,
+      generated: expect.any(Array)
+    });
     expect(Array.isArray(result.generated)).toBe(true);
   });
 
@@ -208,8 +229,10 @@ describe('App', () => {
       base_url: 'https://server-test.app'
     });
 
-    expect(result).toBeDefined();
-    expect(result.generated).toBeDefined();
+    expect(result).toMatchObject({
+      ok: true,
+      generated: expect.any(Array)
+    });
     expect(Array.isArray(result.generated)).toBe(true);
   });
 });

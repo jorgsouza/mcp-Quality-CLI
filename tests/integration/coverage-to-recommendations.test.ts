@@ -44,8 +44,8 @@ describe('Fluxo: Coverage → Recommendations', () => {
       product: 'Test App'
     });
 
-    expect(coverage.summary).toBeDefined();
     expect(coverage.summary).toContain('Status:');
+    expect(coverage.summary).toContain('Pirâmide');
     expect(coverage.pyramid.unit.files_found).toBeGreaterThanOrEqual(0);
     expect(coverage.pyramid.e2e.files_found).toBeGreaterThanOrEqual(0);
     
@@ -104,7 +104,7 @@ describe('Fluxo: Coverage → Recommendations', () => {
     });
 
     expect(pyramidReport.ok).toBe(true);
-    expect(pyramidReport.report_path).toBeDefined();
+    expect(pyramidReport.report_path).toMatch(/PYRAMID-REPORT\.(html|md)$/);
 
     // Verificar se relatório HTML foi criado
     const htmlPath = join(testDir, 'tests/analyses/PYRAMID-REPORT.html');
