@@ -68,9 +68,9 @@
 - ✅ Atualizado `mcp-settings.example.json` com estrutura completa:
   ```json
   {
-    "product": "ReclameAQUI",
-    "base_url": "https://www.reclameaqui.com.br",
-    "domains": ["auth", "search", "claim", "profile"],
+    "product": "MyApp",
+    "base_url": "https://www.example.com",
+    "domains": ["auth", "search", "user", "profile"],
     "critical_flows": [...],
     "targets": { "diff_coverage_min": 80, ... },
     "environments": { "dev": {...}, "stg": {...}, "prod": {...} },
@@ -575,13 +575,13 @@ Atualizar:
 npm run build
 
 # 2. Criar estrutura de produto (novo!)
-quality init-product --repo /path/to/repo --product ReclameAQUI --base-url https://www.reclameaqui.com.br
+quality init-product --repo /path/to/repo --product MyApp --base-url https://www.example.com
 
 # 3. Customizar mcp-settings.json
-# Editar /qa/ReclameAQUI/mcp-settings.json
+# Editar /qa/MyApp/mcp-settings.json
 
 # 4. Seguir fluxo normal
-quality analyze --repo . --product ReclameAQUI
+quality analyze --repo . --product MyApp
 # A tool vai automaticamente ler as configs de mcp-settings.json
 ```
 
@@ -613,7 +613,7 @@ Implementada ferramenta de **cobertura diferencial** que analisa apenas as linha
 
 **Uso:**
 ```bash
-quality diff-coverage --repo=. --product=ReclameAQUI
+quality diff-coverage --repo=. --product=MyApp
 ```
 
 **Registrado como:** `diff_coverage` tool no MCP Server

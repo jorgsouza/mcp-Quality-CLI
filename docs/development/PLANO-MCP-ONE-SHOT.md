@@ -75,9 +75,9 @@ Criar um MCP inteligente que entende comandos em **linguagem natural (PT/EN)** e
 **Mudanças:**
 ```typescript
 // ANTES (específico):
-domains: ['auth', 'search', 'claim', 'profile']
-critical_flows: ['login', 'buscar_empresa', 'abrir_reclamacao']
-base_url: 'https://www.reclameaqui.com.br'
+domains: ['auth', 'search', 'user', 'profile']
+critical_flows: ['login', 'search_products', 'user_registration']
+base_url: 'https://www.example.com'
 
 // DEPOIS (genérico):
 domains: []                    // vazio → analyze sugere depois
@@ -677,7 +677,7 @@ nl_command {
 ```bash
 # Lead quer visão geral do produto
 nl_command { 
-  "query": "gerar relatório completo do produto repo:/workspace/reclameaqui product:ReclameAQUI" 
+  "query": "gerar relatório completo do produto repo:/workspace/myapp product:MyApp" 
 }
 
 # MCP faz:

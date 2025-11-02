@@ -141,7 +141,7 @@ E2E:         15% (15-30 testes)   🟡 MÉDIA
 - ✅ UI crítica justifica E2E para fluxos principais
 - ✅ Balance entre velocidade (unit) e confiança (E2E)
 
-**Exemplo:** ReclameAQUI, e-commerces, dashboards
+**Exemplo:** E-commerce platforms, CRM systems, dashboards
 
 ---
 
