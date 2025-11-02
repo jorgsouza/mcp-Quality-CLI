@@ -16,9 +16,10 @@ Documentação prática para uso diário:
 
 Documentação detalhada de funcionalidades:
 
-- **[MULTI-LANGUAGE-SUPPORT.md](features/MULTI-LANGUAGE-SUPPORT.md)** - Suporte multi-linguagem
 - **[RECOMMENDATION-FEATURE.md](features/RECOMMENDATION-FEATURE.md)** - Sistema de recomendação de estratégias
 - **[RISK-SCORE-SYSTEM.md](features/RISK-SCORE-SYSTEM.md)** - Sistema de pontuação de risco
+- **[SUPERTEST-TESTCONTAINERS.md](features/SUPERTEST-TESTCONTAINERS.md)** - Integração com Supertest e Testcontainers
+- **[MULTI-LANGUAGE-COVERAGE.md](features/MULTI-LANGUAGE-COVERAGE.md)** - Cobertura de código multi-linguagem
 - **[SUPERTEST-TESTCONTAINERS.md](features/SUPERTEST-TESTCONTAINERS.md)** - Templates Supertest & Testcontainers
 
 ### 🏗️ Arquitetura (`architecture/`)
