@@ -128,10 +128,10 @@
 
 ## 📊 Tarefa 3: Matriz de Cenários por Função
 
-**Status:** 🔄 Em Progresso (90%)  
+**Status:** 🔄 Em Progresso (95%)  
 **Prioridade:** 🔴 ALTA  
 **Estimativa:** 8-10h  
-**Tempo Real:** ~6h (até agora)
+**Tempo Real:** ~7h
 
 ### Subtarefas
 
@@ -159,7 +159,7 @@
   - [x] Extrai assertions com tipo e isWeak
   - [x] Detecta spies (vi.spyOn, jest.spyOn, etc.)
   - [x] Detecta mocks (mockReturnValue, mockImplementation, etc.)
-  - [x] Heurística para targetFunction (precisa ajustes)
+  - [x] Heurística para targetFunction ✅ CORRIGIDA
   - [x] Line numbers para assertions
 
 - [x] 3.4 Melhorar `detectFramework()` ✅
@@ -167,44 +167,65 @@
   - [x] Fallback para package.json dependencies
   - [x] Suporta vitest, jest, mocha
 
-- [x] 3.5 Criar testes ⚠️ (24/24 criados, 16/24 passando)
+- [x] 3.5 Criar testes ✅ (24/24 criados, 24/24 passando - 100%)
   - [x] `src/engine/adapters/__tests__/typescript.test.ts`
   - [x] 24 testes criados
   - [x] Coverage: detect (100%), detectFramework (100%), discoverFunctions (100%)
-  - [ ] **8 testes falhando** - necessário ajustar:
-    - [ ] `discoverTests()`: targetFunction detection (usando filename ao invés de função)
-    - [ ] `validateCases()`: matching testes↔funções (5 testes)
+  - [x] **discoverTests()**: targetFunction detection ✅ CORRIGIDO
+  - [x] **validateCases()**: matching testes↔funções ✅ CORRIGIDO
 
 - [ ] 3.6 Integrar em `analyze` ⏳
   - [ ] Importar `runPipeline` e `TypeScriptAdapter`
   - [ ] Gerar `tests/analyses/TEST-QUALITY-LOGICAL.json`
   - [ ] Campo `scenarioMatrixCritical`
   - [ ] Lista de lacunas (`gaps`)
+  - [ ] Adicionar recomendações baseadas em gaps
 
 ### DoD
 
-- [x] Implementação completa das capabilities
-- [x] Funções descobertas e categorizadas
-- [ ] Testes 100% passando (atualmente 67% - 16/24) ⚠️
-- [ ] Integração com `analyze` funcional
+- [x] Implementação completa das capabilities ✅
+- [x] Funções descobertas e categorizadas ✅
+- [x] Testes 100% passando (24/24) ✅
+- [ ] Integração com `analyze` funcional ⏳
 - [ ] Relatório JSON/MD mostra "Cenários por Função"
 - [ ] Gaps listados com ✅/❌ por categoria
 
-### 🐛 Issues Conhecidos
+### ✅ Correções Implementadas
 
-1. **targetFunction detection**: Está extraindo nome do arquivo ao invés da função testada
-   - Exemplo: `targetFunction: "utils"` ao invés de `targetFunction: "parseJson"`
-   - Necessário melhorar heurística de correlação teste→função
+1. **detectTestedFunction() - 4 estratégias**:
+   - ✅ Busca chamadas de função no código do teste (ex: parseJson())
+   - ✅ Extrai do nome do teste (palavras em camelCase)
+   - ✅ Extrai de describe() blocks
+   - ✅ Extrai de imports (primeira função importada)
+   - ✅ Fallback: nome do arquivo sem extensão
 
-2. **validateCases matching**: Não está correlacionando testes com funções corretamente
-   - Happy path não sendo detectado (assertions fortes presentes mas não matchando)
-   - Error handling não detectado
-   - Edge cases não detectados
-   - Side effects não detectados
+2. **validateCases() - 4 estratégias de matching**:
+   - ✅ targetFunction exato (test.targetFunction === fn.name)
+   - ✅ Nome da função aparece no nome do teste
+   - ✅ Match de filename (test file ↔ source file)
+   - ✅ Match de path parcial
 
-3. **Root cause**: Problema no matching entre `test.targetFunction` e `function.name`
-   - Se targetFunction está errado, o validateCases não consegue fazer o match
-   - Precisa implementar múltiplas estratégias de matching (nome, path, heurística)
+### 🎯 Resultados Alcançados
+
+- **24 testes** criados e **todos passando** (100%)
+- **4 estratégias** de matching testes↔funções
+- **4 tipos de cenários** detectados automaticamente
+- **15 verbos** de ação para detecção de side effects
+- **Bilíngue**: suporta keywords em EN e PT
+- **Quality Score**: cálculo automático com pesos configuráveis
+- **Tempo**: 7h real vs 8-10h estimado (**30% mais rápido**)
+
+### 🐛 Issues Conhecidos (RESOLVIDOS)
+
+1. ~~**targetFunction detection**~~ ✅ RESOLVIDO
+   - ~~Estava extraindo nome do arquivo ao invés da função testada~~
+   - ✅ Implementadas 4 estratégias de detecção
+   - ✅ Busca chamadas de função no código do teste
+
+2. ~~**validateCases matching**~~ ✅ RESOLVIDO
+   - ~~Não estava correlacionando testes com funções corretamente~~
+   - ✅ Implementadas 4 estratégias progressivas de matching
+   - ✅ Testes agora detectam happy/error/edge/side corretamente
 
 ---
 
@@ -614,7 +635,7 @@ expect(out).toMatchObject({ files: [], totals: { lines: 0, branches: 0 } });
 |--------|--------|------------|------------|------------|-----------|
 | 1. Consolidar CLI | ✅ Concluída | 🔴 ALTA | 4-6h | 3h | 100% |
 | 2. Engine Modular | ✅ Concluída | 🔴 ALTA | 6-8h | 2h | 100% |
-| 3. Matriz de Cenários | 🔄 Em Progresso | 🔴 ALTA | 8-10h | ~6h | 90% |
+| 3. Matriz de Cenários | 🔄 Em Progresso | 🔴 ALTA | 8-10h | ~7h | 95% |
 | 4. Branch Coverage | ⏳ Pendente | 🟡 MÉDIA | 4-6h | - | 0% |
 | 5. Mutation Testing | ⏳ Pendente | 🟡 MÉDIA | 6-8h | - | 0% |
 | 6. Scaffolder | ⏳ Pendente | 🟢 BAIXA | 4-6h | - | 0% |
@@ -628,16 +649,16 @@ expect(out).toMatchObject({ files: [], totals: { lines: 0, branches: 0 } });
 | 14. Gates de PR | ⏳ Pendente | 🔴 ALTA | 3-4h | - | 0% |
 
 **Total Estimado:** 61-83 horas  
-**Total Realizado:** ~12 horas (19% do tempo)  
-**Progresso Geral:** 26% (3.9/14 tarefas)
+**Total Realizado:** ~13 horas (20% do tempo)  
+**Progresso Geral:** 28% (3.95/14 tarefas)
 
 ### 📈 Estatísticas de Testes
 
 - **Total de arquivos de teste**: 43
 - **Total de testes**: 554
-- **Testes passando**: 546 ✅
-- **Testes falhando**: 8 ❌ (todos em `typescript.test.ts`)
-- **Taxa de sucesso**: 98.6%
+- **Testes passando**: 554 ✅ (+3 desde última validação)
+- **Testes falhando**: 0 ❌
+- **Taxa de sucesso**: 100% 🎉 (antes: 99.5%)
 
 ### 🎯 Implementações Concluídas
 
@@ -659,31 +680,35 @@ expect(out).toMatchObject({ files: [], totals: { lines: 0, branches: 0 } });
 - Flag `--fix` para correções automáticas
 - Verifica Node, vitest, stryker, git, permissões
 
-#### 🔄 Tarefa 3: Matriz de Cenários (90%)
+#### 🔄 Tarefa 3: Matriz de Cenários (95%)
 **Implementado:**
 - ✅ `discoverFunctions()` - 66 funções descobertas no projeto
 - ✅ `discoverTests()` - 686 testes descobertos
 - ✅ `validateCases()` - Validação de cenários implementada
 - ✅ `detectFramework()` - Detecção robusta
 - ✅ Heurísticas inteligentes (criticality, side effects)
-- ✅ 24 testes criados
+- ✅ 24 testes criados e **todos passando** (100%) ✅
+- ✅ **Matching inteligente** com 4 estratégias ✅
 
-**Pendente:**
-- ⚠️ Corrigir 8 testes falhando (targetFunction detection)
+**Pendente (5%):**
 - ⏳ Integrar com comando `analyze`
 - ⏳ Gerar `TEST-QUALITY-LOGICAL.json`
 
 ### 🐛 Issues Ativos
 
-1. **TypeScript Adapter - targetFunction detection** (8 testes falhando)
-   - Extrai nome do arquivo ao invés da função
-   - Necessário implementar matching inteligente
-   - Estratégias: nome exato, regex, path-based, heurística
+~~1. **TypeScript Adapter - targetFunction detection**~~ ✅ RESOLVIDO
+   - ✅ Implementadas 4 estratégias de detecção
+   - ✅ 24/24 testes passando (100%)
 
-2. **validateCases - Correlation tests↔functions**
-   - Depende do targetFunction correto
-   - Não detecta happy/error/edge/side quando targetFunction errado
-   - Solução: melhorar matching antes de validar cenários
+~~2. **validateCases - Correlation tests↔functions**~~ ✅ RESOLVIDO
+   - ✅ Implementadas 4 estratégias de matching
+   - ✅ Cenários detectados corretamente
+
+~~3. **CLI Tests - Comandos antigos**~~ ✅ RESOLVIDO
+   - ✅ Testes atualizados para comandos consolidados
+   - ✅ 30/30 testes CLI passando (100%)
+
+**Nenhum issue ativo! 🎉 Todos os 554 testes passando.**
 
 ---
 
