@@ -215,18 +215,20 @@ export async function ensurePaths(paths: QAPaths): Promise<void> {
 
 ---
 
-### **FASE 2: Refatoração das Tools** ✅ CONCLUÍDA (4h)
+### **FASE 2: Refatoração das Tools** ✅ CONCLUÍDA (5h)
 
-**Commit**: `144006a` (2025-11-02)  
+**Commits**: `144006a`, `4bdc5e7`, `3c189bc` (2025-11-02)  
 **Status**: 601/601 testes passando ✅
 
-#### 2.1. Tools Refatoradas (6/9)
+#### 2.1. Tools Refatoradas (8/9)
 - ✅ `analyze.ts` → `paths.analyses/analyze.json`
 - ✅ `coverage.ts` → `paths.analyses/coverage-analysis.json` + `paths.reports/COVERAGE-REPORT.md`
 - ✅ `plan.ts` → lê `paths.analyses`, escreve `paths.reports/PLAN.md`
 - ✅ `pyramid-report.ts` → lê `paths.analyses`, escreve `paths.reports/PYRAMID-REPORT.*`
 - ✅ `dashboard.ts` → lê `paths.analyses`, escreve `paths.dashboards/dashboard.html`
 - ✅ `run-coverage.ts` → `paths.reports/COVERAGE-ANALYSIS.md` (+ breaking change: requer `product`)
+- ✅ `scaffold-integration.ts` → `paths.integration` + `paths.reports/INTEGRATION-TESTING-GUIDE.md`
+- ✅ `auto.ts` → calcula `getPaths()` uma vez, usa `paths.analyses` em buildReport
 
 #### 2.2. Mudanças Estruturais
 - **RunCoverageParams**: Adicionado campo obrigatório `product: string`
