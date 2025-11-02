@@ -30,7 +30,9 @@ for (const cmdDef of COMMANDS) {
 
   // Adicionar flags dinamicamente
   for (const flag of cmdDef.flags) {
-    const flagName = `--${flag.name} <value>`;
+    // Detectar se é boolean pela defaultValue
+    const isBoolean = typeof flag.defaultValue === 'boolean';
+    const flagName = isBoolean ? `--${flag.name}` : `--${flag.name} <value>`;
     const flagDesc = flag.required 
       ? `${flag.description} (obrigatório)`
       : `${flag.description} ${flag.defaultValue !== undefined ? `(padrão: ${flag.defaultValue})` : ''}`;

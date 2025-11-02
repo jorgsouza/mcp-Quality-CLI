@@ -33,8 +33,8 @@ jobs:
       - name: Build Quality MCP
         run: npm run build
 
-      - name: Run full test suite
-        run: npm test
+      - name: Run full test suite with coverage
+        run: npm run test:coverage
 
       - name: Run full quality analysis
         run: |
