@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { ensureDir, writeFileSafe, readFile } from '../fs.js';
+import { ensureDir, writeFileSafe, readFile, fileExists, readDir } from '../fs.js';
 import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
@@ -287,6 +287,239 @@ describe('Side Effects: readFile', () => {
     await expect(readFile(nonExistentFile)).rejects.toThrow();
     
     expect(readFileSpy).toHaveBeenCalledWith(nonExistentFile, 'utf8');
+  });
+});
+
+// =========================================
+// Edge Cases: Validação de entrada
+// =========================================
+describe('Edge Cases: ensureDir', () => {
+  let testDir: string;
+
+  beforeEach(async () => {
+    testDir = await fs.mkdtemp(join(tmpdir(), 'fs-edge-'));
+  });
+
+  afterEach(async () => {
+    await fs.rm(testDir, { recursive: true, force: true });
+  });
+
+  it('deve criar diretório com caracteres especiais no nome', async () => {
+    const specialDir = join(testDir, 'test-dir with spaces & special!@#');
+    await ensureDir(specialDir);
+    
+    const exists = await fs.access(specialDir).then(() => true).catch(() => false);
+    expect(exists).toBe(true);
+  });
+
+  it('deve criar caminho profundamente aninhado', async () => {
+    const deepPath = join(testDir, 'a', 'b', 'c', 'd', 'e', 'f', 'g');
+    await ensureDir(deepPath);
+    
+    const exists = await fs.access(deepPath).then(() => true).catch(() => false);
+    expect(exists).toBe(true);
+  });
+
+  it('deve lidar com diretório que já existe (idempotência)', async () => {
+    const existingDir = join(testDir, 'existing');
+    await fs.mkdir(existingDir);
+    
+    // Não deve lançar erro ao criar novamente
+    await expect(ensureDir(existingDir)).resolves.not.toThrow();
+  });
+});
+
+describe('Edge Cases: writeFileSafe', () => {
+  let testDir: string;
+
+  beforeEach(async () => {
+    testDir = await fs.mkdtemp(join(tmpdir(), 'fs-edge-'));
+  });
+
+  afterEach(async () => {
+    await fs.rm(testDir, { recursive: true, force: true });
+  });
+
+  it('deve escrever arquivo com nome contendo caracteres especiais', async () => {
+    const specialFile = join(testDir, 'file with spaces & chars!.txt');
+    const content = 'test content';
+    
+    await writeFileSafe(specialFile, content);
+    
+    const written = await fs.readFile(specialFile, 'utf8');
+    expect(written).toBe(content);
+  });
+
+  it('deve escrever string vazia sem erro', async () => {
+    const file = join(testDir, 'empty.txt');
+    await writeFileSafe(file, '');
+    
+    const content = await fs.readFile(file, 'utf8');
+    expect(content).toBe('');
+  });
+
+  it('deve escrever conteúdo muito grande (>1MB)', async () => {
+    const file = join(testDir, 'large.txt');
+    const largeContent = 'x'.repeat(2 * 1024 * 1024); // 2MB
+    
+    await writeFileSafe(file, largeContent);
+    
+    const written = await fs.readFile(file, 'utf8');
+    expect(written.length).toBe(largeContent.length);
+  });
+
+  it('deve lidar com múltiplas escritas sequenciais (race condition test)', async () => {
+    const file = join(testDir, 'concurrent.txt');
+    
+    // Escreve 5 vezes em sequência
+    for (let i = 0; i < 5; i++) {
+      await writeFileSafe(file, `content-${i}`, false);
+    }
+    
+    const final = await fs.readFile(file, 'utf8');
+    expect(final).toBe('content-4');
+  });
+
+  it('deve falhar silenciosamente se backup falhar por falta de permissão', async () => {
+    const file = join(testDir, 'protected.txt');
+    await writeFileSafe(file, 'initial', false);
+    
+    // Mock copyFile para simular falha de permissão
+    const copyFileSpy = vi.spyOn(fs, 'copyFile').mockRejectedValueOnce(new Error('EACCES: permission denied'));
+    const consoleWarnSpy = vi.spyOn(console, 'warn');
+    
+    // Deve continuar e escrever o arquivo mesmo se backup falhar
+    await expect(writeFileSafe(file, 'updated', true)).resolves.not.toThrow();
+    
+    expect(copyFileSpy).toHaveBeenCalled();
+    expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('Failed to create backup'));
+    
+    copyFileSpy.mockRestore();
+    consoleWarnSpy.mockRestore();
+  });
+});
+
+describe('Edge Cases: readFile', () => {
+  let testDir: string;
+
+  beforeEach(async () => {
+    testDir = await fs.mkdtemp(join(tmpdir(), 'fs-edge-'));
+  });
+
+  afterEach(async () => {
+    await fs.rm(testDir, { recursive: true, force: true });
+  });
+
+  it('deve ler arquivo com diferentes encodings', async () => {
+    const file = join(testDir, 'encoded.txt');
+    const content = 'Conteúdo com acentuação: àéîõü';
+    
+    await fs.writeFile(file, content, 'utf8');
+    
+    const utf8Content = await readFile(file, 'utf8');
+    expect(utf8Content).toBe(content);
+    
+    // Verifica que aceita outros encodings
+    const latin1Content = await readFile(file, 'latin1');
+    expect(typeof latin1Content).toBe('string');
+  });
+
+  it('deve lançar erro para arquivo não existente', async () => {
+    const nonExistent = join(testDir, 'does-not-exist.txt');
+    await expect(readFile(nonExistent)).rejects.toThrow();
+  });
+
+  it('deve ler arquivo vazio', async () => {
+    const file = join(testDir, 'empty.txt');
+    await fs.writeFile(file, '');
+    
+    const content = await readFile(file);
+    expect(content).toBe('');
+  });
+});
+
+describe('Edge Cases: fileExists', () => {
+  let testDir: string;
+
+  beforeEach(async () => {
+    testDir = await fs.mkdtemp(join(tmpdir(), 'fs-edge-'));
+  });
+
+  afterEach(async () => {
+    await fs.rm(testDir, { recursive: true, force: true });
+  });
+
+  it('deve retornar false para arquivo inexistente', async () => {
+    const nonExistent = join(testDir, 'nope.txt');
+    const exists = await fileExists(nonExistent);
+    expect(exists).toBe(false);
+  });
+
+  it('deve retornar true para arquivo existente', async () => {
+    const file = join(testDir, 'exists.txt');
+    await fs.writeFile(file, 'test');
+    
+    const exists = await fileExists(file);
+    expect(exists).toBe(true);
+  });
+
+  it('deve retornar true para diretório existente', async () => {
+    const dir = join(testDir, 'dir');
+    await fs.mkdir(dir);
+    
+    const exists = await fileExists(dir);
+    expect(exists).toBe(true);
+  });
+
+  it('deve retornar false para caminho vazio', async () => {
+    const exists = await fileExists('');
+    expect(exists).toBe(false);
+  });
+});
+
+describe('Edge Cases: readDir', () => {
+  let testDir: string;
+
+  beforeEach(async () => {
+    testDir = await fs.mkdtemp(join(tmpdir(), 'fs-edge-'));
+  });
+
+  afterEach(async () => {
+    await fs.rm(testDir, { recursive: true, force: true });
+  });
+
+  it('deve retornar array vazio para diretório inexistente', async () => {
+    const nonExistent = join(testDir, 'nope');
+    const files = await readDir(nonExistent);
+    expect(files).toEqual([]);
+  });
+
+  it('deve retornar array vazio para diretório vazio', async () => {
+    const emptyDir = join(testDir, 'empty');
+    await fs.mkdir(emptyDir);
+    
+    const files = await readDir(emptyDir);
+    expect(files).toEqual([]);
+  });
+
+  it('deve listar todos os arquivos em diretório populado', async () => {
+    await fs.writeFile(join(testDir, 'file1.txt'), '');
+    await fs.writeFile(join(testDir, 'file2.txt'), '');
+    await fs.mkdir(join(testDir, 'subdir'));
+    
+    const files = await readDir(testDir);
+    expect(files).toHaveLength(3);
+    expect(files).toContain('file1.txt');
+    expect(files).toContain('file2.txt');
+    expect(files).toContain('subdir');
+  });
+
+  it('deve lidar com caracteres especiais em nomes de arquivos', async () => {
+    const specialName = 'file with spaces & special!@#.txt';
+    await fs.writeFile(join(testDir, specialName), '');
+    
+    const files = await readDir(testDir);
+    expect(files).toContain(specialName);
   });
 });
 

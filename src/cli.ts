@@ -13,6 +13,7 @@ import { generatePyramidReport } from './tools/pyramid-report.js';
 import { catalogScenarios } from './tools/catalog.js';
 import { recommendTestStrategy } from './tools/recommend-strategy.js';
 import { autoQualityRun } from './tools/auto.js';
+import { analyzeTestLogic } from './tools/analyze-test-logic.js';
 
 const program = new Command();
 
@@ -498,6 +499,47 @@ program
       
       console.log('\n✨ Análise completa finalizada!');
       console.log(JSON.stringify(result, null, 2));
+    } catch (error: any) {
+      console.error('❌ Erro:', error.message);
+      process.exit(1);
+    }
+  });
+
+// Comando: analyze-test-logic
+program
+  .command('analyze-test-logic')
+  .description('🧠 Analisa a lógica dos testes: valida happy path, edge cases, error handling e side effects')
+  .requiredOption('--repo <path>', 'Caminho do repositório')
+  .requiredOption('--product <name>', 'Nome do produto')
+  .option('--generate-patches', 'Gerar patches .patch com testes faltantes')
+  .option('--run-mutation', 'Executar mutation testing (experimental)')
+  .action(async (options) => {
+    try {
+      const params = {
+        repo: options.repo,
+        product: options.product,
+        generatePatches: options.generatePatches ?? true,
+        runMutation: options.runMutation ?? false
+      };
+
+      console.log('🧠 Analisando lógica dos testes...\n');
+      const result = await analyzeTestLogic(params);
+      
+      console.log(`\n✅ Análise completa!`);
+      console.log(`📄 Relatório: ${result.reportPath}`);
+      console.log(`\n📊 Quality Score: ${result.metrics.qualityScore.toFixed(2)}/100 (${result.metrics.grade})`);
+      console.log(`\n🎯 Cobertura de Cenários:`);
+      console.log(`   Happy Path:     ${result.metrics.scenarioCoverage.happy.toFixed(2)}%`);
+      console.log(`   Edge Cases:     ${result.metrics.scenarioCoverage.edge.toFixed(2)}%`);
+      console.log(`   Error Handling: ${result.metrics.scenarioCoverage.error.toFixed(2)}%`);
+      console.log(`   Side Effects:   ${result.metrics.scenarioCoverage.sideEffects.toFixed(2)}%`);
+      
+      console.log(`\n📝 Funções analisadas: ${result.functions.length}`);
+      console.log(`� Recomendações: ${result.recommendations.length}`);
+      
+      if (result.patches.length > 0) {
+        console.log(`\n📦 Patches gerados: ${result.patches.length}`);
+      }
     } catch (error: any) {
       console.error('❌ Erro:', error.message);
       process.exit(1);

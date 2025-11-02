@@ -14,7 +14,8 @@
     "cli": "node dist/cli.js",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage",
+    "analyze:test-logic": "node dist/cli.js analyze-test-logic --repo . --product mcp-Quality-CLI"
   },
   "keywords": [
     "mcp",
