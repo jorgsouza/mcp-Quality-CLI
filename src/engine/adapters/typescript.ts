@@ -582,19 +582,93 @@ async function analyzeCoverage(repo: string): Promise<CoverageMetrics> {
 }
 
 /**
- * 🧬 Capability: Mutation testing (stub - Stryker)
+ * 🧬 Capability: Mutation testing - Parser de resultados do Stryker
+ * 
+ * **NÃO EXECUTA Stryker** - apenas lê resultados existentes.
+ * Para executar: `npx stryker run` manualmente ou via CI.
  */
-async function runMutation(repo: string): Promise<MutationResult> {
-  // TODO: Implementar com @stryker-mutator/core
-  console.log('⚠️  runMutation ainda é stub - implementar com Stryker');
-  return {
-    score: 0,
-    killed: 0,
-    survived: 0,
-    timeout: 0,
-    noCoverage: 0,
-    survivors: [],
+async function discoverMutation(repo: string): Promise<MutationResult> {
+  const reportPath = join(repo, 'reports/mutation/mutation.json');
+  
+  // Se não existe relatório, retorna score 0
+  if (!existsSync(reportPath)) {
+    console.log('ℹ️  Nenhum relatório de mutação encontrado. Execute: npx stryker run');
+    return {
+      score: 0,
+      killed: 0,
+      survived: 0,
+      timeout: 0,
+      noCoverage: 0,
+      survivors: [],
+    };
+  }
+
+  try {
+    const content = await fs.readFile(reportPath, 'utf-8');
+    const report = JSON.parse(content);
+    
+    // Parse do formato Stryker
+    const mutants = report.files?.flatMap((file: any) => 
+      file.mutants?.map((m: any) => ({
+        id: m.id,
+        file: file.source || '',
+        line: m.location?.start?.line || 0,
+        mutator: m.mutatorName || 'Unknown',
+        original: m.originalString || '',
+        mutated: m.mutatedString || '',
+        status: m.status,
+        killingSuggestion: generateKillingSuggestion(m),
+      })) || []
+    ) || [];
+
+    const killed = mutants.filter((m: any) => m.status === 'Killed').length;
+    const survived = mutants.filter((m: any) => m.status === 'Survived').length;
+    const timeout = mutants.filter((m: any) => m.status === 'Timeout').length;
+    const noCoverage = mutants.filter((m: any) => m.status === 'NoCoverage').length;
+    const total = killed + survived + timeout + noCoverage;
+    
+    const score = total > 0 ? Math.round((killed / total) * 100) : 0;
+    
+    return {
+      score,
+      killed,
+      survived,
+      timeout,
+      noCoverage,
+      survivors: mutants.filter((m: any) => m.status === 'Survived'),
+    };
+  } catch (error) {
+    console.error('❌ Erro ao ler relatório de mutação:', error);
+    return {
+      score: 0,
+      killed: 0,
+      survived: 0,
+      timeout: 0,
+      noCoverage: 0,
+      survivors: [],
+    };
+  }
+}
+
+/**
+ * 💡 Gera sugestão de como matar um mutante
+ */
+function generateKillingSuggestion(mutant: any): string {
+  const { mutatorName, originalString, mutatedString } = mutant;
+  
+  // Sugestões baseadas no tipo de mutante
+  const suggestions: Record<string, string> = {
+    'ConditionalExpression': `Adicione assert que valida condição: expect(result).toBe(${originalString})`,
+    'BlockStatement': 'Adicione assert que valida side effect: expect(spy).toHaveBeenCalled()',
+    'EqualityOperator': `Teste valores específicos: expect(x).toBe(${originalString})`,
+    'ArithmeticOperator': 'Teste resultado exato do cálculo: expect(sum).toBe(expected)',
+    'LogicalOperator': 'Teste ambos os lados da condição lógica',
+    'StringLiteral': `Valide string exata: expect(text).toBe("${originalString}")`,
+    'BooleanLiteral': `Valide boolean: expect(flag).toBe(${originalString})`,
   };
+  
+  return suggestions[mutatorName] || 
+         `Adicione assertion específica que valide: ${originalString} vs ${mutatedString}`;
 }
 
 /**
@@ -639,7 +713,7 @@ export const TypeScriptAdapter: LanguageAdapter = {
     tests: discoverTests,
     cases: validateCases,
     coverage: analyzeCoverage,
-    mutation: runMutation,
+    mutation: discoverMutation,
     mocks: analyzeMocks,
     report: generateReport,
     schemas: validateSchemas,

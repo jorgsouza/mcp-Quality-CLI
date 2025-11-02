@@ -63,20 +63,23 @@ export const COMMANDS: readonly CommandDefinition[] = [
   
   {
     name: 'validate',
-    module: './tools/run-diff-coverage.js',
+    module: './tools/validate.js',
     description: '✅ Valida gates de qualidade (coverage, mutation, scenarios)',
     flags: [
       { name: 'repo', description: 'Caminho do repositório', required: true },
       { name: 'product', description: 'Nome do produto', required: false },
-      { name: 'min-branch', description: 'Cobertura mínima de branches (%)', required: false, defaultValue: '80' },
-      { name: 'min-mutation', description: 'Mutation score mínimo (%)', required: false, defaultValue: '70' },
-      { name: 'min-diff-coverage', description: 'Cobertura mínima do diff (%)', required: false, defaultValue: '60' },
+      { name: 'min-branch', description: 'Cobertura mínima de branches (%)', required: false },
+      { name: 'min-mutation', description: 'Mutation score mínimo (%)', required: false },
+      { name: 'min-scenarios', description: 'Percentual mínimo de cenários (%)', required: false },
+      { name: 'min-diff-coverage', description: 'Cobertura mínima do diff (%)', required: false },
+      { name: 'require-critical', description: 'Exige 100% de funções críticas testadas', required: false, defaultValue: false },
+      { name: 'fail-fast', description: 'Para na primeira falha', required: false, defaultValue: false },
       { name: 'base-branch', description: 'Branch base para diff', required: false, defaultValue: 'main' },
-      { name: 'fail-on-low', description: 'Falhar se abaixo do mínimo', required: false, defaultValue: true },
     ],
     examples: [
-      'quality validate --repo . --min-branch 85',
-      'quality validate --repo . --min-mutation 75 --min-diff-coverage 80',
+      'quality validate --repo . --min-mutation 70',
+      'quality validate --repo . --min-mutation 75 --min-branch 85',
+      'quality validate --repo . --min-mutation 70 --fail-fast',
     ],
   },
   

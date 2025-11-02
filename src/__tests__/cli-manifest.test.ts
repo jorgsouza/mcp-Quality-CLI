@@ -210,16 +210,16 @@ describe('Commands Manifest', () => {
   });
 
   describe('Defaults Sensatos', () => {
-    it('comando validate deve ter thresholds padrão razoáveis', () => {
+    it('comando validate deve aceitar thresholds opcionais', () => {
       const validateCmd = findCommand('validate')!;
       
       const minBranch = validateCmd.flags.find(f => f.name === 'min-branch');
       expect(minBranch).toBeDefined();
-      expect(minBranch!.defaultValue).toBe('80');
+      expect(minBranch!.required).toBe(false); // Opcional
       
       const minMutation = validateCmd.flags.find(f => f.name === 'min-mutation');
       expect(minMutation).toBeDefined();
-      expect(minMutation!.defaultValue).toBe('70');
+      expect(minMutation!.required).toBe(false); // Opcional
     });
 
     it('comando scaffold deve ter defaults úteis', () => {
