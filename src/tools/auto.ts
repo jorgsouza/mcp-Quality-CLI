@@ -1,19 +1,30 @@
 /**
- * auto.ts - Orchestrador "One-Shot" para execução automatizada completa
+ * auto.ts - Orchestrador "One-Shot" COMPLETO para análise de qualidade
  * 
- * Detecta automaticamente o contexto do repositório e executa a melhor sequência
- * de comandos para análise de qualidade de testes.
+ * FLUXO MÁGICO:
+ * 1. Self-check: Valida ambiente (Node, vitest, git, permissões)
+ * 2. Analyze: Analisa código e detecta funções/endpoints/eventos
+ * 3. Coverage Analysis: Roda testes e analisa cobertura
+ * 4. Test Strategy: Recomenda estratégia (pirâmide de testes)
+ * 5. Plan: Gera plano de testes baseado em riscos
+ * 6. Scaffold (opcional): Gera estrutura de testes faltantes
+ * 7. Run Tests: Executa testes com coverage completo
+ * 8. Pyramid Report: Gera relatório da pirâmide de testes
+ * 9. Dashboard: Gera dashboard.html visual interativo
+ * 10. Validate: Valida gates de qualidade (coverage, mutation, scenarios)
+ * 11. Final Report: Consolida TUDO em um relatório executivo
  * 
  * Modos disponíveis:
- * - full: Análise completa (analyze → plan → scaffold → run → report)
- * - analyze: Apenas análise do código
- * - plan: Análise + geração de plano
- * - scaffold: Análise + plano + scaffold de testes
- * - run: Executa testes existentes + coverage
+ * - full: Análise completa (TODAS as 11 etapas) ← RECOMENDADO
+ * - analyze: Apenas análise do código (etapas 1-5)
+ * - plan: Análise + geração de plano (etapas 1-5)
+ * - scaffold: Análise + plano + scaffold de testes (etapas 1-6)
+ * - run: Executa testes existentes + coverage (etapas 1-2, 7-11)
  */
 
 import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
+import { selfCheck } from './self-check.js';
 import { analyze } from './analyze.js';
 import { generatePlan } from './plan.js';
 import { scaffoldPlaywright } from './scaffold.js';
@@ -23,6 +34,8 @@ import { generatePyramidReport } from './pyramid-report.js';
 import { generateDashboard } from './dashboard.js';
 import { analyzeTestCoverage } from './coverage.js';
 import { recommendTestStrategy } from './recommend-strategy.js';
+import { validate } from './validate.js';
+import { buildReport } from './report.js';
 import { loadMCPSettings, inferProductFromPackageJson } from '../utils/config.js';
 import { fileExists } from '../utils/fs.js';
 import { detectLanguage } from '../detectors/language.js';
@@ -272,9 +285,29 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<{
   };
   
   try {
-    // 2. ANALYZE (todos os modos começam com análise)
+    // 0. SELF-CHECK (SEMPRE executa - valida ambiente)
+    console.log('🔍 [0/11] Self-Check: Validando ambiente...');
+    const selfCheckResult = await selfCheck({
+      repo: repoPath,
+      fix: false
+    });
+    steps.push('self-check');
+    
+    if (!selfCheckResult.ok) {
+      console.log(`\n⚠️  AVISOS no ambiente:`);
+      selfCheckResult.results.forEach(r => {
+        if (r.status === 'warning' || r.status === 'error') {
+          console.log(`   ${r.status === 'error' ? '❌' : '⚠️'} ${r.name}: ${r.message}`);
+        }
+      });
+      console.log(``);
+    } else {
+      console.log(`✅ Ambiente validado com sucesso!\n`);
+    }
+    
+    // 1. ANALYZE (todos os modos começam com análise)
     if (['full', 'analyze', 'plan', 'scaffold'].includes(mode)) {
-      console.log('🔍 [1/6] Analisando repositório...');
+      console.log('🔍 [1/11] Analisando repositório...');
       const analyzeResult = await analyze({
         repo: repoPath,
         product
@@ -284,9 +317,9 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<{
       console.log(`✅ Análise completa: ${analyzeResult.plan_path}\n`);
     }
     
-    // 2.5. COVERAGE ANALYSIS (análise de cobertura e pirâmide de testes)
+    // 2. COVERAGE ANALYSIS (análise de cobertura e pirâmide de testes)
     if (['full', 'plan', 'scaffold', 'run'].includes(mode)) {
-      console.log('📊 [2/6] Analisando cobertura de testes...');
+      console.log('📊 [2/11] Analisando cobertura de testes...');
       try {
         const coverageResult = await analyzeTestCoverage({
           repo: repoPath,
@@ -301,9 +334,9 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<{
       }
     }
     
-    // 2.6. RECOMMEND STRATEGY (recomendação de estratégia de testes)
+    // 3. RECOMMEND STRATEGY (recomendação de estratégia de testes)
     if (['full', 'plan', 'scaffold'].includes(mode)) {
-      console.log('🎯 [3/6] Gerando recomendação de estratégia...');
+      console.log('🎯 [3/11] Gerando recomendação de estratégia...');
       try {
         const recommendResult = await recommendTestStrategy({
           repo: repoPath,
@@ -318,9 +351,9 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<{
       }
     }
     
-    // 3. PLAN (se mode >= plan)
+    // 4. PLAN (se mode >= plan)
     if (['full', 'plan', 'scaffold'].includes(mode)) {
-      console.log('📋 [4/6] Gerando plano de testes...');
+      console.log('📋 [4/11] Gerando plano de testes...');
       const planResult = await generatePlan({
         repo: repoPath,
         product
@@ -330,9 +363,9 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<{
       console.log(`✅ Plano gerado: ${planResult.plan}\n`);
     }
     
-    // 4. SCAFFOLD (se mode >= scaffold e não skipScaffold)
+    // 5. SCAFFOLD (se mode >= scaffold e não skipScaffold)
     if (['full', 'scaffold'].includes(mode) && !options.skipScaffold) {
-      console.log('🏗️  [5/6] Gerando scaffold de testes...');
+      console.log('🏗️  [5/11] Gerando scaffold de testes...');
       
       // Decidir tipo de scaffold baseado no contexto
       if (!context.hasTests) {
@@ -350,10 +383,10 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<{
       }
     }
     
-    // 5. RUN (se mode == full ou run, e não skipRun)
+    // 6. RUN TESTS WITH COVERAGE (se mode == full ou run, e não skipRun)
     if (['full', 'run'].includes(mode) && !options.skipRun) {
       if (context.hasTests || steps.includes('scaffold-unit')) {
-        console.log('🧪 [6/6] Executando testes e gerando relatórios...');
+        console.log('🧪 [6/11] Executando testes com cobertura...');
         
         try {
           // Run coverage analysis
@@ -362,35 +395,67 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<{
           });
           steps.push('coverage');
           outputs.coverage = coverageResult.reportPath;
-          console.log(`✅ Cobertura analisada: ${coverageResult.analysis.status}\n`);
+          console.log(`✅ Testes executados com sucesso!\n`);
         } catch (error) {
           console.log(`⚠️  Erro ao executar testes: ${error instanceof Error ? error.message : error}\n`);
         }
         
+        // 7. PYRAMID REPORT
+        console.log('📊 [7/11] Gerando relatório da pirâmide de testes...');
         try {
-          // Generate pyramid report
           const pyramidResult = await generatePyramidReport({
             repo: repoPath,
             product
           });
           steps.push('pyramid-report');
           outputs.pyramidReport = pyramidResult.report_path;
-          console.log(`✅ Pirâmide de testes gerada!\n`);
+          console.log(`✅ Relatório da pirâmide gerado: ${pyramidResult.report_path}\n`);
         } catch (error) {
           console.log(`⚠️  Erro ao gerar pirâmide: ${error instanceof Error ? error.message : error}\n`);
         }
         
+        // 8. DASHBOARD HTML
+        console.log('📊 [8/11] Gerando dashboard da pirâmide de testes...');
         try {
-          // Generate dashboard
           const dashboardResult = await generateDashboard({
             repo: repoPath,
             product
           });
           steps.push('dashboard');
           outputs.dashboard = dashboardResult.dashboard_path;
-          console.log(`✅ Dashboard gerado!\n`);
+          console.log(`✅ Dashboard gerado: ${dashboardResult.dashboard_path}\n`);
         } catch (error) {
           console.log(`⚠️  Erro ao gerar dashboard: ${error instanceof Error ? error.message : error}\n`);
+        }
+        
+        // 9. VALIDATE GATES
+        console.log('✅ [9/11] Validando gates de qualidade...');
+        try {
+          const validateResult = await validate({
+            repo: repoPath,
+            product,
+            minBranch: 80,
+            minMutation: 70
+          });
+          steps.push('validate');
+          outputs.validate = validateResult.passed ? 'PASSED' : 'FAILED';
+          console.log(`${validateResult.passed ? '✅' : '⚠️'} Gates de qualidade: ${validateResult.passed ? 'APROVADOS' : 'REPROVADOS'}\n`);
+        } catch (error) {
+          console.log(`⚠️  Erro ao validar gates: ${error instanceof Error ? error.message : error}\n`);
+        }
+        
+        // 10. FINAL CONSOLIDATED REPORT
+        console.log('📄 [10/11] Gerando relatório consolidado final...');
+        try {
+          const reportResult = await buildReport({
+            in_dir: join(repoPath, 'tests', 'analyses'),
+            out_file: 'QUALITY-ANALYSIS-REPORT.md'
+          });
+          steps.push('final-report');
+          outputs.finalReport = reportResult.out;
+          console.log(`✅ Relatório consolidado gerado: ${reportResult.out}\n`);
+        } catch (error) {
+          console.log(`⚠️  Erro ao gerar relatório consolidado: ${error instanceof Error ? error.message : error}\n`);
         }
       } else {
         console.log(`⚠️  Nenhum teste encontrado, pulando execução\n`);

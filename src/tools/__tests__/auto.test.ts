@@ -331,7 +331,8 @@ describe('auto.ts - autoQualityRun', () => {
     });
 
     expect(result.success).toBe(false);
-    expect(result.steps).toEqual([]);
+    // Agora sempre executa self-check primeiro, então steps deve conter ['self-check']
+    expect(result.steps).toEqual(['self-check']);
   });
 });
 

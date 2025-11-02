@@ -4,7 +4,7 @@
     "unit": {
       "files_found": 36,
       "test_cases": 480,
-      "coverage_percent": 82.16,
+      "coverage_percent": 81.95,
       "test_files": [
         "src/__tests__/server.test.ts",
         "src/__tests__/server.integration.test.ts",
@@ -15,6 +15,12 @@
         "src/utils/__tests__/risk-calculator.test.ts",
         "src/utils/__tests__/fs.test.ts",
         "src/utils/__tests__/config.test.ts",
+        "src/engine/__tests__/engine.test.ts",
+        "src/detectors/__tests__/tests.test.ts",
+        "src/detectors/__tests__/next.test.ts",
+        "src/detectors/__tests__/language.test.ts",
+        "src/detectors/__tests__/express.test.ts",
+        "src/detectors/__tests__/events.test.ts",
         "src/tools/__tests__/validate.test.ts",
         "src/tools/__tests__/scaffold.test.ts",
         "src/tools/__tests__/scaffold-unit.test.ts",
@@ -35,12 +41,6 @@
         "src/tools/__tests__/auto.test.ts",
         "src/tools/__tests__/analyze.test.ts",
         "src/tools/__tests__/analyze-test-logic.test.ts",
-        "src/detectors/__tests__/tests.test.ts",
-        "src/detectors/__tests__/next.test.ts",
-        "src/detectors/__tests__/language.test.ts",
-        "src/detectors/__tests__/express.test.ts",
-        "src/detectors/__tests__/events.test.ts",
-        "src/engine/__tests__/engine.test.ts",
         "src/engine/adapters/__tests__/typescript.test.ts"
       ],
       "missing_tests": [
