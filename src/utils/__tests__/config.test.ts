@@ -39,7 +39,8 @@ describe('config.ts - loadMCPSettings', () => {
       auth: {
         strategy: 'storageState',
         storageStatePath: 'fixtures/auth/state.json'
-      }
+      },
+      paths: {}
     };
 
     vi.mocked(fileExists).mockImplementation(async (path: string) => {
@@ -67,7 +68,8 @@ describe('config.ts - loadMCPSettings', () => {
         ci_p95_min: 10
       },
       environments: {},
-      auth: {}
+      auth: {},
+      paths: {}
     };
 
     vi.mocked(fileExists).mockImplementation(async (path: string) => {
@@ -173,7 +175,8 @@ describe('config.ts - mergeSettings', () => {
         ci_p95_min: 10
       },
       environments: {},
-      auth: {}
+      auth: {},
+      paths: {}
     };
 
     const params = {
@@ -201,7 +204,8 @@ describe('config.ts - mergeSettings', () => {
       domains: [],
       critical_flows: [],
       environments: {},
-      auth: {}
+      auth: {},
+      paths: {}
     };
 
     const params = {

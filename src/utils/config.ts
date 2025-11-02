@@ -21,6 +21,9 @@ export const MCPSettingsSchema = z.object({
     strategy: z.enum(['storageState', 'credentials', 'token']).optional(),
     storageStatePath: z.string().optional(),
     credentialsPath: z.string().optional()
+  }).optional().default({}),
+  paths: z.object({
+    output_root: z.string().optional().describe('Diretório raiz customizado para saídas (padrão: qa/<product>)')
   }).optional().default({})
 });
 
@@ -173,6 +176,9 @@ export async function createMCPSettingsTemplate(
     auth: {
       strategy: 'storageState',
       storageStatePath: 'fixtures/auth/storageState.json'
+    },
+    paths: {
+      // Usa padrão qa/<product>, mas pode ser customizado
     }
   };
 
