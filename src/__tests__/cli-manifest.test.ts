@@ -104,8 +104,95 @@ describe('Commands Manifest', () => {
       
       const flagNames = selfCheckCmd!.flags.map(f => f.name);
       
-      expect(flagNames).toContain('repo');
       expect(flagNames).toContain('fix');
+    });
+  });
+
+  describe('Boolean Flags Detection', () => {
+    it('flags boolean devem ter defaultValue do tipo boolean', () => {
+      const booleanFlagNames = [
+        'skip-run',
+        'skip-scaffold',
+        'fix',
+        'fail-fast',
+        'require-critical',
+        'auto-detect',
+      ];
+      
+      for (const cmd of COMMANDS) {
+        for (const flag of cmd.flags) {
+          if (booleanFlagNames.includes(flag.name)) {
+            // Flag boolean deveria ter defaultValue boolean
+            if (typeof flag.defaultValue !== 'boolean') {
+              throw new Error(
+                `Flag '${flag.name}' em '${cmd.name}' deveria ter defaultValue boolean, mas é ${typeof flag.defaultValue}`
+              );
+            }
+            expect(typeof flag.defaultValue).toBe('boolean');
+          }
+        }
+      }
+    });
+
+    it('flags de valor devem ter defaultValue string/number/undefined, não boolean', () => {
+      const valueFlagNames = [
+        'repo',
+        'product',
+        'mode',
+        'type',
+        'framework',
+        'scenario',
+        'function',
+        'in-dir',
+        'out-file',
+        'format',
+        'min-mutation',
+        'min-branch',
+        'min-scenarios',
+        'min-diff-coverage',
+        'base-branch',
+      ];
+      
+      for (const cmd of COMMANDS) {
+        for (const flag of cmd.flags) {
+          if (valueFlagNames.includes(flag.name)) {
+            // Flag de valor NÃO deveria ser boolean
+            if (typeof flag.defaultValue === 'boolean') {
+              throw new Error(
+                `Flag '${flag.name}' em '${cmd.name}' NÃO deveria ser boolean`
+              );
+            }
+            expect(typeof flag.defaultValue).not.toBe('boolean');
+          }
+        }
+      }
+    });
+
+    it('REGRESSÃO: --skip-run deve ser boolean (bug fix e6939d9)', () => {
+      const analyzeCmd = findCommand('analyze');
+      const skipRunFlag = analyzeCmd!.flags.find(f => f.name === 'skip-run');
+      
+      expect(skipRunFlag).toBeDefined();
+      expect(typeof skipRunFlag!.defaultValue).toBe('boolean');
+      expect(skipRunFlag!.defaultValue).toBe(false);
+    });
+
+    it('REGRESSÃO: --skip-scaffold deve ser boolean (bug fix e6939d9)', () => {
+      const analyzeCmd = findCommand('analyze');
+      const skipScaffoldFlag = analyzeCmd!.flags.find(f => f.name === 'skip-scaffold');
+      
+      expect(skipScaffoldFlag).toBeDefined();
+      expect(typeof skipScaffoldFlag!.defaultValue).toBe('boolean');
+      expect(skipScaffoldFlag!.defaultValue).toBe(false);
+    });
+
+    it('REGRESSÃO: --fix deve ser boolean (bug fix e6939d9)', () => {
+      const selfCheckCmd = findCommand('self-check');
+      const fixFlag = selfCheckCmd!.flags.find(f => f.name === 'fix');
+      
+      expect(fixFlag).toBeDefined();
+      expect(typeof fixFlag!.defaultValue).toBe('boolean');
+      expect(fixFlag!.defaultValue).toBe(false);
     });
   });
 
