@@ -187,7 +187,7 @@ export const MCP_TOOLS: readonly MCPToolDefinition[] = [
   },
   
   {
-    name: 'self_check',
+    name: 'self-check',
     description: '🔍 Verifica ambiente e dependências (Node, vitest, stryker). Valida pré-requisitos antes de executar análises. Flag --fix para correções automáticas.',
     inputSchema: {
       type: 'object',

@@ -23,7 +23,7 @@ describe('MCP Tools Manifest', () => {
   });
 
   it('deve conter todos os 5 tools esperados', () => {
-    const expected = ['analyze', 'validate', 'report', 'scaffold', 'self_check'];
+    const expected = ['analyze', 'validate', 'report', 'scaffold', 'self-check'];
     const names = MCP_TOOLS.map(t => t.name);
     
     for (const name of expected) {
