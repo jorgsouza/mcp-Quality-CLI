@@ -57,7 +57,7 @@ async function parseCoverageFile(filePath: string, lang: LanguageDetection): Pro
   }
 }
 
-function parseJaCoCoXML(xml: string): any {
+export function parseJaCoCoXML(xml: string): any {
   // Simplificado: extrair métricas do XML JaCoCo
   const lines = xml.match(/<counter type="LINE" missed="(\d+)" covered="(\d+)"\/>/);
   const branches = xml.match(/<counter type="BRANCH" missed="(\d+)" covered="(\d+)"\/>/);
@@ -101,7 +101,7 @@ function parseJaCoCoXML(xml: string): any {
   };
 }
 
-function parseGoCoverage(content: string): any {
+export function parseGoCoverage(content: string): any {
   // Parse Go coverage.out format
   const lines = content.split('\n').filter(l => l && !l.startsWith('mode:'));
   let totalStatements = 0;
@@ -128,7 +128,7 @@ function parseGoCoverage(content: string): any {
   };
 }
 
-function parseSimpleCov(content: string): any {
+export function parseSimpleCov(content: string): any {
   // Parse SimpleCov JSON format
   const data = JSON.parse(content);
   const coverage = data.coverage || data;
@@ -160,7 +160,7 @@ function parseSimpleCov(content: string): any {
   };
 }
 
-function parsePytestCoverage(content: string): any {
+export function parsePytestCoverage(content: string): any {
   // Parse coverage.py JSON format
   const data = JSON.parse(content);
   const totals = data.totals;
@@ -187,7 +187,7 @@ function parsePytestCoverage(content: string): any {
   };
 }
 
-function parseCoberturaXML(xml: string): any {
+export function parseCoberturaXML(xml: string): any {
   // Parse Cobertura XML format (usado por .NET)
   const lineRate = xml.match(/line-rate="([\d.]+)"/);
   const branchRate = xml.match(/branch-rate="([\d.]+)"/);
@@ -205,7 +205,7 @@ function parseCoberturaXML(xml: string): any {
   };
 }
 
-function parseCloverXML(xml: string): any {
+export function parseCloverXML(xml: string): any {
   // Parse Clover XML format (usado por PHPUnit)
   const metrics = xml.match(/<metrics\s+([^>]+)>/);
   

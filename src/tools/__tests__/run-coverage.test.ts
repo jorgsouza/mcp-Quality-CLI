@@ -1,7 +1,16 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
-import { runCoverageAnalysis } from '../run-coverage';
+import { tmpdir } from 'node:os';
+import { 
+  runCoverageAnalysis,
+  parseJaCoCoXML,
+  parseGoCoverage,
+  parseSimpleCov,
+  parsePytestCoverage,
+  parseCoberturaXML,
+  parseCloverXML
+} from '../run-coverage.js';
 
 describe('runCoverageAnalysis', () => {
   let testDir: string;
@@ -762,6 +771,287 @@ github.com/test/file.go:5.1,7.2 1 10`;
 
       // O importante é que não quebre - pode falhar por falta do phpunit
       expect(result.ok !== undefined).toBe(true);
+    });
+  });
+
+  // ========================================
+  // TESTES UNITÁRIOS DIRETOS DOS PARSERS
+  // ========================================
+  
+  describe('parseJaCoCoXML (unit)', () => {
+    it('deve parsear XML JaCoCo com todos os counters', () => {
+      const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<report name="JaCoCo Coverage">
+  <counter type="LINE" missed="20" covered="80"/>
+  <counter type="BRANCH" missed="10" covered="30"/>
+  <counter type="METHOD" missed="5" covered="15"/>
+</report>`;
+
+      const result = parseJaCoCoXML(xml);
+
+      expect(result.total.lines.total).toBe(100);
+      expect(result.total.lines.covered).toBe(80);
+      expect(result.total.lines.pct).toBe(80);
+      expect(result.total.branches.total).toBe(40);
+      expect(result.total.branches.covered).toBe(30);
+      expect(result.total.branches.pct).toBe(75);
+      expect(result.total.functions.total).toBe(20);
+      expect(result.total.functions.covered).toBe(15);
+      expect(result.total.functions.pct).toBe(75);
+    });
+
+    it('deve lidar com XML sem counters', () => {
+      const xml = `<?xml version="1.0"?><report></report>`;
+      const result = parseJaCoCoXML(xml);
+
+      expect(result.total.lines.total).toBe(0);
+      expect(result.total.lines.pct).toBe(0);
+    });
+
+    it('deve lidar com counters parciais', () => {
+      const xml = `<report>
+  <counter type="LINE" missed="30" covered="70"/>
+</report>`;
+
+      const result = parseJaCoCoXML(xml);
+
+      expect(result.total.lines.total).toBe(100);
+      expect(result.total.lines.pct).toBe(70);
+      expect(result.total.branches.total).toBe(0);
+      expect(result.total.functions.total).toBe(0);
+    });
+  });
+
+  describe('parseGoCoverage (unit)', () => {
+    it('deve parsear coverage.out completo', () => {
+      const content = `mode: set
+github.com/test/main.go:10.1,12.2 1 1
+github.com/test/main.go:14.1,16.2 1 1
+github.com/test/main.go:18.1,20.2 1 0
+github.com/test/main.go:22.1,24.2 1 1
+github.com/test/main.go:26.1,28.2 1 0`;
+
+      const result = parseGoCoverage(content);
+
+      expect(result.total.statements.total).toBe(5);
+      expect(result.total.statements.covered).toBe(3);
+      expect(result.total.statements.pct).toBe(60);
+    });
+
+    it('deve ignorar linha mode', () => {
+      const content = `mode: atomic
+github.com/test/file.go:5.1,7.2 1 10`;
+
+      const result = parseGoCoverage(content);
+
+      expect(result.total.statements.total).toBe(1);
+      expect(result.total.statements.covered).toBe(1);
+      expect(result.total.statements.pct).toBe(100);
+    });
+
+    it('deve lidar com arquivo vazio', () => {
+      const content = `mode: set\n`;
+      const result = parseGoCoverage(content);
+
+      expect(result.total.statements.total).toBe(0);
+      expect(result.total.statements.pct).toBe(0);
+    });
+
+    it('deve contar corretamente statements com count 0', () => {
+      const content = `mode: set
+file.go:1.1,2.2 1 0
+file.go:3.1,4.2 1 0
+file.go:5.1,6.2 1 1`;
+
+      const result = parseGoCoverage(content);
+
+      expect(result.total.statements.total).toBe(3);
+      expect(result.total.statements.covered).toBe(1);
+      expect(result.total.statements.pct).toBeCloseTo(33.33, 1);
+    });
+  });
+
+  describe('parseSimpleCov (unit)', () => {
+    it('deve parsear JSON SimpleCov com wrapper coverage', () => {
+      const json = JSON.stringify({
+        coverage: {
+          '/app/lib/calculator.rb': [1, 1, 1, null, 0, 1, null],
+          '/app/lib/formatter.rb': [1, 1, null, 1, 1]
+        }
+      });
+
+      const result = parseSimpleCov(json);
+
+      // calculator: 7 linhas (5 não-null executáveis, 4 cobertas)
+      // formatter: 4 linhas (4 não-null executáveis, 4 cobertas)
+      // Total: 9 executáveis, 8 cobertas
+      expect(result.total.lines.total).toBe(9);
+      expect(result.total.lines.covered).toBe(8);
+      expect(result.total.lines.pct).toBeCloseTo(88.89, 1);
+    });
+
+    it('deve parsear JSON SimpleCov sem wrapper', () => {
+      const json = JSON.stringify({
+        '/app/file.rb': [1, 1, 0, null, 1]
+      });
+
+      const result = parseSimpleCov(json);
+
+      expect(result.total.lines.total).toBe(4);
+      expect(result.total.lines.covered).toBe(3);
+      expect(result.total.lines.pct).toBe(75);
+    });
+
+    it('deve lidar com arquivo sem cobertura', () => {
+      const json = JSON.stringify({
+        coverage: {
+          '/app/empty.rb': [null, null, null]
+        }
+      });
+
+      const result = parseSimpleCov(json);
+
+      expect(result.total.lines.total).toBe(0);
+      expect(result.total.lines.pct).toBe(0);
+    });
+
+    it('deve contar corretamente múltiplos arquivos', () => {
+      const json = JSON.stringify({
+        coverage: {
+          'file1.rb': [1, 0, 1],
+          'file2.rb': [1, 1],
+          'file3.rb': [0, 0, 0]
+        }
+      });
+
+      const result = parseSimpleCov(json);
+
+      expect(result.total.lines.total).toBe(8); // 3+2+3
+      expect(result.total.lines.covered).toBe(4); // 2+2+0
+      expect(result.total.lines.pct).toBe(50);
+    });
+  });
+
+  describe('parsePytestCoverage (unit)', () => {
+    it('deve parsear JSON coverage.py completo', () => {
+      const json = JSON.stringify({
+        totals: {
+          num_statements: 200,
+          covered_lines: 160,
+          percent_covered: 80.0,
+          num_branches: 50,
+          covered_branches: 40
+        }
+      });
+
+      const result = parsePytestCoverage(json);
+
+      expect(result.total.lines.total).toBe(200);
+      expect(result.total.lines.covered).toBe(160);
+      expect(result.total.lines.pct).toBe(80.0);
+      expect(result.total.branches.total).toBe(50);
+      expect(result.total.branches.covered).toBe(40);
+      expect(result.total.branches.pct).toBe(80);
+    });
+
+    it('deve lidar com JSON sem branches', () => {
+      const json = JSON.stringify({
+        totals: {
+          num_statements: 100,
+          covered_lines: 75,
+          percent_covered: 75.0
+        }
+      });
+
+      const result = parsePytestCoverage(json);
+
+      expect(result.total.lines.pct).toBe(75.0);
+      expect(result.total.branches.total).toBe(0);
+      expect(result.total.branches.pct).toBe(0);
+    });
+
+    it('deve calcular branch percentage corretamente', () => {
+      const json = JSON.stringify({
+        totals: {
+          num_statements: 50,
+          covered_lines: 40,
+          percent_covered: 80.0,
+          num_branches: 20,
+          covered_branches: 15
+        }
+      });
+
+      const result = parsePytestCoverage(json);
+
+      expect(result.total.branches.pct).toBe(75);
+    });
+  });
+
+  describe('parseCoberturaXML (unit)', () => {
+    it('deve parsear XML Cobertura com rates', () => {
+      const xml = `<?xml version="1.0"?>
+<coverage line-rate="0.85" branch-rate="0.75">
+  <packages></packages>
+</coverage>`;
+
+      const result = parseCoberturaXML(xml);
+
+      expect(result.total.lines.pct).toBe(85);
+      expect(result.total.branches.pct).toBe(75);
+    });
+
+    it('deve lidar com XML sem rates', () => {
+      const xml = `<?xml version="1.0"?><coverage></coverage>`;
+      const result = parseCoberturaXML(xml);
+
+      expect(result.total.lines.pct).toBe(0);
+      expect(result.total.branches.pct).toBe(0);
+    });
+
+    it('deve processar rates decimais corretamente', () => {
+      const xml = `<coverage line-rate="0.9525" branch-rate="0.6789"></coverage>`;
+      const result = parseCoberturaXML(xml);
+
+      expect(result.total.lines.pct).toBe(95.25);
+      expect(result.total.branches.pct).toBe(67.89);
+    });
+  });
+
+  describe('parseCloverXML (unit)', () => {
+    it('deve parsear XML Clover com metrics completas', () => {
+      const xml = `<?xml version="1.0"?>
+<coverage>
+  <project>
+    <metrics elements="100" coveredelements="80" statements="200" coveredstatements="150"/>
+  </project>
+</coverage>`;
+
+      const result = parseCloverXML(xml);
+
+      expect(result.total.lines.total).toBe(100);
+      expect(result.total.lines.covered).toBe(80);
+      expect(result.total.lines.pct).toBe(80);
+      expect(result.total.statements.total).toBe(200);
+      expect(result.total.statements.covered).toBe(150);
+      expect(result.total.statements.pct).toBe(75);
+    });
+
+    it('deve lidar com XML sem metrics', () => {
+      const xml = `<?xml version="1.0"?><coverage></coverage>`;
+      const result = parseCloverXML(xml);
+
+      expect(result.total.lines.total).toBe(0);
+      expect(result.total.lines.pct).toBe(0);
+    });
+
+    it('deve processar apenas elements se statements não existir', () => {
+      const xml = `<coverage><project><metrics elements="50" coveredelements="40"/></project></coverage>`;
+      const result = parseCloverXML(xml);
+
+      expect(result.total.lines.total).toBe(50);
+      expect(result.total.lines.covered).toBe(40);
+      expect(result.total.lines.pct).toBe(80);
+      expect(result.total.statements.total).toBe(0);
     });
   });
 });
