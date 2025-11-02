@@ -331,8 +331,8 @@ describe('auto.ts - autoQualityRun', () => {
     });
 
     expect(result.success).toBe(false);
-    // Agora sempre executa self-check primeiro, então steps deve conter ['self-check']
-    expect(result.steps).toEqual(['self-check']);
+    // [FASE 3] Agora sempre executa init-product + self-check primeiro
+    expect(result.steps).toEqual(['init-product', 'self-check']);
   });
 });
 

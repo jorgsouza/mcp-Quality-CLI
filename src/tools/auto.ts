@@ -37,6 +37,7 @@ import { recommendTestStrategy } from './recommend-strategy.js';
 import { validate } from './validate.js';
 import { buildReport } from './report.js';
 import { analyzeTestLogic } from './analyze-test-logic.js';
+import { initProduct } from './init-product.js';
 import { loadMCPSettings, inferProductFromPackageJson } from '../utils/config.js';
 import { fileExists } from '../utils/fs.js';
 import { detectLanguage } from '../detectors/language.js';
@@ -290,6 +291,29 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<{
   const paths = getPaths(repoPath, product, settings || undefined);
   
   try {
+    // [FASE 3] Auto-inicializar estrutura qa/<product> se não existir
+    const mcpSettingsPath = join(paths.root, 'mcp-settings.json');
+    const hasStructure = await fileExists(mcpSettingsPath);
+    
+    if (!hasStructure) {
+      // Verificar se o diretório do repositório existe antes de tentar criar estrutura
+      const repoExists = await fileExists(repoPath);
+      if (!repoExists) {
+        throw new Error(`Repository path does not exist: ${repoPath}`);
+      }
+      
+      console.log(`🏗️  [0/11] Inicializando estrutura qa/${product}...`);
+      await initProduct({ 
+        repo: repoPath, 
+        product,
+        base_url: 'http://localhost:3000', // Default - usuário pode customizar depois
+        domains: [],
+        critical_flows: []
+      });
+      console.log(`✅ Estrutura inicializada!\n`);
+      steps.push('init-product');
+    }
+    
     // 0. SELF-CHECK (SEMPRE executa - valida ambiente)
     console.log('🔍 [0/11] Self-Check: Validando ambiente...');
     const selfCheckResult = await selfCheck({
