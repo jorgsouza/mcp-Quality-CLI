@@ -334,4 +334,114 @@ describe('CLI', () => {
       expect(['jest', 'vitest', 'mocha']).toContain(framework);
     });
   });
+
+  describe('Validação de Comandos Registrados', () => {
+    it('deve ter todos os comandos esperados registrados na CLI', async () => {
+      // Lista completa de comandos que devem estar disponíveis
+      const expectedCommands = [
+        'analyze',
+        'plan',
+        'scaffold',
+        'run',
+        'report',
+        'full',
+        'coverage',
+        'scaffold-unit',
+        'scaffold-integration',
+        'pyramid',
+        'catalog',
+        'recommend',
+        'run-coverage',
+        'auto',
+        'analyze-test-logic',
+        'help'
+      ];
+
+      // Cria uma nova instância do programa para inspeção
+      const { execSync } = await import('child_process');
+      
+      // Executa --help e captura a saída
+      const helpOutput = execSync('node dist/cli.js --help', { 
+        encoding: 'utf8',
+        cwd: process.cwd()
+      });
+
+      // Verifica se cada comando esperado está presente na saída do --help
+      for (const command of expectedCommands) {
+        expect(helpOutput).toContain(command);
+      }
+    });
+
+    it('deve ter descrições para todos os comandos', async () => {
+      const { execSync } = await import('child_process');
+      
+      const helpOutput = execSync('node dist/cli.js --help', { 
+        encoding: 'utf8',
+        cwd: process.cwd()
+      });
+
+      // Comandos críticos que devem ter descrições detalhadas
+      const criticalCommands = [
+        { name: 'analyze', description: 'Analisa o repositório' },
+        { name: 'plan', description: 'Gera plano de testes' },
+        { name: 'auto', description: 'Orquestrador completo' },
+        { name: 'analyze-test-logic', description: 'Analisa a lógica dos testes' }
+      ];
+
+      for (const cmd of criticalCommands) {
+        expect(helpOutput).toContain(cmd.name);
+        expect(helpOutput).toContain(cmd.description);
+      }
+    });
+
+    it('deve validar que comandos específicos aceitam parâmetros obrigatórios', async () => {
+      const { execSync } = await import('child_process');
+      
+      // Testa se analyze requer --repo e --product
+      try {
+        execSync('node dist/cli.js analyze 2>&1', { encoding: 'utf8' });
+      } catch (error: any) {
+        expect(error.stdout || error.stderr).toMatch(/required option.*--repo/i);
+      }
+
+      // Testa se analyze-test-logic requer --repo e --product
+      try {
+        execSync('node dist/cli.js analyze-test-logic 2>&1', { encoding: 'utf8' });
+      } catch (error: any) {
+        expect(error.stdout || error.stderr).toMatch(/required option.*--repo/i);
+      }
+    });
+
+    it('deve rejeitar comandos inexistentes com mensagem clara', async () => {
+      const { execSync } = await import('child_process');
+      
+      try {
+        execSync('node dist/cli.js comando-que-nao-existe 2>&1', { encoding: 'utf8' });
+        // Se não lançar erro, o teste deve falhar
+        expect(true).toBe(false);
+      } catch (error: any) {
+        const output = error.stdout || error.stderr || error.message;
+        expect(output).toMatch(/unknown command|error/i);
+      }
+    });
+
+    it('deve garantir que scripts npm correspondam aos comandos CLI', () => {
+      const fs = require('fs');
+      const path = require('path');
+      
+      const packageJsonPath = path.join(process.cwd(), 'package.json');
+      const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+      
+      // Scripts npm que devem chamar comandos CLI
+      const npmScriptMappings = {
+        'analyze:test-logic': 'analyze-test-logic'
+      };
+
+      for (const [scriptName, cliCommand] of Object.entries(npmScriptMappings)) {
+        expect(packageJson.scripts).toHaveProperty(scriptName);
+        expect(packageJson.scripts[scriptName]).toContain(cliCommand);
+      }
+    });
+  });
 });
+
