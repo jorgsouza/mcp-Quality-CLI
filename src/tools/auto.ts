@@ -36,6 +36,7 @@ import { analyzeTestCoverage } from './coverage.js';
 import { recommendTestStrategy } from './recommend-strategy.js';
 import { validate } from './validate.js';
 import { buildReport } from './report.js';
+import { analyzeTestLogic } from './analyze-test-logic.js';
 import { loadMCPSettings, inferProductFromPackageJson } from '../utils/config.js';
 import { fileExists } from '../utils/fs.js';
 import { detectLanguage } from '../detectors/language.js';
@@ -332,6 +333,27 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<{
       } catch (error) {
         console.log(`⚠️  Erro na análise de cobertura: ${error instanceof Error ? error.message : error}\n`);
       }
+      
+      // 2.5. TEST LOGIC ANALYSIS (análise profunda de qualidade dos testes)
+      console.log('🔬 [2.5/11] Analisando qualidade lógica dos testes...');
+      try {
+        const logicResult = await analyzeTestLogic({
+          repo: repoPath,
+          product,
+          runMutation: false, // Mutation opcional (lento)
+          generatePatches: true
+        });
+        steps.push('test-logic-analysis');
+        outputs.testLogicAnalysis = logicResult.reportPath;
+        console.log(`✅ Análise de qualidade concluída!`);
+        console.log(`   📊 Quality Score: ${logicResult.metrics.qualityScore}/100 (${logicResult.metrics.grade})`);
+        console.log(`   🎯 Happy Path: ${logicResult.metrics.scenarioCoverage.happy.toFixed(1)}%`);
+        console.log(`   🔀 Edge Cases: ${logicResult.metrics.scenarioCoverage.edge.toFixed(1)}%`);
+        console.log(`   ⚠️  Error Handling: ${logicResult.metrics.scenarioCoverage.error.toFixed(1)}%`);
+        console.log(`   📄 Relatório: ${logicResult.reportPath}\n`);
+      } catch (error) {
+        console.log(`⚠️  Erro na análise de lógica: ${error instanceof Error ? error.message : error}\n`);
+      }
     }
     
     // 3. RECOMMEND STRATEGY (recomendação de estratégia de testes)
@@ -457,6 +479,17 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<{
         } catch (error) {
           console.log(`⚠️  Erro ao gerar relatório consolidado: ${error instanceof Error ? error.message : error}\n`);
         }
+
+        // 11. EXPORT TO tests/qa (cópia dos principais artefatos)
+        console.log('📦 [11/11] Exportando relatórios para tests/qa...');
+        try {
+          const copied = await exportReportsToQA(repoPath);
+          steps.push('export-qa');
+          outputs.qa = `tests/qa (${copied.length} arquivos)`;
+          console.log(`✅ Relatórios copiados para tests/qa: ${copied.length} arquivo(s)\n`);
+        } catch (error) {
+          console.log(`⚠️  Erro ao exportar relatórios para tests/qa: ${error instanceof Error ? error.message : error}\n`);
+        }
       } else {
         console.log(`⚠️  Nenhum teste encontrado, pulando execução\n`);
       }
@@ -497,4 +530,39 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<{
 export async function runAutoMode(mode: AutoMode, options: Omit<AutoOptions, 'mode'> = {}): Promise<boolean> {
   const result = await autoQualityRun({ ...options, mode });
   return result.success;
+}
+
+/**
+ * Copia os principais artefatos gerados em tests/analyses para tests/qa
+ */
+async function exportReportsToQA(repoPath: string): Promise<string[]> {
+  const qaDir = join(repoPath, 'tests', 'qa');
+  await fs.mkdir(qaDir, { recursive: true });
+
+  const sources = [
+    // Relatórios em tests/analyses
+    ['tests/analyses/TEST-PLAN.md', 'TEST-PLAN.md'],
+    ['tests/analyses/TEST-STRATEGY-RECOMMENDATION.md', 'TEST-STRATEGY-RECOMMENDATION.md'],
+    ['tests/analyses/COVERAGE-ANALYSIS.md', 'COVERAGE-ANALYSIS.md'],
+    ['tests/analyses/PYRAMID-REPORT.md', 'PYRAMID-REPORT.md'],
+    ['tests/analyses/dashboard.html', 'dashboard.html'],
+    ['tests/analyses/coverage-analysis.json', 'coverage-analysis.json'],
+    // Relatório consolidado gerado na raiz
+    ['QUALITY-ANALYSIS-REPORT.md', 'QUALITY-ANALYSIS-REPORT.md']
+  ];
+
+  const copied: string[] = [];
+  for (const [relSrc, destName] of sources) {
+    const src = join(repoPath, relSrc);
+    const dest = join(qaDir, destName);
+    try {
+      if (await fileExists(src)) {
+        await fs.copyFile(src, dest);
+        copied.push(dest);
+      }
+    } catch {
+      // continua tentando os próximos
+    }
+  }
+  return copied;
 }

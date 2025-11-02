@@ -35,7 +35,7 @@ IDEAL                  ATUAL
 
 - **Test Cases:** 480
 - **Arquivos:** 36
-- **Cobertura:** 82.0%
+- **Cobertura:** 84.6%
 - **Arquivos sem testes:** 5
 
 
@@ -102,4 +102,4 @@ Execute: `quality scaffold-unit --files "src/mcp-tools.manifest.ts src/commands.
 ---
 
 **Gerado por:** Quality MCP v0.2.0  
-**Timestamp:** 2025-11-02T21:51:47.311Z
+**Timestamp:** 2025-11-02T22:12:01.473Z

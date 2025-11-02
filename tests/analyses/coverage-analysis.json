@@ -4,7 +4,7 @@
     "unit": {
       "files_found": 36,
       "test_cases": 480,
-      "coverage_percent": 81.95,
+      "coverage_percent": 84.58,
       "test_files": [
         "src/__tests__/server.test.ts",
         "src/__tests__/server.integration.test.ts",
