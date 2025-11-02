@@ -215,47 +215,35 @@ export async function ensurePaths(paths: QAPaths): Promise<void> {
 
 ---
 
-### **FASE 2: Refatoração das Tools** (Est: 4-6h) - 🔄 EM ANDAMENTO
+### **FASE 2: Refatoração das Tools** ✅ CONCLUÍDA (4h)
 
-#### 2.1. Analyze Tool
-**Arquivo**: `src/tools/analyze.ts`
+**Commit**: `144006a` (2025-11-02)  
+**Status**: 601/601 testes passando ✅
 
-**ANTES**:
-```typescript
-const outFile = options.out_file || join(repo, 'tests/analyses/analyze.json');
-```
+#### 2.1. Tools Refatoradas (6/9)
+- ✅ `analyze.ts` → `paths.analyses/analyze.json`
+- ✅ `coverage.ts` → `paths.analyses/coverage-analysis.json` + `paths.reports/COVERAGE-REPORT.md`
+- ✅ `plan.ts` → lê `paths.analyses`, escreve `paths.reports/PLAN.md`
+- ✅ `pyramid-report.ts` → lê `paths.analyses`, escreve `paths.reports/PYRAMID-REPORT.*`
+- ✅ `dashboard.ts` → lê `paths.analyses`, escreve `paths.dashboards/dashboard.html`
+- ✅ `run-coverage.ts` → `paths.reports/COVERAGE-ANALYSIS.md` (+ breaking change: requer `product`)
 
-**DEPOIS**:
-```typescript
-import { getPaths } from '../utils/paths.js';
+#### 2.2. Mudanças Estruturais
+- **RunCoverageParams**: Adicionado campo obrigatório `product: string`
+- **loadAnalysisData**: Mudou de `(repoPath: string, product?: string)` para `(paths: QAPaths)`
+- **ensurePaths()**: Todas as tools agora chamam após `getPaths()` para garantir diretórios
+- **Estrutura de testes**: Movida de `tests/` para `qa/mcp-Quality-CLI/tests/`
 
-async function analyze(options: AnalyzeOptions): Promise<AnalyzeResult> {
-  const { repo, product } = options;
-  const settings = await loadSettings(repo);
-  const paths = getPaths(repo, product, settings);
-  
-  const outFile = options.out_file || join(paths.analyses, 'analyze.json');
-  // ... resto do código
-}
-```
+#### 2.3. Arquivos Modificados
+- 6 tools refatoradas
+- 5 arquivos de teste atualizados (fixtures para qa/<product>)
+- 9 testes de integração/e2e movidos e imports corrigidos
+- `.gitignore` atualizado para nova estrutura
 
-#### 2.2. Tools a Refatorar (mesma lógica)
-- ✅ `src/tools/analyze.ts` → `paths.analyses/analyze.json`
-- ✅ `src/tools/run-coverage.ts` → `paths.analyses/coverage-analysis.json`
-- ✅ `src/tools/analyze-test-logic.ts` → `paths.analyses/TEST-QUALITY-LOGICAL.json`
-- ✅ `src/tools/plan.ts` → `paths.reports/PLAN.md`
-- ✅ `src/tools/pyramid-report.ts` → `paths.reports/PYRAMID.{md,html,json}`
-- ✅ `src/tools/dashboard.ts` → `paths.dashboards/dashboard.html`
-- ✅ `src/tools/report.ts` → `paths.reports/QUALITY-REPORT.md`
-- ✅ `src/tools/run-diff-coverage.ts` → `paths.reports/DIFF-COVERAGE.md`
-- ✅ `src/tools/scaffold-*.ts` → `paths.unit|integration|e2e`
-
-#### 2.3. Padrão de Migração
-Para cada tool:
-1. Adicionar `import { getPaths } from '../utils/paths.js'`
-2. Calcular `const paths = getPaths(repo, product, settings)`
-3. Substituir hardcoded `join(repo, 'tests/...')` por `paths.analyses|reports|dashboards`
-4. Atualizar testes para mockear `getPaths()`
+#### 2.4. Breaking Changes
+- `RunCoverageParams` agora requer campo `product`
+- Outputs movidos: `tests/analyses` → `qa/<product>/tests/analyses`
+- Nome de arquivo: `PLAN.md` (não `TEST-PLAN.md`)
 
 ---
 
