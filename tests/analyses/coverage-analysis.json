@@ -4,7 +4,7 @@
     "unit": {
       "files_found": 28,
       "test_cases": 305,
-      "coverage_percent": 85.04,
+      "coverage_percent": 79.45,
       "test_files": [
         "src/__tests__/server.test.ts",
         "src/__tests__/server.integration.test.ts",
@@ -46,7 +46,7 @@
         "tests/integration/coverage-to-recommendations.test.ts",
         "tests/integration/analyze-to-plan.test.ts"
       ],
-      "api_endpoints_tested": 2
+      "api_endpoints_tested": 5
     },
     "e2e": {
       "files_found": 5,
@@ -63,7 +63,8 @@
   },
   "health": "healthy",
   "recommendations": [
-    "🔗 Considere adicionar mais testes de integração/API para o meio da pirâmide."
+    "🔗 Considere adicionar mais testes de integração/API para o meio da pirâmide.",
+    "🎯 Meta de cobertura unit: 85% (atual: 77.4%)"
   ],
   "analysis_path": "tests/analyses/coverage-analysis.json"
 }

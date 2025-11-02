@@ -1,6 +1,6 @@
 # Análise da Pirâmide de Testes - mcp-Quality-CLI
 
-**Data:** 2025-11-01
+**Data:** 2025-11-02
 
 ## 📊 Visão Geral
 
@@ -35,7 +35,7 @@ IDEAL                  ATUAL
 
 - **Test Cases:** 305
 - **Arquivos:** 28
-- **Cobertura:** 85.0%
+- **Cobertura:** 79.5%
 - **Arquivos sem testes:** 0
 
 
@@ -44,7 +44,7 @@ IDEAL                  ATUAL
 
 - **Test Cases:** 36
 - **Arquivos:** 4
-- **Endpoints testados:** 2
+- **Endpoints testados:** 5
 - **Cobertura de API:** ✅
 
 
@@ -59,6 +59,7 @@ IDEAL                  ATUAL
 ## 💡 Recomendações
 
 - 🔗 Considere adicionar mais testes de integração/API para o meio da pirâmide.
+- 🎯 Meta de cobertura unit: 85% (atual: 77.4%)
 
 ## 🎯 Plano de Ação
 
@@ -92,4 +93,4 @@ IDEAL                  ATUAL
 ---
 
 **Gerado por:** Quality MCP v0.2.0  
-**Timestamp:** 2025-11-01T22:27:23.425Z
+**Timestamp:** 2025-11-02T00:20:09.474Z
