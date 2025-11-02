@@ -2,6 +2,7 @@ import { join } from 'node:path';
 import { writeFileSafe, ensureDir, readFile, fileExists } from '../utils/fs.js';
 import { loadMCPSettings, mergeSettings } from '../utils/config.js';
 import { findExpressRoutes, findOpenAPI, type Endpoint } from '../detectors/express.js';
+import { getPaths, ensurePaths } from '../utils/paths.js';
 
 export interface ScaffoldIntegrationParams {
   repo: string;
@@ -21,6 +22,10 @@ export async function scaffoldIntegrationTests(input: ScaffoldIntegrationParams)
 
   console.log(`🔗 Gerando testes de integração para ${settings.product}...`);
 
+  // [FASE 2] Calcular e garantir paths
+  const paths = getPaths(settings.repo, settings.product || 'default', fileSettings || undefined);
+  await ensurePaths(paths);
+
   // Valida base_url se fornecida
   if (settings.base_url && settings.base_url !== '') {
     try {
@@ -30,8 +35,8 @@ export async function scaffoldIntegrationTests(input: ScaffoldIntegrationParams)
     }
   }
 
-  const testDir = join(input.repo, 'tests', 'integration');
-  await ensureDir(testDir);
+  // [FASE 2] Usar paths.integration
+  const testDir = paths.integration;
 
   // Detecta endpoints
   let endpoints: Endpoint[] = [];
@@ -104,8 +109,9 @@ export async function scaffoldIntegrationTests(input: ScaffoldIntegrationParams)
   }
 
   // Gera guia
-  await generateIntegrationGuide(input.repo, settings.product || 'Product');
-  generated.push('tests/analyses/INTEGRATION-TESTING-GUIDE.md');
+  await generateIntegrationGuide(paths.reports, settings.product || 'Product');
+  // [FASE 2] Usar path relativo ao root
+  generated.push('tests/reports/INTEGRATION-TESTING-GUIDE.md');
 
   // Atualiza package.json com scripts de integração
   await updatePackageJsonWithIntegrationScripts(input.repo);
@@ -472,7 +478,11 @@ ${endpoints.map(endpoint => `
   await writeFileSafe(join(testDir, 'contract', 'api-contract.test.ts'), contractTest);
 }
 
-async function generateIntegrationGuide(repoPath: string, product: string) {
+/**
+ * Gera guia explicativo sobre Integration Testing
+ * [FASE 2] Agora recebe reportsPath diretamente
+ */
+async function generateIntegrationGuide(reportsPath: string, product: string) {
   const guide = `# Guia de Integration Testing - ${product}
 
 ## O Que São Testes de Integração?
@@ -748,8 +758,9 @@ it('should insert data', async () => {
 **Gerado por:** Quality MCP v0.3.0
 `;
 
+  // [FASE 2] Salvar direto em reportsPath
   await writeFileSafe(
-    join(repoPath, 'tests', 'analyses', 'INTEGRATION-TESTING-GUIDE.md'),
+    join(reportsPath, 'INTEGRATION-TESTING-GUIDE.md'),
     guide
   );
 }

@@ -165,8 +165,10 @@ async function checkNodeVersion(): Promise<CheckResult> {
 
 /**
  * Verifica permissões de escrita no diretório de análises
+ * TODO [FASE 4]: Receber product para verificar qa/<product>/tests/analyses
  */
 async function checkWritePermissions(repo: string): Promise<CheckResult> {
+  // [FASE 2] Por enquanto ainda usa tests/analyses (self-check não recebe product)
   const testDir = join(repo, 'tests', 'analyses');
   
   try {

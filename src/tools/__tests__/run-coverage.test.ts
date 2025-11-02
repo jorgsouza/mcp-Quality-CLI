@@ -34,7 +34,7 @@ describe('runCoverageAnalysis', () => {
     );
 
     await fs.mkdir(join(testDir, 'coverage'), { recursive: true });
-    await fs.mkdir(join(testDir, 'tests/analyses'), { recursive: true });
+    await fs.mkdir(join(testDir, 'qa/test-product/tests/analyses'), { recursive: true });
     await fs.writeFile(
       join(testDir, 'coverage/coverage-summary.json'),
       JSON.stringify({
@@ -65,7 +65,7 @@ describe('runCoverageAnalysis', () => {
     );
 
     await fs.mkdir(join(testDir, 'coverage'), { recursive: true });
-    await fs.mkdir(join(testDir, 'tests/analyses'), { recursive: true });
+    await fs.mkdir(join(testDir, 'qa/test-product/tests/analyses'), { recursive: true });
     await fs.writeFile(
       join(testDir, 'coverage/coverage-summary.json'),
       JSON.stringify({
@@ -97,7 +97,7 @@ describe('runCoverageAnalysis', () => {
     );
 
     await fs.mkdir(join(testDir, 'coverage'), { recursive: true });
-    await fs.mkdir(join(testDir, 'tests/analyses'), { recursive: true });
+    await fs.mkdir(join(testDir, 'qa/test-product/tests/analyses'), { recursive: true });
     await fs.writeFile(
       join(testDir, 'coverage/coverage-summary.json'),
       JSON.stringify({
@@ -127,7 +127,7 @@ describe('runCoverageAnalysis', () => {
     );
 
     await fs.mkdir(join(testDir, 'coverage'), { recursive: true });
-    await fs.mkdir(join(testDir, 'tests/analyses'), { recursive: true });
+    await fs.mkdir(join(testDir, 'qa/test-product/tests/analyses'), { recursive: true });
     await fs.writeFile(
       join(testDir, 'coverage/coverage-summary.json'),
       JSON.stringify({
@@ -171,7 +171,7 @@ describe('runCoverageAnalysis', () => {
     );
 
     await fs.mkdir(join(testDir, 'coverage'), { recursive: true });
-    await fs.mkdir(join(testDir, 'tests/analyses'), { recursive: true });
+    await fs.mkdir(join(testDir, 'qa/test-product/tests/analyses'), { recursive: true });
     await fs.writeFile(
       join(testDir, 'coverage/coverage-summary.json'),
       JSON.stringify({
@@ -210,7 +210,7 @@ describe('runCoverageAnalysis', () => {
     );
 
     await fs.mkdir(join(testDir, 'coverage'), { recursive: true });
-    await fs.mkdir(join(testDir, 'tests/analyses'), { recursive: true });
+    await fs.mkdir(join(testDir, 'qa/test-product/tests/analyses'), { recursive: true });
     await fs.writeFile(
       join(testDir, 'coverage/coverage-summary.json'),
       JSON.stringify({
@@ -247,7 +247,7 @@ describe('runCoverageAnalysis', () => {
       })
     );
 
-    await fs.mkdir(join(testDir, 'tests/analyses'), { recursive: true });
+    await fs.mkdir(join(testDir, 'qa/test-product/tests/analyses'), { recursive: true });
 
     const result = await runCoverageAnalysis({ repo: testDir, product: "test-product" });
 
@@ -265,7 +265,7 @@ describe('runCoverageAnalysis', () => {
     );
 
     await fs.mkdir(join(testDir, 'coverage'), { recursive: true });
-    await fs.mkdir(join(testDir, 'tests/analyses'), { recursive: true });
+    await fs.mkdir(join(testDir, 'qa/test-product/tests/analyses'), { recursive: true });
     await fs.writeFile(
       join(testDir, 'coverage/coverage-summary.json'),
       JSON.stringify({
@@ -296,7 +296,7 @@ describe('runCoverageAnalysis', () => {
     );
 
     await fs.mkdir(join(testDir, 'coverage'), { recursive: true });
-    await fs.mkdir(join(testDir, 'tests/analyses'), { recursive: true });
+    await fs.mkdir(join(testDir, 'qa/test-product/tests/analyses'), { recursive: true });
     await fs.writeFile(
       join(testDir, 'coverage/coverage-summary.json'),
       JSON.stringify({
@@ -332,7 +332,7 @@ describe('runCoverageAnalysis', () => {
     );
 
     await fs.mkdir(join(testDir, 'coverage'), { recursive: true });
-    await fs.mkdir(join(testDir, 'tests/analyses'), { recursive: true });
+    await fs.mkdir(join(testDir, 'qa/test-product/tests/analyses'), { recursive: true });
     await fs.writeFile(
       join(testDir, 'coverage/coverage-summary.json'),
       JSON.stringify({
@@ -388,7 +388,7 @@ describe('Parsers Multi-linguagem', () => {
   beforeEach(async () => {
     testDir = `/tmp/parser-test-${Date.now()}`;
     await fs.mkdir(testDir, { recursive: true });
-    await fs.mkdir(join(testDir, 'tests/analyses'), { recursive: true });
+    await fs.mkdir(join(testDir, 'qa/test-product/tests/analyses'), { recursive: true });
   });
 
   afterEach(async () => {

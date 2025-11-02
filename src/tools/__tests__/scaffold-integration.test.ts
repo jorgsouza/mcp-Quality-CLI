@@ -25,7 +25,8 @@ describe('scaffoldIntegrationTests', () => {
 
     expect(result.ok).toBe(true);
 
-    const integrationDir = join(testDir, 'tests/integration');
+    // [FASE 2] scaffold-integration agora usa paths.integration (qa/<product>/tests/integration)
+    const integrationDir = join(testDir, 'qa/TestApp/tests/integration');
     const exists = await fs.access(integrationDir).then(() => true).catch(() => false);
     expect(exists).toBe(true);
   });
@@ -52,7 +53,8 @@ describe('scaffoldIntegrationTests', () => {
 
     expect(result.ok).toBe(true);
 
-    const clientPath = join(testDir, 'tests/integration/helpers/api-client.ts');
+    // [FASE 2] scaffold-integration agora usa paths.integration
+    const clientPath = join(testDir, 'qa/TestApp/tests/integration/helpers/api-client.ts');
     const exists = await fs.access(clientPath).then(() => true).catch(() => false);
     expect(exists).toBe(true);
 
@@ -60,7 +62,7 @@ describe('scaffoldIntegrationTests', () => {
     expect(content).toContain('baseURL');
     
     // Verifica se a URL está no arquivo setup.ts
-    const setupPath = join(testDir, 'tests/integration/setup.ts');
+    const setupPath = join(testDir, 'qa/TestApp/tests/integration/setup.ts');
     const setupContent = await fs.readFile(setupPath, 'utf-8');
     expect(setupContent).toContain('https://api.test.com');
   });
@@ -75,8 +77,8 @@ describe('scaffoldIntegrationTests', () => {
 
     expect(result.ok).toBe(true);
 
-    // Verifica se arquivos de contrato foram criados
-    const contractPath = join(testDir, 'tests/integration/contract/api-contract.test.ts');
+    // [FASE 2] scaffold-integration agora usa paths.integration
+    const contractPath = join(testDir, 'qa/TestApp/tests/integration/contract/api-contract.test.ts');
     const contractExists = await fs.access(contractPath).then(() => true).catch(() => false);
     expect(contractExists).toBe(true);
   });
@@ -120,7 +122,8 @@ describe('scaffoldIntegrationTests', () => {
 
     expect(result.ok).toBe(true);
 
-    const guidePath = join(testDir, 'tests/analyses/INTEGRATION-TESTING-GUIDE.md');
+    // [FASE 2] scaffold-integration usa paths.reports
+    const guidePath = join(testDir, 'qa/TestApp/tests/reports/INTEGRATION-TESTING-GUIDE.md');
     const exists = await fs.access(guidePath).then(() => true).catch(() => false);
     expect(exists).toBe(true);
 

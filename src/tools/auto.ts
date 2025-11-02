@@ -40,6 +40,7 @@ import { analyzeTestLogic } from './analyze-test-logic.js';
 import { loadMCPSettings, inferProductFromPackageJson } from '../utils/config.js';
 import { fileExists } from '../utils/fs.js';
 import { detectLanguage } from '../detectors/language.js';
+import { getPaths } from '../utils/paths.js';
 
 export type AutoMode = 'full' | 'analyze' | 'plan' | 'scaffold' | 'run';
 
@@ -284,6 +285,9 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<{
     product,
     ...settings
   };
+
+  // [FASE 2] Calcular paths uma vez para uso em todo o pipeline
+  const paths = getPaths(repoPath, product, settings || undefined);
   
   try {
     // 0. SELF-CHECK (SEMPRE executa - valida ambiente)
@@ -471,7 +475,7 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<{
         console.log('📄 [10/11] Gerando relatório consolidado final...');
         try {
           const reportResult = await buildReport({
-            in_dir: join(repoPath, 'tests', 'analyses'),
+            in_dir: paths.analyses, // [FASE 2] Usar paths.analyses
             out_file: 'QUALITY-ANALYSIS-REPORT.md'
           });
           steps.push('final-report');
