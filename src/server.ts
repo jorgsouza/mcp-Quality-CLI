@@ -24,6 +24,7 @@ import { initProduct, type InitProductParams } from './tools/init-product.js';
 import { runDiffCoverage, type DiffCoverageParams } from './tools/run-diff-coverage.js';
 import { autoQualityRun, type AutoOptions } from './tools/auto.js';
 import { nlCommand, type NLCommandParams } from './tools/nl-command.js';
+import { evaluateTestQuality, type TestQualityParams } from './tools/evaluate-test-quality.js';
 import { fileExists } from './utils/fs.js';
 
 // Schemas Zod para validação
@@ -178,6 +179,16 @@ const NLCommandSchema = z.object({
   }).optional().describe('Defaults globais opcionais')
 });
 
+const TestQualitySchema = z.object({
+  repo: z.string()
+    .min(1, 'Repository path is required')
+    .describe('Caminho do repositório'),
+  product: z.string()
+    .min(1, 'Product name is required')
+    .describe('Nome do produto'),
+  includeDetails: z.boolean().optional().describe('Incluir detalhes de todas as funções')
+});
+
 class QualityMCPServer {
   private server: Server;
 
@@ -254,6 +265,19 @@ class QualityMCPServer {
               skipScaffold: { type: 'boolean', description: 'Pular geração de scaffolds (útil se já existem testes)' },
               skipRun: { type: 'boolean', description: 'Pular execução de testes (útil para análise rápida)' }
             }
+          }
+        },
+        {
+          name: 'evaluate_test_quality',
+          description: '🎯 Avalia a qualidade dos testes: analisa funções exportadas, detecta código crítico sem testes, calcula quality score (0-100), identifica gaps de coverage e gera recomendações específicas por função.',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              repo: { type: 'string', description: 'Caminho do repositório' },
+              product: { type: 'string', description: 'Nome do produto' },
+              includeDetails: { type: 'boolean', description: 'Incluir detalhes de todas as funções (default: true)', default: true }
+            },
+            required: ['repo', 'product']
           }
         },
         {
@@ -500,6 +524,19 @@ class QualityMCPServer {
           case 'auto': {
             const params = AutoSchema.parse(request.params.arguments);
             const result = await autoQualityRun(params);
+            return {
+              content: [
+                {
+                  type: 'text',
+                  text: JSON.stringify(result, null, 2)
+                }
+              ]
+            };
+          }
+
+          case 'evaluate_test_quality': {
+            const params = TestQualitySchema.parse(request.params.arguments);
+            const result = await evaluateTestQuality(params);
             return {
               content: [
                 {
