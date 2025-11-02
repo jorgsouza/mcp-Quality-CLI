@@ -70,8 +70,16 @@ describe('generateDashboard', () => {
 
   it('deve incluir gráficos de cobertura', async () => {
     await fs.writeFile(
-      join(testDir, 'tests/analyses/coverage-data.json'),
-      JSON.stringify({ summary: { totalTests: 10, unit: 5, integration: 3, e2e: 2, ratio: '5:3:2' }, health: { status: 'healthy', score: 90 } })
+      join(testDir, 'tests/analyses/coverage-analysis.json'),
+      JSON.stringify({
+        pyramid: {
+          unit: { test_cases: 50, files_found: 10 },
+          integration: { test_cases: 30, files_found: 5 },
+          e2e: { test_cases: 20, files_found: 3 }
+        },
+        health: 'healthy',
+        recommendations: []
+      })
     );
     await fs.writeFile(
       join(testDir, 'tests/analyses/test-catalog.json'),
@@ -91,13 +99,21 @@ describe('generateDashboard', () => {
 
     const dashboardPath = join(testDir, 'tests/analyses/dashboard.html');
     const content = await fs.readFile(dashboardPath, 'utf-8');
-    expect(content).toContain('5:3:2');
+    expect(content).toContain('50:30:20'); // Ratio calculado
   });
 
-  it('deve incluir histórico de execuções', async () => {
+  it('deve gerar dashboard com visualização da pirâmide', async () => {
     await fs.writeFile(
-      join(testDir, 'tests/analyses/coverage-data.json'),
-      JSON.stringify({ summary: { totalTests: 10, unit: 5, integration: 3, e2e: 2 }, health: { status: 'healthy', score: 90 } })
+      join(testDir, 'tests/analyses/coverage-analysis.json'),
+      JSON.stringify({
+        pyramid: {
+          unit: { test_cases: 5, files_found: 3 },
+          integration: { test_cases: 3, files_found: 2 },
+          e2e: { test_cases: 2, files_found: 1 }
+        },
+        health: 'healthy',
+        recommendations: []
+      })
     );
     await fs.writeFile(
       join(testDir, 'tests/analyses/test-catalog.json'),
@@ -131,8 +147,16 @@ describe('generateDashboard', () => {
 
   it('deve exibir status de saúde dos testes', async () => {
     await fs.writeFile(
-      join(testDir, 'tests/analyses/coverage-data.json'),
-      JSON.stringify({ summary: { totalTests: 10, unit: 5, integration: 3, e2e: 2 }, health: { status: 'healthy', score: 90 } })
+      join(testDir, 'tests/analyses/coverage-analysis.json'),
+      JSON.stringify({
+        pyramid: {
+          unit: { test_cases: 5, files_found: 3 },
+          integration: { test_cases: 3, files_found: 2 },
+          e2e: { test_cases: 2, files_found: 1 }
+        },
+        health: 'healthy',
+        recommendations: []
+      })
     );
     await fs.writeFile(
       join(testDir, 'tests/analyses/test-catalog.json'),
@@ -152,7 +176,7 @@ describe('generateDashboard', () => {
 
     const dashboardPath = join(testDir, 'tests/analyses/dashboard.html');
     const content = await fs.readFile(dashboardPath, 'utf-8');
-    expect(content).toContain('90/100');
+    expect(content).toContain('85/100'); // Score 85 para health='healthy'
   });
 });
 

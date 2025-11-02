@@ -57,12 +57,17 @@ async function loadAnalysisData(repoPath: string, product?: string): Promise<any
       totalTests: 0,
       unit: 0,
       integration: 0,
-      e2e: 0
+      e2e: 0,
+      ratio: '0:0:0'
+    },
+    health: {
+      status: 'unknown',
+      score: 0
     }
   };
 
   const files = [
-    'coverage-data.json',
+    'coverage-analysis.json',
     'test-catalog.json',
     'analyze.json'
   ];
@@ -78,6 +83,45 @@ async function loadAnalysisData(repoPath: string, product?: string): Promise<any
     }
   }
 
+  // Extrai dados da pirâmide de coverage-analysis.json
+  if (data['coverage-analysis']?.pyramid) {
+    const pyramid = data['coverage-analysis'].pyramid;
+    const totalTests = (pyramid.unit?.test_cases || 0) + 
+                       (pyramid.integration?.test_cases || 0) + 
+                       (pyramid.e2e?.test_cases || 0);
+    
+    data.summary.totalTests = totalTests;
+    data.summary.unit = pyramid.unit?.test_cases || 0;
+    data.summary.integration = pyramid.integration?.test_cases || 0;
+    data.summary.e2e = pyramid.e2e?.test_cases || 0;
+
+    // Calcula ratio
+    if (totalTests > 0) {
+      const unitPct = Math.round((data.summary.unit / totalTests) * 100);
+      const intPct = Math.round((data.summary.integration / totalTests) * 100);
+      const e2ePct = Math.round((data.summary.e2e / totalTests) * 100);
+      data.summary.ratio = `${unitPct}:${intPct}:${e2ePct}`;
+    }
+
+    // Define health baseado na pirâmide
+    const health = data['coverage-analysis'].health || 'healthy';
+    if (health === 'healthy') {
+      data.health.status = 'healthy';
+      data.health.score = 85;
+    } else if (health === 'warning') {
+      data.health.status = 'warning';
+      data.health.score = 65;
+    } else {
+      data.health.status = 'critical';
+      data.health.score = 35;
+    }
+
+    // Recomendações
+    if (data['coverage-analysis'].recommendations) {
+      data.health.recommendations = data['coverage-analysis'].recommendations;
+    }
+  }
+
   return data;
 }
 
@@ -85,12 +129,12 @@ async function loadAnalysisData(repoPath: string, product?: string): Promise<any
  * Gera HTML interativo do dashboard
  */
 function generateDashboardHTML(data: any, settings: any): string {
-  const coverageData = data['coverage-data'] || {};
+  const coverageData = data['coverage-analysis'] || {};
   const catalogData = data['test-catalog'] || {};
   const analyzeData = data.analyze || {};
 
-  const summary = coverageData.summary || { totalTests: 0, unit: 0, integration: 0, e2e: 0 };
-  const health = coverageData.health || { status: 'unknown', score: 0 };
+  const summary = data.summary || { totalTests: 0, unit: 0, integration: 0, e2e: 0, ratio: '0:0:0' };
+  const health = data.health || { status: 'unknown', score: 0 };
 
   return `<!DOCTYPE html>
 <html lang="pt-BR">

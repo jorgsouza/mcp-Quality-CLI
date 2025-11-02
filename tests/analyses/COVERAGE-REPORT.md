@@ -102,4 +102,4 @@ Execute: `quality scaffold-unit --files "src/mcp-tools.manifest.ts src/commands.
 ---
 
 **Gerado por:** Quality MCP v0.2.0  
-**Timestamp:** 2025-11-02T21:39:02.668Z
+**Timestamp:** 2025-11-02T21:51:47.311Z

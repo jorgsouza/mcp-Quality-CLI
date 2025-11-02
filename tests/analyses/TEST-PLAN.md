@@ -18,11 +18,11 @@
 
 
 ### 🟢 LOW Risk (35 endpoints)
-- **endpoint:GET /api/users** — Score: 0.0 (Probability: 0%, Impact: 6500%)
-- **endpoint:POST /api/users** — Score: 0.0 (Probability: 0%, Impact: 6500%)
-- **endpoint:GET /api/health** — Score: 0.0 (Probability: 0%, Impact: 6500%)
-- **endpoint:GET /api/users** — Score: 0.0 (Probability: 0%, Impact: 6500%)
 - **endpoint:GET /path** — Score: 0.0 (Probability: 0%, Impact: 6500%)
+- **endpoint:GET /users** — Score: 0.0 (Probability: 0%, Impact: 6500%)
+- **endpoint:POST /path** — Score: 0.0 (Probability: 0%, Impact: 6500%)
+- **endpoint:POST /users** — Score: 0.0 (Probability: 0%, Impact: 6500%)
+- **endpoint:PUT /users/:id** — Score: 0.0 (Probability: 0%, Impact: 6500%)
 
 _...and 30 more endpoints_
 
@@ -63,16 +63,16 @@ _...and 30 more endpoints_
 
 
 ### Mapa de Riscos (Análise)
-- **[MED]** endpoint:GET /api/users: sem verificação de contrato detectada
-- **[MED]** endpoint:POST /api/users: sem verificação de contrato detectada
-- **[MED]** endpoint:GET /api/health: sem verificação de contrato detectada
-- **[MED]** endpoint:GET /api/users: sem verificação de contrato detectada
 - **[MED]** endpoint:GET /path: sem verificação de contrato detectada
 - **[MED]** endpoint:GET /users: sem verificação de contrato detectada
 - **[MED]** endpoint:POST /path: sem verificação de contrato detectada
 - **[MED]** endpoint:POST /users: sem verificação de contrato detectada
 - **[MED]** endpoint:PUT /users/:id: sem verificação de contrato detectada
 - **[MED]** endpoint:DELETE /users/:id: sem verificação de contrato detectada
+- **[MED]** endpoint:PATCH /users/:id: sem verificação de contrato detectada
+- **[MED]** endpoint:GET /profile: sem verificação de contrato detectada
+- **[MED]** endpoint:POST /profile: sem verificação de contrato detectada
+- **[MED]** endpoint:GET /admin: sem verificação de contrato detectada
 
 
 ## 3) Playwright — Estrutura
