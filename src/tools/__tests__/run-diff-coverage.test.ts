@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { runDiffCoverage } from '../run-diff-coverage.js';
 import * as fs from '../../utils/fs.js';
 import { spawn } from 'node:child_process';
+import * as paths from '../../utils/paths.js';
 
 // Mock do spawn
 vi.mock('node:child_process');
@@ -9,6 +10,8 @@ vi.mock('node:child_process');
 describe('runDiffCoverage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Mock ensurePaths para não tentar criar diretórios reais
+    vi.spyOn(paths, 'ensurePaths').mockResolvedValue(undefined);
   });
 
   afterEach(() => {

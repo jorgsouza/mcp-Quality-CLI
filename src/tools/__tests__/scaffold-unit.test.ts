@@ -191,7 +191,7 @@ describe('scaffoldUnitTests', () => {
 
     expect(result.ok).toBe(true);
 
-    const guidePath = join(testDir, 'tests/analyses/UNIT-TESTING-GUIDE.md');
+    const guidePath = join(testDir, 'qa/default/tests/reports/UNIT-TESTING-GUIDE.md');
     const exists = await fs.access(guidePath).then(() => true).catch(() => false);
     expect(exists).toBe(true);
 

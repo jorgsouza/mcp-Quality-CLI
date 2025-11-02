@@ -2,6 +2,7 @@ import { promises as fs } from 'node:fs';
 import { join, dirname, basename } from 'node:path';
 import { writeFileSafe, readFile, fileExists } from '../utils/fs.js';
 import { loadMCPSettings, mergeSettings } from '../utils/config.js';
+import { getPaths, ensurePaths } from '../utils/paths.js';
 
 export interface ScaffoldUnitParams {
   repo: string;
@@ -20,6 +21,10 @@ export async function scaffoldUnitTests(input: ScaffoldUnitParams): Promise<{
   const fileSettings = await loadMCPSettings(input.repo, input.product);
   const settings = mergeSettings(fileSettings, input);
 
+  // [FASE 2] Calcular paths centralizados
+  const paths = getPaths(settings.repo, settings.product || 'default', fileSettings || undefined);
+  await ensurePaths(paths);
+
   console.log(`🧪 Gerando testes unitários...`);
 
   const framework = input.framework || await detectTestFramework(input.repo);
@@ -31,7 +36,7 @@ export async function scaffoldUnitTests(input: ScaffoldUnitParams): Promise<{
   } else if (input.auto_detect) {
     filesToTest = await autoDetectSourceFiles(input.repo);
   } else {
-    filesToTest = await getFilesNeedingTests(input.repo);
+    filesToTest = await getFilesNeedingTests(paths.analyses);
   }
   
   const generated: string[] = [];
@@ -52,7 +57,7 @@ export async function scaffoldUnitTests(input: ScaffoldUnitParams): Promise<{
   await ensureTestScripts(input.repo, framework);
 
   // Gera README com instruções
-  await generateUnitTestGuide(input.repo, framework);
+  await generateUnitTestGuide(paths.reports, framework);
 
   console.log(`\n✅ ${generated.length} testes unitários gerados!`);
   
@@ -85,9 +90,9 @@ async function detectTestFramework(repoPath: string): Promise<'jest' | 'vitest' 
   }
 }
 
-async function getFilesNeedingTests(repoPath: string): Promise<string[]> {
+async function getFilesNeedingTests(analysesPath: string): Promise<string[]> {
   // Lê da análise de cobertura se existir
-  const coverageAnalysis = join(repoPath, 'tests', 'analyses', 'coverage-analysis.json');
+  const coverageAnalysis = join(analysesPath, 'coverage-analysis.json');
   
   if (await fileExists(coverageAnalysis)) {
     try {
@@ -437,7 +442,7 @@ async function ensureTestScripts(repoPath: string, framework: string) {
   }
 }
 
-async function generateUnitTestGuide(repoPath: string, framework: string) {
+async function generateUnitTestGuide(reportsPath: string, framework: string) {
   const guide = `# Guia de Unit Testing (Testes Unitários)
 
 ## Framework: ${framework.toUpperCase()}
@@ -514,7 +519,7 @@ describe('Button', () => {
 `;
 
   await writeFileSafe(
-    join(repoPath, 'tests', 'analyses', 'UNIT-TESTING-GUIDE.md'),
+    join(reportsPath, 'UNIT-TESTING-GUIDE.md'),
     guide
   );
 }

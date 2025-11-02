@@ -4,6 +4,8 @@ import { glob } from 'glob';
 import { evaluateTestQuality } from './evaluate-test-quality.js';
 import { detectLanguage } from '../detectors/language.js';
 import { writeFileSafe, ensureDir } from '../utils/fs.js';
+import { getPaths, ensurePaths } from '../utils/paths.js';
+import { loadMCPSettings } from '../utils/config.js';
 
 export interface TestLogicParams {
   repo: string;
@@ -76,6 +78,11 @@ export async function analyzeTestLogic(params: TestLogicParams): Promise<TestLog
   
   console.log(`\n🔍 Analisando lógica dos testes para ${product}...`);
   
+  // [FASE 2] Calcular paths centralizados
+  const settings = await loadMCPSettings(repo).catch(() => undefined);
+  const paths = getPaths(repo, product, settings || undefined);
+  await ensurePaths(paths);
+  
   // 1. Detectar linguagem e framework
   const langDetection = await detectLanguage(repo);
   const language = langDetection.primary;
@@ -109,13 +116,13 @@ export async function analyzeTestLogic(params: TestLogicParams): Promise<TestLog
   let patches: string[] = [];
   if (generatePatches) {
     console.log('🩹 Gerando patches para funções críticas...');
-    patches = await generateTestPatches(repo, language, framework, functions);
+    patches = await generateTestPatches(repo, paths.patches, language, framework, functions);
   }
   
   // 8. Gerar relatórios
   console.log('📄 Gerando relatórios...');
-  const reportPath = await generateLogicalReport(repo, product, language, framework, metrics, functions, recommendations, patches);
-  await generateLogicalJSON(repo, product, language, framework, metrics, functions, recommendations, reportPath, patches);
+  const reportPath = await generateLogicalReport(paths.reports, product, language, framework, metrics, functions, recommendations, patches);
+  await generateLogicalJSON(paths.analyses, product, language, framework, metrics, functions, recommendations, reportPath, patches);
   
   console.log(`\n✅ Análise completa!`);
   console.log(`📊 Quality Score: ${metrics.qualityScore.toFixed(1)}/100 (${metrics.grade})`);
@@ -633,13 +640,13 @@ function generateLogicalRecommendations(functions: FunctionLogic[], metrics: Tes
  */
 async function generateTestPatches(
   repo: string,
+  patchesPath: string,
   language: string,
   framework: string,
   functions: FunctionLogic[]
 ): Promise<string[]> {
   const patches: string[] = [];
-  const patchDir = join(repo, 'tests/analyses/patches');
-  await ensureDir(patchDir);
+  await ensureDir(patchesPath);
   
   const criticalFunctions = functions.filter(f => 
     (f.criticality === 'CRITICAL' || f.criticality === 'HIGH') && f.gaps.length > 0
@@ -647,7 +654,7 @@ async function generateTestPatches(
   
   for (const func of criticalFunctions.slice(0, 5)) { // Limitar a 5 patches
     const patch = generatePatchForFunction(func, language, framework);
-    const patchPath = join(patchDir, `add-tests-${func.name}.patch`);
+    const patchPath = join(patchesPath, `add-tests-${func.name}.patch`);
     await writeFileSafe(patchPath, patch);
     patches.push(relative(repo, patchPath));
   }
@@ -708,7 +715,7 @@ describe('${func.name}', () => {`;
  * Gera relatório Markdown
  */
 async function generateLogicalReport(
-  repo: string,
+  reportsPath: string,
   product: string,
   language: string,
   framework: string,
@@ -798,7 +805,7 @@ git apply ${patches[0]}
 **Ferramenta:** \`analyze-test-logic\`
 `;
 
-  const reportPath = join(repo, 'tests/analyses/TEST-QUALITY-LOGICAL-REPORT.md');
+  const reportPath = join(reportsPath, 'TEST-QUALITY-LOGICAL-REPORT.md');
   await writeFileSafe(reportPath, report);
   
   return reportPath;
@@ -808,7 +815,7 @@ git apply ${patches[0]}
  * Gera JSON com análise lógica
  */
 async function generateLogicalJSON(
-  repo: string,
+  analysesPath: string,
   product: string,
   language: string,
   framework: string,
@@ -837,6 +844,6 @@ async function generateLogicalJSON(
     patches
   };
   
-  const jsonPath = join(repo, 'tests/analyses/TEST-QUALITY-LOGICAL.json');
+  const jsonPath = join(analysesPath, 'TEST-QUALITY-LOGICAL.json');
   await writeFileSafe(jsonPath, JSON.stringify(json, null, 2));
 }

@@ -105,7 +105,7 @@ describe('catalogScenarios', () => {
     });
 
 
-    const matrixPath = join(testDir, 'tests/analyses/RESPONSIBILITY-MATRIX.md');
+    const matrixPath = join(testDir, 'qa/TestApp/tests/reports/RESPONSIBILITY-MATRIX.md');
     const exists = await fs.access(matrixPath).then(() => true).catch(() => false);
     expect(exists).toBe(true);
 
@@ -135,7 +135,7 @@ describe('catalogScenarios', () => {
     });
 
 
-    const catalogPath = join(testDir, 'tests/analyses/SCENARIO-CATALOG.md');
+    const catalogPath = join(testDir, 'qa/TestApp/tests/reports/SCENARIO-CATALOG.md');
     const exists = await fs.access(catalogPath).then(() => true).catch(() => false);
     expect(exists).toBe(true);
 

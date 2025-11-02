@@ -2,6 +2,7 @@ import { spawn } from 'node:child_process';
 import { join } from 'node:path';
 import { readFile, writeFileSafe, fileExists } from '../utils/fs.js';
 import { loadMCPSettings, mergeSettings } from '../utils/config.js';
+import { getPaths, ensurePaths } from '../utils/paths.js';
 
 export interface DiffCoverageParams {
   repo: string;
@@ -42,6 +43,10 @@ export async function runDiffCoverage(input: DiffCoverageParams): Promise<DiffCo
   const fileSettings = await loadMCPSettings(input.repo, input.product);
   const settings = mergeSettings(fileSettings, input);
 
+  // [FASE 2] Calcular paths centralizados
+  const paths = getPaths(settings.repo, settings.product || 'default', fileSettings || undefined);
+  await ensurePaths(paths);
+
   const baseBranch = settings.base_branch || 'main';
   const targetMin = settings.target_min ?? settings.targets?.diff_coverage_min ?? 60;
   const failOnLow = settings.fail_on_low ?? true;
@@ -81,7 +86,7 @@ export async function runDiffCoverage(input: DiffCoverageParams): Promise<DiffCo
 
   // 5. Gera relatório
   const report = generateDiffCoverageReport(diffCoverage, settings.product || 'Product', targetMin);
-  const reportPath = join(settings.repo, 'tests', 'analyses', 'DIFF-COVERAGE-REPORT.md');
+  const reportPath = join(paths.reports, 'DIFF-COVERAGE-REPORT.md');
   await writeFileSafe(reportPath, report);
 
   const passed = diffCoverage.coverage_percent >= targetMin;

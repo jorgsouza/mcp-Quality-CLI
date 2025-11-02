@@ -1,6 +1,8 @@
 import { join } from 'node:path';
 import { writeFileSafe, readFile, fileExists } from '../utils/fs.js';
 import { glob } from 'glob';
+import { getPaths, ensurePaths } from '../utils/paths.js';
+import { loadMCPSettings } from '../utils/config.js';
 
 export interface CatalogParams {
   repo: string;
@@ -37,6 +39,11 @@ export interface CatalogResult {
 export async function catalogScenarios(input: CatalogParams): Promise<CatalogResult> {
   console.log(`📚 Catalogando cenários de teste para ${input.product}...`);
 
+  // [FASE 2] Calcular paths centralizados
+  const settings = await loadMCPSettings(input.repo).catch(() => undefined);
+  const paths = getPaths(input.repo, input.product, settings || undefined);
+  await ensurePaths(paths);
+
   // Detecta todos os arquivos de teste
   const testFiles = await detectAllTests(input.repo);
 
@@ -67,15 +74,15 @@ export async function catalogScenarios(input: CatalogParams): Promise<CatalogRes
 
   // Salva catálogo em JSON
   await writeFileSafe(
-    join(input.repo, 'tests', 'analyses', 'scenario-catalog.json'),
+    join(paths.analyses, 'scenario-catalog.json'),
     JSON.stringify(result, null, 2)
   );
 
   // Gera relatório em Markdown
-  await generateCatalogMarkdown(input.repo, result, input.product);
+  await generateCatalogMarkdown(paths.reports, result, input.product);
 
   // Gera matriz de responsabilidade
-  await generateResponsibilityMatrix(input.repo, result, input.squads || []);
+  await generateResponsibilityMatrix(paths.reports, result, input.squads || []);
 
   console.log(`✅ Catálogo de cenários gerado!`);
   console.log(`   Total de cenários: ${scenarios.length}`);
@@ -246,7 +253,7 @@ function findDuplicateScenarios(scenarios: Scenario[]): Array<{ scenario: string
 }
 
 async function generateCatalogMarkdown(
-  repoPath: string,
+  reportsPath: string,
   result: CatalogResult,
   product: string
 ) {
@@ -384,13 +391,13 @@ git diff tests/analyses/SCENARIO-CATALOG.md
 `;
 
   await writeFileSafe(
-    join(repoPath, 'tests', 'analyses', 'SCENARIO-CATALOG.md'),
+    join(reportsPath, 'SCENARIO-CATALOG.md'),
     markdown
   );
 }
 
 async function generateResponsibilityMatrix(
-  repoPath: string,
+  reportsPath: string,
   result: CatalogResult,
   squads: string[]
 ) {
@@ -451,7 +458,7 @@ ${matrix.map((row, i) => {
 `;
 
   await writeFileSafe(
-    join(repoPath, 'tests', 'analyses', 'RESPONSIBILITY-MATRIX.md'),
+    join(reportsPath, 'RESPONSIBILITY-MATRIX.md'),
     markdown
   );
 }
