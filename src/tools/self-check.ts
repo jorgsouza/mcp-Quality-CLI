@@ -41,7 +41,11 @@ export interface SelfCheckResult {
  * 🔍 Executa self-check do ambiente
  */
 export async function selfCheck(options: SelfCheckOptions): Promise<SelfCheckResult> {
-  console.log('🔍 MCP Quality CLI - Self-Check\n');
+  const isCLI = process.env.CLI_MODE === 'true';
+  
+  if (isCLI) {
+    console.log('🔍 MCP Quality CLI - Self-Check\n');
+  }
   
   const results: CheckResult[] = [];
   
@@ -65,26 +69,32 @@ export async function selfCheck(options: SelfCheckOptions): Promise<SelfCheckRes
   
   // Aplicar fixes se solicitado
   if (options.fix) {
-    console.log('\n🔧 Tentando corrigir problemas...\n');
+    if (isCLI) {
+      console.log('\n🔧 Tentando corrigir problemas...\n');
+    }
     await applyFixes(results, options.repo);
   }
   
-  // Exibir resultados
-  console.log('\n📊 Resultados:\n');
+  // Exibir resultados APENAS no modo CLI
+  if (isCLI) {
+    console.log('\n📊 Resultados:\n');
+  }
   
   let hasErrors = false;
   let hasWarnings = false;
   
   for (const result of results) {
-    const icon = result.status === 'ok' ? '✅' : result.status === 'warning' ? '⚠️' : '❌';
-    console.log(`${icon} ${result.name}`);
-    console.log(`   ${result.message}`);
+    if (isCLI) {
+      const icon = result.status === 'ok' ? '✅' : result.status === 'warning' ? '⚠️' : '❌';
+      console.log(`${icon} ${result.name}`);
+      console.log(`   ${result.message}`);
     
-    if (result.fix && result.status !== 'ok') {
-      console.log(`   💡 Como corrigir: ${result.fix}`);
+      if (result.fix && result.status !== 'ok') {
+        console.log(`   💡 Como corrigir: ${result.fix}`);
+      }
+      
+      console.log('');
     }
-    
-    console.log('');
     
     if (result.status === 'error') hasErrors = true;
     if (result.status === 'warning') hasWarnings = true;
@@ -95,19 +105,27 @@ export async function selfCheck(options: SelfCheckOptions): Promise<SelfCheckRes
   const warningCount = results.filter(r => r.status === 'warning').length;
   const errorCount = results.filter(r => r.status === 'error').length;
   
-  console.log(`\n📈 Resumo: ${okCount} OK, ${warningCount} avisos, ${errorCount} erros\n`);
+  if (isCLI) {
+    console.log(`\n📈 Resumo: ${okCount} OK, ${warningCount} avisos, ${errorCount} erros\n`);
+  }
   
   if (hasErrors) {
-    console.error('❌ Ambiente não está pronto. Corrija os erros acima.\n');
+    if (isCLI) {
+      console.error('❌ Ambiente não está pronto. Corrija os erros acima.\n');
+    }
     // Não fazer process.exit() quando usado via MCP Server
     // O caller (CLI ou MCP) decide o que fazer
     if (process.env.CLI_MODE === 'true') {
       process.exit(1);
     }
   } else if (hasWarnings) {
-    console.warn('⚠️ Ambiente funcional, mas com avisos. Considere corrigir.\n');
+    if (isCLI) {
+      console.warn('⚠️ Ambiente funcional, mas com avisos. Considere corrigir.\n');
+    }
   } else {
-    console.log('✅ Ambiente está perfeito! 🎉\n');
+    if (isCLI) {
+      console.log('✅ Ambiente está perfeito! 🎉\n');
+    }
   }
   
   // Retornar resultado para o MCP Server

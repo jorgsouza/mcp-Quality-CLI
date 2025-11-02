@@ -3,6 +3,10 @@
   "findings": {
     "routes": [],
     "endpoints": [
+      "GET /api/users",
+      "POST /api/users",
+      "GET /api/health",
+      "GET /api/users",
       "GET /path",
       "GET /users",
       "POST /path",
@@ -16,11 +20,7 @@
       "GET /single",
       "POST /double",
       "GET /health",
-      "OPTIONS /api/*",
-      "GET /api/users",
-      "POST /api/users",
-      "GET /api/health",
-      "GET /api/users"
+      "OPTIONS /api/*"
     ],
     "events": [
       "aws:my-queue",
@@ -42,6 +42,26 @@
       "kafka:user-created"
     ],
     "risk_map": [
+      {
+        "area": "endpoint:GET /api/users",
+        "risk": "med",
+        "rationale": "sem verificação de contrato detectada"
+      },
+      {
+        "area": "endpoint:POST /api/users",
+        "risk": "med",
+        "rationale": "sem verificação de contrato detectada"
+      },
+      {
+        "area": "endpoint:GET /api/health",
+        "risk": "med",
+        "rationale": "sem verificação de contrato detectada"
+      },
+      {
+        "area": "endpoint:GET /api/users",
+        "risk": "med",
+        "rationale": "sem verificação de contrato detectada"
+      },
       {
         "area": "endpoint:GET /path",
         "risk": "med",
@@ -109,26 +129,6 @@
       },
       {
         "area": "endpoint:OPTIONS /api/*",
-        "risk": "med",
-        "rationale": "sem verificação de contrato detectada"
-      },
-      {
-        "area": "endpoint:GET /api/users",
-        "risk": "med",
-        "rationale": "sem verificação de contrato detectada"
-      },
-      {
-        "area": "endpoint:POST /api/users",
-        "risk": "med",
-        "rationale": "sem verificação de contrato detectada"
-      },
-      {
-        "area": "endpoint:GET /api/health",
-        "risk": "med",
-        "rationale": "sem verificação de contrato detectada"
-      },
-      {
-        "area": "endpoint:GET /api/users",
         "risk": "med",
         "rationale": "sem verificação de contrato detectada"
       },

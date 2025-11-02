@@ -1,8 +1,37 @@
-# Plano de Testes E2E — Test
+# Plano de Testes E2E — mcp-Quality-CLI
 
-**Base URL:** https://test.com
+**Base URL:** undefined
 
-**Data:** 2025-11-01
+**Data:** 2025-11-02
+
+## 🎯 Ações Recomendadas
+
+[ ] TODO: Create auth fixtures in fixtures/auth/ for session management
+[ ] TODO: Consider Testcontainers for integration tests (see docs/SUPERTEST-TESTCONTAINERS.md)
+[ ] TODO: Configure CI/CD pipeline for automated test execution
+
+---
+
+
+
+## 🔥 Risk Score Analysis
+
+
+### 🟢 LOW Risk (35 endpoints)
+- **endpoint:GET /api/users** — Score: 0.0 (Probability: 0%, Impact: 6500%)
+- **endpoint:POST /api/users** — Score: 0.0 (Probability: 0%, Impact: 6500%)
+- **endpoint:GET /api/health** — Score: 0.0 (Probability: 0%, Impact: 6500%)
+- **endpoint:GET /api/users** — Score: 0.0 (Probability: 0%, Impact: 6500%)
+- **endpoint:GET /path** — Score: 0.0 (Probability: 0%, Impact: 6500%)
+
+_...and 30 more endpoints_
+
+
+**Recommendation:** Focus on CRITICAL and HIGH risk endpoints first for maximum coverage impact.
+
+---
+
+
 
 ## 1) Cenários Canônicos (Produto)
 
@@ -34,16 +63,16 @@
 
 
 ### Mapa de Riscos (Análise)
+- **[MED]** endpoint:GET /api/users: sem verificação de contrato detectada
+- **[MED]** endpoint:POST /api/users: sem verificação de contrato detectada
+- **[MED]** endpoint:GET /api/health: sem verificação de contrato detectada
+- **[MED]** endpoint:GET /api/users: sem verificação de contrato detectada
 - **[MED]** endpoint:GET /path: sem verificação de contrato detectada
 - **[MED]** endpoint:GET /users: sem verificação de contrato detectada
 - **[MED]** endpoint:POST /path: sem verificação de contrato detectada
 - **[MED]** endpoint:POST /users: sem verificação de contrato detectada
 - **[MED]** endpoint:PUT /users/:id: sem verificação de contrato detectada
 - **[MED]** endpoint:DELETE /users/:id: sem verificação de contrato detectada
-- **[MED]** endpoint:PATCH /users/:id: sem verificação de contrato detectada
-- **[MED]** endpoint:GET /profile: sem verificação de contrato detectada
-- **[MED]** endpoint:POST /profile: sem verificação de contrato detectada
-- **[MED]** endpoint:GET /admin: sem verificação de contrato detectada
 
 
 ## 3) Playwright — Estrutura
@@ -91,7 +120,25 @@ packages/product-e2e/
 - **Flaky Rate:** ≤ 3% (percentual de testes instáveis)
 - **Diff Coverage:** ≥ 60% (cobertura nas mudanças)
 
-## 6) Execução
+## 6) Quality Gates
+
+### Required Coverage
+- **Overall:** ≥ 70% (branches, functions, lines)
+- **New Code:** ≥ 60% (diff coverage on PRs)
+- **E2E:** ≥ 50% (critical user flows)
+
+### Performance
+- **Test Execution:** 30s max per test, 300s per suite
+- **Flaky Rate:** ≤ 3% (automatic quarantine)
+- **Build Time:** p95 ≤ 15 minutes
+
+### Blocking Criteria
+- ❌ Any test failure in critical flows (auth, payment, checkout)
+- ❌ Coverage below 60% on changed files
+- ❌ Flaky rate above 3% for 2+ days
+- ❌ Security vulnerabilities (high/critical severity)
+
+## 7) Execução
 
 ### Ambientes
 - **PR:** Suite reduzida (smoke tests)
@@ -130,4 +177,12 @@ npm run e2e:report
 1. ✅ Plano aprovado por QA
 2. ⏳ Scaffold dos testes (executar `quality scaffold`)
 3. ⏳ Execução e validação (executar `quality run`)
-4. ⏳ Relatório para release (executar `quality report`)
+4. ⏳ Análise de cobertura (executar `quality coverage`)
+5. ⏳ Relatório para release (executar `quality report`)
+
+
+**Melhorias Técnicas Sugeridas:**
+[ ] TODO: Create auth fixtures in fixtures/auth/ for session management
+[ ] TODO: Consider Testcontainers for integration tests (see docs/SUPERTEST-TESTCONTAINERS.md)
+[ ] TODO: Configure CI/CD pipeline for automated test execution
+

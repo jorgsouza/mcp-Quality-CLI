@@ -6,10 +6,10 @@
 
 | Camada | Test Cases | Arquivos | Proporção | Status |
 |--------|-----------|----------|-----------|--------|
-| **Unit** | 305 | 28 | 77.4% | ✅ |
-| **Integration** | 36 | 4 | 9.1% | ✅ |
-| **E2E** | 53 | 5 | 13.5% | ✅ |
-| **TOTAL** | **394** | **37** | **100%** | **✅** |
+| **Unit** | 480 | 36 | 83.3% | ✅ |
+| **Integration** | 39 | 4 | 6.8% | ✅ |
+| **E2E** | 57 | 5 | 9.9% | ✅ |
+| **TOTAL** | **576** | **45** | **100%** | **✅** |
 
 ## 🏥 Saúde da Pirâmide
 
@@ -21,11 +21,11 @@
 IDEAL                  ATUAL
   ▲                      ▲
  / \                    / \
-/E2E\  10%            /E2E\  13.5%
+/E2E\  10%            /E2E\  9.9%
 ────────              ────────
- /INT\  20%           /INT\  9.1%
+ /INT\  20%           /INT\  6.8%
 ────────              ────────
-/UNIT\  70%          /UNIT\  77.4%
+/UNIT\  70%          /UNIT\  83.3%
 ────────              ────────
 ```
 
@@ -33,16 +33,25 @@ IDEAL                  ATUAL
 
 ### Base: Testes Unitários
 
-- **Test Cases:** 305
-- **Arquivos:** 28
-- **Cobertura:** 79.5%
-- **Arquivos sem testes:** 0
+- **Test Cases:** 480
+- **Arquivos:** 36
+- **Cobertura:** 82.2%
+- **Arquivos sem testes:** 5
 
+
+**Top 5 arquivos prioritários para testar:**
+- `src/mcp-tools.manifest.ts`
+- `src/commands.manifest.ts`
+- `src/tools/self-check.ts`
+- `src/engine/index.ts`
+- `src/engine/capabilities.ts`
+
+Execute: `quality scaffold-unit --files "src/mcp-tools.manifest.ts src/commands.manifest.ts src/tools/self-check.ts src/engine/index.ts src/engine/capabilities.ts"`
 
 
 ### Meio: Testes de Integração
 
-- **Test Cases:** 36
+- **Test Cases:** 39
 - **Arquivos:** 4
 - **Endpoints testados:** 5
 - **Cobertura de API:** ✅
@@ -51,15 +60,15 @@ IDEAL                  ATUAL
 
 ### Topo: Testes E2E
 
-- **Test Cases:** 53
+- **Test Cases:** 57
 - **Arquivos:** 5
 - **Cenários:** 47
-- **Média por arquivo:** 10.6
+- **Média por arquivo:** 11.4
 
 ## 💡 Recomendações
 
+- 📝 5 arquivos sem testes. Execute 'quality scaffold-unit' para gerar.
 - 🔗 Considere adicionar mais testes de integração/API para o meio da pirâmide.
-- 🎯 Meta de cobertura unit: 85% (atual: 77.4%)
 
 ## 🎯 Plano de Ação
 
@@ -93,4 +102,4 @@ IDEAL                  ATUAL
 ---
 
 **Gerado por:** Quality MCP v0.2.0  
-**Timestamp:** 2025-11-02T00:20:09.474Z
+**Timestamp:** 2025-11-02T21:21:07.264Z
