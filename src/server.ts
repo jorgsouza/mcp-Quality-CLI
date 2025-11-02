@@ -134,19 +134,12 @@ class QualityMCPServer {
             break;
           }
 
-          case 'self_check': {
+          case 'self-check': {
             // Mapeia para selfCheck
-            await selfCheck({
+            result = await selfCheck({
               repo: args.repo || '.',
               fix: args.fix || false,
             });
-            
-            // selfCheck não retorna objeto, apenas imprime
-            // Vamos retornar sucesso genérico
-            result = {
-              ok: true,
-              message: 'Self-check executado. Veja saída acima.',
-            };
             break;
           }
 

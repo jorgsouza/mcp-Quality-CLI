@@ -27,10 +27,20 @@ interface SelfCheckOptions {
   fix?: boolean;
 }
 
+export interface SelfCheckResult {
+  ok: boolean;
+  results: CheckResult[];
+  summary: {
+    ok: number;
+    warnings: number;
+    errors: number;
+  };
+}
+
 /**
  * 🔍 Executa self-check do ambiente
  */
-export async function selfCheck(options: SelfCheckOptions): Promise<void> {
+export async function selfCheck(options: SelfCheckOptions): Promise<SelfCheckResult> {
   console.log('🔍 MCP Quality CLI - Self-Check\n');
   
   const results: CheckResult[] = [];
@@ -89,12 +99,27 @@ export async function selfCheck(options: SelfCheckOptions): Promise<void> {
   
   if (hasErrors) {
     console.error('❌ Ambiente não está pronto. Corrija os erros acima.\n');
-    process.exit(1);
+    // Não fazer process.exit() quando usado via MCP Server
+    // O caller (CLI ou MCP) decide o que fazer
+    if (process.env.CLI_MODE === 'true') {
+      process.exit(1);
+    }
   } else if (hasWarnings) {
     console.warn('⚠️ Ambiente funcional, mas com avisos. Considere corrigir.\n');
   } else {
     console.log('✅ Ambiente está perfeito! 🎉\n');
   }
+  
+  // Retornar resultado para o MCP Server
+  return {
+    ok: !hasErrors,
+    results,
+    summary: {
+      ok: okCount,
+      warnings: warningCount,
+      errors: errorCount,
+    },
+  };
 }
 
 /**

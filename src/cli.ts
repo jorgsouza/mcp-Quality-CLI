@@ -55,6 +55,9 @@ for (const cmdDef of COMMANDS) {
   // Action handler dinâmico
   cmd.action(async (options) => {
     try {
+      // Sinalizar que estamos rodando via CLI (para process.exit funcionar)
+      process.env.CLI_MODE = 'true';
+      
       // Validar flags obrigatórias
       const validation = validateRequiredFlags(cmdDef, options);
       if (!validation.valid) {
