@@ -341,7 +341,25 @@ function findTestEnd(content: string, startIndex: number, lines: string[]): numb
  * Detecta função testada (heurística baseada em nome do teste ou imports)
  */
 function detectTestedFunction(testName: string, content: string, filePath: string): string {
-  // Heurística 1: Nome do teste contém nome da função
+  // Estratégia 1: Buscar chamadas de função no próprio teste
+  // Procurar por palavras que parecem funções (camelCase) no conteúdo do arquivo
+  const functionCallRegex = /\b([a-z][a-zA-Z0-9]*)\s*\(/g;
+  const matches = content.match(functionCallRegex);
+  
+  if (matches) {
+    // Filtrar funções conhecidas de teste (it, test, expect, etc.)
+    const testKeywords = ['it', 'test', 'describe', 'expect', 'toBe', 'toEqual', 'beforeEach', 'afterEach', 'vi', 'jest'];
+    const functionCalls = matches
+      .map(m => m.replace(/\s*\(/, ''))
+      .filter(fn => !testKeywords.includes(fn) && /^[a-z]/.test(fn));
+    
+    // Se encontrou alguma função, retornar a primeira
+    if (functionCalls.length > 0) {
+      return functionCalls[0];
+    }
+  }
+  
+  // Estratégia 2: Nome do teste contém nome da função
   const words = testName.split(/\s+/);
   const possibleFunction = words.find(w => /^[a-z][a-zA-Z0-9]*$/.test(w));
   
@@ -353,14 +371,25 @@ function detectTestedFunction(testName: string, content: string, filePath: strin
     }
   }
   
-  // Heurística 2: Extrair de describe()
+  // Estratégia 3: Extrair de describe()
   const describeRegex = /describe\s*\(\s*['"`](.*?)['"`]/g;
   const describeMatch = describeRegex.exec(content);
   if (describeMatch) {
-    return describeMatch[1];
+    const describeName = describeMatch[1];
+    // Se describe tem nome de função (camelCase), usar
+    if (/^[a-z][a-zA-Z0-9]*$/.test(describeName)) {
+      return describeName;
+    }
   }
   
-  // Fallback: Nome do arquivo de teste
+  // Estratégia 4: Extrair de import (primeira função importada)
+  const importRegex = /import\s+{?\s*([a-z][a-zA-Z0-9]*)/;
+  const importMatch = content.match(importRegex);
+  if (importMatch) {
+    return importMatch[1];
+  }
+  
+  // Fallback: Nome do arquivo de teste (sem extensão)
   const fileName = filePath.split('/').pop()?.replace(/\.(test|spec)\.(ts|js)$/, '') || 'unknown';
   return fileName;
 }
@@ -421,10 +450,24 @@ async function validateCases(functions: FunctionInfo[], tests: TestInfo[]): Prom
   
   // Para cada função, verificar se testes cobrem todos os cenários
   for (const fn of functions) {
-    const relatedTests = tests.filter(test => 
-      test.targetFunction === fn.name || 
-      test.filePath.includes(fn.filePath.replace(/\.(ts|js)$/, ''))
-    );
+    // Melhorar matching de testes relacionados com múltiplas estratégias
+    const relatedTests = tests.filter(test => {
+      // Estratégia 1: targetFunction exato
+      if (test.targetFunction === fn.name) return true;
+      
+      // Estratégia 2: nome da função aparece no nome do teste
+      if (test.name.toLowerCase().includes(fn.name.toLowerCase())) return true;
+      
+      // Estratégia 3: arquivo de teste corresponde ao arquivo fonte
+      const fnFileBase = fn.filePath.replace(/^.*\//, '').replace(/\.(ts|js)$/, '');
+      const testFileBase = test.filePath.replace(/^.*\//, '').replace(/\.(test|spec)\.(ts|js)$/, '');
+      if (fnFileBase === testFileBase) return true;
+      
+      // Estratégia 4: caminho parcial do arquivo
+      if (test.filePath.includes(fnFileBase)) return true;
+      
+      return false;
+    });
     
     // Analisar assertions dos testes relacionados
     const scenarioMatrix: ScenarioMatrix = {
@@ -447,7 +490,7 @@ async function validateCases(functions: FunctionInfo[], tests: TestInfo[]): Prom
       
       // Detectar cenário error handling
       if (test.assertions.some(a => 
-        ['toThrow', 'toThrowError', 'rejects'].includes(a.type) ||
+        ['toThrow', 'toThrowError', 'rejects', 'reject'].includes(a.type) ||
         a.type.includes('Throw') ||
         a.type.includes('reject')
       )) {
