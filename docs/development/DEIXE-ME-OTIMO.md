@@ -215,12 +215,13 @@ export async function ensurePaths(paths: QAPaths): Promise<void> {
 
 ---
 
-### **FASE 2: Refatoração das Tools** ✅ CONCLUÍDA (5h)
+### **FASE 2: Refatoração das Tools** ✅ CONCLUÍDA (6h)
 
-**Commits**: `144006a`, `4bdc5e7`, `3c189bc` (2025-11-02)  
-**Status**: 601/601 testes passando ✅
+**Commits**: `144006a`, `4bdc5e7`, `3c189bc`, `520e2fa` (2025-11-02)  
+**Status**: 601/601 testes passando ✅  
+**Tools Refatoradas**: 12/12 (100%)
 
-#### 2.1. Tools Refatoradas (8/9)
+#### 2.1. Tools Refatoradas (12/12 = 100% COMPLETO!)
 - ✅ `analyze.ts` → `paths.analyses/analyze.json`
 - ✅ `coverage.ts` → `paths.analyses/coverage-analysis.json` + `paths.reports/COVERAGE-REPORT.md`
 - ✅ `plan.ts` → lê `paths.analyses`, escreve `paths.reports/PLAN.md`
@@ -229,6 +230,10 @@ export async function ensurePaths(paths: QAPaths): Promise<void> {
 - ✅ `run-coverage.ts` → `paths.reports/COVERAGE-ANALYSIS.md` (+ breaking change: requer `product`)
 - ✅ `scaffold-integration.ts` → `paths.integration` + `paths.reports/INTEGRATION-TESTING-GUIDE.md`
 - ✅ `auto.ts` → calcula `getPaths()` uma vez, usa `paths.analyses` em buildReport
+- ✅ `analyze-test-logic.ts` → `paths.patches`, `paths.reports`, `paths.analyses`
+- ✅ `run-diff-coverage.ts` → `paths.reports/DIFF-COVERAGE-REPORT.md`
+- ✅ `catalog.ts` → `paths.analyses/scenario-catalog.json`, `paths.reports/{SCENARIO-CATALOG.md, RESPONSIBILITY-MATRIX.md}`
+- ✅ `scaffold-unit.ts` → `paths.reports/UNIT-TESTING-GUIDE.md`
 
 #### 2.2. Mudanças Estruturais
 - **RunCoverageParams**: Adicionado campo obrigatório `product: string`
