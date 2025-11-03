@@ -28,6 +28,9 @@ export interface QAPaths {
   /** Tests E2E: qa/<product>/tests/e2e */
   e2e: string;
   
+  /** Contract tests (Pact): qa/<product>/tests/contracts */
+  contracts: string;
+  
   /** Fixtures (mocks, auth, data): qa/<product>/fixtures */
   fixtures: string;
   
@@ -91,6 +94,7 @@ export function getPaths(
     unit: join(testsDir, 'unit'),
     integration: join(testsDir, 'integration'),
     e2e: join(testsDir, 'e2e'),
+    contracts: join(testsDir, 'contracts'),
     
     // Fixtures
     fixtures: fixturesDir,

@@ -63,26 +63,7 @@ jobs:
             tests/analyses/
           retention-days: 90
 
-      - name: Send Slack notification on failure
-        if: failure()
-        uses: slackapi/slack-github-action@v1
-        continue-on-error: true
-        with:
-          payload: |
-            {
-              "text": "🚨 Nightly tests failed for ${{ github.repository }} (${{ matrix.browser }})",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*Nightly Test Failure*\n\n*Repository:* ${{ github.repository }}\n*Browser:* ${{ matrix.browser }}\n*Run:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Details>"
-                  }
-                }
-              ]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
 
   aggregate-results:
     name: Aggregate Results

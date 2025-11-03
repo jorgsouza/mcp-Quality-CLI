@@ -3,23 +3,26 @@
  * 
  * FLUXO MÁGICO:
  * 1. Self-check: Valida ambiente (Node, vitest, git, permissões)
- * 2. Analyze: Analisa código e detecta funções/endpoints/eventos
- * 3. Coverage Analysis: Roda testes e analisa cobertura
- * 4. Test Strategy: Recomenda estratégia (pirâmide de testes)
- * 5. Plan: Gera plano de testes baseado em riscos
- * 6. Scaffold (opcional): Gera estrutura de testes faltantes
- * 7. Run Tests: Executa testes com coverage completo
- * 8. Pyramid Report: Gera relatório da pirâmide de testes
- * 9. Dashboard: Gera dashboard.html visual interativo
- * 10. Validate: Valida gates de qualidade (coverage, mutation, scenarios)
- * 11. Final Report: Consolida TUDO em um relatório executivo
+ * 2. [FASE 1] CUJ/SLO/Risk Discovery: Cataloga journeys críticos
+ * 3. [FASE 2] Portfolio Planning: Redesenha pirâmide de testes
+ * 4. [FASE 3] Contract Testing: Gera e verifica contratos Pact (CDC)
+ * 5. Analyze: Analisa código e detecta funções/endpoints/eventos
+ * 6. Coverage Analysis: Roda testes e analisa cobertura
+ * 7. Test Strategy: Recomenda estratégia (pirâmide de testes)
+ * 8. Plan: Gera plano de testes baseado em riscos
+ * 9. Scaffold (opcional): Gera estrutura de testes faltantes
+ * 10. Run Tests: Executa testes com coverage completo
+ * 11. Pyramid Report: Gera relatório da pirâmide de testes
+ * 12. Dashboard: Gera dashboard.html visual interativo
+ * 13. Validate: Valida gates de qualidade (coverage, mutation, scenarios)
+ * 14. Final Report: Consolida TUDO em um relatório executivo
  * 
  * Modos disponíveis:
- * - full: Análise completa (TODAS as 11 etapas) ← RECOMENDADO
- * - analyze: Apenas análise do código (etapas 1-5)
- * - plan: Análise + geração de plano (etapas 1-5)
- * - scaffold: Análise + plano + scaffold de testes (etapas 1-6)
- * - run: Executa testes existentes + coverage (etapas 1-2, 7-11)
+ * - full: Análise completa (TODAS as etapas) ← RECOMENDADO
+ * - analyze: Apenas análise do código (etapas 1-7)
+ * - plan: Análise + geração de plano (etapas 1-8)
+ * - scaffold: Análise + plano + scaffold de testes (etapas 1-9)
+ * - run: Executa testes existentes + coverage (etapas 1-2, 10-14)
  */
 
 import { promises as fs } from 'node:fs';
@@ -49,7 +52,13 @@ import { defineSLOs } from './define-slos.js';
 import { riskRegister } from './risk-register.js';
 
 // [QUALITY GATES] FASE 2: Portfolio Planning
-import { portfolioPlan } from './portfolio-plan.js';
+// TODO: Implementar portfolio-plan.ts
+// import { portfolioPlan } from './portfolio-plan.js';
+
+// [QUALITY GATES] FASE 3: CDC/Pact Contract Testing
+// TODO: Implementar scaffold-contracts-pact.ts e run-contracts-verify.ts
+// import { scaffoldContractsPact } from './scaffold-contracts-pact.js';
+// import { runContractsVerify } from './run-contracts-verify.js';
 
 export type AutoMode = 'full' | 'analyze' | 'plan' | 'scaffold' | 'run';
 
@@ -104,6 +113,7 @@ interface PipelineContext {
   steps: string[];
   outputs: Record<string, string>;
   settings: any;
+  metrics?: Record<string, number>; // 🆕 Métricas adicionais (contracts, etc)
 }
 
 // ============================================================================
@@ -408,6 +418,7 @@ async function runDiscoveryPhase(ctx: PipelineContext): Promise<void> {
 /**
  * Phase 1.5: Portfolio Planning 🆕
  * Redesenha a pirâmide de testes baseado em riscos
+ * TODO: Implementar quando portfolio-plan.ts estiver pronto
  */
 async function runPortfolioPlanningPhase(ctx: PipelineContext): Promise<void> {
   if (!['full', 'analyze', 'plan', 'scaffold'].includes(ctx.mode)) {
@@ -415,22 +426,57 @@ async function runPortfolioPlanningPhase(ctx: PipelineContext): Promise<void> {
   }
   
   console.log('📊 [PHASE 1.5] Portfolio Planning...');
+  console.log('  ⏭️  Pulando: feature em desenvolvimento (portfolio-plan.ts)\n');
   
-  try {
-    const portfolioResult = await portfolioPlan({
-      repo: ctx.repoPath,
-      product: ctx.product,
-      // risk_file e coverage_file serão buscados automaticamente
-    });
-    ctx.steps.push('portfolio-plan');
-    ctx.outputs.portfolioPlan = portfolioResult.output;
-    
-    console.log(`  ✅ Portfolio plan gerado: ${portfolioResult.recommendations_count} recomendações`);
-    console.log(`  📊 Distribuição atual: Unit ${portfolioResult.current_distribution.unit_percent.toFixed(1)}%, Integration ${portfolioResult.current_distribution.integration_percent.toFixed(1)}%, E2E ${portfolioResult.current_distribution.e2e_percent.toFixed(1)}%`);
-    console.log(`  🎯 Target: Unit ${portfolioResult.target_distribution.unit_percent}%, Integration ${portfolioResult.target_distribution.integration_percent}%, E2E ${portfolioResult.target_distribution.e2e_percent}%\n`);
-  } catch (error) {
-    console.log(`⚠️  Erro na Phase 1.5 (Portfolio Planning): ${error instanceof Error ? error.message : error}\n`);
+  // TODO: Descomentar quando implementado
+  // try {
+  //   const portfolioResult = await portfolioPlan({
+  //     repo: ctx.repoPath,
+  //     product: ctx.product,
+  //   });
+  //   ctx.steps.push('portfolio-plan');
+  //   ctx.outputs.portfolioPlan = portfolioResult.output;
+  //   console.log(`  ✅ Portfolio plan gerado\n`);
+  // } catch (error) {
+  //   console.log(`⚠️  Erro: ${error instanceof Error ? error.message : error}\n`);
+  // }
+}
+
+/**
+ * Phase 1.6: Contract Testing (CDC/Pact) 🆕
+ * Gera e verifica contratos entre serviços
+ * TODO: Implementar quando scaffold-contracts-pact.ts estiver pronto
+ */
+async function runContractTestingPhase(ctx: PipelineContext): Promise<void> {
+  if (!['full', 'analyze', 'plan', 'scaffold'].includes(ctx.mode)) {
+    return;
   }
+  
+  console.log('🤝 [PHASE 1.6] Contract Testing (CDC/Pact)...');
+  console.log('  ⏭️  Pulando: feature em desenvolvimento (scaffold-contracts-pact.ts)\n');
+  
+  // TODO: Descomentar quando implementado
+  // try {
+  //   const analysisPath = ctx.outputs.analyze; // Corrigido: era 'analysis'
+  //   if (!analysisPath) {
+  //     console.log('  ⏭️  Pulando: análise não disponível\n');
+  //     return;
+  //   }
+  //   
+  //   const analysisContent = await fs.readFile(analysisPath, 'utf-8');
+  //   const analysis = JSON.parse(analysisContent);
+  //   const endpointCount = analysis.endpoints?.length || 0;
+  //   
+  //   if (endpointCount < 3) {
+  //     console.log(`  ⏭️  Pulando: apenas ${endpointCount} endpoints\n`);
+  //     return;
+  //   }
+  //   
+  //   console.log(`  📡 Detectados ${endpointCount} endpoints - iniciando CDC...`);
+  //   // ... resto da implementação
+  // } catch (error) {
+  //   console.log(`⚠️  Erro: ${error instanceof Error ? error.message : error}\n`);
+  // }
 }
 
 /**
@@ -776,6 +822,7 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<AutoRes
     await runInitPhase(ctx);
     await runDiscoveryPhase(ctx);
     await runPortfolioPlanningPhase(ctx); // 🆕 FASE 2
+    await runContractTestingPhase(ctx); // 🆕 FASE 3
     await runAnalysisPhase(ctx);
     await runCoverageAnalysisPhase(ctx);
     await runPlanningPhase(ctx);

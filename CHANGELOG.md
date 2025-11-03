@@ -5,6 +5,70 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2025-11-03
+
+### 🤝 Contract Testing Support (FASE 3)
+
+#### Added
+- ✨ **Consumer-Driven Contract (CDC) Testing** com Pact Framework:
+  - `scaffold-contracts-pact.ts`: Gera contratos, consumer e provider tests automaticamente
+  - `run-contracts-verify.ts`: Verifica contratos e publica no Pact Broker (opcional)
+  - Suporte multi-linguagem: TypeScript, Python, Java
+  - Detecção inteligente de serviços via Express routes, OpenAPI specs
+  - Smart consumer creation: Cria consumer genérico se apenas providers detectados
+  - Contract prioritization: Baseado em criticality de CUJs
+  - Verificação de contratos com métricas (verification_rate, verified/failed)
+  - Integração com auto.ts (Phase 1.6)
+
+- 🧩 **Pact Adapters** (`adapters/pact-adapter.ts`):
+  - `TypeScriptPactAdapter`: Templates para @pact-foundation/pact
+  - `PythonPactAdapter`: Templates para pact-python
+  - `JavaPactAdapter`: Templates para pact-jvm
+  - Factory pattern: `getPactAdapter(language)`
+
+- 📊 **Contract Schemas** (`schemas/contract-schemas.ts`):
+  - 8 Zod schemas: ServiceIntegration, PactInteraction, PactContract, PactConfig, etc
+  - `calculateContractPriority()`: Critical/High/Medium/Low baseado em CUJ + integrations
+  - PACT_MATCHERS constants para tipos comuns
+
+- 🧪 **Tests**:
+  - `scaffold-contracts-pact.test.ts`: 9 unit tests (100% passing)
+  - `run-contracts-verify.test.ts`: 10 unit tests (100% passing)
+  - `phase-3-cdc-pact.e2e.test.ts`: 4 E2E tests (100% passing)
+
+- 📚 **Documentação**:
+  - `docs/guides/CDC-GUIDE.md`: Guia completo de 400+ linhas com:
+    - O que é CDC/Pact (conceito, fluxo, benefícios)
+    - Quando usar (casos de uso, anti-patterns)
+    - Quick Start (scaffold, consumer, provider, verify)
+    - Exemplos práticos (TypeScript, Python, Java)
+    - Pact Broker (setup, publish, can-i-deploy)
+    - Troubleshooting (10+ erros comuns)
+    - Best Practices (matchers, versioning, CI/CD)
+
+#### Changed
+- 🔧 `auto.ts`: Adicionada Phase 1.6 - Contract Testing
+  - Detecção inteligente: Só roda CDC se >= 3 endpoints
+  - Execução: scaffold → verify → métricas
+  - Tratamento de erros robusto
+  - Métricas adicionadas: `contracts_total`, `verification_rate`, etc
+  - Atualizado fluxo de 11 para 14 etapas
+
+- 🔧 `paths.ts`: Adicionado campo `contracts: string` ao QAPaths
+  - Novo diretório: `qa/<product>/tests/contracts/`
+  - Estrutura: config, consumer tests, provider tests, pacts/
+
+#### Fixed
+- 🐛 Todos os mocks de testes atualizados com campo `contracts` (QAPaths)
+- 🐛 `catalog-cujs.test.ts`: Corrigido mock faltando campo contracts
+
+#### Breaking Changes
+- ⚠️ **QAPaths interface**: Novo campo obrigatório `contracts: string`
+  - **Migração**: Atualizar mocks de teste que usam `getPaths()`
+  - **Exemplo**: `contracts: '/path/to/qa/product/tests/contracts'`
+
+---
+
 # Changelog
 
 ## [0.3.1] - 2025-11-01

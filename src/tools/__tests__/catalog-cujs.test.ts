@@ -30,6 +30,7 @@ describe('catalogCUJs', () => {
       unit: '/test/repo/qa/test-product/tests/unit',
       integration: '/test/repo/qa/test-product/tests/integration',
       e2e: '/test/repo/qa/test-product/tests/e2e',
+      contracts: '/test/repo/qa/test-product/tests/contracts',
       fixtures: '/test/repo/qa/test-product/fixtures',
       fixturesAuth: '/test/repo/qa/test-product/fixtures/auth',
       dashboards: '/test/repo/qa/test-product/dashboards',

@@ -127,7 +127,9 @@ describe('analyzeTestCoverage', () => {
     });
 
     expect(result.health).toBe('inverted');
-    expect(result.summary).toContain('INVERTIDA') || expect(result.recommendations.some(r => r.includes('invertida'))).toBe(true);
+    const hasInvertedWarning = result.summary.includes('INVERTIDA') || 
+                               result.recommendations.some(r => r.includes('invertida'));
+    expect(hasInvertedWarning).toBe(true);
   });
 
   // 4. Gerar recomendações
