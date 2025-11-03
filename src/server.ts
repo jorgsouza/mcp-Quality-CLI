@@ -122,12 +122,17 @@ class QualityMCPServer {
           }
 
           case 'scaffold': {
-            // Mapeia para scaffold-unit, scaffold-integration ou scaffold-playwright
+            // [FASE 3] FORÇAR product para garantir qa/<product>/ em TODOS os tipos
+            if (!args.repo || !args.product) {
+              throw new Error('scaffold requer repo e product para determinar paths corretos');
+            }
+            
             const type = args.type || 'unit';
             
             if (type === 'unit') {
               result = await scaffoldUnitTests({
                 repo: args.repo as string,
+                product: args.product as string,  // ← [FASE 3] ADICIONADO
                 files: args.function ? [args.function as string] : undefined,
                 framework: args.framework || 'vitest',
                 auto_detect: args.autoDetect !== false,
@@ -135,7 +140,7 @@ class QualityMCPServer {
             } else if (type === 'integration') {
               result = await scaffoldIntegrationTests({
                 repo: args.repo as string,
-                product: args.product,
+                product: args.product as string,  // ← JÁ TINHA, mantido
                 base_url: args.baseUrl,
               });
             } else if (type === 'e2e') {
