@@ -32,7 +32,7 @@ describe('E2E: auto-full-cycle', () => {
         skipRun: true
       });
 
-      expect(result.success).toBe(true);
+      expect(result.ok).toBe(true);
       expect(result.context).toBeDefined();
       // Produto pode ser inferido do tempDir ou usar o passado
       expect(result.context.product).toBeDefined();
@@ -57,7 +57,7 @@ describe('E2E: auto-full-cycle', () => {
         skipRun: true
       });
 
-      expect(result.success).toBe(true);
+      expect(result.ok).toBe(true);
       expect(result.context).toBeDefined();
       // Produto deve ser inferido do package.json
       expect(result.context.product).toBeDefined();
@@ -92,7 +92,7 @@ describe('E2E: auto-full-cycle', () => {
         skipRun: true
       });
 
-      expect(result.success).toBe(true);
+      expect(result.ok).toBe(true);
       expect(result.context).toBeDefined();
       expect(result.context.product).toBeDefined();
       expect(result.steps.length).toBeGreaterThan(0);
@@ -120,7 +120,7 @@ describe('E2E: auto-full-cycle', () => {
         product: 'AnalyzeTest'
       });
 
-      expect(result.success).toBe(true);
+      expect(result.ok).toBe(true);
       expect(result.context).toBeDefined();
       expect(result.steps.length).toBeGreaterThan(0);
       expect(result.outputs).toBeDefined();
@@ -133,7 +133,7 @@ describe('E2E: auto-full-cycle', () => {
         product: 'PlanTest'
       });
 
-      expect(result.success).toBe(true);
+      expect(result.ok).toBe(true);
       expect(result.context).toBeDefined();
       expect(result.steps.length).toBeGreaterThan(0);
       expect(result.outputs).toBeDefined();
@@ -147,7 +147,7 @@ describe('E2E: auto-full-cycle', () => {
         skipScaffold: true // Skip real scaffold for speed
       });
 
-      expect(result.success).toBe(true);
+      expect(result.ok).toBe(true);
       expect(result.context).toBeDefined();
       expect(result.steps.length).toBeGreaterThan(0);
     });
@@ -160,7 +160,7 @@ describe('E2E: auto-full-cycle', () => {
         skipRun: true // Skip real execution for speed
       });
 
-      expect(result.success).toBe(true);
+      expect(result.ok).toBe(true);
       expect(result.context).toBeDefined();
       // RUN mode pode ter steps diferentes
       expect(result.steps).toBeDefined();
@@ -175,7 +175,7 @@ describe('E2E: auto-full-cycle', () => {
         product: 'AutoDetectTest'
       });
 
-      expect(result.success).toBe(true);
+      expect(result.ok).toBe(true);
       expect(result.context).toBeDefined();
       expect(result.context.repoPath).toBeDefined();
       expect(result.context.repoPath.length).toBeGreaterThan(0);
@@ -193,7 +193,7 @@ describe('E2E: auto-full-cycle', () => {
         // Não passa product, deve inferir
       });
 
-      expect(result.success).toBe(true);
+      expect(result.ok).toBe(true);
       expect(result.context).toBeDefined();
       expect(result.context.product).toBeDefined();
     });
@@ -207,7 +207,7 @@ describe('E2E: auto-full-cycle', () => {
         product: 'StructureTest'
       });
 
-      expect(result.success).toBe(true);
+      expect(result.ok).toBe(true);
 
       // Verifica que o resultado tem contexto
       expect(result.context).toBeDefined();
@@ -223,7 +223,7 @@ describe('E2E: auto-full-cycle', () => {
         skipRun: true
       });
 
-      expect(result.success).toBe(true);
+      expect(result.ok).toBe(true);
       expect(result.outputs).toBeDefined();
       expect(result.steps.length).toBeGreaterThan(0);
       // Verifica que passos foram executados
@@ -239,7 +239,7 @@ describe('E2E: auto-full-cycle', () => {
         product: 'InvalidRepo'
       });
 
-      expect(result.success).toBe(false);
+      expect(result.ok).toBe(false);
     });
 
     it('should handle missing product name', async () => {
@@ -251,7 +251,7 @@ describe('E2E: auto-full-cycle', () => {
       });
 
       // Deve ter sucesso usando fallback
-      expect(result.success).toBe(true);
+      expect(result.ok).toBe(true);
       expect(result.context.product).toBeDefined();
     });
 
@@ -264,7 +264,7 @@ describe('E2E: auto-full-cycle', () => {
       });
 
       // Mesmo com erros potenciais de FS, deve continuar
-      expect(result.success).toBeDefined();
+      expect(result.ok).toBeDefined();
     });
   });
 
@@ -288,7 +288,7 @@ describe('E2E: auto-full-cycle', () => {
         product: 'VitestProject'
       });
 
-      expect(result.success).toBe(true);
+      expect(result.ok).toBe(true);
       expect(result.context.testFramework).toBe('vitest');
     });
 
@@ -305,7 +305,7 @@ describe('E2E: auto-full-cycle', () => {
         product: 'ExistingTests'
       });
 
-      expect(result.success).toBe(true);
+      expect(result.ok).toBe(true);
       expect(result.context.hasTests).toBe(true);
     });
   });

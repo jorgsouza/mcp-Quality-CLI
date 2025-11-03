@@ -196,7 +196,7 @@ export async function nlCommand(params: NLCommandParams): Promise<NLCommandResul
     const result = await autoQualityRun(finalParams);
     
     return {
-      success: result.success,
+      success: result.ok,  // [FASE 6] Usar result.ok
       detected_mode: detectedMode,
       extracted_params: extracted,
       final_params: finalParams,

@@ -63,6 +63,28 @@ export interface RepoContext {
 }
 
 /**
+ * [FASE 6] Resultado estruturado do Auto
+ * Retorna paths organizados por categoria
+ */
+export interface AutoResult {
+  ok: boolean;
+  outputs: {
+    root: string;
+    reports: string[];
+    analyses: string[];
+    dashboard?: string;
+    tests?: {
+      unit?: string;
+      integration?: string;
+      e2e?: string;
+    };
+  };
+  steps: string[];
+  duration: number;
+  context: RepoContext;
+}
+
+/**
  * Detecta contexto do repositório automaticamente
  */
 export async function detectRepoContext(repoPath: string): Promise<RepoContext> {
@@ -254,12 +276,11 @@ async function checkForTestFiles(dir: string, language?: string): Promise<boolea
 /**
  * Executa análise de qualidade automatizada
  */
-export async function autoQualityRun(options: AutoOptions = {}): Promise<{
-  success: boolean;
-  context: RepoContext;
-  steps: string[];
-  outputs: Record<string, string>;
-}> {
+/**
+ * [FASE 6] Orquestrador principal com retorno estruturado
+ */
+export async function autoQualityRun(options: AutoOptions = {}): Promise<AutoResult> {
+  const startTime = Date.now();
   const mode = options.mode || 'full';
   const repoPath = options.repo || process.cwd();
   
@@ -525,7 +546,7 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<{
       }
     }
     
-    // Resumo final
+    // [FASE 6] Resumo final estruturado
     console.log('\n' + '='.repeat(60));
     console.log('✅ AUTO COMPLETO!');
     console.log('='.repeat(60));
@@ -536,20 +557,60 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<{
     });
     console.log('\n' + '='.repeat(60) + '\n');
     
+    // [FASE 6] Construir outputs estruturados
+    const duration = Date.now() - startTime;
+    const reports: string[] = [];
+    const analyses: string[] = [];
+    let dashboard: string | undefined;
+    
+    // Coletar reports gerados
+    if (outputs.plan) reports.push(outputs.plan);
+    if (outputs.pyramidReport) reports.push(outputs.pyramidReport);
+    if (outputs.diffCoverage) reports.push(outputs.diffCoverage);
+    if (outputs.finalReport) reports.push(outputs.finalReport);
+    if (outputs.testQuality) reports.push(outputs.testQuality);
+    
+    // Coletar analyses geradas
+    if (outputs.analyze) analyses.push(outputs.analyze);
+    if (outputs.coverageAnalysis) analyses.push(outputs.coverageAnalysis);
+    if (outputs.testLogicAnalysis) analyses.push(outputs.testLogicAnalysis);
+    if (outputs.recommendStrategy) analyses.push(outputs.recommendStrategy);
+    
+    // Dashboard
+    if (outputs.dashboard) dashboard = outputs.dashboard;
+    
     return {
-      success: true,
-      context,
+      ok: true,
+      outputs: {
+        root: paths.root,
+        reports,
+        analyses,
+        dashboard,
+        tests: {
+          unit: paths.unit,
+          integration: paths.integration,
+          e2e: paths.e2e
+        }
+      },
       steps,
-      outputs
+      duration,
+      context
     };
     
   } catch (error) {
     console.error('\n❌ Erro durante execução AUTO:', error instanceof Error ? error.message : error);
+    const duration = Date.now() - startTime;
+    
     return {
-      success: false,
-      context,
+      ok: false,
+      outputs: {
+        root: paths?.root || '',
+        reports: [],
+        analyses: []
+      },
       steps,
-      outputs
+      duration,
+      context
     };
   }
 }
@@ -559,7 +620,7 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<{
  */
 export async function runAutoMode(mode: AutoMode, options: Omit<AutoOptions, 'mode'> = {}): Promise<boolean> {
   const result = await autoQualityRun({ ...options, mode });
-  return result.success;
+  return result.ok;
 }
 
 /**

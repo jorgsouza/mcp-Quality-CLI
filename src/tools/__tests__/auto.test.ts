@@ -130,7 +130,7 @@ describe('auto.ts - autoQualityRun', () => {
       product: 'TestApp'
     });
 
-    expect(result.success).toBe(true);
+    expect(result.ok).toBe(true);
     expect(result.steps).toContain('analyze');
     expect(result.steps).not.toContain('plan');
     expect(analyze).toHaveBeenCalledWith({
@@ -160,7 +160,7 @@ describe('auto.ts - autoQualityRun', () => {
       repo: tempDir
     });
 
-    expect(result.success).toBe(true);
+    expect(result.ok).toBe(true);
     expect(result.steps).toContain('analyze');
     expect(result.steps).toContain('plan');
     expect(result.steps).not.toContain('scaffold-unit');
@@ -195,7 +195,7 @@ describe('auto.ts - autoQualityRun', () => {
       repo: tempDir
     });
 
-    expect(result.success).toBe(true);
+    expect(result.ok).toBe(true);
     expect(result.steps).toContain('analyze');
     expect(result.steps).toContain('plan');
     expect(result.steps).toContain('scaffold-unit');
@@ -228,7 +228,7 @@ describe('auto.ts - autoQualityRun', () => {
       repo: tempDir
     });
 
-    expect(result.success).toBe(true);
+    expect(result.ok).toBe(true);
     expect(result.steps).not.toContain('scaffold-unit');
     expect(scaffoldUnitTests).not.toHaveBeenCalled();
   });
@@ -290,7 +290,7 @@ describe('auto.ts - autoQualityRun', () => {
       repo: tempDir
     });
 
-    expect(result.success).toBe(true);
+    expect(result.ok).toBe(true);
     expect(result.steps).toContain('analyze');
     expect(result.steps).toContain('plan');
     expect(result.steps).toContain('coverage');
@@ -315,7 +315,7 @@ describe('auto.ts - autoQualityRun', () => {
       skipRun: true
     });
 
-    expect(result.success).toBe(true);
+    expect(result.ok).toBe(true);
     expect(result.steps).not.toContain('coverage');
     expect(runCoverageAnalysis).not.toHaveBeenCalled();
   });
@@ -330,7 +330,7 @@ describe('auto.ts - autoQualityRun', () => {
       repo: tempDir
     });
 
-    expect(result.success).toBe(false);
+    expect(result.ok).toBe(false);
     // [FASE 3] Agora sempre executa init-product + self-check primeiro
     expect(result.steps).toEqual(['init-product', 'self-check']);
   });

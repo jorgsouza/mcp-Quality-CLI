@@ -10,7 +10,7 @@ import { tmpdir } from 'node:os';
 // Mock das dependências
 vi.mock('../auto.js', () => ({
   autoQualityRun: vi.fn(async (options) => ({
-    success: true,
+    ok: true, // AutoResult usa 'ok' não 'success'
     context: {
       repoPath: options.repo || '/mock/repo',
       product: options.product || 'MockProduct',
@@ -18,8 +18,11 @@ vi.mock('../auto.js', () => ({
       hasPackageJson: true,
     },
     steps: ['Step 1', 'Step 2'],
+    duration: 1000,
     outputs: {
-      analyze: '/mock/analyze.json',
+      root: `qa/${options.product || 'MockProduct'}`,
+      reports: ['/mock/analyze.json'],
+      analyses: ['/mock/analyze.json'],
     },
   })),
 }));

@@ -613,7 +613,41 @@ export async function selfCheck(options: SelfCheckOptions): Promise<SelfCheckRes
 
 ---
 
-### **FASE 5: Organização de Saídas por Categoria** (Est: 1-2h)
+### **FASE 5: Organização de Saídas por Categoria** ✅ CONCLUÍDA (FASE 2)
+
+**Status**: ✅ JÁ IMPLEMENTADA NA FASE 2  
+**Motivo**: Nomenclatura padronizada foi definida durante refatoração das tools
+
+#### 5.1. ✅ Nomenclatura Padronizada (JÁ IMPLEMENTADA)
+
+**Definida em**: FASE 2 (Commits: 144006a, 4bdc5e7, 3c189bc, 520e2fa)
+
+| Categoria | Diretório | Arquivos |
+|-----------|-----------|----------|
+| **Análises Brutas** | `tests/analyses/` | `analyze.json`, `coverage-analysis.json`, `risk-map.json`, `TEST-QUALITY-LOGICAL.json` |
+| **Relatórios Legíveis** | `tests/reports/` | `QUALITY-REPORT.md`, `PLAN.md`, `PYRAMID.md`, `PYRAMID.html`, `DIFF-COVERAGE.md`, `SELF-CHECK.md` |
+| **Dashboards Interativos** | `dashboards/` | `dashboard.html` |
+| **Fixtures de Teste** | `fixtures/` | `auth/storageState.json`, `mocks/*.json` |
+| **Tests** | `tests/unit/`, `tests/integration/`, `tests/e2e/` | Testes gerados pelos scaffolds |
+
+**Implementado em**:
+- `src/utils/paths.ts`: Interface `QAPaths` define todos os diretórios
+- 12 tools refatoradas usam `getPaths()` para obter diretórios corretos
+- 100% das saídas organizadas em `qa/<product>/`
+
+#### 5.2. ⚠️ Playwright Reports (PENDENTE - Opcional)
+
+**Nota**: Playwright config não é gerado automaticamente pelo fluxo principal.  
+O scaffold.ts tem template, mas não é chamado no modo `auto --mode full`.
+
+**Decisão**: MOVER PARA "COULD HAVE"
+- Playwright é opcional para E2E
+- Usuário pode rodar manualmente `quality scaffold --type e2e` se quiser
+- Não bloqueia objetivo principal do plano
+
+---
+
+### **FASE 5: Organização de Saídas por Categoria** (Est: 1-2h) [PLANEJAMENTO ORIGINAL]
 
 #### 5.1. Nomenclatura Padronizada
 
