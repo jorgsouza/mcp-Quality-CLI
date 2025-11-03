@@ -41,12 +41,15 @@ import { initProduct } from './init-product.js';
 import { loadMCPSettings, inferProductFromPackageJson } from '../utils/config.js';
 import { fileExists } from '../utils/fs.js';
 import { detectLanguage } from '../detectors/language.js';
-import { getPaths } from '../utils/paths.js';
+import { getPaths, type QAPaths } from '../utils/paths.js';
 
 // [QUALITY GATES] FASE 1: CUJ/SLO/Risk Discovery
 import { catalogCUJs } from './catalog-cujs.js';
 import { defineSLOs } from './define-slos.js';
 import { riskRegister } from './risk-register.js';
+
+// [QUALITY GATES] FASE 2: Portfolio Planning
+import { portfolioPlan } from './portfolio-plan.js';
 
 export type AutoMode = 'full' | 'analyze' | 'plan' | 'scaffold' | 'run';
 
@@ -88,6 +91,24 @@ export interface AutoResult {
   duration: number;
   context: RepoContext;
 }
+
+/**
+ * Contexto interno do pipeline (usado entre funções)
+ */
+interface PipelineContext {
+  repoPath: string;
+  product: string;
+  mode: AutoMode;
+  context: RepoContext;
+  paths: QAPaths;
+  steps: string[];
+  outputs: Record<string, string>;
+  settings: any;
+}
+
+// ============================================================================
+// DETECTION HELPERS
+// ============================================================================
 
 /**
  * Detecta contexto do repositório automaticamente
@@ -278,403 +299,359 @@ async function checkForTestFiles(dir: string, language?: string): Promise<boolea
   return false;
 }
 
-/**
- * Executa análise de qualidade automatizada
- */
-/**
- * [FASE 6] Orquestrador principal com retorno estruturado
- */
-export async function autoQualityRun(options: AutoOptions = {}): Promise<AutoResult> {
-  const startTime = Date.now();
-  const mode = options.mode || 'full';
-  const repoPath = options.repo || process.cwd();
-  
-  console.log(`\n🚀 Iniciando modo AUTO: ${mode}`);
-  console.log(`📁 Repositório: ${repoPath}\n`);
-  
-  // 1. Detectar contexto
-  const context = await detectRepoContext(repoPath);
-  console.log(`📦 Produto detectado: ${context.product}`);
-  console.log(`🧪 Framework: ${context.testFramework || 'não detectado'}`);
-  console.log(`💻 Linguagem: ${context.language || 'não detectada'}`);
-  console.log(`✅ Testes existentes: ${context.hasTests ? 'Sim' : 'Não'}\n`);
-  
-  const steps: string[] = [];
-  const outputs: Record<string, string> = {};
-  
-  // Determinar produto final
-  const product = options.product || context.product;
-  
-  // Tentar carregar configurações existentes
-  const settings = await loadMCPSettings(repoPath, product);
-  const config = {
-    repo: repoPath,
-    product,
-    ...settings
-  };
+// ============================================================================
+// PIPELINE PHASES
+// ============================================================================
 
-  // [FASE 2] Calcular paths uma vez para uso em todo o pipeline
-  const paths = getPaths(repoPath, product, settings || undefined);
+/**
+ * Phase 0: Inicialização (self-check + estrutura qa/)
+ */
+async function runInitPhase(ctx: PipelineContext): Promise<void> {
+  // Auto-inicializar estrutura qa/<product> se não existir
+  const mcpSettingsPath = join(ctx.paths.root, 'mcp-settings.json');
+  const hasStructure = await fileExists(mcpSettingsPath);
   
-  try {
-    // [FASE 3] Auto-inicializar estrutura qa/<product> se não existir
-    const mcpSettingsPath = join(paths.root, 'mcp-settings.json');
-    const hasStructure = await fileExists(mcpSettingsPath);
-    
-    if (!hasStructure) {
-      // Verificar se o diretório do repositório existe antes de tentar criar estrutura
-      const repoExists = await fileExists(repoPath);
-      if (!repoExists) {
-        throw new Error(`Repository path does not exist: ${repoPath}`);
-      }
-      
-      console.log(`🏗️  [0/11] Inicializando estrutura qa/${product}...`);
-      await initProduct({ 
-        repo: repoPath, 
-        product,
-        base_url: 'http://localhost:3000', // Default - usuário pode customizar depois
-        domains: [],
-        critical_flows: []
-      });
-      console.log(`✅ Estrutura inicializada!\n`);
-      steps.push('init-product');
+  if (!hasStructure) {
+    const repoExists = await fileExists(ctx.repoPath);
+    if (!repoExists) {
+      throw new Error(`Repository path does not exist: ${ctx.repoPath}`);
     }
     
-    // 0. SELF-CHECK (SEMPRE executa - valida ambiente)
-    console.log('🔍 [0/11] Self-Check: Validando ambiente...');
-    const selfCheckResult = await selfCheck({
-      repo: repoPath,
-      product,  // [FASE 4] Passar product para validar qa/<product>/
-      fix: false
+    console.log(`🏗️  [0/11] Inicializando estrutura qa/${ctx.product}...`);
+    await initProduct({ 
+      repo: ctx.repoPath, 
+      product: ctx.product,
+      base_url: 'http://localhost:3000',
+      domains: [],
+      critical_flows: []
     });
-    steps.push('self-check');
-    
-    if (!selfCheckResult.ok) {
-      console.log(`\n⚠️  AVISOS no ambiente:`);
-      selfCheckResult.results.forEach(r => {
-        if (r.status === 'warning' || r.status === 'error') {
-          console.log(`   ${r.status === 'error' ? '❌' : '⚠️'} ${r.name}: ${r.message}`);
-        }
-      });
-      console.log(``);
-    } else {
-      console.log(`✅ Ambiente validado com sucesso!\n`);
-    }
-    
-    // [QUALITY GATES] PHASE 1: CUJ/SLO/Risk Discovery
-    // Descobre Critical User Journeys, define SLOs e gera Risk Register
-    if (['full', 'analyze', 'plan', 'scaffold'].includes(mode)) {
-      console.log('🎯 [PHASE 1] CUJ/SLO/Risk Discovery...');
-      
-      try {
-        // 1.1. Catalog CUJs
-        console.log('  📋 [1.1] Catalogando Critical User Journeys...');
-        const cujResult = await catalogCUJs({
-          repo: repoPath,
-          product,
-          sources: ['routes', 'readme'], // TODO: Add 'openapi', 'telemetry' in future
-        });
-        steps.push('catalog-cujs');
-        outputs.cujCatalog = cujResult.output;
-        console.log(`  ✅ ${cujResult.cujs_count} CUJs catalogados\n`);
-        
-        // 1.2. Define SLOs
-        console.log('  🎯 [1.2] Definindo SLOs para CUJs...');
-        const slosResult = await defineSLOs({
-          repo: repoPath,
-          product,
-          cuj_file: cujResult.output,
-        });
-        steps.push('define-slos');
-        outputs.slos = slosResult.output;
-        console.log(`  ✅ ${slosResult.slos_count} SLOs definidos (${slosResult.custom_slos_count} customizados)\n`);
-        
-        // 1.3. Risk Register
-        console.log('  ⚠️  [1.3] Gerando Risk Register...');
-        const riskResult = await riskRegister({
-          repo: repoPath,
-          product,
-          cuj_file: cujResult.output,
-          slos_file: slosResult.output,
-        });
-        steps.push('risk-register');
-        outputs.riskRegister = riskResult.output;
-        console.log(`  ✅ ${riskResult.total_risks} riscos identificados (${riskResult.critical_risks} críticos)\n`);
-        
-        if (riskResult.top_5_risk_ids.length > 0) {
-          console.log(`  📊 Top 5 Riscos Críticos:`);
-          console.log(`     ${riskResult.top_5_risk_ids.join(', ')}\n`);
-        }
-      } catch (error) {
-        console.log(`⚠️  Erro na Phase 1 (CUJ/SLO/Risk): ${error instanceof Error ? error.message : error}\n`);
+    console.log(`✅ Estrutura inicializada!\n`);
+    ctx.steps.push('init-product');
+  }
+  
+  // Self-check (sempre executa)
+  console.log('🔍 [0/11] Self-Check: Validando ambiente...');
+  const selfCheckResult = await selfCheck({
+    repo: ctx.repoPath,
+    product: ctx.product,
+    fix: false
+  });
+  ctx.steps.push('self-check');
+  
+  if (!selfCheckResult.ok) {
+    console.log(`\n⚠️  AVISOS no ambiente:`);
+    selfCheckResult.results.forEach(r => {
+      if (r.status === 'warning' || r.status === 'error') {
+        console.log(`   ${r.status === 'error' ? '❌' : '⚠️'} ${r.name}: ${r.message}`);
       }
-    }
-    
-    // 1. ANALYZE (todos os modos começam com análise)
-    if (['full', 'analyze', 'plan', 'scaffold'].includes(mode)) {
-      console.log('🔍 [1/11] Analisando repositório...');
-      const analyzeResult = await analyze({
-        repo: repoPath,
-        product
-      });
-      steps.push('analyze');
-      outputs.analyze = analyzeResult.plan_path;
-      console.log(`✅ Análise completa: ${analyzeResult.plan_path}\n`);
-    }
-    
-    // 2. COVERAGE ANALYSIS (análise de cobertura e pirâmide de testes)
-    if (['full', 'plan', 'scaffold', 'run'].includes(mode)) {
-      console.log('📊 [2/11] Analisando cobertura de testes...');
-      try {
-        const coverageResult = await analyzeTestCoverage({
-          repo: repoPath,
-          product
-        });
-        steps.push('coverage-analysis');
-        outputs.coverageAnalysis = 'tests/analyses/coverage-analysis.json';
-        console.log(`✅ Cobertura analisada: ${coverageResult.health}\n`);
-        console.log(coverageResult.summary);
-      } catch (error) {
-        console.log(`⚠️  Erro na análise de cobertura: ${error instanceof Error ? error.message : error}\n`);
-      }
-      
-      // 2.5. TEST LOGIC ANALYSIS (análise profunda de qualidade dos testes)
-      console.log('🔬 [2.5/11] Analisando qualidade lógica dos testes...');
-      try {
-        const logicResult = await analyzeTestLogic({
-          repo: repoPath,
-          product,
-          runMutation: false, // Mutation opcional (lento)
-          generatePatches: true
-        });
-        steps.push('test-logic-analysis');
-        outputs.testLogicAnalysis = logicResult.reportPath;
-        console.log(`✅ Análise de qualidade concluída!`);
-        console.log(`   📊 Quality Score: ${logicResult.metrics.qualityScore}/100 (${logicResult.metrics.grade})`);
-        console.log(`   🎯 Happy Path: ${logicResult.metrics.scenarioCoverage.happy.toFixed(1)}%`);
-        console.log(`   🔀 Edge Cases: ${logicResult.metrics.scenarioCoverage.edge.toFixed(1)}%`);
-        console.log(`   ⚠️  Error Handling: ${logicResult.metrics.scenarioCoverage.error.toFixed(1)}%`);
-        console.log(`   📄 Relatório: ${logicResult.reportPath}\n`);
-      } catch (error) {
-        console.log(`⚠️  Erro na análise de lógica: ${error instanceof Error ? error.message : error}\n`);
-      }
-    }
-    
-    // 3. RECOMMEND STRATEGY (recomendação de estratégia de testes)
-    if (['full', 'plan', 'scaffold'].includes(mode)) {
-      console.log('🎯 [3/11] Gerando recomendação de estratégia...');
-      try {
-        const recommendResult = await recommendTestStrategy({
-          repo: repoPath,
-          product
-        });
-        steps.push('recommend-strategy');
-        outputs.recommendStrategy = 'tests/analyses/TEST-STRATEGY-RECOMMENDATION.md';
-        console.log(`✅ Recomendação gerada!\n`);
-        console.log(recommendResult.summary);
-      } catch (error) {
-        console.log(`⚠️  Erro na recomendação: ${error instanceof Error ? error.message : error}\n`);
-      }
-    }
-    
-    // 4. PLAN (se mode >= plan)
-    if (['full', 'plan', 'scaffold'].includes(mode)) {
-      console.log('📋 [4/11] Gerando plano de testes...');
-      const planResult = await generatePlan({
-        repo: repoPath,
-        product
-      });
-      steps.push('plan');
-      outputs.plan = planResult.plan;
-      console.log(`✅ Plano gerado: ${planResult.plan}\n`);
-    }
-    
-    // 5. SCAFFOLD (se mode >= scaffold e não skipScaffold)
-    if (['full', 'scaffold'].includes(mode) && !options.skipScaffold) {
-      console.log('🏗️  [5/11] Gerando scaffold de testes...');
-      
-      // Decidir tipo de scaffold baseado no contexto
-      if (!context.hasTests) {
-        // Se não tem testes, gera unit tests
-        const scaffoldResult = await scaffoldUnitTests({
-          repo: repoPath,
-          product,
-          files: [] // Auto-detecta arquivos
-        });
-        steps.push('scaffold-unit');
-        outputs.scaffold = scaffoldResult.generated.join(', ');
-        console.log(`✅ Testes unitários gerados: ${scaffoldResult.generated.length} arquivos\n`);
-      } else {
-        console.log(`ℹ️  Testes já existem, pulando scaffold\n`);
-      }
-    }
-    
-    // 6. RUN TESTS WITH COVERAGE (se mode == full ou run, e não skipRun)
-    if (['full', 'run'].includes(mode) && !options.skipRun) {
-      if (context.hasTests || steps.includes('scaffold-unit')) {
-        console.log('🧪 [6/11] Executando testes com cobertura...');
-        
-        try {
-          // Run coverage analysis
-          const coverageResult = await runCoverageAnalysis({
-            repo: repoPath,
-            product // [FASE 2] Adicionar product para getPaths()
-          });
-          steps.push('coverage');
-          outputs.coverage = coverageResult.reportPath;
-          console.log(`✅ Testes executados com sucesso!\n`);
-        } catch (error) {
-          console.log(`⚠️  Erro ao executar testes: ${error instanceof Error ? error.message : error}\n`);
-        }
-        
-        // 7. PYRAMID REPORT
-        console.log('📊 [7/11] Gerando relatório da pirâmide de testes...');
-        try {
-          const pyramidResult = await generatePyramidReport({
-            repo: repoPath,
-            product
-          });
-          steps.push('pyramid-report');
-          outputs.pyramidReport = pyramidResult.report_path;
-          console.log(`✅ Relatório da pirâmide gerado: ${pyramidResult.report_path}\n`);
-        } catch (error) {
-          console.log(`⚠️  Erro ao gerar pirâmide: ${error instanceof Error ? error.message : error}\n`);
-        }
-        
-        // 8. DASHBOARD HTML
-        console.log('📊 [8/11] Gerando dashboard da pirâmide de testes...');
-        try {
-          const dashboardResult = await generateDashboard({
-            repo: repoPath,
-            product
-          });
-          steps.push('dashboard');
-          outputs.dashboard = dashboardResult.dashboard_path;
-          console.log(`✅ Dashboard gerado: ${dashboardResult.dashboard_path}\n`);
-        } catch (error) {
-          console.log(`⚠️  Erro ao gerar dashboard: ${error instanceof Error ? error.message : error}\n`);
-        }
-        
-        // 9. VALIDATE GATES
-        console.log('✅ [9/11] Validando gates de qualidade...');
-        try {
-          const validateResult = await validate({
-            repo: repoPath,
-            product,
-            minBranch: 80,
-            minMutation: 70
-          });
-          steps.push('validate');
-          outputs.validate = validateResult.passed ? 'PASSED' : 'FAILED';
-          console.log(`${validateResult.passed ? '✅' : '⚠️'} Gates de qualidade: ${validateResult.passed ? 'APROVADOS' : 'REPROVADOS'}\n`);
-        } catch (error) {
-          console.log(`⚠️  Erro ao validar gates: ${error instanceof Error ? error.message : error}\n`);
-        }
-        
-        // 10. FINAL CONSOLIDATED REPORT
-        console.log('📄 [10/11] Gerando relatório consolidado final...');
-        try {
-          const reportResult = await buildReport({
-            in_dir: paths.analyses, // [FASE 2] Usar paths.analyses
-            out_file: 'QUALITY-ANALYSIS-REPORT.md'
-          });
-          steps.push('final-report');
-          outputs.finalReport = reportResult.out;
-          console.log(`✅ Relatório consolidado gerado: ${reportResult.out}\n`);
-        } catch (error) {
-          console.log(`⚠️  Erro ao gerar relatório consolidado: ${error instanceof Error ? error.message : error}\n`);
-        }
-
-        // 11. EXPORT TO tests/qa (cópia dos principais artefatos)
-        console.log('📦 [11/11] Exportando relatórios para tests/qa...');
-        try {
-          const copied = await exportReportsToQA(repoPath);
-          steps.push('export-qa');
-          outputs.qa = `tests/qa (${copied.length} arquivos)`;
-          console.log(`✅ Relatórios copiados para tests/qa: ${copied.length} arquivo(s)\n`);
-        } catch (error) {
-          console.log(`⚠️  Erro ao exportar relatórios para tests/qa: ${error instanceof Error ? error.message : error}\n`);
-        }
-      } else {
-        console.log(`⚠️  Nenhum teste encontrado, pulando execução\n`);
-      }
-    }
-    
-    // [FASE 6] Resumo final estruturado
-    console.log('\n' + '='.repeat(60));
-    console.log('✅ AUTO COMPLETO!');
-    console.log('='.repeat(60));
-    console.log(`\n📊 Passos executados: ${steps.join(' → ')}`);
-    console.log(`\n📁 Arquivos gerados:`);
-    Object.entries(outputs).forEach(([step, output]) => {
-      console.log(`   ${step}: ${output}`);
     });
-    console.log('\n' + '='.repeat(60) + '\n');
-    
-    // [FASE 6] Construir outputs estruturados
-    const duration = Date.now() - startTime;
-    const reports: string[] = [];
-    const analyses: string[] = [];
-    let dashboard: string | undefined;
-    
-    // Coletar reports gerados
-    if (outputs.plan) reports.push(outputs.plan);
-    if (outputs.pyramidReport) reports.push(outputs.pyramidReport);
-    if (outputs.diffCoverage) reports.push(outputs.diffCoverage);
-    if (outputs.finalReport) reports.push(outputs.finalReport);
-    if (outputs.testQuality) reports.push(outputs.testQuality);
-    
-    // Coletar analyses geradas
-    if (outputs.analyze) analyses.push(outputs.analyze);
-    if (outputs.coverageAnalysis) analyses.push(outputs.coverageAnalysis);
-    if (outputs.testLogicAnalysis) analyses.push(outputs.testLogicAnalysis);
-    if (outputs.recommendStrategy) analyses.push(outputs.recommendStrategy);
-    
-    // Dashboard
-    if (outputs.dashboard) dashboard = outputs.dashboard;
-    
-    return {
-      ok: true,
-      outputs: {
-        root: paths.root,
-        reports,
-        analyses,
-        dashboard,
-        tests: {
-          unit: paths.unit,
-          integration: paths.integration,
-          e2e: paths.e2e
-        }
-      },
-      steps,
-      duration,
-      context
-    };
-    
-  } catch (error) {
-    console.error('\n❌ Erro durante execução AUTO:', error instanceof Error ? error.message : error);
-    const duration = Date.now() - startTime;
-    
-    return {
-      ok: false,
-      outputs: {
-        root: paths?.root || '',
-        reports: [],
-        analyses: []
-      },
-      steps,
-      duration,
-      context
-    };
+    console.log(``);
+  } else {
+    console.log(`✅ Ambiente validado com sucesso!\n`);
   }
 }
 
 /**
- * Executa modo específico com validações
+ * Phase 1: CUJ/SLO/Risk Discovery
  */
-export async function runAutoMode(mode: AutoMode, options: Omit<AutoOptions, 'mode'> = {}): Promise<boolean> {
-  const result = await autoQualityRun({ ...options, mode });
-  return result.ok;
+async function runDiscoveryPhase(ctx: PipelineContext): Promise<void> {
+  if (!['full', 'analyze', 'plan', 'scaffold'].includes(ctx.mode)) {
+    return;
+  }
+  
+  console.log('🎯 [PHASE 1] CUJ/SLO/Risk Discovery...');
+  
+  try {
+    // 1.1. Catalog CUJs
+    console.log('  📋 [1.1] Catalogando Critical User Journeys...');
+    const cujResult = await catalogCUJs({
+      repo: ctx.repoPath,
+      product: ctx.product,
+      sources: ['routes', 'readme'],
+    });
+    ctx.steps.push('catalog-cujs');
+    ctx.outputs.cujCatalog = cujResult.output;
+    console.log(`  ✅ ${cujResult.cujs_count} CUJs catalogados\n`);
+    
+    // 1.2. Define SLOs
+    console.log('  🎯 [1.2] Definindo SLOs para CUJs...');
+    const slosResult = await defineSLOs({
+      repo: ctx.repoPath,
+      product: ctx.product,
+      cuj_file: cujResult.output,
+    });
+    ctx.steps.push('define-slos');
+    ctx.outputs.slos = slosResult.output;
+    console.log(`  ✅ ${slosResult.slos_count} SLOs definidos (${slosResult.custom_slos_count} customizados)\n`);
+    
+    // 1.3. Risk Register
+    console.log('  ⚠️  [1.3] Gerando Risk Register...');
+    const riskResult = await riskRegister({
+      repo: ctx.repoPath,
+      product: ctx.product,
+      cuj_file: cujResult.output,
+      slos_file: slosResult.output,
+    });
+    ctx.steps.push('risk-register');
+    ctx.outputs.riskRegister = riskResult.output;
+    console.log(`  ✅ ${riskResult.total_risks} riscos identificados (${riskResult.critical_risks} críticos)\n`);
+    
+    if (riskResult.top_5_risk_ids.length > 0) {
+      console.log(`  📊 Top 5 Riscos Críticos:`);
+      console.log(`     ${riskResult.top_5_risk_ids.join(', ')}\n`);
+    }
+  } catch (error) {
+    console.log(`⚠️  Erro na Phase 1 (CUJ/SLO/Risk): ${error instanceof Error ? error.message : error}\n`);
+  }
+}
+
+/**
+ * Phase 1.5: Portfolio Planning 🆕
+ * Redesenha a pirâmide de testes baseado em riscos
+ */
+async function runPortfolioPlanningPhase(ctx: PipelineContext): Promise<void> {
+  if (!['full', 'analyze', 'plan', 'scaffold'].includes(ctx.mode)) {
+    return;
+  }
+  
+  console.log('📊 [PHASE 1.5] Portfolio Planning...');
+  
+  try {
+    const portfolioResult = await portfolioPlan({
+      repo: ctx.repoPath,
+      product: ctx.product,
+      // risk_file e coverage_file serão buscados automaticamente
+    });
+    ctx.steps.push('portfolio-plan');
+    ctx.outputs.portfolioPlan = portfolioResult.output;
+    
+    console.log(`  ✅ Portfolio plan gerado: ${portfolioResult.recommendations_count} recomendações`);
+    console.log(`  📊 Distribuição atual: Unit ${portfolioResult.current_distribution.unit_percent.toFixed(1)}%, Integration ${portfolioResult.current_distribution.integration_percent.toFixed(1)}%, E2E ${portfolioResult.current_distribution.e2e_percent.toFixed(1)}%`);
+    console.log(`  🎯 Target: Unit ${portfolioResult.target_distribution.unit_percent}%, Integration ${portfolioResult.target_distribution.integration_percent}%, E2E ${portfolioResult.target_distribution.e2e_percent}%\n`);
+  } catch (error) {
+    console.log(`⚠️  Erro na Phase 1.5 (Portfolio Planning): ${error instanceof Error ? error.message : error}\n`);
+  }
+}
+
+/**
+ * Phase 2: Code Analysis
+ */
+async function runAnalysisPhase(ctx: PipelineContext): Promise<void> {
+  if (!['full', 'analyze', 'plan', 'scaffold'].includes(ctx.mode)) {
+    return;
+  }
+  
+  // 1. Analyze (código)
+  console.log('🔍 [1/11] Analisando repositório...');
+  const analyzeResult = await analyze({
+    repo: ctx.repoPath,
+    product: ctx.product
+  });
+  ctx.steps.push('analyze');
+  ctx.outputs.analyze = analyzeResult.plan_path;
+  console.log(`✅ Análise completa: ${analyzeResult.plan_path}\n`);
+}
+
+/**
+ * Phase 3: Coverage & Test Quality Analysis
+ */
+async function runCoverageAnalysisPhase(ctx: PipelineContext): Promise<void> {
+  if (!['full', 'plan', 'scaffold', 'run'].includes(ctx.mode)) {
+    return;
+  }
+  
+  // 2. Coverage Analysis
+  console.log('📊 [2/11] Analisando cobertura de testes...');
+  try {
+    const coverageResult = await analyzeTestCoverage({
+      repo: ctx.repoPath,
+      product: ctx.product
+    });
+    ctx.steps.push('coverage-analysis');
+    ctx.outputs.coverageAnalysis = 'tests/analyses/coverage-analysis.json';
+    console.log(`✅ Cobertura analisada: ${coverageResult.health}\n`);
+    console.log(coverageResult.summary);
+  } catch (error) {
+    console.log(`⚠️  Erro na análise de cobertura: ${error instanceof Error ? error.message : error}\n`);
+  }
+  
+  // 2.5. Test Logic Analysis
+  console.log('🔬 [2.5/11] Analisando qualidade lógica dos testes...');
+  try {
+    const logicResult = await analyzeTestLogic({
+      repo: ctx.repoPath,
+      product: ctx.product,
+      runMutation: false,
+      generatePatches: true
+    });
+    ctx.steps.push('test-logic-analysis');
+    ctx.outputs.testLogicAnalysis = logicResult.reportPath;
+    console.log(`✅ Análise de qualidade concluída!`);
+    console.log(`   📊 Quality Score: ${logicResult.metrics.qualityScore}/100 (${logicResult.metrics.grade})`);
+    console.log(`   🎯 Happy Path: ${logicResult.metrics.scenarioCoverage.happy.toFixed(1)}%`);
+    console.log(`   🔀 Edge Cases: ${logicResult.metrics.scenarioCoverage.edge.toFixed(1)}%`);
+    console.log(`   ⚠️  Error Handling: ${logicResult.metrics.scenarioCoverage.error.toFixed(1)}%`);
+    console.log(`   📄 Relatório: ${logicResult.reportPath}\n`);
+  } catch (error) {
+    console.log(`⚠️  Erro na análise de lógica: ${error instanceof Error ? error.message : error}\n`);
+  }
+}
+
+/**
+ * Phase 4: Test Strategy & Planning
+ */
+async function runPlanningPhase(ctx: PipelineContext): Promise<void> {
+  if (!['full', 'plan', 'scaffold'].includes(ctx.mode)) {
+    return;
+  }
+  
+  // 3. Recommend Strategy
+  console.log('🎯 [3/11] Gerando recomendação de estratégia...');
+  try {
+    const recommendResult = await recommendTestStrategy({
+      repo: ctx.repoPath,
+      product: ctx.product
+    });
+    ctx.steps.push('recommend-strategy');
+    ctx.outputs.recommendStrategy = 'tests/analyses/TEST-STRATEGY-RECOMMENDATION.md';
+    console.log(`✅ Recomendação gerada!\n`);
+    console.log(recommendResult.summary);
+  } catch (error) {
+    console.log(`⚠️  Erro na recomendação: ${error instanceof Error ? error.message : error}\n`);
+  }
+  
+  // 4. Generate Plan
+  console.log('📋 [4/11] Gerando plano de testes...');
+  const planResult = await generatePlan({
+    repo: ctx.repoPath,
+    product: ctx.product
+  });
+  ctx.steps.push('plan');
+  ctx.outputs.plan = planResult.plan;
+  console.log(`✅ Plano gerado: ${planResult.plan}\n`);
+}
+
+/**
+ * Phase 5: Scaffold (opcional)
+ */
+async function runScaffoldPhase(ctx: PipelineContext, skipScaffold: boolean): Promise<void> {
+  if (!['full', 'scaffold'].includes(ctx.mode) || skipScaffold) {
+    return;
+  }
+  
+  console.log('🏗️  [5/11] Gerando scaffold de testes...');
+  
+  // Decidir tipo de scaffold baseado no contexto
+  if (!ctx.context.hasTests) {
+    // Se não tem testes, gera unit tests
+    const scaffoldResult = await scaffoldUnitTests({
+      repo: ctx.repoPath,
+      product: ctx.product,
+      files: [] // Auto-detecta arquivos
+    });
+    ctx.steps.push('scaffold-unit');
+    ctx.outputs.scaffold = scaffoldResult.generated.join(', ');
+    console.log(`✅ Testes unitários gerados: ${scaffoldResult.generated.length} arquivos\n`);
+  } else {
+    console.log(`ℹ️  Testes já existem, pulando scaffold\n`);
+  }
+}
+
+/**
+ * Phase 6-11: Test Execution & Reporting
+ */
+async function runTestingPhase(ctx: PipelineContext, skipRun: boolean): Promise<void> {
+  if (!['full', 'run'].includes(ctx.mode) || skipRun) {
+    return;
+  }
+  
+  if (!ctx.context.hasTests && !ctx.steps.includes('scaffold-unit')) {
+    console.log(`⚠️  Nenhum teste encontrado, pulando execução\n`);
+    return;
+  }
+  
+  // 6. Run Tests with Coverage
+  console.log('🧪 [6/11] Executando testes com cobertura...');
+  try {
+    const coverageResult = await runCoverageAnalysis({
+      repo: ctx.repoPath,
+      product: ctx.product
+    });
+    ctx.steps.push('coverage');
+    ctx.outputs.coverage = coverageResult.reportPath;
+    console.log(`✅ Testes executados com sucesso!\n`);
+  } catch (error) {
+    console.log(`⚠️  Erro ao executar testes: ${error instanceof Error ? error.message : error}\n`);
+  }
+  
+  // 7. Pyramid Report
+  console.log('📊 [7/11] Gerando relatório da pirâmide de testes...');
+  try {
+    const pyramidResult = await generatePyramidReport({
+      repo: ctx.repoPath,
+      product: ctx.product
+    });
+    ctx.steps.push('pyramid-report');
+    ctx.outputs.pyramidReport = pyramidResult.report_path;
+    console.log(`✅ Relatório da pirâmide gerado: ${pyramidResult.report_path}\n`);
+  } catch (error) {
+    console.log(`⚠️  Erro ao gerar pirâmide: ${error instanceof Error ? error.message : error}\n`);
+  }
+  
+  // 8. Dashboard HTML
+  console.log('📊 [8/11] Gerando dashboard da pirâmide de testes...');
+  try {
+    const dashboardResult = await generateDashboard({
+      repo: ctx.repoPath,
+      product: ctx.product
+    });
+    ctx.steps.push('dashboard');
+    ctx.outputs.dashboard = dashboardResult.dashboard_path;
+    console.log(`✅ Dashboard gerado: ${dashboardResult.dashboard_path}\n`);
+  } catch (error) {
+    console.log(`⚠️  Erro ao gerar dashboard: ${error instanceof Error ? error.message : error}\n`);
+  }
+  
+  // 9. Validate Gates
+  console.log('✅ [9/11] Validando gates de qualidade...');
+  try {
+    const validateResult = await validate({
+      repo: ctx.repoPath,
+      product: ctx.product,
+      minBranch: 80,
+      minMutation: 70
+    });
+    ctx.steps.push('validate');
+    ctx.outputs.validate = validateResult.passed ? 'PASSED' : 'FAILED';
+    console.log(`${validateResult.passed ? '✅' : '⚠️'} Gates de qualidade: ${validateResult.passed ? 'APROVADOS' : 'REPROVADOS'}\n`);
+  } catch (error) {
+    console.log(`⚠️  Erro ao validar gates: ${error instanceof Error ? error.message : error}\n`);
+  }
+  
+  // 10. Final Consolidated Report
+  console.log('📄 [10/11] Gerando relatório consolidado final...');
+  try {
+    const reportResult = await buildReport({
+      in_dir: ctx.paths.analyses,
+      out_file: 'QUALITY-ANALYSIS-REPORT.md'
+    });
+    ctx.steps.push('final-report');
+    ctx.outputs.finalReport = reportResult.out;
+    console.log(`✅ Relatório consolidado gerado: ${reportResult.out}\n`);
+  } catch (error) {
+    console.log(`⚠️  Erro ao gerar relatório consolidado: ${error instanceof Error ? error.message : error}\n`);
+  }
+
+  // 11. Export to tests/qa
+  console.log('📦 [11/11] Exportando relatórios para tests/qa...');
+  try {
+    const copied = await exportReportsToQA(ctx.repoPath);
+    ctx.steps.push('export-qa');
+    ctx.outputs.qa = `tests/qa (${copied.length} arquivos)`;
+    console.log(`✅ Relatórios copiados para tests/qa: ${copied.length} arquivo(s)\n`);
+  } catch (error) {
+    console.log(`⚠️  Erro ao exportar relatórios para tests/qa: ${error instanceof Error ? error.message : error}\n`);
+  }
 }
 
 /**
@@ -685,14 +662,12 @@ async function exportReportsToQA(repoPath: string): Promise<string[]> {
   await fs.mkdir(qaDir, { recursive: true });
 
   const sources = [
-    // Relatórios em tests/analyses
     ['tests/analyses/TEST-PLAN.md', 'TEST-PLAN.md'],
     ['tests/analyses/TEST-STRATEGY-RECOMMENDATION.md', 'TEST-STRATEGY-RECOMMENDATION.md'],
     ['tests/analyses/COVERAGE-ANALYSIS.md', 'COVERAGE-ANALYSIS.md'],
     ['tests/analyses/PYRAMID-REPORT.md', 'PYRAMID-REPORT.md'],
     ['tests/analyses/dashboard.html', 'dashboard.html'],
     ['tests/analyses/coverage-analysis.json', 'coverage-analysis.json'],
-    // Relatório consolidado gerado na raiz
     ['QUALITY-ANALYSIS-REPORT.md', 'QUALITY-ANALYSIS-REPORT.md']
   ];
 
@@ -710,4 +685,140 @@ async function exportReportsToQA(repoPath: string): Promise<string[]> {
     }
   }
   return copied;
+}
+
+/**
+ * Constrói resultado estruturado final
+ */
+function buildFinalResult(ctx: PipelineContext, duration: number): AutoResult {
+  const reports: string[] = [];
+  const analyses: string[] = [];
+  let dashboard: string | undefined;
+  
+  // Coletar reports gerados
+  if (ctx.outputs.plan) reports.push(ctx.outputs.plan);
+  if (ctx.outputs.pyramidReport) reports.push(ctx.outputs.pyramidReport);
+  if (ctx.outputs.diffCoverage) reports.push(ctx.outputs.diffCoverage);
+  if (ctx.outputs.finalReport) reports.push(ctx.outputs.finalReport);
+  if (ctx.outputs.testQuality) reports.push(ctx.outputs.testQuality);
+  
+  // Coletar analyses geradas
+  if (ctx.outputs.analyze) analyses.push(ctx.outputs.analyze);
+  if (ctx.outputs.coverageAnalysis) analyses.push(ctx.outputs.coverageAnalysis);
+  if (ctx.outputs.testLogicAnalysis) analyses.push(ctx.outputs.testLogicAnalysis);
+  if (ctx.outputs.recommendStrategy) analyses.push(ctx.outputs.recommendStrategy);
+  
+  // Dashboard
+  if (ctx.outputs.dashboard) dashboard = ctx.outputs.dashboard;
+  
+  return {
+    ok: true,
+    outputs: {
+      root: ctx.paths.root,
+      reports,
+      analyses,
+      dashboard,
+      tests: {
+        unit: ctx.paths.unit,
+        integration: ctx.paths.integration,
+        e2e: ctx.paths.e2e
+      }
+    },
+    steps: ctx.steps,
+    duration,
+    context: ctx.context
+  };
+}
+
+// ============================================================================
+// MAIN ORCHESTRATOR
+// ============================================================================
+
+/**
+ * [FASE 6] Orquestrador principal com retorno estruturado (REFATORADO)
+ */
+export async function autoQualityRun(options: AutoOptions = {}): Promise<AutoResult> {
+  const startTime = Date.now();
+  const mode = options.mode || 'full';
+  const repoPath = options.repo || process.cwd();
+  
+  console.log(`\n🚀 Iniciando modo AUTO: ${mode}`);
+  console.log(`📁 Repositório: ${repoPath}\n`);
+  
+  // 1. Detectar contexto
+  const context = await detectRepoContext(repoPath);
+  console.log(`📦 Produto detectado: ${context.product}`);
+  console.log(`🧪 Framework: ${context.testFramework || 'não detectado'}`);
+  console.log(`💻 Linguagem: ${context.language || 'não detectada'}`);
+  console.log(`✅ Testes existentes: ${context.hasTests ? 'Sim' : 'Não'}\n`);
+  
+  // Determinar produto final
+  const product = options.product || context.product;
+  
+  // Carregar configurações
+  const settings = await loadMCPSettings(repoPath, product);
+  const paths = getPaths(repoPath, product, settings || undefined);
+  
+  // Criar contexto do pipeline
+  const ctx: PipelineContext = {
+    repoPath,
+    product,
+    mode,
+    context,
+    paths,
+    steps: [],
+    outputs: {},
+    settings
+  };
+  
+  try {
+    // Executar fases do pipeline
+    await runInitPhase(ctx);
+    await runDiscoveryPhase(ctx);
+    await runPortfolioPlanningPhase(ctx); // 🆕 FASE 2
+    await runAnalysisPhase(ctx);
+    await runCoverageAnalysisPhase(ctx);
+    await runPlanningPhase(ctx);
+    await runScaffoldPhase(ctx, options.skipScaffold || false);
+    await runTestingPhase(ctx, options.skipRun || false);
+    
+    // Resumo final
+    console.log('\n' + '='.repeat(60));
+    console.log('✅ AUTO COMPLETO!');
+    console.log('='.repeat(60));
+    console.log(`\n📊 Passos executados: ${ctx.steps.join(' → ')}`);
+    console.log(`\n📁 Arquivos gerados:`);
+    Object.entries(ctx.outputs).forEach(([step, output]) => {
+      console.log(`   ${step}: ${output}`);
+    });
+    console.log('\n' + '='.repeat(60) + '\n');
+    
+    // Construir resultado estruturado
+    const duration = Date.now() - startTime;
+    return buildFinalResult(ctx, duration);
+    
+  } catch (error) {
+    console.error('\n❌ Erro durante execução AUTO:', error instanceof Error ? error.message : error);
+    const duration = Date.now() - startTime;
+    
+    return {
+      ok: false,
+      outputs: {
+        root: paths.root,
+        reports: [],
+        analyses: []
+      },
+      steps: ctx.steps,
+      duration,
+      context
+    };
+  }
+}
+
+/**
+ * Executa modo específico com validações
+ */
+export async function runAutoMode(mode: AutoMode, options: Omit<AutoOptions, 'mode'> = {}): Promise<boolean> {
+  const result = await autoQualityRun({ ...options, mode });
+  return result.ok;
 }
