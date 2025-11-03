@@ -116,13 +116,6 @@ export async function analyze(input: AnalyzeParams): Promise<AnalyzeResult> {
     analyzeJsonPath,
     JSON.stringify({ summary, findings, recommendations }, null, 2)
   );
-  
-  // Also save in tests/analyses for backward compatibility
-  const legacyAnalyzePath = join(settings.repo, 'tests/analyses/analyze.json');
-  await writeFileSafe(
-    legacyAnalyzePath,
-    JSON.stringify({ summary, findings, recommendations }, null, 2)
-  );
 
   console.log(`✅ Análise completa. ${routes.length} rotas, ${endpoints.length} endpoints, ${events.length} eventos.`);
   console.log(`📄 Análise salva em: ${analyzeJsonPath}`);
@@ -131,7 +124,7 @@ export async function analyze(input: AnalyzeParams): Promise<AnalyzeResult> {
     summary,
     findings,
     recommendations,
-    plan_path: join(settings.repo, 'tests/analyses/TEST-PLAN.md')
+    plan_path: analyzeJsonPath
   };
 }
 

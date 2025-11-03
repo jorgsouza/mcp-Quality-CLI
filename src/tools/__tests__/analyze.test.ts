@@ -120,8 +120,8 @@ describe('analyze', () => {
       product: 'Test'
     });
 
-    // Verificar se arquivo foi criado
-    const analyzeJsonPath = join(testDir, 'tests/analyses/analyze.json');
+    // [FASE 2] Verificar se arquivo foi criado na nova estrutura qa/<product>
+    const analyzeJsonPath = join(testDir, 'qa/Test/tests/analyses/analyze.json');
     const fileExists = await fs.access(analyzeJsonPath).then(() => true).catch(() => false);
     
     expect(fileExists).toBe(true);
