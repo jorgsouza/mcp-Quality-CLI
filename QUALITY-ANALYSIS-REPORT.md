@@ -24,10 +24,10 @@ _*Cobertura de diferença requer configuração adicional_
 
 ## 📁 Artefatos
 
-- **HTML Report:** [`/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762130359695/qa/test-project/tests/analyses/html/index.html`](/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762130359695/qa/test-project/tests/analyses/html/index.html)
-- **JUnit XML:** [`/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762130359695/qa/test-project/tests/analyses/junit/results.xml`](/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762130359695/qa/test-project/tests/analyses/junit/results.xml)
-- **JSON Results:** [`/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762130359695/qa/test-project/tests/analyses/json/results.json`](/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762130359695/qa/test-project/tests/analyses/json/results.json)
-- **Coverage:** [`/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762130359695/qa/test-project/tests/analyses/coverage/`](/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762130359695/qa/test-project/tests/analyses/coverage/)
+- **HTML Report:** [`/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762133860878/qa/test-project/tests/analyses/html/index.html`](/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762133860878/qa/test-project/tests/analyses/html/index.html)
+- **JUnit XML:** [`/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762133860878/qa/test-project/tests/analyses/junit/results.xml`](/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762133860878/qa/test-project/tests/analyses/junit/results.xml)
+- **JSON Results:** [`/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762133860878/qa/test-project/tests/analyses/json/results.json`](/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762133860878/qa/test-project/tests/analyses/json/results.json)
+- **Coverage:** [`/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762133860878/qa/test-project/tests/analyses/coverage/`](/Volumes/Dev/mcp-Quality-CLI/.test-auto-run-1762133860878/qa/test-project/tests/analyses/coverage/)
 
 
 
@@ -86,4 +86,4 @@ npm run test:debug -- tests/path/to/test.spec.ts
 ---
 
 **Gerado por:** Quality MCP v0.1.0  
-**Timestamp:** 2025-11-03T00:39:21.640Z
+**Timestamp:** 2025-11-03T01:37:42.767Z

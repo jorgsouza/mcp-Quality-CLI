@@ -18,8 +18,9 @@ describe('detectLanguage', () => {
   beforeEach(() => {
     testDir = '/tmp/test-project';
     vi.clearAllMocks();
-    // Mock console.log para não poluir output dos testes
+    // Mock console.log e console.warn para não poluir output dos testes
     vi.spyOn(console, 'log').mockImplementation(() => {});
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -271,7 +272,7 @@ gem 'rails', '~> 7.0'`);
       // Verify
       expect(result.primary).toBe('typescript');
       expect(result.framework).toBe('vitest');
-      expect(console.log).toHaveBeenCalledWith('⚠️  Linguagem não detectada, assumindo TypeScript/JavaScript');
+      expect(console.warn).toHaveBeenCalledWith('⚠️  Linguagem não detectada automaticamente.');
     });
 
     it('deve lidar com erro de leitura de diretório', async () => {
