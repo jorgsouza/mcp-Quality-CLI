@@ -83,7 +83,11 @@ describe('catalogCUJs', () => {
       vi.mocked(langDetector.detectLanguage).mockResolvedValue({
         primary: 'javascript',
         framework: 'Express',
-        testRunner: 'jest',
+        testCommand: 'npm test',
+        coverageCommand: 'npm run coverage',
+        coverageFile: 'coverage/lcov.info',
+        testPatterns: ['**/*.test.js'],
+        sourcePatterns: ['src/**/*.js'],
       });
 
       vi.mocked(expressDetector.findExpressRoutes).mockResolvedValue([
@@ -115,7 +119,11 @@ describe('catalogCUJs', () => {
       vi.mocked(langDetector.detectLanguage).mockResolvedValue({
         primary: 'javascript',
         framework: 'Express',
-        testRunner: 'jest',
+        testCommand: 'npm test',
+        coverageCommand: 'npm run coverage',
+        coverageFile: 'coverage/lcov.info',
+        testPatterns: ['**/*.test.js'],
+        sourcePatterns: ['src/**/*.js'],
       });
 
       vi.mocked(expressDetector.findExpressRoutes).mockResolvedValue([
@@ -146,7 +154,11 @@ describe('catalogCUJs', () => {
       vi.mocked(langDetector.detectLanguage).mockResolvedValue({
         primary: 'javascript',
         framework: 'Express',
-        testRunner: 'jest',
+        testCommand: 'npm test',
+        coverageCommand: 'npm run coverage',
+        coverageFile: 'coverage/lcov.info',
+        testPatterns: ['**/*.test.js'],
+        sourcePatterns: ['src/**/*.js'],
       });
 
       vi.mocked(expressDetector.findExpressRoutes).mockResolvedValue([
@@ -177,7 +189,11 @@ describe('catalogCUJs', () => {
       vi.mocked(langDetector.detectLanguage).mockResolvedValue({
         primary: 'javascript',
         framework: 'Express',
-        testRunner: 'jest',
+        testCommand: 'npm test',
+        coverageCommand: 'npm run coverage',
+        coverageFile: 'coverage/lcov.info',
+        testPatterns: ['**/*.test.js'],
+        sourcePatterns: ['src/**/*.js'],
       });
 
       vi.mocked(expressDetector.findExpressRoutes).mockResolvedValue([
@@ -213,7 +229,11 @@ describe('catalogCUJs', () => {
       vi.mocked(langDetector.detectLanguage).mockResolvedValue({
         primary: 'typescript',
         framework: 'Next.js',
-        testRunner: 'jest',
+        testCommand: 'npm test',
+        coverageCommand: 'npm run coverage',
+        coverageFile: 'coverage/lcov.info',
+        testPatterns: ['**/*.test.ts'],
+        sourcePatterns: ['src/**/*.ts'],
       });
 
       vi.mocked(expressDetector.findExpressRoutes).mockResolvedValue([]);
@@ -243,7 +263,11 @@ describe('catalogCUJs', () => {
       vi.mocked(langDetector.detectLanguage).mockResolvedValue({
         primary: 'javascript',
         framework: 'Express',
-        testRunner: 'jest',
+        testCommand: 'npm test',
+        coverageCommand: 'npm run coverage',
+        coverageFile: 'coverage/lcov.info',
+        testPatterns: ['**/*.test.js'],
+        sourcePatterns: ['src/**/*.js'],
       });
 
       vi.mocked(expressDetector.findExpressRoutes).mockResolvedValue([]);
@@ -274,16 +298,21 @@ describe('catalogCUJs', () => {
   });
 
   describe('Deduplication', () => {
-    it('deve deduplic ar CUJs com mesmo ID', async () => {
+    it('deve mesclar endpoints duplicados no mesmo CUJ', async () => {
       vi.mocked(langDetector.detectLanguage).mockResolvedValue({
         primary: 'javascript',
         framework: 'Express',
-        testRunner: 'jest',
+        testCommand: 'npm test',
+        coverageCommand: 'npm run coverage',
+        coverageFile: 'coverage/lcov.info',
+        testPatterns: ['**/*.test.js'],
+        sourcePatterns: ['src/**/*.js'],
       });
 
       vi.mocked(expressDetector.findExpressRoutes).mockResolvedValue([
         { method: 'POST', path: '/api/auth/login', file: 'routes/auth.ts' },
-        { method: 'POST', path: '/api/auth/login', file: 'routes/auth-v2.ts' }, // Duplicate
+        { method: 'POST', path: '/api/auth/logout', file: 'routes/auth.ts' },
+        { method: 'GET', path: '/api/auth/verify', file: 'routes/auth-v2.ts' },
       ]);
 
       vi.mocked(nextDetector.findNextRoutes).mockResolvedValue([]);
@@ -303,8 +332,103 @@ describe('catalogCUJs', () => {
         sources: ['routes'],
       });
 
-      // Deve ter apenas 1 CUJ (deduplicado)
+      // Deve ter apenas 1 CUJ (auth) com 3 endpoints agrupados
       expect(catalogData.cujs).toHaveLength(1);
+      expect(catalogData.cujs[0].id).toBe('auth-api');
+      expect(catalogData.cujs[0].endpoints).toHaveLength(3);
+    });
+  });
+
+  describe('Multi-language support', () => {
+    it('deve detectar projeto TypeScript', async () => {
+      vi.mocked(langDetector.detectLanguage).mockResolvedValue({
+        primary: 'typescript',
+        framework: 'Express',
+        testCommand: 'npm test',
+        coverageCommand: 'npm run coverage',
+        coverageFile: 'coverage/lcov.info',
+        testPatterns: ['**/*.test.ts'],
+        sourcePatterns: ['src/**/*.ts'],
+      });
+
+      vi.mocked(expressDetector.findExpressRoutes).mockResolvedValue([
+        { method: 'POST', path: '/api/auth/login', file: 'src/routes/auth.ts' },
+      ]);
+
+      vi.mocked(nextDetector.findNextRoutes).mockResolvedValue([]);
+      vi.mocked(fs.mkdir).mockResolvedValue(undefined as any);
+      vi.mocked(fs.readFile).mockRejectedValue(new Error('README não existe'));
+
+      let catalogData: any;
+      vi.mocked(fs.writeFile).mockImplementation(async (path, data) => {
+        if (typeof path === 'string' && path.includes('cuj-catalog.json')) {
+          catalogData = JSON.parse(data as string);
+        }
+      });
+
+      const result = await catalogCUJs({
+        repo: '/test/repo',
+        product: 'test-product',
+        sources: ['routes'],
+      });
+
+      expect(result.ok).toBe(true);
+      expect(catalogData.cujs).toHaveLength(1);
+    });
+
+    it('deve detectar projeto Python', async () => {
+      vi.mocked(langDetector.detectLanguage).mockResolvedValue({
+        primary: 'python',
+        framework: 'FastAPI',
+        testCommand: 'pytest',
+        coverageCommand: 'pytest --cov',
+        coverageFile: 'coverage.xml',
+        testPatterns: ['**/test_*.py', '**/*_test.py'],
+        sourcePatterns: ['src/**/*.py', 'app/**/*.py'],
+      });
+
+      // Para Python, não tem detector de rotas ainda, então vai retornar vazio
+      vi.mocked(expressDetector.findExpressRoutes).mockResolvedValue([]);
+      vi.mocked(nextDetector.findNextRoutes).mockResolvedValue([]);
+      vi.mocked(fs.mkdir).mockResolvedValue(undefined as any);
+      vi.mocked(fs.readFile).mockRejectedValue(new Error('README não existe'));
+
+      const result = await catalogCUJs({
+        repo: '/test/repo',
+        product: 'test-product',
+        sources: ['routes'],
+      });
+
+      expect(result.ok).toBe(true);
+      // Sem detector de rotas Python, retorna 0 CUJs (por enquanto)
+      expect(result.cujs_count).toBe(0);
+    });
+
+    it('deve detectar projeto Java', async () => {
+      vi.mocked(langDetector.detectLanguage).mockResolvedValue({
+        primary: 'java',
+        framework: 'Spring Boot',
+        testCommand: 'mvn test',
+        coverageCommand: 'mvn jacoco:report',
+        coverageFile: 'target/site/jacoco/jacoco.xml',
+        testPatterns: ['**/src/test/**/*Test.java'],
+        sourcePatterns: ['**/src/main/**/*.java'],
+      });
+
+      vi.mocked(expressDetector.findExpressRoutes).mockResolvedValue([]);
+      vi.mocked(nextDetector.findNextRoutes).mockResolvedValue([]);
+      vi.mocked(fs.mkdir).mockResolvedValue(undefined as any);
+      vi.mocked(fs.readFile).mockRejectedValue(new Error('README não existe'));
+
+      const result = await catalogCUJs({
+        repo: '/test/repo',
+        product: 'test-product',
+        sources: ['routes'],
+      });
+
+      expect(result.ok).toBe(true);
+      // Sem detector de rotas Java, retorna 0 CUJs (por enquanto)
+      expect(result.cujs_count).toBe(0);
     });
   });
 
@@ -326,7 +450,11 @@ describe('catalogCUJs', () => {
       vi.mocked(langDetector.detectLanguage).mockResolvedValue({
         primary: 'javascript',
         framework: 'Express',
-        testRunner: 'jest',
+        testCommand: 'npm test',
+        coverageCommand: 'npm run coverage',
+        coverageFile: 'coverage/lcov.info',
+        testPatterns: ['**/*.test.js'],
+        sourcePatterns: ['src/**/*.js'],
       });
 
       vi.mocked(expressDetector.findExpressRoutes).mockResolvedValue([
@@ -354,7 +482,11 @@ describe('catalogCUJs', () => {
       vi.mocked(langDetector.detectLanguage).mockResolvedValue({
         primary: 'javascript',
         framework: 'Express',
-        testRunner: 'jest',
+        testCommand: 'npm test',
+        coverageCommand: 'npm run coverage',
+        coverageFile: 'coverage/lcov.info',
+        testPatterns: ['**/*.test.js'],
+        sourcePatterns: ['src/**/*.js'],
       });
 
       vi.mocked(expressDetector.findExpressRoutes).mockResolvedValue([
