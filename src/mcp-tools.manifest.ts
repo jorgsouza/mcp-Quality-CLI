@@ -109,18 +109,17 @@ export const MCP_TOOLS: readonly MCPToolDefinition[] = [
   
   {
     name: 'report',
-    description: '📊 Gera relatórios consolidados (MD/JSON/HTML). Unifica resultados de análise, coverage, mutation em formato legível para aprovação de QA.',
+    description: '📊 Gera relatórios consolidados (MD/JSON/HTML). Unifica resultados de análise, coverage, mutation em formato legível para aprovação de QA. [FASE 3] Relatórios sempre salvos em qa/<product>/tests/reports/',
     inputSchema: {
       type: 'object',
       properties: {
-        inDir: { 
+        repo: { 
           type: 'string', 
-          description: 'Diretório de entrada com análises' 
+          description: 'Caminho do repositório (OBRIGATÓRIO para determinar qa/<product>/)'
         },
-        outFile: { 
+        product: { 
           type: 'string', 
-          description: 'Arquivo de saída',
-          default: 'SUMMARY.md'
+          description: 'Nome do produto (OBRIGATÓRIO para determinar qa/<product>/)'
         },
         format: { 
           type: 'string', 
@@ -137,7 +136,7 @@ export const MCP_TOOLS: readonly MCPToolDefinition[] = [
           description: 'Percentual máximo de testes flaky',
         },
       },
-      required: ['inDir'],
+      required: ['repo', 'product'],
     },
   },
   

@@ -15,6 +15,10 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 import { MCP_TOOLS } from './mcp-tools.manifest.js';
 
+// [FASE 3] Import paths utilities para forçar qa/<product>/
+import { getPaths, ensurePaths } from './utils/paths.js';
+import { loadMCPSettings } from './utils/config.js';
+
 // Imports dos tools (auto usados pelo CLI)
 import { autoQualityRun } from './tools/auto.js';
 import { runDiffCoverage } from './tools/run-diff-coverage.js';
@@ -95,10 +99,20 @@ class QualityMCPServer {
           }
 
           case 'report': {
-            // Mapeia para buildReport
+            // [FASE 3] FORÇAR paths em qa/<product>/ - ignorar args.inDir/outFile absolutos
+            if (!args.repo || !args.product) {
+              throw new Error('report requer repo e product para determinar paths corretos');
+            }
+            
+            const settings = await loadMCPSettings(args.repo, args.product).catch(() => undefined);
+            const paths = getPaths(args.repo, args.product, settings || undefined);
+            await ensurePaths(paths);
+            
             result = await buildReport({
-              in_dir: args.inDir as string,
-              out_file: args.outFile || 'SUMMARY.md',
+              repo: args.repo,
+              product: args.product,
+              in_dir: paths.analyses, // ← FORÇADO (ignora args.inDir)
+              out_file: `${paths.reports}/QUALITY-REPORT.md`, // ← FORÇADO (ignora args.outFile)
               thresholds: {
                 diff_coverage_min: args.diffCoverageMin,
                 flaky_pct_max: args.flakyPctMax,
