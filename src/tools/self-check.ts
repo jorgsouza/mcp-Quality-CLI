@@ -164,33 +164,28 @@ async function checkNodeVersion(): Promise<CheckResult> {
 }
 
 /**
- * Verifica permissões de escrita no diretório de análises
+ * Verifica permissões de escrita
+ * 
+ * [FASE 3 FIX] Valida permissão de escrita na raiz do repo
+ * NÃO tenta criar tests/analyses na raiz
  * TODO [FASE 4]: Receber product para verificar qa/<product>/tests/analyses
  */
 async function checkWritePermissions(repo: string): Promise<CheckResult> {
-  // [FASE 2] Por enquanto ainda usa tests/analyses (self-check não recebe product)
-  const testDir = join(repo, 'tests', 'analyses');
-  
   try {
-    // Tentar criar diretório se não existir
-    if (!existsSync(testDir)) {
-      await mkdir(testDir, { recursive: true });
-    }
-    
-    // Tentar escrever arquivo de teste
-    await access(testDir, constants.W_OK);
+    // [FASE 3] Verificar permissão de escrita na RAIZ do repo (não em tests/analyses)
+    await access(repo, constants.W_OK);
     
     return {
       name: 'Permissões de Escrita',
       status: 'ok',
-      message: `Pode escrever em ${testDir}`,
+      message: `Pode escrever em ${repo}`,
     };
   } catch (error) {
     return {
       name: 'Permissões de Escrita',
       status: 'error',
-      message: `Sem permissão para escrever em ${testDir}`,
-      fix: `chmod u+w ${testDir} ou execute com sudo (não recomendado)`,
+      message: `Sem permissão para escrever em ${repo}`,
+      fix: `chmod u+w ${repo} ou execute com sudo (não recomendado)`,
     };
   }
 }
@@ -311,12 +306,16 @@ async function checkGit(repo: string): Promise<CheckResult> {
 
 /**
  * Verifica estrutura de diretórios esperada
+ * 
+ * [FASE 3 FIX] NÃO cria tests/analyses na raiz!
+ * Self-check valida APENAS o básico (src/, package.json)
+ * A estrutura qa/<product>/ é criada automaticamente por auto.ts (init-product)
  */
 async function checkDirectoryStructure(repo: string): Promise<CheckResult> {
+  // [FASE 3] Verificar APENAS diretórios essenciais do projeto
+  // NÃO verificar tests/analyses (estrutura antiga)
   const requiredDirs = [
-    'src',
-    'tests',
-    'tests/analyses',
+    'src',  // Código-fonte
   ];
   
   const missing: string[] = [];
@@ -346,12 +345,16 @@ async function checkDirectoryStructure(repo: string): Promise<CheckResult> {
 
 /**
  * Aplica fixes automaticamente
+ * 
+ * [FASE 3 FIX] NÃO cria tests/analyses na raiz!
+ * Apenas cria diretórios básicos (src/)
  */
 async function applyFixes(results: CheckResult[], repo: string): Promise<void> {
   for (const result of results) {
     if (result.status === 'warning' && result.name === 'Estrutura de Diretórios') {
-      // Criar diretórios faltantes
-      const dirs = ['src', 'tests', 'tests/analyses'];
+      // [FASE 3] Criar APENAS diretórios básicos do projeto
+      // NÃO criar tests/analyses (estrutura antiga)
+      const dirs = ['src'];  // Apenas o essencial
       for (const dir of dirs) {
         const fullPath = join(repo, dir);
         if (!existsSync(fullPath)) {

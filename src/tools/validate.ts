@@ -11,6 +11,8 @@ import { existsSync } from 'node:fs';
 import { runPipeline } from '../engine/index.js';
 import type { MutationResult } from '../engine/capabilities.js';
 import type { TestLogicResult } from './analyze-test-logic.js';
+import { getPaths } from '../utils/paths.js';
+import { loadMCPSettings } from '../utils/config.js';
 
 export interface ValidateOptions {
   repo: string;
@@ -77,7 +79,7 @@ export async function validate(options: ValidateOptions): Promise<ValidationResu
   
   // Gate 2: Quality Score (novo - análise de test-logic)
   if (minQualityScore !== undefined) {
-    const qualityViolation = await validateQualityScore(repo, minQualityScore);
+    const qualityViolation = await validateQualityScore(repo, product, minQualityScore);
     if (qualityViolation) {
       violations.push(qualityViolation);
       if (failFast) {
@@ -88,7 +90,7 @@ export async function validate(options: ValidateOptions): Promise<ValidationResu
   
   // Gate 3: Scenario Coverage - Happy Path
   if (minHappyPath !== undefined) {
-    const happyViolation = await validateScenarioCoverage(repo, 'happy', minHappyPath);
+    const happyViolation = await validateScenarioCoverage(repo, product, 'happy', minHappyPath);
     if (happyViolation) {
       violations.push(happyViolation);
       if (failFast) {
@@ -99,7 +101,7 @@ export async function validate(options: ValidateOptions): Promise<ValidationResu
   
   // Gate 4: Scenario Coverage - Edge Cases
   if (minEdgeCases !== undefined) {
-    const edgeViolation = await validateScenarioCoverage(repo, 'edge', minEdgeCases);
+    const edgeViolation = await validateScenarioCoverage(repo, product, 'edge', minEdgeCases);
     if (edgeViolation) {
       violations.push(edgeViolation);
       if (failFast) {
@@ -110,7 +112,7 @@ export async function validate(options: ValidateOptions): Promise<ValidationResu
   
   // Gate 5: Scenario Coverage - Error Handling
   if (minErrorHandling !== undefined) {
-    const errorViolation = await validateScenarioCoverage(repo, 'error', minErrorHandling);
+    const errorViolation = await validateScenarioCoverage(repo, product, 'error', minErrorHandling);
     if (errorViolation) {
       violations.push(errorViolation);
       if (failFast) {
@@ -227,10 +229,13 @@ async function validateMutationScore(repo: string, threshold: number): Promise<V
 }
 
 /**
- * � Valida quality score mínimo (análise de test-logic)
+ * 🎯 Valida quality score mínimo (análise de test-logic)
  */
-async function validateQualityScore(repo: string, threshold: number): Promise<Violation | null> {
-  const reportPath = join(repo, 'tests/analyses/TEST-QUALITY-LOGICAL.json');
+async function validateQualityScore(repo: string, product: string, threshold: number): Promise<Violation | null> {
+  // [FASE 3] Usar getPaths() para localizar análises
+  const settings = await loadMCPSettings(repo, product).catch(() => undefined);
+  const paths = getPaths(repo, product, settings || undefined);
+  const reportPath = join(paths.analyses, 'TEST-QUALITY-LOGICAL.json');
   
   if (!existsSync(reportPath)) {
     return {
@@ -296,11 +301,15 @@ async function validateQualityScore(repo: string, threshold: number): Promise<Vi
  * 🎯 Valida cobertura de cenários (happy/edge/error)
  */
 async function validateScenarioCoverage(
-  repo: string, 
+  repo: string,
+  product: string,
   scenario: 'happy' | 'edge' | 'error', 
   threshold: number
 ): Promise<Violation | null> {
-  const reportPath = join(repo, 'tests/analyses/TEST-QUALITY-LOGICAL.json');
+  // [FASE 3] Usar getPaths() para localizar análises
+  const settings = await loadMCPSettings(repo, product).catch(() => undefined);
+  const paths = getPaths(repo, product, settings || undefined);
+  const reportPath = join(paths.analyses, 'TEST-QUALITY-LOGICAL.json');
   
   if (!existsSync(reportPath)) {
     return null; // Já reportado em validateQualityScore
