@@ -3,6 +3,7 @@ import { writeFileSafe, ensureDir, readFile, fileExists } from '../utils/fs.js';
 import { loadMCPSettings, mergeSettings } from '../utils/config.js';
 import { findExpressRoutes, findOpenAPI, type Endpoint } from '../detectors/express.js';
 import { getPaths, ensurePaths } from '../utils/paths.js';
+import { getLanguageAdapter } from '../adapters/index.js';
 
 export interface ScaffoldIntegrationParams {
   repo: string;
@@ -85,6 +86,10 @@ export async function scaffoldIntegrationTests(input: ScaffoldIntegrationParams)
   generated.push('tests/integration/examples/supertest.example.test.ts');
   generated.push('tests/integration/examples/testcontainers.example.test.ts');
 
+  // [ADAPTER PATTERN] Detecta linguagem e usa adapter apropriado
+  const adapter = await getLanguageAdapter(input.repo);
+  console.log(`📦 Linguagem detectada: ${adapter.language} (${adapter.defaultFramework})`);
+
   // Gera testes por domínio
   const endpointsByDomain = groupEndpointsByDomain(endpoints);
   
@@ -93,7 +98,8 @@ export async function scaffoldIntegrationTests(input: ScaffoldIntegrationParams)
       testDir,
       domain,
       domainEndpoints,
-      settings.base_url
+      settings.base_url,
+      adapter  // ← Passa adapter
     );
     generated.push(testFile);
   }
@@ -294,11 +300,27 @@ async function generateDomainIntegrationTests(
   testDir: string,
   domain: string,
   endpoints: Endpoint[],
-  baseUrl?: string
+  baseUrl?: string,
+  adapter?: any  // Novo parâmetro opcional
 ): Promise<string> {
   const domainDir = join(testDir, domain);
   await ensureDir(domainDir);
 
+  // [ADAPTER PATTERN] Se adapter foi passado, usa generateIntegrationTest
+  if (adapter) {
+    const content = adapter.generateIntegrationTest(domain, {
+      includeImports: true,
+      includeComments: true
+    });
+    
+    const extension = adapter.getTestFileExtension();
+    const testFile = join(domainDir, `${domain}${extension}`);
+    await writeFileSafe(testFile, content);
+    
+    return `tests/integration/${domain}/${domain}${extension}`;
+  }
+
+  // Fallback para template TypeScript (compatibilidade)
   const testCases = endpoints.map(endpoint => 
     generateEndpointTest(endpoint)
   ).join('\n\n');

@@ -1,6 +1,9 @@
 import type { LanguageAdapter } from './base-adapter.js';
 import { TypeScriptAdapter } from './typescript-adapter.js';
 import { PythonAdapter } from './python-adapter.js';
+import { GoAdapter } from './go-adapter.js';
+import { JavaAdapter } from './java-adapter.js';
+import { RubyAdapter } from './ruby-adapter.js';
 import { detectLanguage } from '../detectors/language.js';
 
 /**
@@ -17,13 +20,14 @@ export async function getLanguageAdapter(repoPath: string): Promise<LanguageAdap
     case 'javascript':
       return new TypeScriptAdapter();
     
-    // TODO: Adicionar mais adapters conforme necessário
-    // case 'java':
-    //   return new JavaAdapter();
-    // case 'go':
-    //   return new GoAdapter();
-    // case 'ruby':
-    //   return new RubyAdapter();
+    case 'go':
+      return new GoAdapter();
+    
+    case 'java':
+      return new JavaAdapter();
+    
+    case 'ruby':
+      return new RubyAdapter();
     
     default:
       console.warn(`⚠️  Adapter para '${detection.primary}' não implementado. Usando TypeScript como fallback.`);
@@ -43,6 +47,15 @@ export function createAdapter(language: string): LanguageAdapter {
     case 'javascript':
       return new TypeScriptAdapter();
     
+    case 'go':
+      return new GoAdapter();
+    
+    case 'java':
+      return new JavaAdapter();
+    
+    case 'ruby':
+      return new RubyAdapter();
+    
     default:
       throw new Error(`Adapter para linguagem '${language}' não implementado`);
   }
@@ -52,3 +65,6 @@ export function createAdapter(language: string): LanguageAdapter {
 export type { LanguageAdapter, TestGenerationOptions, TestScenario } from './base-adapter.js';
 export { TypeScriptAdapter } from './typescript-adapter.js';
 export { PythonAdapter } from './python-adapter.js';
+export { GoAdapter } from './go-adapter.js';
+export { JavaAdapter } from './java-adapter.js';
+export { RubyAdapter } from './ruby-adapter.js';

@@ -266,7 +266,8 @@ describe('scaffoldUnitTests', () => {
 
     expect(result.ok).toBe(true);
 
-    const testPath = join(testDir, 'src/__tests__/feature.test.ts');
+    // [ADAPTER PATTERN] Agora gera em tests/unit/
+    const testPath = join(testDir, 'tests/unit/src/feature.test.ts');
     const exists = await fs.access(testPath).then(() => true).catch(() => false);
     expect(exists).toBe(true);
   });

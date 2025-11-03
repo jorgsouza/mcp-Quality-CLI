@@ -3,6 +3,7 @@ import { join, dirname, basename } from 'node:path';
 import { writeFileSafe, readFile, fileExists } from '../utils/fs.js';
 import { loadMCPSettings, mergeSettings } from '../utils/config.js';
 import { getPaths, ensurePaths } from '../utils/paths.js';
+import { getLanguageAdapter } from '../adapters/index.js';
 
 export interface ScaffoldUnitParams {
   repo: string;
@@ -136,24 +137,71 @@ async function generateUnitTest(
   sourceFile: string,
   framework: 'jest' | 'vitest' | 'mocha'
 ): Promise<string | null> {
+  // [ADAPTER PATTERN] Usa adapter de linguagem ao invés de template hardcoded
+  const adapter = await getLanguageAdapter(repoPath);
+  
   const sourceContent = await readFile(join(repoPath, sourceFile));
   
-  // Analisa o arquivo fonte
-  const analysis = analyzeSourceFile(sourceContent, sourceFile);
+  // Extrai nome da função/classe principal do arquivo
+  const functionName = extractMainExport(sourceContent, adapter.language);
   
-  if (!analysis.testable) {
+  if (!functionName) {
+    console.warn(`  ⚠️  Nenhuma função/classe exportada encontrada em ${sourceFile}`);
     return null;
   }
+  
+  // Gera teste usando adapter (agnóstico de linguagem)
+  const testContent = adapter.generateUnitTest(functionName, `./${sourceFile}`, {
+    framework: framework as any,
+    includeImports: true,
+    includeComments: true,
+    scenarios: ['happy', 'error', 'edge']
+  });
+  
+  // Determina caminho do arquivo de teste
+  const testExtension = adapter.getTestFileExtension();
+  const testFileName = sourceFile.replace(/\.(ts|tsx|js|jsx|py|go|java|rb|rs|php|cs)$/, testExtension);
+  const testFilePath = join(repoPath, 'tests', 'unit', testFileName);
+  
+  // Cria diretório e arquivo
+  await fs.mkdir(dirname(testFilePath), { recursive: true });
+  await writeFileSafe(testFilePath, testContent);
+  
+  // Retorna caminho relativo ao repoPath para consistência
+  return join('tests', 'unit', testFileName);
+}
 
-  // Gera path do teste
-  const testPath = getTestPath(sourceFile);
+/**
+ * Extrai nome da função/classe/componente principal do arquivo
+ */
+function extractMainExport(content: string, language: string): string | null {
+  if (language === 'typescript' || language === 'javascript') {
+    // export default function Name
+    const defaultFn = content.match(/export\s+default\s+(?:function|class)\s+(\w+)/);
+    if (defaultFn) return defaultFn[1];
+    
+    // export function/class/const Name
+    const namedExport = content.match(/export\s+(?:function|class|const)\s+(\w+)/);
+    if (namedExport) return namedExport[1];
+  } else if (language === 'python') {
+    // def function_name
+    const funcDef = content.match(/^def\s+(\w+)/m);
+    if (funcDef) return funcDef[1];
+    
+    // class ClassName
+    const classDef = content.match(/^class\s+(\w+)/m);
+    if (classDef) return classDef[1];
+  } else if (language === 'go') {
+    // func FunctionName
+    const funcDef = content.match(/^func\s+(\w+)/m);
+    if (funcDef) return funcDef[1];
+  } else if (language === 'java') {
+    // public class ClassName
+    const classDef = content.match(/public\s+class\s+(\w+)/);
+    if (classDef) return classDef[1];
+  }
   
-  // Gera conteúdo do teste
-  const testContent = generateTestContent(analysis, framework, sourceFile);
-  
-  await writeFileSafe(join(repoPath, testPath), testContent);
-  
-  return testPath;
+  return null;
 }
 
 interface FileAnalysis {
