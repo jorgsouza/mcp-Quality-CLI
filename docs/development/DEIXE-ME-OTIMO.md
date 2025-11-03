@@ -256,8 +256,9 @@ export async function ensurePaths(paths: QAPaths): Promise<void> {
 
 ### **FASE 3: Auto.ts como Orquestrador Central** ✅ CONCLUÍDA (1h)
 
-**Commit**: `e9b004c` (2025-11-02)  
-**Status**: 601/601 testes passando ✅
+**Commits**: `e9b004c`, `a4813ed`, `fdf2dff` (2025-11-02)  
+**Status**: 601/601 testes passando ✅  
+**CRÍTICO**: Fix do MCP Server forçando qa/<product>/
 
 #### 3.1. ✅ Auto-Inicialização de Estrutura
 **Arquivo**: `src/tools/auto.ts`
@@ -269,30 +270,48 @@ export async function ensurePaths(paths: QAPaths): Promise<void> {
 - Adiciona step 'init-product' ao resultado
 - Validação de repositório inválido com erro claro
 
-```typescript
-// [FASE 3] Auto-inicializar estrutura qa/<product> se não existir
-const mcpSettingsPath = join(paths.root, 'mcp-settings.json');
-const hasStructure = await fileExists(mcpSettingsPath);
+#### 3.2. ✅ MCP Server Forçando Paths Corretos (CRÍTICO - fdf2dff)
+**Arquivos**: `src/server.ts`, `src/mcp-tools.manifest.ts`
 
-if (!hasStructure) {
-  const repoExists = await fileExists(repoPath);
-  if (!repoExists) {
-    throw new Error(`Repository path does not exist: ${repoPath}`);
+**PROBLEMA DESCOBERTO**:
+- Usuário rodou MCP em projeto Python (spotifyCli)
+- Copilot passou paths absolutos: `outFile: "/Volumes/Dev/spotifyCli/QUALITY_REPORT.md"`
+- MCP Server ACEITAVA qualquer path → arquivos criados FORA de qa/<product>/
+- Estrutura quebrada, relatórios na raiz
+
+**SOLUÇÃO IMPLEMENTADA**:
+```typescript
+// src/server.ts
+import { getPaths, ensurePaths } from './utils/paths.js';
+import { loadMCPSettings } from './utils/config.js';
+
+case 'report': {
+  // FORÇAR paths em qa/<product>/ - ignorar args.inDir/outFile
+  if (!args.repo || !args.product) {
+    throw new Error('report requer repo e product');
   }
   
-  console.log(`🏗️  [0/11] Inicializando estrutura qa/${product}...`);
-  await initProduct({ 
-    repo: repoPath, 
-    product,
-    base_url: 'http://localhost:3000',
-    domains: [],
-    critical_flows: []
+  const settings = await loadMCPSettings(args.repo, args.product).catch(() => undefined);
+  const paths = getPaths(args.repo, args.product, settings || undefined);
+  await ensurePaths(paths);
+  
+  result = await buildReport({
+    repo: args.repo,
+    product: args.product,
+    in_dir: paths.analyses,  // ← FORÇADO (ignora args.inDir)
+    out_file: `${paths.reports}/QUALITY-REPORT.md`, // ← FORÇADO (ignora args.outFile)
+    thresholds: { ... }
   });
-  steps.push('init-product');
 }
 ```
 
-#### 3.2. ✅ Zero Configuração Manual
+**RESULTADO**:
+- ✅ Copilot pode passar QUALQUER path → MCP SOBRESCREVE para qa/<product>/
+- ✅ 100% dos relatórios em `qa/<product>/tests/reports/`
+- ✅ 100% das análises em `qa/<product>/tests/analyses/`
+- ✅ Estrutura previsível em QUALQUER projeto (Python, Node, Go, etc.)
+
+#### 3.3. ✅ Zero Configuração Manual
 ```bash
 # Antes (FASE 2): Usuário tinha que rodar init-product primeiro
 quality init-product --repo . --product MyApp --base-url http://localhost:3000
@@ -304,6 +323,30 @@ quality auto --repo . --product MyApp --mode full
 # ✅ Cria estrutura completa automaticamente  
 # ✅ Roda análise completa
 # ✅ Gera todos os relatórios em qa/MyApp/
+# ✅ MCP Server FORÇA paths corretos (ignora paths do Copilot)
+```
+
+#### 3.4. ✅ Validação Real (Projeto Python)
+**Cenário**: Usuário rodou MCP em `/Volumes/Dev/spotifyCli` (projeto Python)
+
+**Antes do fix**:
+```
+/Volumes/Dev/spotifyCli/
+├── QUALITY_REPORT.md  ← ❌ Criado na raiz (errado)
+├── tests/analyses/     ← ❌ Recriado (estrutura antiga)
+└── qa/spotifyCli/      ← Estrutura vazia
+```
+
+**Depois do fix** (fdf2dff):
+```
+/Volumes/Dev/spotifyCli/
+└── qa/spotifyCli/
+    ├── tests/
+    │   ├── analyses/  ← ✅ JSON data aqui
+    │   └── reports/
+    │       └── QUALITY-REPORT.md  ← ✅ Relatório aqui
+    ├── dashboards/
+    └── fixtures/
 ```
 
 ---
