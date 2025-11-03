@@ -43,6 +43,11 @@ import { fileExists } from '../utils/fs.js';
 import { detectLanguage } from '../detectors/language.js';
 import { getPaths } from '../utils/paths.js';
 
+// [QUALITY GATES] FASE 1: CUJ/SLO/Risk Discovery
+import { catalogCUJs } from './catalog-cujs.js';
+import { defineSLOs } from './define-slos.js';
+import { riskRegister } from './risk-register.js';
+
 export type AutoMode = 'full' | 'analyze' | 'plan' | 'scaffold' | 'run';
 
 export interface AutoOptions {
@@ -354,6 +359,55 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<AutoRes
       console.log(``);
     } else {
       console.log(`✅ Ambiente validado com sucesso!\n`);
+    }
+    
+    // [QUALITY GATES] PHASE 1: CUJ/SLO/Risk Discovery
+    // Descobre Critical User Journeys, define SLOs e gera Risk Register
+    if (['full', 'analyze', 'plan', 'scaffold'].includes(mode)) {
+      console.log('🎯 [PHASE 1] CUJ/SLO/Risk Discovery...');
+      
+      try {
+        // 1.1. Catalog CUJs
+        console.log('  📋 [1.1] Catalogando Critical User Journeys...');
+        const cujResult = await catalogCUJs({
+          repo: repoPath,
+          product,
+          sources: ['routes', 'readme'], // TODO: Add 'openapi', 'telemetry' in future
+        });
+        steps.push('catalog-cujs');
+        outputs.cujCatalog = cujResult.output;
+        console.log(`  ✅ ${cujResult.cujs_count} CUJs catalogados\n`);
+        
+        // 1.2. Define SLOs
+        console.log('  🎯 [1.2] Definindo SLOs para CUJs...');
+        const slosResult = await defineSLOs({
+          repo: repoPath,
+          product,
+          cuj_file: cujResult.output,
+        });
+        steps.push('define-slos');
+        outputs.slos = slosResult.output;
+        console.log(`  ✅ ${slosResult.slos_count} SLOs definidos (${slosResult.custom_slos_count} customizados)\n`);
+        
+        // 1.3. Risk Register
+        console.log('  ⚠️  [1.3] Gerando Risk Register...');
+        const riskResult = await riskRegister({
+          repo: repoPath,
+          product,
+          cuj_file: cujResult.output,
+          slos_file: slosResult.output,
+        });
+        steps.push('risk-register');
+        outputs.riskRegister = riskResult.output;
+        console.log(`  ✅ ${riskResult.total_risks} riscos identificados (${riskResult.critical_risks} críticos)\n`);
+        
+        if (riskResult.top_5_risk_ids.length > 0) {
+          console.log(`  📊 Top 5 Riscos Críticos:`);
+          console.log(`     ${riskResult.top_5_risk_ids.join(', ')}\n`);
+        }
+      } catch (error) {
+        console.log(`⚠️  Erro na Phase 1 (CUJ/SLO/Risk): ${error instanceof Error ? error.message : error}\n`);
+      }
     }
     
     // 1. ANALYZE (todos os modos começam com análise)
