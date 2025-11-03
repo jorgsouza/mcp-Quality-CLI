@@ -31,20 +31,62 @@ quality auto --repo . --product "MyApp"
 📊 Gerando relatórios... ✅ Dashboard HTML + resumo executivo
 ```
 
-### 📁 **Resultado:** Estrutura completa criada
+### 📁 **Resultado:** Estrutura completa e organizada
 
 ```
-qa/MyApp/
+qa/MyApp/                      # 🎯 TUDO em um único diretório!
 ├── mcp-settings.json          # ⚙️  Configurações do projeto
 ├── tests/
-│   ├── unit/                  # 🔬 Testes unitários (auto-gerados)
+│   ├── analyses/              # 📊 Dados brutos (JSON)
+│   │   ├── analyze.json       # Mapeamento de código
+│   │   ├── coverage-analysis.json
+│   │   ├── risk-map.json
+│   │   └── TEST-QUALITY-LOGICAL.json
+│   ├── reports/               # � Relatórios legíveis
+│   │   ├── QUALITY-REPORT.md  # Resumo executivo
+│   │   ├── PLAN.md            # Plano de testes
+│   │   ├── PYRAMID.md         # Análise de pirâmide
+│   │   ├── PYRAMID.html       # Dashboard pirâmide
+│   │   ├── COVERAGE-REPORT.md
+│   │   ├── DIFF-COVERAGE.md
+│   │   └── SELF-CHECK.md      # Validação de ambiente
+│   ├── unit/                  # 🔬 Testes unitários
 │   ├── integration/           # 🔗 Testes de integração  
-│   ├── e2e/                   # 🎭 Testes E2E Playwright
-│   └── analyses/
-│       ├── TEST-PLAN.md       # 📋 Plano detalhado (35+ cenários)
-│       ├── COVERAGE-REPORT.md # 📊 Análise de cobertura
-│       ├── dashboard.html     # 📈 Dashboard interativo
-│       └── SUMMARY.md         # 📝 Resumo executivo
+│   └── e2e/                   # 🎭 Testes E2E Playwright
+├── dashboards/
+│   └── dashboard.html         # 📈 Dashboard interativo
+└── fixtures/
+    └── auth/
+        └── storageState.json  # Sessões autenticadas
+```
+
+**✨ Novidade v0.3.1:** Retorno estruturado!
+
+O comando `auto` agora retorna um objeto organizado com todos os paths gerados:
+
+```json
+{
+  "ok": true,
+  "outputs": {
+    "root": "qa/MyApp",
+    "reports": [
+      "tests/reports/QUALITY-REPORT.md",
+      "tests/reports/PLAN.md",
+      "tests/reports/PYRAMID.html"
+    ],
+    "analyses": [
+      "tests/analyses/analyze.json",
+      "tests/analyses/coverage-analysis.json"
+    ],
+    "dashboard": "dashboards/dashboard.html",
+    "tests": {
+      "unit": "tests/unit",
+      "integration": "tests/integration",
+      "e2e": "tests/e2e"
+    }
+  },
+  "duration": 45230
+}
 ```
 
 ## ⚡ Quickstart (v0.3.0 - One-Shot com Linguagem Natural)
