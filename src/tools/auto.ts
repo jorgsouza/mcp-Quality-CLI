@@ -318,6 +318,7 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<{
     console.log('🔍 [0/11] Self-Check: Validando ambiente...');
     const selfCheckResult = await selfCheck({
       repo: repoPath,
+      product,  // [FASE 4] Passar product para validar qa/<product>/
       fix: false
     });
     steps.push('self-check');

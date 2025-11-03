@@ -476,7 +476,96 @@ return {
 
 ---
 
-### **FASE 4: Self-Check Robusto** (Est: 2-3h)
+### **FASE 4: Self-Check Robusto** ✅ CONCLUÍDA (2h)
+
+**Commit**: `[próximo]` (2025-11-03)  
+**Status**: 621/621 testes passando ✅  
+**Implementação**: Validações robustas + relatório automático
+
+#### 4.1. ✅ Validações Adicionadas
+
+**Implementado em**: `src/tools/self-check.ts`
+
+**Novas verificações**:
+- ✅ **npm version**: Verifica npm >= 8, sugere `npm install -g npm@latest`
+- ✅ **Playwright**: Detecta `@playwright/test` no package.json
+- ✅ **Playwright Browsers**: Verifica se `npx playwright --version` funciona
+- ✅ **Permissões em qa/<product>/**: Valida escrita em qa/<product>/ se product fornecido
+- ✅ **Relatório SELF-CHECK.md**: Gerado automaticamente em `qa/<product>/tests/reports/`
+
+#### 4.2. ✅ Estrutura do Relatório
+
+**Arquivo**: `qa/<product>/tests/reports/SELF-CHECK.md`
+
+**Conteúdo**:
+```markdown
+# Self-Check Report 🔍
+
+**Gerado em**: 2025-11-03T18:30:00.000Z
+**Produto**: mcp-Quality-CLI
+**Repositório**: /Volumes/Dev/mcp-Quality-CLI
+
+## 📊 Resumo
+
+- ✅ **OK**: 7
+- ⚠️ **Avisos**: 2
+- ❌ **Erros**: 0
+
+## ⚠️ Avisos (2)
+
+### Playwright
+**Problema**: Playwright não instalado (opcional para E2E)
+**Solução**:
+```bash
+npm i -D @playwright/test && npx playwright install
+```
+
+## ✅ Verificações OK (7)
+
+- **Node.js Version**: v20.11.0 (requerido: >=18)
+- **npm Version**: 10.2.4 (requerido: >=8)
+- **Permissões de Escrita**: Pode escrever em /Volumes/Dev/mcp-Quality-CLI e qa/mcp-Quality-CLI/
+- **Test Runner**: vitest instalado
+- **Git**: Git instalado e repositório inicializado
+- **Estrutura de Diretórios**: Todos os diretórios necessários existem
+
+---
+
+**Próximos passos**:
+1. (Opcional) Corrija os 2 aviso(s) listado(s) acima
+2. Rode análise completa: `quality auto --repo . --product mcp-Quality-CLI --mode full`
+```
+
+#### 4.3. ✅ Integração com Auto.ts
+
+**Arquivo**: `src/tools/auto.ts`
+
+**Mudança**:
+```typescript
+const selfCheckResult = await selfCheck({
+  repo: repoPath,
+  product,  // ← [FASE 4] Passa product para validar qa/<product>/
+  fix: false
+});
+```
+
+**Benefícios**:
+- ✅ Valida permissões em `qa/<product>/` antes de rodar análise
+- ✅ Gera relatório automático se houver problemas
+- ✅ Usuário sabe exatamente o que precisa corrigir
+
+#### 4.4. ✅ Novas Funções
+
+**Implementadas**:
+- `checkNpmVersion()`: Valida npm >= 8
+- `checkPlaywright(repo)`: Detecta @playwright/test
+- `checkPlaywrightBrowsers()`: Verifica browsers instalados
+- `checkWritePermissions(repo, product?)`: Valida escrita em qa/<product>/
+- `generateSelfCheckReport(repo, product, results)`: Gera SELF-CHECK.md
+
+---
+
+### **FASE 4: Self-Check Robusto** (Est: 2-3h) [PLANEJAMENTO ORIGINAL]
 
 #### 4.1. Validações Adicionais
 **Arquivo**: `src/tools/self-check.ts`
