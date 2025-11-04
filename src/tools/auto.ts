@@ -56,9 +56,8 @@ import { riskRegister } from './risk-register.js';
 // import { portfolioPlan } from './portfolio-plan.js';
 
 // [QUALITY GATES] FASE 3: CDC/Pact Contract Testing
-// TODO: Implementar scaffold-contracts-pact.ts e run-contracts-verify.ts
-// import { scaffoldContractsPact } from './scaffold-contracts-pact.js';
-// import { runContractsVerify } from './run-contracts-verify.js';
+import { scaffoldContractsPact } from './scaffold-contracts-pact.js';
+import { runContractsVerify } from './run-contracts-verify.js';
 
 export type AutoMode = 'full' | 'analyze' | 'plan' | 'scaffold' | 'run';
 
@@ -445,7 +444,6 @@ async function runPortfolioPlanningPhase(ctx: PipelineContext): Promise<void> {
 /**
  * Phase 1.6: Contract Testing (CDC/Pact) 🆕
  * Gera e verifica contratos entre serviços
- * TODO: Implementar quando scaffold-contracts-pact.ts estiver pronto
  */
 async function runContractTestingPhase(ctx: PipelineContext): Promise<void> {
   if (!['full', 'analyze', 'plan', 'scaffold'].includes(ctx.mode)) {
@@ -453,30 +451,91 @@ async function runContractTestingPhase(ctx: PipelineContext): Promise<void> {
   }
   
   console.log('🤝 [PHASE 1.6] Contract Testing (CDC/Pact)...');
-  console.log('  ⏭️  Pulando: feature em desenvolvimento (scaffold-contracts-pact.ts)\n');
   
-  // TODO: Descomentar quando implementado
-  // try {
-  //   const analysisPath = ctx.outputs.analyze; // Corrigido: era 'analysis'
-  //   if (!analysisPath) {
-  //     console.log('  ⏭️  Pulando: análise não disponível\n');
-  //     return;
-  //   }
-  //   
-  //   const analysisContent = await fs.readFile(analysisPath, 'utf-8');
-  //   const analysis = JSON.parse(analysisContent);
-  //   const endpointCount = analysis.endpoints?.length || 0;
-  //   
-  //   if (endpointCount < 3) {
-  //     console.log(`  ⏭️  Pulando: apenas ${endpointCount} endpoints\n`);
-  //     return;
-  //   }
-  //   
-  //   console.log(`  📡 Detectados ${endpointCount} endpoints - iniciando CDC...`);
-  //   // ... resto da implementação
-  // } catch (error) {
-  //   console.log(`⚠️  Erro: ${error instanceof Error ? error.message : error}\n`);
-  // }
+  try {
+    const analysisPath = ctx.outputs.analyze;
+    if (!analysisPath) {
+      console.log('  ⏭️  Pulando: análise de código não disponível\n');
+      return;
+    }
+    
+    // Read analysis to check endpoint count
+    const analysisContent = await fs.readFile(analysisPath, 'utf-8');
+    const analysis = JSON.parse(analysisContent);
+    const endpointCount = analysis.endpoints?.length || 0;
+    
+    // Only run CDC if >= 3 endpoints (intelligent threshold)
+    if (endpointCount < 3) {
+      console.log(`  ⏭️  Pulando: apenas ${endpointCount} endpoints (mínimo: 3)\n`);
+      return;
+    }
+    
+    console.log(`  📡 Detectados ${endpointCount} endpoints - iniciando CDC...`);
+    
+    // Step 1: Scaffold contracts
+    const scaffoldResult = await scaffoldContractsPact({
+      repo: ctx.repoPath,
+      product: ctx.product,
+      analyze_file: analysisPath,
+      auto_detect: true,
+    });
+    
+    if (scaffoldResult.ok) {
+      ctx.steps.push('contract-scaffold');
+      if (scaffoldResult.catalog_path) {
+        ctx.outputs.contractCatalog = scaffoldResult.catalog_path;
+      }
+      if (scaffoldResult.config_path) {
+        ctx.outputs.contractConfig = scaffoldResult.config_path;
+      }
+      console.log(`  ✅ Contratos gerados: ${scaffoldResult.total_contracts} contratos, ${scaffoldResult.total_interactions} interações`);
+      
+      // Initialize metrics if needed
+      if (!ctx.metrics) {
+        ctx.metrics = {};
+      }
+      ctx.metrics.contracts_total = scaffoldResult.total_contracts;
+      ctx.metrics.interactions_total = scaffoldResult.total_interactions;
+    } else {
+      console.log(`  ⚠️  ${scaffoldResult.message}\n`);
+      return;
+    }
+    
+    // Step 2: Verify contracts (if pacts exist)
+    const pactsDir = join(ctx.paths.contracts, 'pacts');
+    const pactsExist = await fileExists(pactsDir);
+    
+    if (pactsExist) {
+      console.log('  🔍 Verificando contratos...');
+      const verifyResult = await runContractsVerify({
+        repo: ctx.repoPath,
+        product: ctx.product,
+        provider_base_url: 'http://localhost:3000', // Default
+      });
+      
+      if (verifyResult.ok) {
+        ctx.steps.push('contract-verify');
+        if (verifyResult.report_path) {
+          ctx.outputs.contractVerify = verifyResult.report_path;
+        }
+        console.log(`  ✅ Verificação: ${Math.round(verifyResult.verification_rate * 100)}% (${verifyResult.verified}/${verifyResult.total_interactions})`);
+        
+        if (ctx.metrics) {
+          ctx.metrics.verification_rate = verifyResult.verification_rate;
+          ctx.metrics.verified = verifyResult.verified;
+          ctx.metrics.failed = verifyResult.failed;
+        }
+      } else {
+        console.log(`  ⚠️  Verificação falhou: ${verifyResult.message}`);
+      }
+    } else {
+      console.log('  ℹ️  Pact files não encontrados (execute consumer tests primeiro)');
+    }
+    
+    console.log('');
+  } catch (error) {
+    console.log(`  ⚠️  Erro no Contract Testing: ${error instanceof Error ? error.message : String(error)}\n`);
+  }
 }
 
 /**

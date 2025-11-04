@@ -1,7 +1,7 @@
 {
   "name": "quality-mcp",
-  "version": "0.3.1",
-  "description": "MCP server agnóstico de linguagem com comandos em linguagem natural para análise de repositórios e geração automatizada de testes (Playwright, Vitest, Jest, Go, Java, Python, etc)",
+  "version": "0.4.0",
+  "description": "MCP server agnóstico de linguagem com comandos em linguagem natural para análise de repositórios e geração automatizada de testes (Playwright, Vitest, Jest, Go, Java, Python, etc) + CDC/Pact Contract Testing",
   "type": "module",
   "main": "dist/server.js",
   "bin": {

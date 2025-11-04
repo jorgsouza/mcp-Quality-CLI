@@ -331,8 +331,9 @@ describe('auto.ts - autoQualityRun', () => {
     });
 
     expect(result.ok).toBe(false);
-    // [FASE 3] Agora executa init-product + self-check + FASE 1 (CUJ/SLO/Risk) + FASE 2 (Portfolio) antes de analyze
-    expect(result.steps).toEqual(['init-product', 'self-check', 'catalog-cujs', 'define-slos', 'risk-register', 'portfolio-plan']);
+    // [FASE 1] Executa init-product + self-check + FASE 1 (CUJ/SLO/Risk) antes de analyze
+    // [FASE 2] Portfolio Planning ainda não implementado (pulado)
+    expect(result.steps).toEqual(['init-product', 'self-check', 'catalog-cujs', 'define-slos', 'risk-register']);
   });
 });
 
