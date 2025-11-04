@@ -52,6 +52,7 @@ export const COMMANDS: readonly CommandDefinition[] = [
       { name: 'mode', description: 'Modo: full|analyze|plan|scaffold|run', required: false, defaultValue: 'full' },
       { name: 'skip-run', description: 'Pular execução de testes', required: false, defaultValue: false },
       { name: 'skip-scaffold', description: 'Pular geração de scaffolds', required: false, defaultValue: false },
+      { name: 'base-branch', description: 'Branch base para diff coverage (default: main)', required: false, defaultValue: 'main' }, // 🆕 Base branch dinâmico
     ],
     aliases: ['full', 'smart'],
     examples: [

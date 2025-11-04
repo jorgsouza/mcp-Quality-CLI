@@ -45,6 +45,9 @@ import { getPaths, type QAPaths } from '../utils/paths.js';
 // 🆕 [PASSO 2] Engine Unificado Multi-Linguagem
 import { runPipeline } from '../engine/index.js';
 
+// 🆕 [PASSO 3] Adapter Factory Multi-Linguagem
+import { getAdapter } from '../adapters/adapter-factory.js';
+
 // [QUALITY GATES] FASE 1: CUJ/SLO/Risk Discovery
 import { catalogCUJs } from './catalog-cujs.js';
 import { defineSLOs } from './define-slos.js';
@@ -92,6 +95,7 @@ export interface AutoOptions {
   product?: string;
   skipScaffold?: boolean;
   skipRun?: boolean;
+  baseBranch?: string; // 🆕 Base branch para diff coverage (default: 'main')
 }
 
 export interface RepoContext {
@@ -165,6 +169,7 @@ interface PipelineContext {
   settings: any;
   language?: string; // 🆕 Linguagem detectada pelo engine
   metrics?: Record<string, any>; // 🆕 Métricas adicionais (contracts, DORA, quality gates, etc)
+  baseBranch?: string; // 🆕 Base branch para diff coverage
 }
 
 // ============================================================================
@@ -681,7 +686,7 @@ async function runCoverageAnalysisPhase(ctx: PipelineContext): Promise<void> {
     const diffResult = await runDiffCoverage({
       repo: ctx.repoPath,
       product: ctx.product,
-      baseBranch: 'main',
+      baseBranch: ctx.baseBranch || 'main', // 🆕 Dinâmico do contexto
       minCoverage: 80
     });
     ctx.steps.push('diff-coverage');
@@ -1224,7 +1229,8 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<AutoRes
     paths,
     steps: [],
     outputs: {},
-    settings
+    settings,
+    baseBranch: options.baseBranch || process.env.BASE_BRANCH || 'main' // 🆕 Base branch dinâmico
   };
   
   try {
