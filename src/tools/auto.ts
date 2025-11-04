@@ -157,7 +157,7 @@ interface PipelineContext {
   steps: string[];
   outputs: Record<string, string>;
   settings: any;
-  metrics?: Record<string, number>; // 🆕 Métricas adicionais (contracts, etc)
+  metrics?: Record<string, any>; // 🆕 Métricas adicionais (contracts, DORA, quality gates, etc)
 }
 
 // ============================================================================
@@ -738,6 +738,12 @@ async function runMutationTestingPhase(ctx: PipelineContext): Promise<void> {
     ctx.steps.push('mutation-tests');
     ctx.outputs.mutationScore = mutationResult.outputPath;
     
+    // Armazenar metrics para Quality Gates
+    if (!ctx.metrics) ctx.metrics = {};
+    ctx.metrics.mutation_overall = mutationResult.overallScore;
+    ctx.metrics.mutation_critical = mutationResult.criticalScore;
+    ctx.metrics.mutation_passed = mutationResult.passed ? 1 : 0;
+    
     if (mutationResult.passed) {
       console.log(`  ✅ Mutation score: ${mutationResult.overallScore.toFixed(1)}% (threshold: ${mutationResult.threshold.toFixed(0)}%)`);
       console.log(`  🔥 Critical modules score: ${mutationResult.criticalScore.toFixed(1)}%`);
@@ -751,6 +757,112 @@ async function runMutationTestingPhase(ctx: PipelineContext): Promise<void> {
   } catch (error) {
     console.log(`  ⚠️  Erro ao executar mutation tests: ${error instanceof Error ? error.message : error}`);
     console.log(`  💡 Certifique-se de ter Stryker (TS), mutmut (Py), go-mutesting (Go) ou PIT (Java) instalados\n`);
+  }
+}
+
+/**
+ * Phase 4.7: Production Metrics Ingest (DORA) 🆕
+ */
+async function runProdMetricsPhase(ctx: PipelineContext): Promise<void> {
+  if (!['full', 'run'].includes(ctx.mode)) {
+    return;
+  }
+  
+  console.log('📊 [PHASE 4.7] Production Metrics (DORA)...');
+  try {
+    const prodMetricsResult = await prodMetricsIngest({
+      repo: ctx.repoPath,
+      product: ctx.product,
+      sources: {
+        // TODO: Ler de config ou env vars
+        // sentry: { dsn: process.env.SENTRY_DSN, ... },
+        // datadog: { apiKey: process.env.DD_API_KEY, ... },
+      }
+    });
+    
+    ctx.steps.push('prod-metrics');
+    ctx.outputs.prodMetrics = prodMetricsResult.output;
+    
+    // Armazenar metrics para Quality Gates
+    if (!ctx.metrics) ctx.metrics = {};
+    ctx.metrics.deployment_frequency = prodMetricsResult.dora_metrics.deployment_frequency;
+    ctx.metrics.change_failure_rate = prodMetricsResult.dora_metrics.change_failure_rate;
+    ctx.metrics.mttr_minutes = prodMetricsResult.dora_metrics.mttr_minutes;
+    ctx.metrics.dora_tier = prodMetricsResult.dora_metrics.dora_tier;
+    
+    console.log(`  ✅ DORA Metrics: ${prodMetricsResult.dora_metrics.dora_tier}`);
+    console.log(`  📊 Deploy Freq: ${prodMetricsResult.dora_metrics.deployment_frequency.toFixed(0)}/mês | CFR: ${(prodMetricsResult.dora_metrics.change_failure_rate * 100).toFixed(1)}% | MTTR: ${prodMetricsResult.dora_metrics.mttr_minutes.toFixed(0)}min\n`);
+  } catch (error) {
+    console.log(`  ⚠️  Erro ao coletar prod metrics: ${error instanceof Error ? error.message : error}\n`);
+  }
+}
+
+/**
+ * Phase 4.8: SLO Canary Check 🆕
+ */
+async function runSLOCanaryPhase(ctx: PipelineContext): Promise<void> {
+  if (!['full', 'run'].includes(ctx.mode)) {
+    return;
+  }
+  
+  console.log('🕯️  [PHASE 4.8] SLO Canary Check...');
+  try {
+    const sloCanaryResult = await sloCanaryCheck({
+      repo: ctx.repoPath,
+      product: ctx.product,
+    });
+    
+    ctx.steps.push('slo-canary');
+    ctx.outputs.sloCanary = sloCanaryResult.output_path;
+    
+    // Armazenar metrics para Quality Gates
+    if (!ctx.metrics) ctx.metrics = {};
+    ctx.metrics.slo_cujs_met = sloCanaryResult.summary.cujs_met;
+    ctx.metrics.slo_cujs_violated = sloCanaryResult.summary.cujs_violated;
+    ctx.metrics.slo_critical_violations = sloCanaryResult.summary.critical_violations;
+    
+    console.log(`  ${sloCanaryResult.ok ? '✅' : '⚠️'} SLOs: ${sloCanaryResult.summary.cujs_met}/${sloCanaryResult.summary.total_cujs} CUJs atendendo`);
+    if (!sloCanaryResult.ok) {
+      console.log(`  🔴 ${sloCanaryResult.summary.critical_violations} violações críticas\n`);
+    } else {
+      console.log();
+    }
+  } catch (error) {
+    console.log(`  ⚠️  Erro ao verificar SLOs: ${error instanceof Error ? error.message : error}\n`);
+  }
+}
+
+/**
+ * Phase 4.9: Quality Gates (Final Validation) 🆕
+ */
+async function runQualityGatesPhase(ctx: PipelineContext): Promise<void> {
+  if (!['full', 'run'].includes(ctx.mode)) {
+    return;
+  }
+  
+  console.log('🚦 [PHASE 4.9] Quality Gates...');
+  try {
+    const qualityGateResult = await releaseQualityGate({
+      repo: ctx.repoPath,
+      product: ctx.product,
+    });
+    
+    ctx.steps.push('quality-gates');
+    ctx.outputs.qualityGate = qualityGateResult.output_path;
+    
+    // Armazenar resultdo para AutoResult
+    if (!ctx.metrics) ctx.metrics = {};
+    ctx.metrics.quality_gate_passed = qualityGateResult.exit_code === 0 ? 1 : 0;
+    ctx.metrics.quality_gate_exit_code = qualityGateResult.exit_code;
+    ctx.metrics.quality_gate_total_violations = qualityGateResult.summary.failed_gates;
+    ctx.metrics.quality_gate_blocking_violations = qualityGateResult.summary.blocking_violations;
+    
+    const passed = qualityGateResult.exit_code === 0;
+    const totalViolations = qualityGateResult.summary.failed_gates;
+    console.log(`  ${passed ? '✅' : '🚫'} Quality Gates: ${passed ? 'PASSED' : 'FAILED'}`);
+    console.log(`  📊 ${qualityGateResult.summary.total_gates} gates | ${totalViolations} violations\n`);
+  } catch (error) {
+    console.log(`  ⚠️  Erro ao aplicar quality gates: ${error instanceof Error ? error.message : error}\n`);
   }
 }
 
@@ -968,6 +1080,33 @@ function buildFinalResult(ctx: PipelineContext, duration: number): AutoResult {
   // Dashboard HTML (para visualização interativa)
   if (ctx.outputs.dashboard) dashboard = ctx.outputs.dashboard;
   
+  // 🆕 Métricas de Quality Gates
+  const mutation = ctx.metrics?.mutation_overall !== undefined ? {
+    overall_score: ctx.metrics.mutation_overall,
+    critical_score: ctx.metrics.mutation_critical || 0,
+    passed: !!ctx.metrics.mutation_passed,
+  } : undefined;
+  
+  const prod_metrics = ctx.metrics?.dora_tier ? {
+    deployment_frequency: ctx.metrics.deployment_frequency || 0,
+    mttr_minutes: ctx.metrics.mttr_minutes || 0,
+    change_failure_rate: ctx.metrics.change_failure_rate || 0,
+    dora_tier: String(ctx.metrics.dora_tier),
+  } : undefined;
+  
+  const slo_canary = ctx.metrics?.slo_cujs_met !== undefined ? {
+    cujs_met: ctx.metrics.slo_cujs_met,
+    cujs_violated: ctx.metrics.slo_cujs_violated || 0,
+    critical_violations: ctx.metrics.slo_critical_violations || 0,
+  } : undefined;
+  
+  const quality_gate = ctx.metrics?.quality_gate_exit_code !== undefined ? {
+    passed: !!ctx.metrics.quality_gate_passed,
+    exit_code: ctx.metrics.quality_gate_exit_code,
+    total_violations: ctx.metrics.quality_gate_total_violations || 0,
+    blocking_violations: ctx.metrics.quality_gate_blocking_violations || 0,
+  } : undefined;
+  
   return {
     ok: true,
     outputs: {
@@ -979,7 +1118,11 @@ function buildFinalResult(ctx: PipelineContext, duration: number): AutoResult {
         unit: ctx.paths.unit,
         integration: ctx.paths.integration,
         e2e: ctx.paths.e2e
-      }
+      },
+      mutation,
+      prod_metrics,
+      slo_canary,
+      quality_gate,
     },
     steps: ctx.steps,
     duration,
@@ -1038,7 +1181,10 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<AutoRes
     await runCoverageAnalysisPhase(ctx);
     await runPlanningPhase(ctx);
     await runSuiteHealthPhase(ctx); // 🆕 FASE 7: Suite Health
-    await runMutationTestingPhase(ctx); // 🆕 FASE 8: Mutation Testing
+    await runMutationTestingPhase(ctx); // 🆕 FASE 6: Mutation Testing
+    await runProdMetricsPhase(ctx); // 🆕 FASE 8: Prod Metrics (DORA)
+    await runSLOCanaryPhase(ctx); // 🆕 FASE 9: SLO Canary
+    await runQualityGatesPhase(ctx); // 🆕 FASE 10: Quality Gates
     await runConsolidatedReporting(ctx); // 🆕 CONSOLIDATED REPORTS (2 arquivos principais)
     await runScaffoldPhase(ctx, options.skipScaffold || false);
     await runTestingPhase(ctx, options.skipRun || false);
