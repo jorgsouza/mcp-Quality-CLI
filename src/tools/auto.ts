@@ -63,6 +63,9 @@ import { scaffoldApprovalTests } from './scaffold-approval-tests.js';
 // [QUALITY GATES] FASE 7: Suite Health
 import { suiteHealth } from './suite-health.js';
 
+// [QUALITY GATES] FASE 8: Mutation Testing
+import { runMutationTests } from './run-mutation-tests.js';
+
 // [CONSOLIDATION] Consolidated Reports
 import { consolidateCodeAnalysisReport, consolidateTestPlanReport } from './consolidate-reports.js';
 
@@ -682,6 +685,41 @@ async function runSuiteHealthPhase(ctx: PipelineContext): Promise<void> {
 }
 
 /**
+ * Phase 4.6: Mutation Testing 🆕
+ * Executa mutation testing em módulos críticos (do risk-register)
+ */
+async function runMutationTestingPhase(ctx: PipelineContext): Promise<void> {
+  if (!['full', 'run'].includes(ctx.mode)) {
+    return;
+  }
+  
+  console.log('🧬 [PHASE 4.6] Mutation Testing...');
+  try {
+    const mutationResult = await runMutationTests({
+      repo: ctx.repoPath,
+      product: ctx.product,
+      minScore: 0.5, // 50% mínimo
+    });
+    ctx.steps.push('mutation-tests');
+    ctx.outputs.mutationScore = mutationResult.outputPath;
+    
+    if (mutationResult.passed) {
+      console.log(`  ✅ Mutation score: ${mutationResult.overallScore.toFixed(1)}% (threshold: ${mutationResult.threshold.toFixed(0)}%)`);
+      console.log(`  🔥 Critical modules score: ${mutationResult.criticalScore.toFixed(1)}%`);
+    } else {
+      console.log(`  ⚠️  Mutation score abaixo do threshold: ${mutationResult.overallScore.toFixed(1)}% < ${mutationResult.threshold.toFixed(0)}%`);
+      console.log(`  🔴 Adicione mais testes para matar os mutantes sobreviventes!`);
+    }
+    
+    console.log(`  📊 Módulos testados: ${mutationResult.modules.length}`);
+    console.log(`  💾 Relatório: MUTATION-SCORE.md\n`);
+  } catch (error) {
+    console.log(`  ⚠️  Erro ao executar mutation tests: ${error instanceof Error ? error.message : error}`);
+    console.log(`  💡 Certifique-se de ter Stryker (TS), mutmut (Py), go-mutesting (Go) ou PIT (Java) instalados\n`);
+  }
+}
+
+/**
  * Phase 5: Consolidated Reporting (2 relatórios principais)
  */
 async function runConsolidatedReporting(ctx: PipelineContext): Promise<void> {
@@ -965,6 +1003,7 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<AutoRes
     await runCoverageAnalysisPhase(ctx);
     await runPlanningPhase(ctx);
     await runSuiteHealthPhase(ctx); // 🆕 FASE 7: Suite Health
+    await runMutationTestingPhase(ctx); // 🆕 FASE 8: Mutation Testing
     await runConsolidatedReporting(ctx); // 🆕 CONSOLIDATED REPORTS (2 arquivos principais)
     await runScaffoldPhase(ctx, options.skipScaffold || false);
     await runTestingPhase(ctx, options.skipRun || false);
