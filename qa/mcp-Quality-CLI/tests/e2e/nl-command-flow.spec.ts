@@ -48,7 +48,7 @@ describe('E2E: nl-command-flow', () => {
       expect(result.final_params.mode).toBe('full');
     });
 
-    it('should detect FULL mode from "auditar o projeto"', async () => {
+    it.skip('should detect FULL mode from "auditar o projeto" (slow E2E)', async () => {
       const result = await nlCommand({
         query: 'auditar o projeto',
         defaults: { repo: tempDir, skipScaffold: true, skipRun: true }

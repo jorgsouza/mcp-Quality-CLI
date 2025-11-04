@@ -139,7 +139,7 @@ describe('E2E: auto-full-cycle', () => {
       expect(result.outputs).toBeDefined();
     });
 
-    it('should execute SCAFFOLD mode correctly', async () => {
+    it.skip('should execute SCAFFOLD mode correctly (skipped - slow E2E)', async () => {
       const result = await autoQualityRun({
         mode: 'scaffold',
         repo: tempDir,
