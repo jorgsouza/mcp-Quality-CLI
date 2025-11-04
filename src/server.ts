@@ -84,9 +84,8 @@ class QualityMCPServer {
             result = await runDiffCoverage({
               repo: args.repo as string,
               product: args.product,
-              target_min: args.minDiffCoverage || 60,
-              base_branch: args.baseBranch || 'main',
-              fail_on_low: args.failOnLow !== false,
+              minCoverage: args.minDiffCoverage || 60,
+              baseBranch: args.baseBranch || 'main',
             });
             
             // TODO: Adicionar validação de branch coverage e mutation
