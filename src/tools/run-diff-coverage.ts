@@ -154,10 +154,24 @@ export async function runDiffCoverage(
  */
 async function getChangedFiles(repo: string, baseBranch: string): Promise<string[]> {
   try {
+    // Verificar se está em um repositório git
+    try {
+      execSync('git rev-parse --git-dir', {
+        cwd: repo,
+        encoding: 'utf-8',
+        stdio: 'pipe',
+        timeout: 5000, // 5s timeout
+      });
+    } catch {
+      console.log('⚠️  Não é um repositório git');
+      return [];
+    }
+
     const output = execSync(`git diff --name-only ${baseBranch}...HEAD`, {
       cwd: repo,
       encoding: 'utf-8',
       stdio: 'pipe',
+      timeout: 10000, // 10s timeout para evitar loops
     });
 
     return output
@@ -186,6 +200,7 @@ async function getDiffLinesPerFile(
         cwd: repo,
         encoding: 'utf-8',
         stdio: 'pipe',
+        timeout: 10000, // 10s timeout
       });
 
       // Parsear output do git diff

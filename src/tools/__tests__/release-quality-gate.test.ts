@@ -19,9 +19,10 @@ describe('releaseQualityGate', () => {
   });
 
   it('deve retornar exit_code=0 quando todos os gates passam', async () => {
-    // Mock fileExists
-    const { fileExists } = await import('../../utils/fs.js');
-    vi.mocked(fileExists).mockResolvedValue(true);
+    // Mock fileExists e writeFileSafe
+    const { fileExists, writeFileSafe } = await import('../../utils/fs.js');
+    vi.mocked(fileExists).mockResolvedValue(false); // Não há thresholds.json customizado
+    vi.mocked(writeFileSafe).mockResolvedValue(undefined); // 🆕
     
     // Mock readFile com métricas boas
     vi.spyOn(fs, 'readFile').mockImplementation(async (path: any) => {

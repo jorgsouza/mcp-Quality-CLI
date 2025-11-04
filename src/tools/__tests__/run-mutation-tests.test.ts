@@ -5,6 +5,7 @@ import * as paths from '../../utils/paths.js';
 
 vi.mock('node:fs/promises');
 vi.mock('../../utils/paths.js');
+vi.mock('../../utils/fs.js'); // 🆕 Mock fs utils
 vi.mock('../../runners/mutation-runner.js');
 vi.mock('../../adapters/index.js');
 
@@ -21,8 +22,10 @@ describe('runMutationTests', () => {
   });
 
   it('deve executar mutation tests com sucesso', async () => {
-    // Mock fileExists
-    vi.spyOn(fs, 'access').mockResolvedValue(undefined);
+    // Mock fs utils
+    const { fileExists, writeFileSafe } = await import('../../utils/fs.js');
+    vi.mocked(fileExists).mockResolvedValue(true);
+    vi.mocked(writeFileSafe).mockResolvedValue(undefined); // 🆕 Mock writeFileSafe
     
     // Mock readFile para risk-register.json
     vi.spyOn(fs, 'readFile').mockResolvedValue(JSON.stringify({
@@ -64,7 +67,10 @@ describe('runMutationTests', () => {
   });
 
   it('deve retornar passed=false se score < minScore', async () => {
-    vi.spyOn(fs, 'access').mockResolvedValue(undefined);
+    const { fileExists, writeFileSafe } = await import('../../utils/fs.js');
+    vi.mocked(fileExists).mockResolvedValue(true);
+    vi.mocked(writeFileSafe).mockResolvedValue(undefined); // 🆕
+    
     vi.spyOn(fs, 'readFile').mockResolvedValue(JSON.stringify({ high_risk: [] }));
     
     const { runMutationAuto } = await import('../../runners/mutation-runner.js');
@@ -98,7 +104,9 @@ describe('runMutationTests', () => {
   });
 
   it('deve lidar com erro graciosamente', async () => {
-    vi.spyOn(fs, 'access').mockRejectedValue(new Error('File not found'));
+    const { fileExists, writeFileSafe } = await import('../../utils/fs.js');
+    vi.mocked(fileExists).mockResolvedValue(false); // Arquivo não existe
+    vi.mocked(writeFileSafe).mockResolvedValue(undefined); // 🆕
     
     const result = await runMutationTests({
       repo: '/test',
