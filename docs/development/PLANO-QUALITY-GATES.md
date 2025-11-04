@@ -3,6 +3,7 @@
 **Objetivo**: Transformar o MCP Quality CLI em uma plataforma completa de engenharia de qualidade seguindo práticas DORA, SRE, Fowler, Kent Beck, Meszaros e Pact.
 
 ## 📋 Índice
+
 - [Visão Geral](#visão-geral)
 - [Arquitetura](#arquitetura)
 - [Novas Tools MCP](#novas-tools-mcp)
@@ -107,18 +108,21 @@ Atualmente o MCP Quality CLI foca em **quantidade de testes** (cobertura). Quere
 ### 1. CUJ/SLO/Risk Discovery
 
 #### 1.1. `catalog_cujs`
+
 **Propósito**: Mapear Critical User Journeys (CUJs)
 
 **Input Schema**:
+
 ```typescript
 interface CatalogCUJsParams {
   repo: string;
   product: string;
-  sources?: ('routes' | 'telemetry' | 'readme' | 'openapi')[];
+  sources?: ("routes" | "telemetry" | "readme" | "openapi")[];
 }
 ```
 
 **Output**: `qa/<product>/tests/analyses/cuj-catalog.json`
+
 ```json
 {
   "cujs": [
@@ -134,6 +138,7 @@ interface CatalogCUJsParams {
 ```
 
 **Implementação**:
+
 - Escaneia rotas API (Express/Next/FastAPI)
 - Parse OpenAPI/Swagger se disponível
 - Lê telemetria (Sentry breadcrumbs, Datadog traces)
@@ -142,9 +147,11 @@ interface CatalogCUJsParams {
 ---
 
 #### 1.2. `define_slos`
+
 **Propósito**: Definir SLOs por CUJ
 
 **Input Schema**:
+
 ```typescript
 interface DefineSLOsParams {
   repo: string;
@@ -159,6 +166,7 @@ interface DefineSLOsParams {
 ```
 
 **Output**: `qa/<product>/tests/analyses/slos.json`
+
 ```json
 {
   "slos": [
@@ -175,20 +183,23 @@ interface DefineSLOsParams {
 ---
 
 #### 1.3. `risk_register`
+
 **Propósito**: Cruzar CUJs + SLOs + domínio para identificar riscos críticos
 
 **Input Schema**:
+
 ```typescript
 interface RiskRegisterParams {
   repo: string;
   product: string;
   cuj_file: string;
   slos_file: string;
-  impact_matrix?: Record<string, 'critical' | 'high' | 'medium' | 'low'>;
+  impact_matrix?: Record<string, "critical" | "high" | "medium" | "low">;
 }
 ```
 
 **Output**: `qa/<product>/tests/analyses/risk-register.json`
+
 ```json
 {
   "risks": [
@@ -210,9 +221,11 @@ interface RiskRegisterParams {
 ### 2. Portfolio Planning
 
 #### 2.1. `portfolio_plan`
+
 **Propósito**: Redesenhar pirâmide de testes baseado em riscos
 
 **Input Schema**:
+
 ```typescript
 interface PortfolioPlanParams {
   repo: string;
@@ -229,26 +242,30 @@ interface PortfolioPlanParams {
 ```
 
 **Output**: `qa/<product>/tests/reports/portfolio-plan.md`
+
 ```markdown
 # Test Portfolio Plan
 
 ## Current State
+
 - Unit: 45% (target: 70%)
 - Service: 30% (target: 20%)
 - E2E: 25% (target: 10%)
 - CI Time: 18 min (target: ≤12 min)
 
 ## Recommendations
+
 1. **Add 150 unit tests** for billing-core (mutation score: 0.34 → 0.60)
 2. **Remove 40 E2E tests** (duplicated by service tests)
 3. **Add CDC (Pact)** for payment-gateway integration
 4. **Add property tests** for pricing logic (invariants: price ≥ 0)
 
 ## Module Breakdown
-| Module | Unit | Service | E2E | CDC | Property | Approval |
-|--------|------|---------|-----|-----|----------|----------|
-| billing-core | 80 | 15 | 2 | - | 3 | - |
-| payment-gateway | 50 | 20 | 1 | 5 | - | - |
+
+| Module          | Unit | Service | E2E | CDC | Property | Approval |
+| --------------- | ---- | ------- | --- | --- | -------- | -------- |
+| billing-core    | 80   | 15      | 2   | -   | 3        | -        |
+| payment-gateway | 50   | 20      | 1   | 5   | -        | -        |
 ```
 
 ---
@@ -256,60 +273,69 @@ interface PortfolioPlanParams {
 ### 3. Advanced Scaffolding
 
 #### 3.1. `scaffold_contracts_pact`
+
 **Propósito**: Gerar CDC com Pact
 
 **Input Schema**:
+
 ```typescript
 interface ScaffoldContractsPactParams {
   repo: string;
   product: string;
   services: Array<{
     name: string;
-    role: 'consumer' | 'provider';
+    role: "consumer" | "provider";
     endpoints: string[];
   }>;
 }
 ```
 
-**Output**: 
+**Output**:
+
 - `qa/<product>/tests/contracts/pact.config.ts`
 - `qa/<product>/tests/contracts/<service>/*.pact.spec.ts`
 
 **Exemplo gerado**:
+
 ```typescript
 // qa/<product>/tests/contracts/payment-gateway/checkout.pact.spec.ts
-import { pactWith } from 'jest-pact';
+import { pactWith } from "jest-pact";
 
-pactWith({ consumer: 'checkout-service', provider: 'payment-gateway' }, (interaction) => {
-  interaction('process payment', ({ provider, execute }) => {
-    beforeEach(() =>
-      provider
-        .given('user has valid credit card')
-        .uponReceiving('a payment request')
-        .withRequest({
-          method: 'POST',
-          path: '/api/v1/payments',
-          body: { amount: 100, currency: 'USD' }
-        })
-        .willRespondWith({
-          status: 200,
-          body: { transaction_id: '12345', status: 'approved' }
-        })
-    );
+pactWith(
+  { consumer: "checkout-service", provider: "payment-gateway" },
+  (interaction) => {
+    interaction("process payment", ({ provider, execute }) => {
+      beforeEach(() =>
+        provider
+          .given("user has valid credit card")
+          .uponReceiving("a payment request")
+          .withRequest({
+            method: "POST",
+            path: "/api/v1/payments",
+            body: { amount: 100, currency: "USD" },
+          })
+          .willRespondWith({
+            status: 200,
+            body: { transaction_id: "12345", status: "approved" },
+          })
+      );
 
-    execute('should process payment', () => {
-      // test implementation
+      execute("should process payment", () => {
+        // test implementation
+      });
     });
-  });
-});
+  }
+);
 ```
 
 ---
 
 #### 3.2. `scaffold_property_tests`
+
 **Propósito**: Gerar property-based tests (fast-check/Hypothesis/QuickCheck)
 
 **Input Schema**:
+
 ```typescript
 interface ScaffoldPropertyTestsParams {
   repo: string;
@@ -324,12 +350,13 @@ interface ScaffoldPropertyTestsParams {
 **Output**: `qa/<product>/tests/unit/property/<module>.property.spec.ts`
 
 **Exemplo gerado**:
+
 ```typescript
 // qa/<product>/tests/unit/property/pricing.property.spec.ts
-import fc from 'fast-check';
+import fc from "fast-check";
 
-describe('Pricing invariants', () => {
-  it('price is always non-negative', () => {
+describe("Pricing invariants", () => {
+  it("price is always non-negative", () => {
     fc.assert(
       fc.property(
         fc.array(fc.record({ price: fc.nat(), quantity: fc.nat() })),
@@ -341,13 +368,16 @@ describe('Pricing invariants', () => {
     );
   });
 
-  it('total equals sum of item prices', () => {
+  it("total equals sum of item prices", () => {
     fc.assert(
       fc.property(
         fc.array(fc.record({ price: fc.nat(), quantity: fc.nat() })),
         (items) => {
           const total = calculateTotal(items);
-          const expected = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+          const expected = items.reduce(
+            (sum, item) => sum + item.price * item.quantity,
+            0
+          );
           return total === expected;
         }
       )
@@ -359,16 +389,18 @@ describe('Pricing invariants', () => {
 ---
 
 #### 3.3. `scaffold_approval_tests`
+
 **Propósito**: Gerar Approval/Golden Master tests para legado
 
 **Input Schema**:
+
 ```typescript
 interface ScaffoldApprovalTestsParams {
   repo: string;
   product: string;
   targets: Array<{
     module: string;
-    output_format: 'json' | 'html' | 'pdf' | 'xml';
+    output_format: "json" | "html" | "pdf" | "xml";
   }>;
 }
 ```
@@ -376,13 +408,14 @@ interface ScaffoldApprovalTestsParams {
 **Output**: `qa/<product>/tests/approval/<module>/*.approval.spec.ts`
 
 **Exemplo gerado**:
+
 ```typescript
 // qa/<product>/tests/approval/report-generator.approval.spec.ts
-import { toMatchSnapshot } from 'jest';
+import { toMatchSnapshot } from "jest";
 
-describe('Report Generator (Approval Tests)', () => {
-  it('should generate invoice PDF unchanged', () => {
-    const invoice = generateInvoice({ orderId: '12345' });
+describe("Report Generator (Approval Tests)", () => {
+  it("should generate invoice PDF unchanged", () => {
+    const invoice = generateInvoice({ orderId: "12345" });
     expect(invoice).toMatchSnapshot();
   });
 });
@@ -393,9 +426,11 @@ describe('Report Generator (Approval Tests)', () => {
 ### 4. Advanced Execution
 
 #### 4.1. `run_contracts_verify`
+
 **Propósito**: Executar verificação de contratos Pact
 
 **Input Schema**:
+
 ```typescript
 interface RunContractsVerifyParams {
   repo: string;
@@ -405,6 +440,7 @@ interface RunContractsVerifyParams {
 ```
 
 **Output**: `qa/<product>/tests/reports/contracts-verify.json`
+
 ```json
 {
   "total_contracts": 12,
@@ -425,20 +461,23 @@ interface RunContractsVerifyParams {
 ---
 
 #### 4.2. `run_mutation_tests`
+
 **Propósito**: Executar mutation testing (Stryker/PIT/Mutmut)
 
 **Input Schema**:
+
 ```typescript
 interface RunMutationTestsParams {
   repo: string;
   product: string;
   targets: string[]; // módulos críticos apenas
-  framework?: 'stryker' | 'pit' | 'mutmut';
+  framework?: "stryker" | "pit" | "mutmut";
   min_score?: number; // default 0.5
 }
 ```
 
 **Output**: `qa/<product>/tests/reports/mutation-score.json`
+
 ```json
 {
   "framework": "stryker",
@@ -463,9 +502,11 @@ interface RunMutationTestsParams {
 ### 5. Metrics & Health
 
 #### 5.1. `suite_health`
+
 **Propósito**: Medir saúde da suíte de testes
 
 **Input Schema**:
+
 ```typescript
 interface SuiteHealthParams {
   repo: string;
@@ -475,6 +516,7 @@ interface SuiteHealthParams {
 ```
 
 **Output**: `qa/<product>/tests/reports/suite-health.json`
+
 ```json
 {
   "total_runtime_sec": 465,
@@ -498,9 +540,11 @@ interface SuiteHealthParams {
 ---
 
 #### 5.2. `prod_metrics_ingest`
+
 **Propósito**: Coletar métricas DORA de produção
 
 **Input Schema**:
+
 ```typescript
 interface ProdMetricsIngestParams {
   repo: string;
@@ -517,6 +561,7 @@ interface ProdMetricsIngestParams {
 ```
 
 **Output**: `qa/<product>/tests/analyses/prod-metrics.json`
+
 ```json
 {
   "period": { "start": "2025-06-01", "end": "2025-06-30" },
@@ -527,9 +572,7 @@ interface ProdMetricsIngestParams {
       "deploys_count": 210,
       "cfr": 0.12,
       "mttr_minutes": 38,
-      "incidents": [
-        { "category": "checkout", "count": 3, "severity": "high" }
-      ]
+      "incidents": [{ "category": "checkout", "count": 3, "severity": "high" }]
     }
   ],
   "dora_metrics": {
@@ -544,9 +587,11 @@ interface ProdMetricsIngestParams {
 ---
 
 #### 5.3. `slo_canary_check`
+
 **Propósito**: Avaliar canary/flags vs SLOs
 
 **Input Schema**:
+
 ```typescript
 interface SLOCanaryCheckParams {
   repo: string;
@@ -557,21 +602,25 @@ interface SLOCanaryCheckParams {
 ```
 
 **Output**: `qa/<product>/tests/reports/slo-canary.md`
+
 ```markdown
 # SLO Canary Report
 
 ## Summary
+
 - **Period**: 2025-06-01 to 2025-06-30
 - **SLOs Met**: 4/5 (80%)
 - **Incidents**: 3 high-severity
 
 ## CUJ: checkout-purchase
+
 - **SLO**: Latency P99 ≤ 500ms, Error Rate ≤ 1%, Availability ≥ 99.5%
 - **Actual**: Latency P99 = 380ms ✅, Error Rate = 1.2% ❌, Availability = 99.7% ✅
 - **Status**: ❌ VIOLATION (Error Rate exceeded)
 - **Incidents**: 3 checkout failures (payment gateway timeout)
 
 ## Recommendations
+
 1. Add circuit breaker to payment-gateway integration
 2. Increase CDC test coverage (currently 60%)
 3. Add chaos engineering test for gateway timeout
@@ -582,9 +631,11 @@ interface SLOCanaryCheckParams {
 ### 6. Quality Gates
 
 #### 6.1. `release_quality_gate`
+
 **Propósito**: Aplicar quality gates e retornar exit code para CI
 
 **Input Schema**:
+
 ```typescript
 interface ReleaseQualityGateParams {
   repo: string;
@@ -594,6 +645,7 @@ interface ReleaseQualityGateParams {
 ```
 
 **Thresholds Schema** (`qa/<product>/thresholds.json`):
+
 ```json
 {
   "production": {
@@ -621,6 +673,7 @@ interface ReleaseQualityGateParams {
 ```
 
 **Output**: `qa/<product>/tests/reports/quality-gate.json`
+
 ```json
 {
   "passed": false,
@@ -712,46 +765,46 @@ export async function autoQualityRun(options: AutoOptions): Promise<AutoResult> 
   // PHASE 1: CUJ/SLO/Risk Discovery 🆕
   const cujResult = await catalogCUJs({ repo, product });
   steps.push('catalog-cujs');
-  
+
   const slosResult = await defineSLOs({ repo, product, cuj_file: cujResult.output });
   steps.push('define-slos');
-  
+
   const riskResult = await riskRegister({ repo, product, cuj_file: cujResult.output, slos_file: slosResult.output });
   steps.push('risk-register');
 
   // PHASE 2: Code Analysis + Portfolio Planning 🆕
   const analyzeResult = await analyze({ repo, product });
   steps.push('analyze');
-  
+
   const coverageResult = await runCoverage({ repo, product });
   steps.push('coverage');
-  
-  const portfolioResult = await portfolioPlan({ 
-    repo, 
-    product, 
-    risk_file: riskResult.output, 
-    coverage_file: coverageResult.output 
+
+  const portfolioResult = await portfolioPlan({
+    repo,
+    product,
+    risk_file: riskResult.output,
+    coverage_file: coverageResult.output
   });
   steps.push('portfolio-plan');
 
   // PHASE 3: Scaffold All Test Types 🆕
   await scaffoldUnitTests({ repo, product });
   steps.push('scaffold-unit');
-  
+
   await scaffoldIntegrationTests({ repo, product });
   steps.push('scaffold-integration');
-  
+
   await scaffoldPlaywright({ repo, product });
   steps.push('scaffold-e2e');
-  
+
   // 🆕 CDC
   await scaffoldContractsPact({ repo, product, services: [...] });
   steps.push('scaffold-contracts');
-  
+
   // 🆕 Property-based (só para módulos com invariantes)
   await scaffoldPropertyTests({ repo, product, targets: [...] });
   steps.push('scaffold-property');
-  
+
   // 🆕 Approval (só para legados complexos)
   await scaffoldApprovalTests({ repo, product, targets: [...] });
   steps.push('scaffold-approval');
@@ -761,11 +814,11 @@ export async function autoQualityRun(options: AutoOptions): Promise<AutoResult> 
     // Unit + Service + CDC
     await runTests({ repo, product, types: ['unit', 'integration'] });
     steps.push('run-tests');
-    
+
     // 🆕 Verify Contracts
     await runContractsVerify({ repo, product });
     steps.push('run-contracts');
-    
+
     // E2E (smoke crítico apenas)
     await runPlaywright({ repo, product, tags: ['@smoke', '@critical'] });
     steps.push('run-e2e');
@@ -777,26 +830,26 @@ export async function autoQualityRun(options: AutoOptions): Promise<AutoResult> 
 
   // PHASE 6: Mutation Testing (só módulos críticos) 🆕
   const criticalModules = riskResult.data.top_5_critical.map(r => r.module);
-  const mutationResult = await runMutationTests({ 
-    repo, 
-    product, 
-    targets: criticalModules 
+  const mutationResult = await runMutationTests({
+    repo,
+    product,
+    targets: criticalModules
   });
   steps.push('mutation-tests');
 
   // PHASE 7: Production Metrics 🆕
-  const prodMetricsResult = await prodMetricsIngest({ 
-    repo, 
-    product, 
-    sources: { sentry: {...}, datadog: {...} } 
+  const prodMetricsResult = await prodMetricsIngest({
+    repo,
+    product,
+    sources: { sentry: {...}, datadog: {...} }
   });
   steps.push('prod-metrics');
-  
-  const sloCanaryResult = await sloCanaryCheck({ 
-    repo, 
-    product, 
-    slos_file: slosResult.output, 
-    prod_metrics_file: prodMetricsResult.output 
+
+  const sloCanaryResult = await sloCanaryCheck({
+    repo,
+    product,
+    slos_file: slosResult.output,
+    prod_metrics_file: prodMetricsResult.output
   });
   steps.push('slo-canary');
 
@@ -807,7 +860,7 @@ export async function autoQualityRun(options: AutoOptions): Promise<AutoResult> 
   // Generate Reports
   await pyramidReport({ repo, product });
   steps.push('pyramid-report');
-  
+
   await buildReport({ repo, product });
   steps.push('build-report');
 
@@ -828,28 +881,28 @@ export async function autoQualityRun(options: AutoOptions): Promise<AutoResult> 
 
 ### Gates por Categoria
 
-| Gate | Métrica | Threshold | Fonte |
-|------|---------|-----------|-------|
-| **Production** | CFR | ≤ 15% | prod-metrics.json |
-| **Production** | MTTR | ≤ 60 min | prod-metrics.json |
-| **Eficácia** | Mutation Score (overall) | ≥ 50% | mutation-score.json |
-| **Eficácia** | Mutation Score (critical) | ≥ 60% | mutation-score.json + risk-register.json |
-| **Contratos** | Verification Rate | ≥ 95% | contracts-verify.json |
-| **Contratos** | Breaking Changes | 0 | contracts-verify.json |
-| **Suite Health** | Flakiness | ≤ 3% | suite-health.json |
-| **Suite Health** | Total Runtime | ≤ 12 min | suite-health.json |
-| **Suite Health** | Parallelism | ≥ 4 workers | suite-health.json |
-| **Portfolio** | E2E Tests | ≤ 15% | portfolio-plan.md |
-| **Portfolio** | Unit Tests | ≥ 60% | portfolio-plan.md |
+| Gate             | Métrica                   | Threshold   | Fonte                                    |
+| ---------------- | ------------------------- | ----------- | ---------------------------------------- |
+| **Production**   | CFR                       | ≤ 15%       | prod-metrics.json                        |
+| **Production**   | MTTR                      | ≤ 60 min    | prod-metrics.json                        |
+| **Eficácia**     | Mutation Score (overall)  | ≥ 50%       | mutation-score.json                      |
+| **Eficácia**     | Mutation Score (critical) | ≥ 60%       | mutation-score.json + risk-register.json |
+| **Contratos**    | Verification Rate         | ≥ 95%       | contracts-verify.json                    |
+| **Contratos**    | Breaking Changes          | 0           | contracts-verify.json                    |
+| **Suite Health** | Flakiness                 | ≤ 3%        | suite-health.json                        |
+| **Suite Health** | Total Runtime             | ≤ 12 min    | suite-health.json                        |
+| **Suite Health** | Parallelism               | ≥ 4 workers | suite-health.json                        |
+| **Portfolio**    | E2E Tests                 | ≤ 15%       | portfolio-plan.md                        |
+| **Portfolio**    | Unit Tests                | ≥ 60%       | portfolio-plan.md                        |
 
 ### Exit Codes para CI
 
 ```typescript
 // release_quality_gate retorna:
 {
-  exit_code: 0 // ✅ All gates passed
-  exit_code: 1 // ❌ Blocking violation (CFR, mutation critical)
-  exit_code: 2 // ⚠️  Non-blocking violation (flakiness, E2E%)
+  exit_code: 0; // ✅ All gates passed
+  exit_code: 1; // ❌ Blocking violation (CFR, mutation critical)
+  exit_code: 2; // ⚠️  Non-blocking violation (flakiness, E2E%)
 }
 ```
 
@@ -860,6 +913,7 @@ export async function autoQualityRun(options: AutoOptions): Promise<AutoResult> 
 ### FASE 1: CUJ/SLO/Risk Tools (Est: 4-5 dias)
 
 **Arquivos Novos**:
+
 - `src/tools/catalog-cujs.ts`
 - `src/tools/define-slos.ts`
 - `src/tools/risk-register.ts`
@@ -868,11 +922,13 @@ export async function autoQualityRun(options: AutoOptions): Promise<AutoResult> 
 - `src/tools/__tests__/risk-register.test.ts`
 
 **Dependências**:
+
 - Parser de rotas: Express, Next.js, FastAPI
 - OpenAPI parser: `swagger-parser`
 - Telemetria: SDK Sentry/Datadog (opcional)
 
 **Tasks**:
+
 1. ✅ Criar interface `CUJ`, `SLO`, `Risk`
 2. ✅ Implementar `catalog_cujs`: escanear rotas + OpenAPI
 3. ✅ Implementar `define_slos`: template + validação
@@ -885,10 +941,12 @@ export async function autoQualityRun(options: AutoOptions): Promise<AutoResult> 
 ### FASE 2: Portfolio Planning (Est: 2-3 dias)
 
 **Arquivos Novos**:
+
 - `src/tools/portfolio-plan.ts`
 - `src/tools/__tests__/portfolio-plan.test.ts`
 
 **Tasks**:
+
 1. ✅ Calcular distribuição atual (unit/service/E2E)
 2. ✅ Recomendar rebalanceamento baseado em riscos
 3. ✅ Sugerir CDC, property, approval por módulo
@@ -900,17 +958,20 @@ export async function autoQualityRun(options: AutoOptions): Promise<AutoResult> 
 ### FASE 3: CDC (Pact) (Est: 5-6 dias)
 
 **Arquivos Novos**:
+
 - `src/tools/scaffold-contracts-pact.ts`
 - `src/tools/run-contracts-verify.ts`
 - `src/adapters/pact-adapter.ts` (para cada stack)
 - `src/tools/__tests__/scaffold-contracts-pact.test.ts`
 
 **Dependências**:
+
 - `@pact-foundation/pact` (Node.js/TypeScript)
 - `pact-python` (Python)
 - `pact-jvm` (Java)
 
 **Tasks**:
+
 1. ✅ Detectar serviços e integrações (analyze.json)
 2. ✅ Gerar pact.config.ts
 3. ✅ Scaffoldar consumer/provider tests
@@ -922,11 +983,13 @@ export async function autoQualityRun(options: AutoOptions): Promise<AutoResult> 
 ### FASE 4: Property-Based Tests (Est: 3-4 dias)
 
 **Arquivos Novos**:
+
 - `src/tools/scaffold-property-tests.ts`
 - `src/adapters/property-test-adapter.ts`
 - Templates: `fast-check` (TS), `hypothesis` (Python), `QuickCheck` (Go)
 
 **Tasks**:
+
 1. ✅ Detectar módulos com lógica matemática/regras
 2. ✅ Identificar invariantes (pricing, totals, estado)
 3. ✅ Gerar templates por linguagem
@@ -937,10 +1000,12 @@ export async function autoQualityRun(options: AutoOptions): Promise<AutoResult> 
 ### FASE 5: Approval Tests (Est: 2 dias)
 
 **Arquivos Novos**:
+
 - `src/tools/scaffold-approval-tests.ts`
 - Templates: Jest snapshots, Approval Tests libraries
 
 **Tasks**:
+
 1. ✅ Detectar módulos legados (sem testes, alta complexidade)
 2. ✅ Gerar approval tests para outputs complexos
 3. ✅ Golden master fixtures
@@ -950,15 +1015,18 @@ export async function autoQualityRun(options: AutoOptions): Promise<AutoResult> 
 ### FASE 6: Mutation Testing (Est: 4-5 dias)
 
 **Arquivos Novos**:
+
 - `src/tools/run-mutation-tests.ts`
 - `src/adapters/mutation-adapter.ts` (Stryker/PIT/Mutmut)
 
 **Dependências**:
+
 - `@stryker-mutator/core` (TS/JS)
 - `pitest` (Java)
 - `mutmut` (Python)
 
 **Tasks**:
+
 1. ✅ Detectar framework de testes
 2. ✅ Configurar mutation runner
 3. ✅ Executar só em módulos críticos (risk-register)
@@ -969,10 +1037,12 @@ export async function autoQualityRun(options: AutoOptions): Promise<AutoResult> 
 ### FASE 7: Suite Health (Est: 3 dias)
 
 **Arquivos Novos**:
+
 - `src/tools/suite-health.ts`
 - `src/utils/flakiness-detector.ts`
 
 **Tasks**:
+
 1. ✅ Coletar histórico de execuções (CI logs, JUnit XML)
 2. ✅ Calcular flake rate por teste
 3. ✅ Medir runtime total e paralelismo
@@ -983,6 +1053,7 @@ export async function autoQualityRun(options: AutoOptions): Promise<AutoResult> 
 ### FASE 8: Production Metrics (Est: 5-6 dias)
 
 **Arquivos Novos**:
+
 - `src/tools/prod-metrics-ingest.ts`
 - `src/adapters/sentry-adapter.ts`
 - `src/adapters/datadog-adapter.ts`
@@ -990,6 +1061,7 @@ export async function autoQualityRun(options: AutoOptions): Promise<AutoResult> 
 - `src/adapters/jira-adapter.ts`
 
 **Tasks**:
+
 1. ✅ Conectar com Sentry (erros, releases)
 2. ✅ Conectar com Datadog (métricas, traces)
 3. ✅ Conectar com Jira (incidents)
@@ -1001,9 +1073,11 @@ export async function autoQualityRun(options: AutoOptions): Promise<AutoResult> 
 ### FASE 9: SLO Canary Check (Est: 2 dias)
 
 **Arquivos Novos**:
+
 - `src/tools/slo-canary-check.ts`
 
 **Tasks**:
+
 1. ✅ Comparar prod-metrics vs SLOs
 2. ✅ Alertar violações por CUJ
 3. ✅ Gerar slo-canary.md
@@ -1013,10 +1087,12 @@ export async function autoQualityRun(options: AutoOptions): Promise<AutoResult> 
 ### FASE 10: Quality Gates (Est: 3 dias)
 
 **Arquivos Novos**:
+
 - `src/tools/release-quality-gate.ts`
 - `src/schemas/thresholds-schema.ts`
 
 **Tasks**:
+
 1. ✅ Carregar thresholds.json
 2. ✅ Validar cada gate
 3. ✅ Gerar quality-gate.json
@@ -1027,6 +1103,7 @@ export async function autoQualityRun(options: AutoOptions): Promise<AutoResult> 
 ### FASE 11: Integração Auto.ts (Est: 3-4 dias)
 
 **Tasks**:
+
 1. ✅ Adicionar Phases 1-8 ao pipeline
 2. ✅ Orquestrar dependências entre tools
 3. ✅ Atualizar AutoResult interface
@@ -1037,6 +1114,7 @@ export async function autoQualityRun(options: AutoOptions): Promise<AutoResult> 
 ### FASE 12: MCP Server + Documentação (Est: 2-3 dias)
 
 **Tasks**:
+
 1. ✅ Adicionar 13 tools ao manifest
 2. ✅ Atualizar README com quality gates
 3. ✅ Criar QUALITY-GATES-GUIDE.md
@@ -1046,21 +1124,21 @@ export async function autoQualityRun(options: AutoOptions): Promise<AutoResult> 
 
 ## 📊 Cronograma
 
-| Fase | Duração | Deps | Risco |
-|------|---------|------|-------|
-| 1. CUJ/SLO/Risk | 4-5 dias | - | 🟡 Médio (parsers de rotas) |
-| 2. Portfolio Planning | 2-3 dias | 1 | 🟢 Baixo |
-| 3. CDC (Pact) | 5-6 dias | 1 | 🔴 Alto (multi-stack) |
-| 4. Property Tests | 3-4 dias | 1 | 🟡 Médio (templates) |
-| 5. Approval Tests | 2 dias | - | 🟢 Baixo |
-| 6. Mutation Testing | 4-5 dias | - | 🔴 Alto (múltiplos runners) |
-| 7. Suite Health | 3 dias | - | 🟡 Médio (histórico CI) |
-| 8. Prod Metrics | 5-6 dias | 1 | 🔴 Alto (APIs externas) |
-| 9. SLO Canary | 2 dias | 1, 8 | 🟢 Baixo |
-| 10. Quality Gates | 3 dias | 2-9 | 🟢 Baixo |
-| 11. Auto.ts Integration | 3-4 dias | 1-10 | 🟡 Médio (orquestração) |
-| 12. MCP + Docs | 2-3 dias | 11 | 🟢 Baixo |
-| **TOTAL** | **38-50 dias** | - | - |
+| Fase                    | Duração        | Deps | Risco                       |
+| ----------------------- | -------------- | ---- | --------------------------- |
+| 1. CUJ/SLO/Risk         | 4-5 dias       | -    | 🟡 Médio (parsers de rotas) |
+| 2. Portfolio Planning   | 2-3 dias       | 1    | 🟢 Baixo                    |
+| 3. CDC (Pact)           | 5-6 dias       | 1    | 🔴 Alto (multi-stack)       |
+| 4. Property Tests       | 3-4 dias       | 1    | 🟡 Médio (templates)        |
+| 5. Approval Tests       | 2 dias         | -    | 🟢 Baixo                    |
+| 6. Mutation Testing     | 4-5 dias       | -    | 🔴 Alto (múltiplos runners) |
+| 7. Suite Health         | 3 dias         | -    | 🟡 Médio (histórico CI)     |
+| 8. Prod Metrics         | 5-6 dias       | 1    | 🔴 Alto (APIs externas)     |
+| 9. SLO Canary           | 2 dias         | 1, 8 | 🟢 Baixo                    |
+| 10. Quality Gates       | 3 dias         | 2-9  | 🟢 Baixo                    |
+| 11. Auto.ts Integration | 3-4 dias       | 1-10 | 🟡 Médio (orquestração)     |
+| 12. MCP + Docs          | 2-3 dias       | 11   | 🟢 Baixo                    |
+| **TOTAL**               | **38-50 dias** | -    | -                           |
 
 **Estimativa**: 2-2.5 meses (1 dev full-time)
 
@@ -1069,6 +1147,7 @@ export async function autoQualityRun(options: AutoOptions): Promise<AutoResult> 
 ## ✅ Critérios de Sucesso
 
 ### Must Have
+
 - [ ] 13 novas tools implementadas e testadas
 - [ ] Pipeline `auto` com todas as fases fases funcionando
 - [ ] Quality gates bloqueando builds ruins (exit code)
@@ -1076,12 +1155,14 @@ export async function autoQualityRun(options: AutoOptions): Promise<AutoResult> 
 - [ ] 700+ testes passando (621 existentes + ~80 novos)
 
 ### Should Have
+
 - [ ] CDC (Pact) funcional para ≥2 stacks (TS, Python)
 - [ ] Mutation testing para ≥3 runners (Stryker, PIT, Mutmut)
 - [ ] Prod metrics de ≥2 fontes (Sentry + Datadog)
 - [ ] Documentação completa (QUALITY-GATES-GUIDE.md)
 
 ### Could Have
+
 - [ ] Dashboard interativo mostrando gates
 - [ ] Integração com Pact Broker
 - [ ] CI/CD templates (.github/workflows/)
@@ -1117,6 +1198,7 @@ export async function autoQualityRun(options: AutoOptions): Promise<AutoResult> 
 **Impacto**: O comando `quality analyze/auto` não entrega o mesmo "one-shot" fora do TS/JS.
 
 **Solução**:
+
 - Padronizar interface do engine para receber um `LanguageAdapter` unificado
 - Mover adapter TypeScript atual para `src/adapters/` (mesma família)
 - Criar contrato único: `LanguageAdapter` com métodos:
@@ -1137,6 +1219,7 @@ export async function autoQualityRun(options: AutoOptions): Promise<AutoResult> 
 **Impacto**: CDC gerado mas nunca executado automaticamente.
 
 **Solução**:
+
 - ✅ `run-contracts-verify.ts` já existe mas não integrado
 - Adicionar parsing de relatórios Pact (JSON/HTML)
 - Integrar no `auto.ts` antes de `validate`
@@ -1153,6 +1236,7 @@ export async function autoQualityRun(options: AutoOptions): Promise<AutoResult> 
 **Impacto**: Cobertura e mutation score só funciona para TS/JS.
 
 **Solução**:
+
 - Criar executores por linguagem:
   - `runners/python-runner.ts` (pytest + coverage.py)
   - `runners/go-runner.ts` (go test -cover)
@@ -1174,7 +1258,9 @@ export async function autoQualityRun(options: AutoOptions): Promise<AutoResult> 
 **Impacto**: Duplicação de lógica, manutenção difícil, evolução divergente.
 
 **Solução**:
+
 - Unificar em **um único contrato** `LanguageAdapter`:
+
 ```typescript
 interface LanguageAdapter {
   language: string;
@@ -1186,6 +1272,7 @@ interface LanguageAdapter {
   scaffoldTest(target: TestTarget): Promise<string>;
 }
 ```
+
 - Migrar adapter TS do engine para `src/adapters/typescript.ts`
 - Engine consome adapters de forma polimórfica
 
@@ -1200,6 +1287,7 @@ interface LanguageAdapter {
 **Impacto**: Primeiras execuções falham com erros crípticos.
 
 **Solução**:
+
 - Expandir `self-check.ts` para:
   - Detectar ferramentas faltantes
   - Imprimir comandos exatos: `npm i -D vitest @vitest/coverage-v8`
@@ -1222,6 +1310,7 @@ interface LanguageAdapter {
 **Impacto**: Plano pode não priorizar os módulos realmente problemáticos.
 
 **Solução**:
+
 - Puxar sinais reais:
   - **Git churn**: arquivos com mais commits (código volátil)
   - **Complexidade ciclomática**: funções complexas (risk-prone)
@@ -1243,6 +1332,7 @@ interface LanguageAdapter {
 **Impacto**: Não valida se código novo está testado.
 
 **Solução**:
+
 - Criar `run-diff-coverage.ts`:
   - Integrar com `git diff main...HEAD`
   - Gerar coverage focado no diff
@@ -1258,6 +1348,7 @@ interface LanguageAdapter {
 ## 🛠️ Roadmap para "Fechar" a V1 Sólida
 
 ### Fase A: Unificar Adapters (5-7 dias)
+
 1. Criar contrato `LanguageAdapter` unificado
 2. Migrar adapter TS do engine para `src/adapters/typescript.ts`
 3. Implementar adapters completos:
@@ -1266,35 +1357,41 @@ interface LanguageAdapter {
 4. Engine passa a consumir adapters polimorficamente
 
 ### Fase B: CDC Completo (2-3 dias)
+
 1. Integrar `run-contracts-verify.ts` no pipeline
 2. Parser de relatórios Pact (JSON/HTML)
 3. Consolidar em relatórios principais
 4. Adicionar gate: `contract_verification_rate >= 95%`
 
 ### Fase C: Coverage/Mutation Multi-Linguagem (4-5 dias)
+
 1. Criar runners por linguagem (Python, Go, Java)
 2. Criar parsers de cobertura (Cobertura, JaCoCo, gocov)
 3. Integrar mutation testing multi-linguagem
 4. Testar com projetos reais em cada stack
 
 ### Fase D: Bootstrap de Dependências (2 dias)
+
 1. Expandir `self-check.ts` com detecção de faltas
 2. Modo `--bootstrap-deps` para instalação automática
 3. Criar `SETUP-BY-LANGUAGE.md` com receitas prontas
 
 ### Fase E: Diff Coverage (3 dias)
+
 1. Implementar `run-diff-coverage.ts`
 2. Integrar com git diff
 3. Adicionar gate em `validate.ts`
 4. Reportar em `DIFF-COVERAGE.md`
 
 ### Fase F: Risco Dinâmico (3-4 dias)
+
 1. Coletar git churn por arquivo
 2. Calcular complexidade ciclomática
 3. Integrar flakiness histórico
 4. Score composto em `risk-register.ts`
 
 ### Fase G: Documentação e Testes (2-3 dias)
+
 1. Tabela "Linguagem × Suporte" no README
 2. Testes E2E por linguagem
 3. CI matrix com Python/Go/TS
@@ -1304,20 +1401,20 @@ interface LanguageAdapter {
 
 ## 📊 Cronograma Revisado
 
-| Fase Original | Status | Nova Fase | Status | Prioridade |
-|---------------|--------|-----------|--------|------------|
-| 1. CUJ/SLO/Risk | ✅ 100% | A. Unificar Adapters | ❌ 0% | 🔴 ALTA |
-| 2. Portfolio Planning | ✅ 100% | B. CDC Completo | ⚠️ 50% | 🟡 MÉDIA |
-| 3. CDC (Pact) | ✅ 80% | C. Coverage Multi-Lang | ❌ 20% | 🔴 ALTA |
-| 4. Property Tests | ✅ 100% | D. Bootstrap Deps | ❌ 0% | 🟡 MÉDIA |
-| 5. Approval Tests | ✅ 100% | E. Diff Coverage | ❌ 0% | 🟡 MÉDIA |
-| 6. Mutation Testing | ❌ 0% | F. Risco Dinâmico | ❌ 0% | 🟢 BAIXA |
-| 7. Suite Health | ✅ 100% | G. Docs & Testes | ⚠️ 30% | 🟡 MÉDIA |
-| 8. Prod Metrics | ❌ 0% | - | - | - |
-| 9. SLO Canary | ❌ 0% | - | - | - |
-| 10. Quality Gates | ❌ 0% | - | - | - |
-| 11. Integration | ⚠️ 50% | - | - | - |
-| 12. MCP + Docs | ⚠️ 20% | - | - | - |
+| Fase Original         | Status  | Nova Fase              | Status | Prioridade |
+| --------------------- | ------- | ---------------------- | ------ | ---------- |
+| 1. CUJ/SLO/Risk       | ✅ 100% | A. Unificar Adapters   | ❌ 0%  | 🔴 ALTA    |
+| 2. Portfolio Planning | ✅ 100% | B. CDC Completo        | ⚠️ 50% | 🟡 MÉDIA   |
+| 3. CDC (Pact)         | ✅ 80%  | C. Coverage Multi-Lang | ❌ 20% | 🔴 ALTA    |
+| 4. Property Tests     | ✅ 100% | D. Bootstrap Deps      | ❌ 0%  | 🟡 MÉDIA   |
+| 5. Approval Tests     | ✅ 100% | E. Diff Coverage       | ❌ 0%  | 🟡 MÉDIA   |
+| 6. Mutation Testing   | ❌ 0%   | F. Risco Dinâmico      | ❌ 0%  | 🟢 BAIXA   |
+| 7. Suite Health       | ✅ 100% | G. Docs & Testes       | ⚠️ 30% | 🟡 MÉDIA   |
+| 8. Prod Metrics       | ❌ 0%   | -                      | -      | -          |
+| 9. SLO Canary         | ❌ 0%   | -                      | -      | -          |
+| 10. Quality Gates     | ❌ 0%   | -                      | -      | -          |
+| 11. Integration       | ⚠️ 50%  | -                      | -      | -          |
+| 12. MCP + Docs        | ⚠️ 20%  | -                      | -      | -          |
 
 **Novo Esforço Total**: 21-27 dias (3-4 semanas)  
 **Prioridade 1 (Blockers)**: Fases A, C (9-12 dias)  
@@ -1329,6 +1426,7 @@ interface LanguageAdapter {
 ## ✅ Critérios de Sucesso V1 (Revisado)
 
 ### Must Have
+
 - [x] 6/12 fases originais implementadas (50%)
 - [x] Property Tests + Approval Tests funcionais
 - [x] Suite Health monitorando flakiness
@@ -1339,12 +1437,14 @@ interface LanguageAdapter {
 - [ ] 700+ testes passando (666 atuais + ~50 novos)
 
 ### Should Have
+
 - [ ] Diff Coverage validado em PRs
 - [ ] Risco dinâmico (git churn + complexidade)
 - [ ] Documentação completa por linguagem
 - [ ] CI matrix testando Python/Go/TS
 
 ### Could Have
+
 - [ ] Dashboard interativo (quality gates visíveis)
 - [ ] Pact Broker integration
 - [ ] Chaos Engineering tests
