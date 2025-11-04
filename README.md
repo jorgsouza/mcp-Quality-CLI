@@ -1166,22 +1166,6 @@ O Quality MCP oferece suporte **END-TO-END** para múltiplas linguagens com adap
 - **Mutation**: PIT (PITest)
 - **Formats**: JaCoCo XML/CSV/HTML
 - **Status**: ✅ Produção
-- **Formats**: Cobertura XML, JSON
-- **Status**: ✅ Produção
-
-#### Go
-- **Frameworks**: go test (built-in)
-- **Coverage**: go test -cover
-- **Mutation**: go-mutesting (experimental)
-- **Formats**: coverage.out
-- **Status**: 🟡 Beta
-
-#### Java (Em Desenvolvimento)
-- **Frameworks**: JUnit 5, TestNG
-- **Coverage**: JaCoCo, Cobertura
-- **Mutation**: PIT
-- **Formats**: JaCoCo XML, Cobertura XML
-- **Status**: ⚪ Q1 2026
 
 ### Setup Rápido por Linguagem
 
