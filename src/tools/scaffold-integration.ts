@@ -88,7 +88,13 @@ export async function scaffoldIntegrationTests(input: ScaffoldIntegrationParams)
 
   // [ADAPTER PATTERN] Detecta linguagem e usa adapter apropriado
   const adapter = await getLanguageAdapter(input.repo);
-  console.log(`📦 Linguagem detectada: ${adapter.language} (${adapter.defaultFramework})`);
+  
+  if (!adapter) {
+    throw new Error('Nenhum adapter de linguagem encontrado');
+  }
+  
+  const framework = await adapter.detectFramework(input.repo);
+  console.log(`📦 Linguagem detectada: ${adapter.language} (${framework?.name || 'unknown'})`);
 
   // Gera testes por domínio
   const endpointsByDomain = groupEndpointsByDomain(endpoints);

@@ -140,6 +140,11 @@ async function generateUnitTest(
   // [ADAPTER PATTERN] Usa adapter de linguagem ao invés de template hardcoded
   const adapter = await getLanguageAdapter(repoPath);
   
+  if (!adapter) {
+    console.warn(`  ⚠️  Nenhum adapter encontrado para ${repoPath}`);
+    return null;
+  }
+  
   const sourceContent = await readFile(join(repoPath, sourceFile));
   
   // Extrai nome da função/classe principal do arquivo
@@ -150,16 +155,15 @@ async function generateUnitTest(
     return null;
   }
   
-  // Gera teste usando adapter (agnóstico de linguagem)
-  const testContent = adapter.generateUnitTest(functionName, `./${sourceFile}`, {
-    framework: framework as any,
-    includeImports: true,
-    includeComments: true,
-    scenarios: ['happy', 'error', 'edge']
+  // Gera teste usando novo método scaffoldTest()
+  const testContent = await adapter.scaffoldTest({
+    file: sourceFile,
+    function: functionName,
+    type: 'unit',
   });
   
   // Determina caminho do arquivo de teste
-  const testExtension = adapter.getTestFileExtension();
+  const testExtension = adapter.fileExtensions[0]; // Usa primeira extensão
   const testFileName = sourceFile.replace(/\.(ts|tsx|js|jsx|py|go|java|rb|rs|php|cs)$/, testExtension);
   const testFilePath = join(repoPath, 'tests', 'unit', testFileName);
   
