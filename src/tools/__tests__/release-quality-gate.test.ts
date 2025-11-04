@@ -17,6 +17,10 @@ describe('releaseQualityGate', () => {
       reports: '/test/qa/TestProduct/tests/reports',
     } as any);
   });
+  
+  afterEach(() => {
+    vi.restoreAllMocks(); // 🆕 Restaura mocks após cada teste
+  });
 
   it('deve retornar exit_code=0 quando todos os gates passam', async () => {
     // Mock fileExists e writeFileSafe
@@ -93,7 +97,9 @@ describe('releaseQualityGate', () => {
 
   it('deve retornar exit_code=2 com apenas warnings', async () => {
     const { fileExists, writeFileSafe } = await import('../../utils/fs.js');
-    vi.mocked(fileExists).mockImplementation(async (path: any) => {
+    
+    // Mock fileExists PRIMEIRO
+    const mockFileExists = vi.mocked(fileExists).mockImplementation(async (path: any) => {
       if (path.includes('thresholds.json')) return false;
       if (path.includes('mutation-score.json')) return true;
       if (path.includes('coverage-analysis.json')) return true;
@@ -101,7 +107,8 @@ describe('releaseQualityGate', () => {
     });
     vi.mocked(writeFileSafe).mockResolvedValue(undefined);
     
-    vi.spyOn(fs, 'readFile').mockImplementation(async (path: any) => {
+    // Mock fs.readFile DEPOIS
+    const mockReadFile = vi.spyOn(fs, 'readFile').mockImplementation(async (path: any) => {
       const pathStr = path.toString();
       if (pathStr.includes('coverage')) {
         return JSON.stringify({
@@ -120,13 +127,18 @@ describe('releaseQualityGate', () => {
       return JSON.stringify({});
     });
     
-    const result = await releaseQualityGate({
-      repo: '/test',
-      product: 'TestProduct'
-    });
-    
-    expect(result.exit_code).toBe(2);
-    expect(result.summary.non_blocking_violations).toBeGreaterThan(0);
+    try {
+      const result = await releaseQualityGate({
+        repo: '/test',
+        product: 'TestProduct'
+      });
+      
+      expect(result.exit_code).toBe(2);
+      expect(result.summary.non_blocking_violations).toBeGreaterThan(0);
+    } finally {
+      mockFileExists.mockRestore();
+      mockReadFile.mockRestore();
+    }
   });
 });
 
