@@ -261,6 +261,172 @@ export class GoAdapter implements LanguageAdapter {
   }
 
   /**
+   * 🆕 Garante dependências Go instaladas
+   */
+  async ensureDeps(repo: string, options?: { bootstrap?: boolean }): Promise<{
+    ok: boolean;
+    installed: string[];
+    missing: string[];
+    commands?: string[];
+  }> {
+    const installed: string[] = [];
+    const missing: string[] = [];
+    const commands: string[] = [];
+
+    // Verificar Go
+    try {
+      const goVersion = execSync('go version', { encoding: 'utf-8', stdio: 'pipe' });
+      installed.push(`Go: ${goVersion.trim()}`);
+    } catch {
+      missing.push('Go 1.19+');
+      commands.push('# Ubuntu/Debian:\nsudo apt-get install -y golang');
+      commands.push('# macOS:\nbrew install go');
+    }
+
+    // Verificar go.mod
+    if (existsSync(join(repo, 'go.mod'))) {
+      installed.push('go.mod');
+    } else {
+      missing.push('go.mod');
+      commands.push('# Inicializar módulo Go:\ngo mod init <module-name>');
+    }
+
+    // Verificar go-mutesting (opcional)
+    if (await this.hasGoPackage('github.com/zimmski/go-mutesting')) {
+      installed.push('go-mutesting');
+    }
+
+    // Verificar gotestsum (opcional)
+    if (await this.hasGoPackage('gotest.tools/gotestsum')) {
+      installed.push('gotestsum');
+    }
+
+    // Verificar pact-go (opcional)
+    if (await this.hasGoPackage('github.com/pact-foundation/pact-go')) {
+      installed.push('pact-go');
+    }
+
+    return {
+      ok: missing.length === 0,
+      installed,
+      missing,
+      commands: missing.length > 0 ? commands : undefined,
+    };
+  }
+
+  /**
+   * 🆕 Descobre contratos Pact (Go)
+   */
+  async discoverContracts(repo: string): Promise<Array<{
+    file: string;
+    consumer: string;
+    provider: string;
+    type: 'consumer' | 'provider';
+  }>> {
+    const contracts: Array<{
+      file: string;
+      consumer: string;
+      provider: string;
+      type: 'consumer' | 'provider';
+    }> = [];
+
+    // Go Pact: pacts/*.json
+    const pactDirs = [
+      join(repo, 'pacts'),
+      join(repo, 'test', 'pacts'),
+    ];
+
+    for (const pactDir of pactDirs) {
+      if (!existsSync(pactDir)) continue;
+
+      try {
+        const files = await glob('*.json', { cwd: pactDir });
+
+        for (const file of files) {
+          try {
+            const fullPath = join(pactDir, file);
+            const content = readFileSync(fullPath, 'utf-8');
+            const pact = JSON.parse(content);
+
+            contracts.push({
+              file: fullPath.replace(repo + '/', ''),
+              consumer: pact.consumer?.name || 'unknown',
+              provider: pact.provider?.name || 'unknown',
+              type: 'consumer',
+            });
+          } catch {
+            // Ignorar arquivos inválidos
+          }
+        }
+      } catch {
+        // Ignorar erro de glob
+      }
+    }
+
+    return contracts;
+  }
+
+  /**
+   * 🆕 Verifica contratos Pact (Go)
+   */
+  async verifyContracts(repo: string, options?: {
+    broker?: string;
+    token?: string;
+    provider?: string;
+  }): Promise<{
+    ok: boolean;
+    total: number;
+    verified: number;
+    failed: number;
+    results: Array<{
+      contract: string;
+      status: 'passed' | 'failed';
+      message?: string;
+    }>;
+  }> {
+    // Go Pact: executar testes que usam pact-go verifier
+    const contracts = await this.discoverContracts(repo);
+
+    if (contracts.length === 0) {
+      return {
+        ok: true,
+        total: 0,
+        verified: 0,
+        failed: 0,
+        results: [],
+      };
+    }
+
+    // Executar testes provider (Go usa testes normais com pact-go)
+    let output = '';
+    let ok = true;
+
+    try {
+      output = execSync('go test ./... -v -tags=provider', {
+        cwd: repo,
+        encoding: 'utf-8',
+        stdio: 'pipe',
+        timeout: 120000, // 2 min
+      });
+    } catch (error: any) {
+      ok = false;
+      output = error.stdout || error.stderr || error.message;
+    }
+
+    // Parse output (básico)
+    const verified = ok ? contracts.length : 0;
+    const failed = contracts.length - verified;
+
+    return {
+      ok,
+      total: contracts.length,
+      verified,
+      failed,
+      results: [], // TODO: Parsear resultados detalhados
+    };
+  }
+
+  /**
    * Valida ambiente Go
    */
   async validate(repo: string): Promise<{
@@ -269,43 +435,15 @@ export class GoAdapter implements LanguageAdapter {
     missing?: string[];
     warnings?: string[];
   }> {
-    const missing: string[] = [];
-    const warnings: string[] = [];
-
-    // 1. Verificar Go instalado
-    try {
-      execSync('go version', { stdio: 'pipe' });
-    } catch {
-      missing.push('Go (golang)');
-      return { ok: false, missing, warnings };
-    }
-
-    // 2. Verificar go.mod
-    if (!existsSync(join(repo, 'go.mod'))) {
-      warnings.push('go.mod (execute: go mod init)');
-    }
-
-    // 3. Detectar framework
+    const depsResult = await this.ensureDeps(repo);
     const framework = await this.detectFramework(repo);
 
-    if (!framework) {
-      missing.push('Arquivos de teste (*_test.go)');
-      return { ok: false, missing, warnings };
-    }
-
-    // 4. Verificar go-mutesting
-    if (!(await this.hasGoPackage('github.com/zimmski/go-mutesting'))) {
-      warnings.push('go-mutesting (mutation testing)');
-    }
-
-    // 5. Verificar gotestsum (melhor output)
-    if (!(await this.hasGoPackage('gotest.tools/gotestsum'))) {
-      warnings.push('gotestsum (melhor visualização)');
-    }
-
-    const ok = missing.length === 0;
-
-    return { ok, framework, missing, warnings };
+    return {
+      ok: depsResult.ok,
+      framework: framework || undefined,
+      missing: depsResult.missing,
+      warnings: [],
+    };
   }
 
   // ==================== Helpers ====================

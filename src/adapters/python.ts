@@ -317,6 +317,211 @@ export class PythonAdapter implements LanguageAdapter {
   }
 
   /**
+   * 🆕 Garante dependências Python instaladas
+   */
+  async ensureDeps(repo: string, options?: { bootstrap?: boolean }): Promise<{
+    ok: boolean;
+    installed: string[];
+    missing: string[];
+    commands?: string[];
+  }> {
+    const installed: string[] = [];
+    const missing: string[] = [];
+    const commands: string[] = [];
+
+    // Verificar Python
+    try {
+      const pythonVersion = execSync('python3 --version || python --version', { encoding: 'utf-8', stdio: 'pipe' });
+      installed.push(`Python: ${pythonVersion.trim()}`);
+    } catch {
+      missing.push('Python 3.9+');
+      commands.push('# Ubuntu/Debian:\nsudo apt-get install -y python3 python3-pip python3-venv');
+      commands.push('# macOS:\nbrew install python@3.11');
+    }
+
+    // Verificar pip
+    try {
+      const pipVersion = execSync('python3 -m pip --version || python -m pip --version', { encoding: 'utf-8', stdio: 'pipe' });
+      installed.push(`pip: ${pipVersion.split('\n')[0]}`);
+    } catch {
+      missing.push('pip');
+      commands.push('# Instalar pip:\npython3 -m ensurepip --upgrade');
+    }
+
+    // Verificar pytest
+    if (await this.hasPythonPackage(repo, 'pytest')) {
+      installed.push('pytest');
+    } else {
+      missing.push('pytest');
+      commands.push('# Instalar pytest:\npython3 -m pip install pytest');
+    }
+
+    // Verificar coverage.py
+    if (await this.hasPythonPackage(repo, 'coverage')) {
+      installed.push('coverage.py');
+    } else {
+      missing.push('coverage.py');
+      commands.push('# Instalar coverage:\npython3 -m pip install coverage');
+    }
+
+    // Verificar pytest-cov
+    if (await this.hasPythonPackage(repo, 'pytest-cov')) {
+      installed.push('pytest-cov');
+    } else {
+      missing.push('pytest-cov');
+      commands.push('# Instalar pytest-cov:\npython3 -m pip install pytest-cov');
+    }
+
+    // Verificar mutmut (opcional)
+    if (await this.hasPythonPackage(repo, 'mutmut')) {
+      installed.push('mutmut');
+    }
+
+    // Verificar pact-python (opcional)
+    if (await this.hasPythonPackage(repo, 'pact-python')) {
+      installed.push('pact-python');
+    }
+
+    return {
+      ok: missing.length === 0,
+      installed,
+      missing,
+      commands: missing.length > 0 ? commands : undefined,
+    };
+  }
+
+  /**
+   * 🆕 Descobre contratos Pact (Python)
+   */
+  async discoverContracts(repo: string): Promise<Array<{
+    file: string;
+    consumer: string;
+    provider: string;
+    type: 'consumer' | 'provider';
+  }>> {
+    const contracts: Array<{
+      file: string;
+      consumer: string;
+      provider: string;
+      type: 'consumer' | 'provider';
+    }> = [];
+
+    // Python Pact: pacts/*.json ou tests/pacts/*.json
+    const pactDirs = [
+      join(repo, 'pacts'),
+      join(repo, 'tests', 'pacts'),
+    ];
+
+    for (const pactDir of pactDirs) {
+      if (!existsSync(pactDir)) continue;
+
+      try {
+        const files = await glob('*.json', { cwd: pactDir });
+
+        for (const file of files) {
+          try {
+            const fullPath = join(pactDir, file);
+            const content = readFileSync(fullPath, 'utf-8');
+            const pact = JSON.parse(content);
+
+            contracts.push({
+              file: fullPath.replace(repo + '/', ''),
+              consumer: pact.consumer?.name || 'unknown',
+              provider: pact.provider?.name || 'unknown',
+              type: 'consumer',
+            });
+          } catch {
+            // Ignorar arquivos inválidos
+          }
+        }
+      } catch {
+        // Ignorar erro de glob
+      }
+    }
+
+    return contracts;
+  }
+
+  /**
+   * 🆕 Verifica contratos Pact (Python)
+   */
+  async verifyContracts(repo: string, options?: {
+    broker?: string;
+    token?: string;
+    provider?: string;
+  }): Promise<{
+    ok: boolean;
+    total: number;
+    verified: number;
+    failed: number;
+    results: Array<{
+      contract: string;
+      status: 'passed' | 'failed';
+      message?: string;
+    }>;
+  }> {
+    // Python Pact: pact-verifier (provider side)
+    // Formato: pact-verifier --provider-base-url http://localhost:5000 --pact-urls ./pacts/*.json
+
+    const contracts = await this.discoverContracts(repo);
+
+    if (contracts.length === 0) {
+      return {
+        ok: true,
+        total: 0,
+        verified: 0,
+        failed: 0,
+        results: [],
+      };
+    }
+
+    // Construir comando
+    let command = 'pact-verifier';
+
+    if (options?.provider) {
+      command += ` --provider-name ${options.provider}`;
+    }
+
+    if (options?.broker) {
+      command += ` --pact-broker-url ${options.broker}`;
+      if (options.token) {
+        command += ` --pact-broker-token ${options.token}`;
+      }
+    } else {
+      // Usar pacts locais
+      const pactFiles = contracts.map(c => join(repo, c.file)).join(' ');
+      command += ` --pact-urls ${pactFiles}`;
+    }
+
+    let output = '';
+    let ok = true;
+
+    try {
+      output = execSync(command, {
+        cwd: repo,
+        encoding: 'utf-8',
+        stdio: 'pipe',
+        timeout: 120000, // 2 min
+      });
+    } catch (error: any) {
+      ok = false;
+      output = error.stdout || error.stderr || error.message;
+    }
+
+    // Parse output (básico)
+    const verified = ok ? contracts.length : 0;
+    const failed = contracts.length - verified;
+
+    return {
+      ok,
+      total: contracts.length,
+      verified,
+      failed,
+      results: [], // TODO: Parsear resultados detalhados
+    };
+  }
+
+  /**
    * Valida ambiente Python
    */
   async validate(repo: string): Promise<{
@@ -325,62 +530,15 @@ export class PythonAdapter implements LanguageAdapter {
     missing?: string[];
     warnings?: string[];
   }> {
-    const missing: string[] = [];
-    const warnings: string[] = [];
-
-    // 1. Verificar Python
-    try {
-      execSync('python --version', { stdio: 'pipe' });
-    } catch {
-      try {
-        execSync('python3 --version', { stdio: 'pipe' });
-      } catch {
-        missing.push('Python 3.x');
-        return { ok: false, missing, warnings };
-      }
-    }
-
-    // 2. Detectar framework
+    const depsResult = await this.ensureDeps(repo);
     const framework = await this.detectFramework(repo);
 
-    if (!framework) {
-      missing.push('Framework de testes (pytest ou unittest)');
-      return { ok: false, missing, warnings };
-    }
-
-    // 3. Verificar pytest
-    if (framework.name === 'pytest') {
-      if (!(await this.hasPythonPackage(repo, 'pytest'))) {
-        missing.push('pytest');
-      }
-
-      if (!(await this.hasPythonPackage(repo, 'pytest-cov'))) {
-        warnings.push('pytest-cov (cobertura)');
-      }
-
-      if (!(await this.hasPythonPackage(repo, 'pytest-xdist'))) {
-        warnings.push('pytest-xdist (paralelismo)');
-      }
-    }
-
-    // 4. Verificar coverage.py
-    if (!(await this.hasPythonPackage(repo, 'coverage'))) {
-      warnings.push('coverage (cobertura)');
-    }
-
-    // 5. Verificar mutmut
-    if (!(await this.hasPythonPackage(repo, 'mutmut'))) {
-      warnings.push('mutmut (mutation testing)');
-    }
-
-    // 6. Verificar hypothesis (property testing)
-    if (!(await this.hasPythonPackage(repo, 'hypothesis'))) {
-      warnings.push('hypothesis (property-based testing)');
-    }
-
-    const ok = missing.length === 0;
-
-    return { ok, framework, missing, warnings };
+    return {
+      ok: depsResult.ok,
+      framework: framework || undefined,
+      missing: depsResult.missing,
+      warnings: [],
+    };
   }
 
   // ==================== Helpers ====================
