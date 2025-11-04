@@ -137,6 +137,19 @@ export async function runDiffCoverage(
       minCoverage,
       ok,
     });
+    
+    // 🆕 2) Salvar JSON para validate.ts
+    const jsonPath = join(paths.analyses, 'diff-coverage.json');
+    const jsonData = {
+      diffCoverage,
+      linesAdded: totalLinesAdded,
+      linesCovered: totalLinesCovered,
+      files: fileResults,
+      baseBranch,
+      timestamp: new Date().toISOString(),
+    };
+    await writeFileSafe(jsonPath, JSON.stringify(jsonData, null, 2));
+    console.log(`✅ JSON salvo: ${jsonPath}`);
   }
 
   return {

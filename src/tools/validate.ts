@@ -509,7 +509,7 @@ async function validateContracts(repo: string, product: string): Promise<Violati
   
   // Procura por arquivos de verificação de contratos
   const contractCatalogPath = join(paths.analyses, 'contract-catalog.json');
-  const contractVerifyPath = join(paths.analyses, 'contracts-verify.json');
+  const contractVerifyPath = join(paths.reports, 'contracts-verify.json'); // 🆕 Corrigido: reports não analyses
   
   if (!existsSync(contractCatalogPath) && !existsSync(contractVerifyPath)) {
     return {

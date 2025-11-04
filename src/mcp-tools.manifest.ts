@@ -92,6 +92,11 @@ export const MCP_TOOLS: readonly MCPToolDefinition[] = [
           minimum: 0,
           maximum: 100
         },
+        requireContractsPassing: { // 🆕 3) Flag contracts
+          type: 'boolean',
+          description: 'Exige contratos CDC/Pact passando',
+          default: false
+        },
         baseBranch: { 
           type: 'string', 
           description: 'Branch base para diff',

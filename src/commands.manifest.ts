@@ -73,6 +73,7 @@ export const COMMANDS: readonly CommandDefinition[] = [
       { name: 'min-scenarios', description: 'Percentual mínimo de cenários (%)', required: false },
       { name: 'min-diff-coverage', description: 'Cobertura mínima do diff (%)', required: false },
       { name: 'require-critical', description: 'Exige 100% de funções críticas testadas', required: false, defaultValue: false },
+      { name: 'require-contracts', description: 'Exige contratos CDC/Pact passando', required: false, defaultValue: false }, // 🆕 3)
       { name: 'fail-fast', description: 'Para na primeira falha', required: false, defaultValue: false },
       { name: 'base-branch', description: 'Branch base para diff', required: false, defaultValue: 'main' },
     ],
