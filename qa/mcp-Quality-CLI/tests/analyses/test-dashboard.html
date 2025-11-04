@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Quality Dashboard - Trust DS</title>
+    <style>
+        /* ===================================
+           TRUST DS - Design Tokens
+           ================================== */
+        :root {
+            /* Cores Primárias */
+            --trust-primary-50: #f0f9ff;
+            --trust-primary-100: #e0f2fe;
+            --trust-primary-500: #0ea5e9;
+            --trust-primary-600: #0284c7;
+            --trust-primary-700: #0369a1;
+            
+            /* Cores Semânticas */
+            --trust-success-50: #f0fdf4;
+            --trust-success-500: #22c55e;
+            --trust-success-600: #16a34a;
+            
+            --trust-warning-50: #fffbeb;
+            --trust-warning-500: #f59e0b;
+            --trust-warning-600: #d97706;
+            
+            --trust-danger-50: #fef2f2;
+            --trust-danger-500: #ef4444;
+            --trust-danger-600: #dc2626;
+            
+            /* Cores Neutras */
+            --trust-gray-50: #f9fafb;
+            --trust-gray-100: #f3f4f6;
+            --trust-gray-200: #e5e7eb;
+            --trust-gray-300: #d1d5db;
+            --trust-gray-400: #9ca3af;
+            --trust-gray-500: #6b7280;
+            --trust-gray-600: #4b5563;
+            --trust-gray-700: #374151;
+            --trust-gray-800: #1f2937;
+            --trust-gray-900: #111827;
+            
+            /* Espaçamentos */
+            --trust-space-xs: 0.5rem;
+            --trust-space-sm: 0.75rem;
+            --trust-space-md: 1rem;
+            --trust-space-lg: 1.5rem;
+            --trust-space-xl: 2rem;
+            --trust-space-2xl: 3rem;
+            
+            /* Tipografia */
+            --trust-font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            --trust-text-xs: 0.75rem;
+            --trust-text-sm: 0.875rem;
+            --trust-text-base: 1rem;
+            --trust-text-lg: 1.125rem;
+            --trust-text-xl: 1.25rem;
+            --trust-text-2xl: 1.5rem;
+            --trust-text-3xl: 1.875rem;
+            --trust-text-4xl: 2.25rem;
+            
+            /* Sombras */
+            --trust-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --trust-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --trust-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --trust-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+            
+            /* Bordas */
+            --trust-radius-sm: 0.25rem;
+            --trust-radius-md: 0.375rem;
+            --trust-radius-lg: 0.5rem;
+            --trust-radius-xl: 0.75rem;
+        }
+        
+        /* Reset e Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--trust-font-sans);
+            background: var(--trust-gray-50);
+            color: var(--trust-gray-900);
+            line-height: 1.5;
+        }
+        
+        /* Layout Principal */
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--trust-space-xl);
+        }
+        
+        /* Header */
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--trust-primary-600) 0%, var(--trust-primary-700) 100%);
+            color: white;
+            padding: var(--trust-space-2xl) var(--trust-space-xl);
+            border-radius: var(--trust-radius-xl);
+            margin-bottom: var(--trust-space-2xl);
+            box-shadow: var(--trust-shadow-xl);
+        }
+        
+        .dashboard-header h1 {
+            font-size: var(--trust-text-4xl);
+            font-weight: 700;
+            margin-bottom: var(--trust-space-sm);
+        }
+        
+        .dashboard-header p {
+            font-size: var(--trust-text-lg);
+            opacity: 0.9;
+        }
+        
+        /* Grid de Cards */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--trust-space-lg);
+            margin-bottom: var(--trust-space-2xl);
+        }
+        
+        /* Card Component */
+        .trust-card {
+            background: white;
+            border-radius: var(--trust-radius-lg);
+            padding: var(--trust-space-lg);
+            box-shadow: var(--trust-shadow-md);
+            transition: all 0.3s ease;
+            border: 1px solid var(--trust-gray-200);
+        }
+        
+        .trust-card:hover {
+            box-shadow: var(--trust-shadow-xl);
+            transform: translateY(-2px);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--trust-space-md);
+        }
+        
+        .card-title {
+            font-size: var(--trust-text-sm);
+            font-weight: 600;
+            color: var(--trust-gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .card-icon {
+            font-size: var(--trust-text-2xl);
+        }
+        
+        .card-value {
+            font-size: var(--trust-text-4xl);
+            font-weight: 700;
+            margin-bottom: var(--trust-space-xs);
+        }
+        
+        .card-label {
+            font-size: var(--trust-text-sm);
+            color: var(--trust-gray-500);
+        }
+        
+        .card-badge {
+            display: inline-block;
+            padding: var(--trust-space-xs) var(--trust-space-sm);
+            border-radius: var(--trust-radius-md);
+            font-size: var(--trust-text-xs);
+            font-weight: 600;
+            margin-top: var(--trust-space-sm);
+        }
+        
+        .badge-danger {
+            background: var(--trust-danger-50);
+            color: var(--trust-danger-600);
+        }
+        
+        .badge-warning {
+            background: var(--trust-warning-50);
+            color: var(--trust-warning-600);
+        }
+        
+        .badge-success {
+            background: var(--trust-success-50);
+            color: var(--trust-success-600);
+        }
+        
+        /* Chart Section */
+        .chart-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--trust-space-lg);
+            margin-bottom: var(--trust-space-2xl);
+        }
+        
+        .chart-card {
+            background: white;
+            border-radius: var(--trust-radius-lg);
+            padding: var(--trust-space-xl);
+            box-shadow: var(--trust-shadow-md);
+        }
+        
+        .chart-title {
+            font-size: var(--trust-text-xl);
+            font-weight: 600;
+            margin-bottom: var(--trust-space-lg);
+            color: var(--trust-gray-800);
+        }
+        
+        /* Table */
+        .table-section {
+            background: white;
+            border-radius: var(--trust-radius-lg);
+            box-shadow: var(--trust-shadow-md);
+            overflow: hidden;
+        }
+        
+        .table-header {
+            padding: var(--trust-space-lg);
+            border-bottom: 1px solid var(--trust-gray-200);
+        }
+        
+        .table-title {
+            font-size: var(--trust-text-xl);
+            font-weight: 600;
+            margin-bottom: var(--trust-space-sm);
+        }
+        
+        .table-filters {
+            display: flex;
+            gap: var(--trust-space-md);
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: var(--trust-space-xs) var(--trust-space-md);
+            border-radius: var(--trust-radius-md);
+            border: 1px solid var(--trust-gray-300);
+            background: white;
+            font-size: var(--trust-text-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .filter-btn:hover {
+            background: var(--trust-gray-50);
+        }
+        
+        .filter-btn.active {
+            background: var(--trust-primary-500);
+            color: white;
+            border-color: var(--trust-primary-500);
+        }
+        
+        .trust-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .trust-table thead {
+            background: var(--trust-gray-50);
+        }
+        
+        .trust-table th {
+            padding: var(--trust-space-md);
+            text-align: left;
+            font-size: var(--trust-text-sm);
+            font-weight: 600;
+            color: var(--trust-gray-700);
+            border-bottom: 2px solid var(--trust-gray-200);
+        }
+        
+        .trust-table td {
+            padding: var(--trust-space-md);
+            font-size: var(--trust-text-sm);
+            border-bottom: 1px solid var(--trust-gray-100);
+        }
+        
+        .trust-table tbody tr:hover {
+            background: var(--trust-gray-50);
+        }
+        
+        .test-name {
+            font-weight: 500;
+            color: var(--trust-gray-900);
+            max-width: 400px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .test-type {
+            display: inline-block;
+            padding: var(--trust-space-xs) var(--trust-space-sm);
+            border-radius: var(--trust-radius-sm);
+            font-size: var(--trust-text-xs);
+            font-weight: 600;
+        }
+        
+        .type-unit {
+            background: var(--trust-primary-50);
+            color: var(--trust-primary-600);
+        }
+        
+        .type-integration {
+            background: var(--trust-warning-50);
+            color: var(--trust-warning-600);
+        }
+        
+        .type-e2e {
+            background: #faf5ff;
+            color: #9333ea;
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            height: 8px;
+            background: var(--trust-gray-200);
+            border-radius: var(--trust-radius-md);
+            overflow: hidden;
+            margin-top: var(--trust-space-sm);
+        }
+        
+        .progress-fill {
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-danger {
+            background: var(--trust-danger-500);
+        }
+        
+        .progress-warning {
+            background: var(--trust-warning-500);
+        }
+        
+        .progress-success {
+            background: var(--trust-success-500);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .chart-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .table-filters {
+                flex-direction: column;
+            }
+            
+            .trust-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+        
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: var(--trust-space-2xl);
+            color: var(--trust-gray-500);
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--trust-gray-200);
+            border-top-color: var(--trust-primary-500);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <h1>🎯 Test Quality Dashboard</h1>
+            <p>Análise completa de 1.973 testes do MCP Quality CLI</p>
+        </header>
+        
+        <!-- Metrics Grid -->
+        <div class="metrics-grid">
+            <div class="trust-card">
+                <div class="card-header">
+                    <span class="card-title">Total de Testes</span>
+                    <span class="card-icon">📊</span>
+                </div>
+                <div class="card-value" id="totalTests">1,973</div>
+                <div class="card-label">Testes analisados</div>
+                <div class="progress-bar">
+                    <div class="progress-fill progress-success" style="width: 100%"></div>
+                </div>
+            </div>
+            
+            <div class="trust-card">
+                <div class="card-header">
+                    <span class="card-title">Testes Fortes</span>
+                    <span class="card-icon">💪</span>
+                </div>
+                <div class="card-value" style="color: var(--trust-success-500)" id="strongTests">0%</div>
+                <div class="card-label">Asserts robustos</div>
+                <span class="card-badge badge-danger">CRÍTICO</span>
+            </div>
+            
+            <div class="trust-card">
+                <div class="card-header">
+                    <span class="card-title">Testes Fracos</span>
+                    <span class="card-icon">⚠️</span>
+                </div>
+                <div class="card-value" style="color: var(--trust-danger-500)" id="weakTests">100%</div>
+                <div class="card-label">Precisam melhoria</div>
+                <span class="card-badge badge-danger">1.973 testes</span>
+            </div>
+            
+            <div class="trust-card">
+                <div class="card-header">
+                    <span class="card-title">Diff Coverage</span>
+                    <span class="card-icon">🎯</span>
+                </div>
+                <div class="card-value" style="color: var(--trust-warning-500)" id="diffCoverage">0%</div>
+                <div class="card-label">Cobertura no diff</div>
+                <span class="card-badge badge-warning">Baixa</span>
+            </div>
+            
+            <div class="trust-card">
+                <div class="card-header">
+                    <span class="card-title">Contracts (CDC)</span>
+                    <span class="card-icon">🤝</span>
+                </div>
+                <div class="card-value" style="color: var(--trust-warning-500)" id="contracts">0%</div>
+                <div class="card-label">Protegidos por Pact</div>
+                <span class="card-badge badge-warning">Sem contratos</span>
+            </div>
+            
+            <div class="trust-card">
+                <div class="card-header">
+                    <span class="card-title">Testes Flaky</span>
+                    <span class="card-icon">🔄</span>
+                </div>
+                <div class="card-value" style="color: var(--trust-success-500)" id="flaky">0%</div>
+                <div class="card-label">Instabilidade</div>
+                <span class="card-badge badge-success">Estável</span>
+            </div>
+        </div>
+        
+        <!-- Charts Section -->
+        <div class="chart-section">
+            <div class="chart-card">
+                <h2 class="chart-title">Distribuição por Tipo</h2>
+                <canvas id="typeChart" width="400" height="300"></canvas>
+            </div>
+            
+            <div class="chart-card">
+                <h2 class="chart-title">Qualidade dos Asserts</h2>
+                <canvas id="assertChart" width="400" height="300"></canvas>
+            </div>
+        </div>
+        
+        <!-- Table Section -->
+        <div class="table-section">
+            <div class="table-header">
+                <h2 class="table-title">Lista de Testes</h2>
+                <div class="table-filters">
+                    <button class="filter-btn active" onclick="filterTests('all')">Todos (1973)</button>
+                    <button class="filter-btn" onclick="filterTests('unit')" id="unitBtn">Unit</button>
+                    <button class="filter-btn" onclick="filterTests('integration')" id="integrationBtn">Integration</button>
+                    <button class="filter-btn" onclick="filterTests('e2e')" id="e2eBtn">E2E</button>
+                    <button class="filter-btn" onclick="filterTests('weak')" id="weakBtn">Fracos (1973)</button>
+                </div>
+            </div>
+            
+            <div id="tableContainer">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Carregando testes...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        // Dados carregados
+        const metrics = {
+            totalTests: 1973,
+            assertStrongPct: 0,
+            assertWeakPct: 100,
+            diffCoveredPct: 0,
+            contractsProtectedPct: 0,
+            suspectedFlakyPct: 0,
+            testsWithAsserts: 0,
+            testsWithoutAsserts: 1973
+        };
+        
+        let testsData = [];
+        let currentFilter = 'all';
+        
+        // Carregar dados dos testes
+        async function loadTests() {
+            try {
+                const response = await fetch('test-explanations.json');
+                testsData = await response.json();
+                renderTable();
+                updateCharts();
+                updateCounters();
+            } catch (error) {
+                console.error('Erro ao carregar testes:', error);
+                document.getElementById('tableContainer').innerHTML = `
+                    <div class="loading">
+                        <p style="color: var(--trust-danger-500)">❌ Erro ao carregar dados</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Atualizar contadores
+        function updateCounters() {
+            const typeCounts = testsData.reduce((acc, test) => {
+                acc[test.testType] = (acc[test.testType] || 0) + 1;
+                return acc;
+            }, {});
+            
+            document.getElementById('unitBtn').textContent = `Unit (${typeCounts.unit || 0})`;
+            document.getElementById('integrationBtn').textContent = `Integration (${typeCounts.integration || 0})`;
+            document.getElementById('e2eBtn').textContent = `E2E (${typeCounts.e2e || 0})`;
+        }
+        
+        // Filtrar testes
+        function filterTests(filter) {
+            currentFilter = filter;
+            
+            // Atualizar botões ativos
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            renderTable();
+        }
+        
+        // Renderizar tabela
+        function renderTable() {
+            let filtered = testsData;
+            
+            if (currentFilter !== 'all') {
+                if (currentFilter === 'weak') {
+                    filtered = testsData.filter(t => t.assertStrength === 'fraco');
+                } else {
+                    filtered = testsData.filter(t => t.testType === currentFilter);
+                }
+            }
+            
+            const rows = filtered.slice(0, 50).map(test => `
+                <tr>
+                    <td>
+                        <div class="test-name" title="${test.name}">${test.name}</div>
+                    </td>
+                    <td>
+                        <span class="test-type type-${test.testType}">${test.testType.toUpperCase()}</span>
+                    </td>
+                    <td>
+                        <span class="card-badge ${test.assertStrength === 'fraco' ? 'badge-danger' : test.assertStrength === 'médio' ? 'badge-warning' : 'badge-success'}">
+                            ${test.assertStrength}
+                        </span>
+                    </td>
+                    <td>${test.smells.length}</td>
+                    <td>${test.coverage.linesCovered}/${test.coverage.linesTotal}</td>
+                </tr>
+            `).join('');
+            
+            document.getElementById('tableContainer').innerHTML = `
+                <table class="trust-table">
+                    <thead>
+                        <tr>
+                            <th>Nome do Teste</th>
+                            <th>Tipo</th>
+                            <th>Força</th>
+                            <th>Smells</th>
+                            <th>Coverage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${rows}
+                    </tbody>
+                </table>
+                <div style="padding: var(--trust-space-lg); text-align: center; color: var(--trust-gray-500);">
+                    Mostrando ${Math.min(50, filtered.length)} de ${filtered.length} testes
+                </div>
+            `;
+        }
+        
+        // Criar gráficos
+        function updateCharts() {
+            // Gráfico de Tipos
+            const typeCounts = testsData.reduce((acc, test) => {
+                acc[test.testType] = (acc[test.testType] || 0) + 1;
+                return acc;
+            }, {});
+            
+            new Chart(document.getElementById('typeChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Unit', 'Integration', 'E2E', 'Unknown'],
+                    datasets: [{
+                        data: [
+                            typeCounts.unit || 0,
+                            typeCounts.integration || 0,
+                            typeCounts.e2e || 0,
+                            typeCounts.unknown || 0
+                        ],
+                        backgroundColor: [
+                            '#0ea5e9',
+                            '#f59e0b',
+                            '#9333ea',
+                            '#6b7280'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico de Asserts
+            new Chart(document.getElementById('assertChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Fortes', 'Médios', 'Fracos', 'Sem Asserts'],
+                    datasets: [{
+                        label: 'Quantidade',
+                        data: [
+                            metrics.assertStrongPct * metrics.totalTests / 100,
+                            metrics.assertMediumPct || 0,
+                            metrics.assertWeakPct * metrics.totalTests / 100,
+                            metrics.testsWithoutAsserts
+                        ],
+                        backgroundColor: [
+                            '#22c55e',
+                            '#f59e0b',
+                            '#ef4444',
+                            '#6b7280'
+                        ],
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Inicializar
+        loadTests();
+    </script>
+</body>
+</html>
+
