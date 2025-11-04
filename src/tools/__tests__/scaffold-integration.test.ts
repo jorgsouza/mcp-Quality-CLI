@@ -9,6 +9,11 @@ describe('scaffoldIntegrationTests', () => {
   beforeEach(async () => {
     testDir = `/tmp/integration-test-${Date.now()}`;
     await fs.mkdir(testDir, { recursive: true });
+    // Criar package.json para que seja detectado como TypeScript
+    await fs.writeFile(
+      join(testDir, 'package.json'),
+      JSON.stringify({ name: 'test-project', devDependencies: { vitest: '^0.34.0' } })
+    );
   });
 
   afterEach(async () => {

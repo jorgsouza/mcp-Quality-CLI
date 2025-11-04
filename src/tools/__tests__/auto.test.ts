@@ -346,8 +346,8 @@ describe('auto.ts - autoQualityRun', () => {
 
     expect(result.ok).toBe(false);
     // [FASE 1] Executa init-product + self-check + FASE 1 (CUJ/SLO/Risk) antes de analyze
-    // [FASE 2] Portfolio Planning ainda não implementado (pulado)
-    expect(result.steps).toEqual(['init-product', 'self-check', 'catalog-cujs', 'define-slos', 'risk-register']);
+    // [FASE 2] Portfolio Planning agora está ativo
+    expect(result.steps).toEqual(['init-product', 'self-check', 'catalog-cujs', 'define-slos', 'risk-register', 'portfolio-plan']);
   });
 });
 
