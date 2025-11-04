@@ -14,6 +14,7 @@ import { existsSync } from 'node:fs';
 import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
 import { parseCoverageAuto } from '../parsers/coverage-parsers.js';
+import { parseLCOV, findLCOVFile, findFileInReport, calculateLineCoverage, type LCOVReport } from '../parsers/lcov-line-parser.js'; // 🆕 Parser preciso
 import { getPaths } from '../utils/paths.js';
 import { writeFileSafe } from '../utils/fs.js';
 
@@ -67,19 +68,21 @@ export async function runDiffCoverage(
   // 2. Obter linhas alteradas por arquivo
   const diffData = await getDiffLinesPerFile(repo, baseBranch, changedFiles);
 
-  // 3. Obter coverage geral
-  const coverageFile = await findCoverageFile(repo);
-  let coverageData: any = null;
+  // 🆕 3. Obter coverage LCOV preciso linha-a-linha
+  const lcovFile = await findLCOVFile(repo);
+  let lcovReport: LCOVReport | null = null;
 
-  if (coverageFile) {
+  if (lcovFile) {
     try {
-      coverageData = await parseCoverageAuto(coverageFile);
+      const lcovContent = await fs.readFile(lcovFile, 'utf-8');
+      lcovReport = parseLCOV(lcovContent);
+      console.log(`📊 LCOV carregado: ${lcovReport.files.size} arquivos, ${lcovReport.totalLines} linhas`);
     } catch (error) {
-      console.warn('⚠️  Erro ao parsear coverage:', error);
+      console.warn('⚠️  Erro ao parsear LCOV, usando fallback:', error);
     }
   }
 
-  // 4. Calcular coverage do diff
+  // 🆕 4. Calcular coverage EXATO do diff linha-a-linha
   const fileResults: Array<{
     file: string;
     linesAdded: number;
@@ -91,21 +94,30 @@ export async function runDiffCoverage(
   let totalLinesCovered = 0;
 
   for (const [file, lines] of Object.entries(diffData)) {
-    const linesAdded = lines.length;
+    const changedLines = lines as number[];
+    const linesAdded = changedLines.length;
     totalLinesAdded += linesAdded;
 
-    // Verificar quais linhas estão cobertas
     let linesCovered = 0;
 
-    if (coverageData) {
-      // Simples: assumir 80% de cobertura para arquivos testados
-      // Em produção, parsearia line-by-line do lcov.info
-      linesCovered = Math.floor(linesAdded * 0.8);
+    if (lcovReport && changedLines.length > 0) {
+      // 🆕 CÁLCULO PRECISO: Verifica cada linha alterada no LCOV
+      const lcovFile = findFileInReport(lcovReport, file);
+      if (lcovFile) {
+        const result = calculateLineCoverage(lcovReport, lcovFile, changedLines);
+        linesCovered = result.covered;
+        console.log(`  ${file}: ${linesCovered}/${linesAdded} linhas cobertas (${result.percentage.toFixed(1)}%)`);
+      } else {
+        console.log(`  ${file}: não encontrado no LCOV (0% coverage)`);
+      }
+    } else if (linesAdded === 0) {
+      // Arquivo sem mudanças de código (ex: apenas imports)
+      linesCovered = 0;
     }
 
     totalLinesCovered += linesCovered;
 
-    const fileCoverage = linesAdded > 0 ? (linesCovered / linesAdded) * 100 : 0;
+    const fileCoverage = linesAdded > 0 ? (linesCovered / linesAdded) * 100 : 100;
 
     fileResults.push({
       file,

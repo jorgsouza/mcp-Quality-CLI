@@ -42,6 +42,9 @@ import { fileExists } from '../utils/fs.js';
 import { detectLanguage } from '../detectors/language.js';
 import { getPaths, type QAPaths } from '../utils/paths.js';
 
+// 🆕 [PASSO 2] Engine Unificado Multi-Linguagem
+import { runPipeline } from '../engine/index.js';
+
 // [QUALITY GATES] FASE 1: CUJ/SLO/Risk Discovery
 import { catalogCUJs } from './catalog-cujs.js';
 import { defineSLOs } from './define-slos.js';
@@ -160,6 +163,7 @@ interface PipelineContext {
   steps: string[];
   outputs: Record<string, string>;
   settings: any;
+  language?: string; // 🆕 Linguagem detectada pelo engine
   metrics?: Record<string, any>; // 🆕 Métricas adicionais (contracts, DORA, quality gates, etc)
 }
 
@@ -586,15 +590,38 @@ async function runContractTestingPhase(ctx: PipelineContext): Promise<void> {
 }
 
 /**
- * Phase 2: Code Analysis
+ * Phase 2: Code Analysis (🆕 Unificado com Engine Multi-Linguagem)
  */
 async function runAnalysisPhase(ctx: PipelineContext): Promise<void> {
   if (!['full', 'analyze', 'plan', 'scaffold'].includes(ctx.mode)) {
     return;
   }
   
-  // 1. Analyze (código)
-  console.log('🔍 [1/11] Analisando repositório...');
+  // 🆕 1. Usa runPipeline do engine para detecção automática de linguagem
+  console.log('🔍 [1/11] Analisando repositório com Engine Unificado...');
+  try {
+    const engineResult = await runPipeline({
+      repo: ctx.repoPath,
+      product: ctx.product,
+    });
+    
+    // Armazena resultado do engine
+    ctx.language = engineResult.report.language;
+    console.log(`📝 Linguagem detectada: ${ctx.language}`);
+    
+    // Armazena funções/testes descobertos
+    if (engineResult.report.functions) {
+      console.log(`📦 ${engineResult.report.functions.length} funções descobertas`);
+    }
+    if (engineResult.report.tests) {
+      console.log(`🧪 ${engineResult.report.tests.length} testes descobertos`);
+    }
+    
+  } catch (error) {
+    console.warn('⚠️  Engine falhou, usando fallback:', error);
+  }
+  
+  // 2. Analyze tradicional (complementar)
   const analyzeResult = await analyze({
     repo: ctx.repoPath,
     product: ctx.product
