@@ -1,0 +1,14 @@
+{
+  "assertStrongPct": 0,
+  "assertMediumPct": 0,
+  "assertWeakPct": 100,
+  "diffCoveredPct": 0,
+  "contractsProtectedPct": 0,
+  "weakTestsInDiffPct": 0,
+  "criticalEndpointsWithoutContract": 0,
+  "suspectedFlakyPct": 0,
+  "diagnosticAssertsPct": 0,
+  "totalTests": 1973,
+  "testsWithAsserts": 0,
+  "testsWithoutAsserts": 1973
+}
