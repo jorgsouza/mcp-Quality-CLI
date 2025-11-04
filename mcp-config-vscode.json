@@ -2,7 +2,7 @@
   "mcpServers": {
     "quality": {
       "command": "node",
-      "args": ["/Volumes/Dev/mcp-Quality-CLI/dist/server.js"]
+      "args": ["/home/jorgesouza/Documents/dev/mcp-Quality-CLI/dist/server.js"]
     }
   }
 }

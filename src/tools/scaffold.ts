@@ -1,4 +1,9 @@
+import { join as joinPath, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { join, writeFileSafe, ensureDir } from '../utils/fs.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export interface ScaffoldParams {
   repo: string;

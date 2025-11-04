@@ -1,0 +1,50 @@
+{
+  "timestamp": "2025-11-04T13:31:40.283Z",
+  "repo": ".",
+  "product": "mcp-Quality-CLI",
+  "risks": [
+    {
+      "id": "risk-api-api",
+      "cuj_id": "api-api",
+      "title": "Risco: API (api)",
+      "description": "API (api) apresenta impacto medium e probabilidade low de falha. Este CUJ possui 5 endpoints e 1 dependências.",
+      "impact": "medium",
+      "probability": "low",
+      "risk_score": 10,
+      "affected_modules": [],
+      "mitigation_strategies": [
+        "Aumentar cobertura de testes unitários e integração",
+        "Adicionar testes E2E para validar user flow completo"
+      ],
+      "has_cdc": false,
+      "recommended_tests": [
+        "unit",
+        "integration",
+        "cdc"
+      ]
+    },
+    {
+      "id": "risk-api-users",
+      "cuj_id": "api-users",
+      "title": "Risco: API (users)",
+      "description": "API (users) apresenta impacto medium e probabilidade low de falha. Este CUJ possui 5 endpoints e 1 dependências.",
+      "impact": "medium",
+      "probability": "low",
+      "risk_score": 10,
+      "affected_modules": [],
+      "mitigation_strategies": [
+        "Aumentar cobertura de testes unitários e integração",
+        "Adicionar testes E2E para validar user flow completo"
+      ],
+      "has_cdc": false,
+      "recommended_tests": [
+        "unit",
+        "integration",
+        "cdc"
+      ]
+    }
+  ],
+  "top_5_critical": [],
+  "total_risk_score": 20,
+  "coverage_gaps": []
+}

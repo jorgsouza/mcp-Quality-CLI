@@ -1,0 +1,45 @@
+{
+  "timestamp": "2025-11-04T13:31:40.279Z",
+  "repo": ".",
+  "product": "mcp-Quality-CLI",
+  "sources": [
+    "routes",
+    "readme"
+  ],
+  "cujs": [
+    {
+      "id": "api-api",
+      "name": "API (api)",
+      "description": "General API for api",
+      "criticality": "medium",
+      "endpoints": [
+        "GET /api/users",
+        "POST /api/users",
+        "GET /api/health",
+        "GET /api/users",
+        "OPTIONS /api/*"
+      ],
+      "dependencies": [
+        "database"
+      ]
+    },
+    {
+      "id": "api-users",
+      "name": "API (users)",
+      "description": "General API for users",
+      "criticality": "medium",
+      "endpoints": [
+        "GET /users",
+        "POST /users",
+        "PUT /users/:id",
+        "DELETE /users/:id",
+        "PATCH /users/:id"
+      ],
+      "dependencies": [
+        "database"
+      ]
+    }
+  ],
+  "auto_detected": 2,
+  "manual_review_needed": true
+}

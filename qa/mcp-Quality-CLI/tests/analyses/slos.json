@@ -1,0 +1,20 @@
+{
+  "timestamp": "2025-11-04T13:31:40.281Z",
+  "repo": ".",
+  "product": "mcp-Quality-CLI",
+  "slos": [
+    {
+      "cuj_id": "api-api",
+      "latency_p99_ms": 5000,
+      "error_rate_max": 0.05,
+      "availability_min": 0.99
+    },
+    {
+      "cuj_id": "api-users",
+      "latency_p99_ms": 5000,
+      "error_rate_max": 0.05,
+      "availability_min": 0.99
+    }
+  ],
+  "defaults_applied": true
+}

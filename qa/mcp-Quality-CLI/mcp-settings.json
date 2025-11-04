@@ -1,0 +1,26 @@
+{
+  "product": "mcp-Quality-CLI",
+  "base_url": "http://localhost:3000",
+  "domains": [],
+  "critical_flows": [],
+  "targets": {
+    "diff_coverage_min": 80,
+    "flaky_pct_max": 5,
+    "ci_p95_min": 8
+  },
+  "environments": {
+    "dev": {
+      "url": "http://localhost:3000"
+    },
+    "stg": {
+      "url": "http://localhost:3000"
+    },
+    "prod": {
+      "url": "http://localhost:3000"
+    }
+  },
+  "auth": {
+    "strategy": "storageState",
+    "storageStatePath": "fixtures/auth/storageState.json"
+  }
+}

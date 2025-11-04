@@ -1,28 +1,25 @@
 /**
  * auto.ts - Orchestrador "One-Shot" COMPLETO para análise de qualidade
  * 
- * FLUXO MÁGICO:
- * 1. Self-check: Valida ambiente (Node, vitest, git, permissões)
- * 2. [FASE 1] CUJ/SLO/Risk Discovery: Cataloga journeys críticos
- * 3. [FASE 2] Portfolio Planning: Redesenha pirâmide de testes
- * 4. [FASE 3] Contract Testing: Gera e verifica contratos Pact (CDC)
- * 5. Analyze: Analisa código e detecta funções/endpoints/eventos
- * 6. Coverage Analysis: Roda testes e analisa cobertura
- * 7. Test Strategy: Recomenda estratégia (pirâmide de testes)
- * 8. Plan: Gera plano de testes baseado em riscos
- * 9. Scaffold (opcional): Gera estrutura de testes faltantes
- * 10. Run Tests: Executa testes com coverage completo
- * 11. Pyramid Report: Gera relatório da pirâmide de testes
- * 12. Dashboard: Gera dashboard.html visual interativo
- * 13. Validate: Valida gates de qualidade (coverage, mutation, scenarios)
- * 14. Final Report: Consolida TUDO em um relatório executivo
+ * FLUXO CONSOLIDADO (9 FASES):
+ * 1. [FASE 1] CUJ/SLO/Risk Discovery: Cataloga journeys críticos
+ * 2. [FASE 2] Portfolio Planning: Redesenha pirâmide de testes
+ * 3. [FASE 3] Contract Testing: Gera e verifica contratos Pact (CDC)
+ * 4. Analyze: Analisa código e detecta funções/endpoints/eventos
+ * 5. Coverage Analysis: Analisa cobertura e qualidade dos testes
+ * 6. Test Strategy & Planning: Recomenda estratégia e gera plano
+ * 7. 📊 RELATÓRIOS CONSOLIDADOS (2 PRINCIPAIS):
+ *    - CODE-ANALYSIS.md: Análise completa do código
+ *    - TEST-PLAN.md: Planejamento estratégico de testes
+ * 8. Scaffold (opcional): Gera estrutura de testes faltantes
+ * 9. Run & Validate: Executa testes + valida gates + dashboard
  * 
  * Modos disponíveis:
  * - full: Análise completa (TODAS as etapas) ← RECOMENDADO
  * - analyze: Apenas análise do código (etapas 1-7)
- * - plan: Análise + geração de plano (etapas 1-8)
- * - scaffold: Análise + plano + scaffold de testes (etapas 1-9)
- * - run: Executa testes existentes + coverage (etapas 1-2, 10-14)
+ * - plan: Análise + geração de plano (etapas 1-7)
+ * - scaffold: Análise + plano + scaffold de testes (etapas 1-8)
+ * - run: Executa testes existentes + coverage (etapas 9)
  */
 
 import { promises as fs } from 'node:fs';
@@ -30,15 +27,14 @@ import { join } from 'node:path';
 import { selfCheck } from './self-check.js';
 import { analyze } from './analyze.js';
 import { generatePlan } from './plan.js';
+import { recommendTestStrategy } from './recommend-strategy.js';
+import { generatePyramidReport } from './pyramid-report.js';
 import { scaffoldPlaywright } from './scaffold.js';
 import { scaffoldUnitTests } from './scaffold-unit.js';
 import { runCoverageAnalysis } from './run-coverage.js';
-import { generatePyramidReport } from './pyramid-report.js';
 import { generateDashboard } from './dashboard.js';
 import { analyzeTestCoverage } from './coverage.js';
-import { recommendTestStrategy } from './recommend-strategy.js';
 import { validate } from './validate.js';
-import { buildReport } from './report.js';
 import { analyzeTestLogic } from './analyze-test-logic.js';
 import { initProduct } from './init-product.js';
 import { loadMCPSettings, inferProductFromPackageJson } from '../utils/config.js';
@@ -58,6 +54,9 @@ import { riskRegister } from './risk-register.js';
 // [QUALITY GATES] FASE 3: CDC/Pact Contract Testing
 import { scaffoldContractsPact } from './scaffold-contracts-pact.js';
 import { runContractsVerify } from './run-contracts-verify.js';
+
+// [CONSOLIDATION] Consolidated Reports
+import { consolidateCodeAnalysisReport, consolidateTestPlanReport } from './consolidate-reports.js';
 
 export type AutoMode = 'full' | 'analyze' | 'plan' | 'scaffold' | 'run';
 
@@ -603,15 +602,18 @@ async function runCoverageAnalysisPhase(ctx: PipelineContext): Promise<void> {
 }
 
 /**
- * Phase 4: Test Strategy & Planning
+ * Phase 4: Test Strategy & Planning (dados intermediários para consolidação)
+ * 
+ * Gera relatórios intermediários que serão consolidados depois.
+ * Os arquivos .md individuais serão deletados após consolidação.
  */
 async function runPlanningPhase(ctx: PipelineContext): Promise<void> {
   if (!['full', 'plan', 'scaffold'].includes(ctx.mode)) {
     return;
   }
   
-  // 3. Recommend Strategy
-  console.log('🎯 [3/11] Gerando recomendação de estratégia...');
+  // 3. Recommend Strategy (dados intermediários)
+  console.log('🎯 [3/11] Gerando dados de estratégia...');
   try {
     const recommendResult = await recommendTestStrategy({
       repo: ctx.repoPath,
@@ -619,32 +621,145 @@ async function runPlanningPhase(ctx: PipelineContext): Promise<void> {
     });
     ctx.steps.push('recommend-strategy');
     ctx.outputs.recommendStrategy = 'tests/analyses/TEST-STRATEGY-RECOMMENDATION.md';
-    console.log(`✅ Recomendação gerada!\n`);
-    console.log(recommendResult.summary);
+    console.log(`✅ Dados de estratégia gerados (será consolidado)\n`);
   } catch (error) {
-    console.log(`⚠️  Erro na recomendação: ${error instanceof Error ? error.message : error}\n`);
+    console.log(`⚠️  Erro na estratégia: ${error instanceof Error ? error.message : error}\n`);
   }
   
-  // 4. Generate Plan
-  console.log('📋 [4/11] Gerando plano de testes...');
-  const planResult = await generatePlan({
-    repo: ctx.repoPath,
-    product: ctx.product
-  });
-  ctx.steps.push('plan');
-  ctx.outputs.plan = planResult.plan;
-  console.log(`✅ Plano gerado: ${planResult.plan}\n`);
+  // 4. Generate Plan (dados intermediários)
+  console.log('📋 [4/11] Gerando dados de plano...');
+  try {
+    const planResult = await generatePlan({
+      repo: ctx.repoPath,
+      product: ctx.product
+    });
+    ctx.steps.push('plan');
+    ctx.outputs.plan = planResult.plan;
+    console.log(`✅ Dados de plano gerados (será consolidado)\n`);
+  } catch (error) {
+    console.log(`⚠️  Erro no plano: ${error instanceof Error ? error.message : error}\n`);
+  }
 }
 
 /**
- * Phase 5: Scaffold (opcional)
+ * Phase 5: Consolidated Reporting (2 relatórios principais)
+ */
+async function runConsolidatedReporting(ctx: PipelineContext): Promise<void> {
+  if (!['full', 'analyze', 'plan', 'scaffold', 'run'].includes(ctx.mode)) {
+    return;
+  }
+  
+  console.log('\n' + '='.repeat(60));
+  console.log('📊 [5/11] Gerando relatórios consolidados...');
+  console.log('='.repeat(60) + '\n');
+  
+  // Relatório 1: CODE-ANALYSIS.md
+  console.log('📋 [5.1] Consolidando análise de código...');
+  try {
+    const codeAnalysisResult = await consolidateCodeAnalysisReport(
+      ctx.repoPath,
+      ctx.product
+    );
+    ctx.steps.push('code-analysis-report');
+    ctx.outputs.codeAnalysisReport = codeAnalysisResult.path;
+    console.log(`✅ CODE-ANALYSIS.md gerado: ${codeAnalysisResult.path}\n`);
+  } catch (error) {
+    console.log(`⚠️  Erro ao gerar análise de código: ${error instanceof Error ? error.message : error}\n`);
+  }
+  
+  // Relatório 2: TEST-PLAN.md
+  console.log('📋 [5.2] Consolidando plano de testes...');
+  try {
+    const testPlanResult = await consolidateTestPlanReport(
+      ctx.repoPath,
+      ctx.product
+    );
+    ctx.steps.push('test-plan-report');
+    ctx.outputs.testPlanReport = testPlanResult.path;
+    console.log(`✅ TEST-PLAN.md gerado: ${testPlanResult.path}\n`);
+  } catch (error) {
+    console.log(`⚠️  Erro ao gerar plano de testes: ${error instanceof Error ? error.message : error}\n`);
+  }
+  
+  // Limpar relatórios redundantes
+  console.log('🧹 [5.3] Limpando relatórios redundantes...');
+  await cleanupRedundantReports(ctx);
+  
+  console.log('✅ Relatórios consolidados gerados com sucesso!\n');
+}
+
+/**
+ * Remove relatórios individuais redundantes após consolidação
+ * 
+ * Mantém apenas:
+ * - CODE-ANALYSIS.md (consolidado) ⭐
+ * - TEST-PLAN.md (consolidado) ⭐
+ * - SELF-CHECK.md (diagnóstico do ambiente)
+ * - GETTING_STARTED.md (guia inicial)
+ * - README.md (documentação)
+ * - dashboard.html (visualização interativa)
+ * - arquivos JSON em analyses/ (dados brutos para referência)
+ */
+async function cleanupRedundantReports(ctx: PipelineContext): Promise<void> {
+  const redundantFiles = [
+    // === RELATÓRIOS CONSOLIDADOS EM CODE-ANALYSIS.md ===
+    join(ctx.paths.reports, 'COVERAGE-ANALYSIS.md'),
+    join(ctx.paths.reports, 'COVERAGE-REPORT.md'),
+    join(ctx.paths.reports, 'TEST-LOGIC-ANALYSIS.md'),
+    join(ctx.paths.analyses, 'TEST-QUALITY-REPORT.md'),
+    join(ctx.paths.reports, 'TEST-QUALITY-LOGICAL-REPORT.md'),
+    join(ctx.paths.reports, 'QUALITY-ANALYSIS-REPORT.md'),
+    join(ctx.paths.reports, 'QUALITY-REPORT.md'), // ← Gerado pela tool report do MCP
+    
+    // === RELATÓRIOS CONSOLIDADOS EM TEST-PLAN.md ===
+    join(ctx.paths.analyses, 'TEST-STRATEGY-RECOMMENDATION.md'),
+    join(ctx.paths.reports, 'PLAN.md'),
+    join(ctx.paths.reports, 'PYRAMID-REPORT.md'),
+    join(ctx.paths.reports, 'PYRAMID-REPORT.html'),
+    join(ctx.paths.reports, 'PYRAMID-REPORT.json'),
+    join(ctx.paths.reports, 'PORTFOLIO-PLAN.md'),
+    
+    // === RELATÓRIOS DE SCAFFOLDING (gerados apenas se scaffold) ===
+    join(ctx.paths.reports, 'INTEGRATION-TESTING-GUIDE.md'),
+    join(ctx.paths.reports, 'UNIT-TESTING-GUIDE.md'),
+    
+    // === RELATÓRIOS DE EXECUÇÃO (gerados apenas se run) ===
+    join(ctx.paths.reports, 'DIFF-COVERAGE-REPORT.md'),
+    join(ctx.paths.reports, 'CONTRACTS-VERIFY.md'),
+    
+    // === RELATÓRIOS DE CATALOGAÇÃO ===
+    join(ctx.paths.reports, 'SCENARIO-CATALOG.md'),
+    join(ctx.paths.reports, 'RESPONSIBILITY-MATRIX.md'),
+  ];
+  
+  let deleted = 0;
+  for (const file of redundantFiles) {
+    try {
+      if (await fileExists(file)) {
+        await fs.unlink(file);
+        deleted++;
+      }
+    } catch (error) {
+      // Ignora erros de deleção
+    }
+  }
+  
+  if (deleted > 0) {
+    console.log(`   🗑️  ${deleted} relatório(s) redundante(s) removido(s)\n`);
+  } else {
+    console.log(`   ✓ Nenhum arquivo redundante encontrado\n`);
+  }
+}
+
+/**
+ * Phase 6: Scaffold (opcional)
  */
 async function runScaffoldPhase(ctx: PipelineContext, skipScaffold: boolean): Promise<void> {
   if (!['full', 'scaffold'].includes(ctx.mode) || skipScaffold) {
     return;
   }
   
-  console.log('🏗️  [5/11] Gerando scaffold de testes...');
+  console.log('🏗️  [6/11] Gerando scaffold de testes...');
   
   // Decidir tipo de scaffold baseado no contexto
   if (!ctx.context.hasTests) {
@@ -663,7 +778,7 @@ async function runScaffoldPhase(ctx: PipelineContext, skipScaffold: boolean): Pr
 }
 
 /**
- * Phase 6-11: Test Execution & Reporting
+ * Phase 7-9: Test Execution & Validation
  */
 async function runTestingPhase(ctx: PipelineContext, skipRun: boolean): Promise<void> {
   if (!['full', 'run'].includes(ctx.mode) || skipRun) {
@@ -675,8 +790,8 @@ async function runTestingPhase(ctx: PipelineContext, skipRun: boolean): Promise<
     return;
   }
   
-  // 6. Run Tests with Coverage
-  console.log('🧪 [6/11] Executando testes com cobertura...');
+  // 7. Run Tests with Coverage
+  console.log('🧪 [7/9] Executando testes com cobertura...');
   try {
     const coverageResult = await runCoverageAnalysis({
       repo: ctx.repoPath,
@@ -689,36 +804,8 @@ async function runTestingPhase(ctx: PipelineContext, skipRun: boolean): Promise<
     console.log(`⚠️  Erro ao executar testes: ${error instanceof Error ? error.message : error}\n`);
   }
   
-  // 7. Pyramid Report
-  console.log('📊 [7/11] Gerando relatório da pirâmide de testes...');
-  try {
-    const pyramidResult = await generatePyramidReport({
-      repo: ctx.repoPath,
-      product: ctx.product
-    });
-    ctx.steps.push('pyramid-report');
-    ctx.outputs.pyramidReport = pyramidResult.report_path;
-    console.log(`✅ Relatório da pirâmide gerado: ${pyramidResult.report_path}\n`);
-  } catch (error) {
-    console.log(`⚠️  Erro ao gerar pirâmide: ${error instanceof Error ? error.message : error}\n`);
-  }
-  
-  // 8. Dashboard HTML
-  console.log('📊 [8/11] Gerando dashboard da pirâmide de testes...');
-  try {
-    const dashboardResult = await generateDashboard({
-      repo: ctx.repoPath,
-      product: ctx.product
-    });
-    ctx.steps.push('dashboard');
-    ctx.outputs.dashboard = dashboardResult.dashboard_path;
-    console.log(`✅ Dashboard gerado: ${dashboardResult.dashboard_path}\n`);
-  } catch (error) {
-    console.log(`⚠️  Erro ao gerar dashboard: ${error instanceof Error ? error.message : error}\n`);
-  }
-  
-  // 9. Validate Gates
-  console.log('✅ [9/11] Validando gates de qualidade...');
+  // 8. Validate Gates
+  console.log('✅ [8/9] Validando gates de qualidade...');
   try {
     const validateResult = await validate({
       repo: ctx.repoPath,
@@ -733,87 +820,39 @@ async function runTestingPhase(ctx: PipelineContext, skipRun: boolean): Promise<
     console.log(`⚠️  Erro ao validar gates: ${error instanceof Error ? error.message : error}\n`);
   }
   
-  // 10. Final Consolidated Report
-  console.log('📄 [10/11] Gerando relatório consolidado final...');
+  // 9. Dashboard HTML (mantido para visualização interativa)
+  console.log('📊 [9/9] Gerando dashboard interativo...');
   try {
-    const reportResult = await buildReport({
-      in_dir: ctx.paths.analyses,
-      out_file: 'QUALITY-ANALYSIS-REPORT.md'
+    const dashboardResult = await generateDashboard({
+      repo: ctx.repoPath,
+      product: ctx.product
     });
-    ctx.steps.push('final-report');
-    ctx.outputs.finalReport = reportResult.out;
-    console.log(`✅ Relatório consolidado gerado: ${reportResult.out}\n`);
+    ctx.steps.push('dashboard');
+    ctx.outputs.dashboard = dashboardResult.dashboard_path;
+    console.log(`✅ Dashboard gerado: ${dashboardResult.dashboard_path}\n`);
   } catch (error) {
-    console.log(`⚠️  Erro ao gerar relatório consolidado: ${error instanceof Error ? error.message : error}\n`);
-  }
-
-  // 11. Export to tests/qa
-  console.log('📦 [11/11] Exportando relatórios para tests/qa...');
-  try {
-    const copied = await exportReportsToQA(ctx.repoPath);
-    ctx.steps.push('export-qa');
-    ctx.outputs.qa = `tests/qa (${copied.length} arquivos)`;
-    console.log(`✅ Relatórios copiados para tests/qa: ${copied.length} arquivo(s)\n`);
-  } catch (error) {
-    console.log(`⚠️  Erro ao exportar relatórios para tests/qa: ${error instanceof Error ? error.message : error}\n`);
+    console.log(`⚠️  Erro ao gerar dashboard: ${error instanceof Error ? error.message : error}\n`);
   }
 }
 
 /**
- * Copia os principais artefatos gerados em tests/analyses para tests/qa
- */
-async function exportReportsToQA(repoPath: string): Promise<string[]> {
-  const qaDir = join(repoPath, 'tests', 'qa');
-  await fs.mkdir(qaDir, { recursive: true });
-
-  const sources = [
-    ['tests/analyses/TEST-PLAN.md', 'TEST-PLAN.md'],
-    ['tests/analyses/TEST-STRATEGY-RECOMMENDATION.md', 'TEST-STRATEGY-RECOMMENDATION.md'],
-    ['tests/analyses/COVERAGE-ANALYSIS.md', 'COVERAGE-ANALYSIS.md'],
-    ['tests/analyses/PYRAMID-REPORT.md', 'PYRAMID-REPORT.md'],
-    ['tests/analyses/dashboard.html', 'dashboard.html'],
-    ['tests/analyses/coverage-analysis.json', 'coverage-analysis.json'],
-    ['QUALITY-ANALYSIS-REPORT.md', 'QUALITY-ANALYSIS-REPORT.md']
-  ];
-
-  const copied: string[] = [];
-  for (const [relSrc, destName] of sources) {
-    const src = join(repoPath, relSrc);
-    const dest = join(qaDir, destName);
-    try {
-      if (await fileExists(src)) {
-        await fs.copyFile(src, dest);
-        copied.push(dest);
-      }
-    } catch {
-      // continua tentando os próximos
-    }
-  }
-  return copied;
-}
-
-/**
- * Constrói resultado estruturado final
+ * Constrói resultado estruturado final com os 2 relatórios consolidados
  */
 function buildFinalResult(ctx: PipelineContext, duration: number): AutoResult {
   const reports: string[] = [];
   const analyses: string[] = [];
   let dashboard: string | undefined;
   
-  // Coletar reports gerados
-  if (ctx.outputs.plan) reports.push(ctx.outputs.plan);
-  if (ctx.outputs.pyramidReport) reports.push(ctx.outputs.pyramidReport);
-  if (ctx.outputs.diffCoverage) reports.push(ctx.outputs.diffCoverage);
-  if (ctx.outputs.finalReport) reports.push(ctx.outputs.finalReport);
-  if (ctx.outputs.testQuality) reports.push(ctx.outputs.testQuality);
+  // 🆕 RELATÓRIOS CONSOLIDADOS (2 principais)
+  if (ctx.outputs.codeAnalysisReport) reports.push(ctx.outputs.codeAnalysisReport);
+  if (ctx.outputs.testPlanReport) reports.push(ctx.outputs.testPlanReport);
   
-  // Coletar analyses geradas
+  // Coletar analyses intermediárias (JSON) para referência
   if (ctx.outputs.analyze) analyses.push(ctx.outputs.analyze);
   if (ctx.outputs.coverageAnalysis) analyses.push(ctx.outputs.coverageAnalysis);
   if (ctx.outputs.testLogicAnalysis) analyses.push(ctx.outputs.testLogicAnalysis);
-  if (ctx.outputs.recommendStrategy) analyses.push(ctx.outputs.recommendStrategy);
   
-  // Dashboard
+  // Dashboard HTML (para visualização interativa)
   if (ctx.outputs.dashboard) dashboard = ctx.outputs.dashboard;
   
   return {
@@ -885,6 +924,7 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<AutoRes
     await runAnalysisPhase(ctx);
     await runCoverageAnalysisPhase(ctx);
     await runPlanningPhase(ctx);
+    await runConsolidatedReporting(ctx); // 🆕 CONSOLIDATED REPORTS (2 arquivos principais)
     await runScaffoldPhase(ctx, options.skipScaffold || false);
     await runTestingPhase(ctx, options.skipRun || false);
     

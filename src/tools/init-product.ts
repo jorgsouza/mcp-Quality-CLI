@@ -1,7 +1,11 @@
 import { promises as fs } from 'node:fs';
-import { join } from 'node:path';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { writeFileSafe, fileExists } from '../utils/fs.js';
 import { createMCPSettingsTemplate } from '../utils/config.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export interface InitProductParams {
   repo: string;
