@@ -3,6 +3,7 @@
 ## 🎉 Nova Saída Estruturada
 
 Agora cada teste mostra **claramente**:
+
 1. ✅ **Nome do teste**
 2. ✅ **Tipo do teste** (unit/integration/e2e)
 3. ✅ **O que ele está testando**
@@ -44,13 +45,16 @@ Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MT
 ### 📋 Estrutura do Teste (Given-When-Then)
 
 **Given** (pré-condições):
+
 - Mock do repositório de usuários retornando usuário válido
 - Token JWT válido gerado
 
 **When** (ação testada):
+
 - validateUser(userId, token)
 
 **Then** (validações):
+
 - status: 200
 - body.isValid: true
 - body.user.id: userId
@@ -97,14 +101,17 @@ Protege o CUJ crítico "Fluxo de Checkout" (risco alto) com SLO de 99.95% uptime
 ### 📋 Estrutura do Teste (Given-When-Then)
 
 **Given** (pré-condições):
+
 - Servidor mock da API de pagamento rodando
 - Usuário autenticado
 - Carrinho com 3 itens
 
 **When** (ação testada):
+
 - processPayment(userId, cartId, paymentMethod)
 
 **Then** (validações):
+
 - status: 201
 - body.paymentId: expect.any(String)
 - body.status: 'processed'
@@ -152,16 +159,19 @@ Protege o CUJ crítico "Jornada de Compra" (risco alto); Garantir que fluxos cr�
 ### 📋 Estrutura do Teste (Given-When-Then)
 
 **Given** (pré-condições):
+
 - Navegador aberto na página inicial
 - Usuário logado
 - Produto adicionado ao carrinho
 
 **When** (ação testada):
+
 - Clicar em "Finalizar Compra"
 - Preencher dados de pagamento
 - Confirmar pedido
 
 **Then** (validações):
+
 - page.url: toContain('/success')
 - page.text: toContain('Pedido confirmado')
 - database.orders.count: toHaveLength(1)
@@ -193,31 +203,37 @@ Protege o CUJ crítico "Jornada de Compra" (risco alto); Garantir que fluxos cr�
 ## 🎯 Principais Melhorias
 
 ### 1. **Cabeçalho Claro**
+
 - Emoji indicando tipo (🔬 unit, 🔗 integration, 🎭 e2e)
 - Nome do teste em destaque
 - Arquivo e tipo claramente identificados
 
 ### 2. **Seção "O que testa?"** 🎯
+
 - Descrição em linguagem natural
 - Extrai contexto do nome do teste
 - Identifica a função/módulo alvo
 
 ### 3. **Seção "Por que testa isso?"** ❓
+
 - Justificativa técnica baseada no tipo
 - Identifica cenários (erro, edge case, happy path)
 - Explica a importância das validações
 
 ### 4. **Seção "Para que testa?"** 🎯
+
 - Propósito de negócio
 - Link com CUJ/SLO quando disponível
 - Impacto DORA (CFR, MTTR, DF, LTC)
 - Objetivo KR3a
 
 ### 5. **Enriquecimento com CUJ/SLO**
+
 Quando há CUJ identificado, o propósito é enriquecido:
+
 ```
-Protege o CUJ crítico "Fluxo de Checkout" (risco alto) com SLO de 99.95% uptime; 
-Prevenir falhas de comunicação entre serviços/módulos; 
+Protege o CUJ crítico "Fluxo de Checkout" (risco alto) com SLO de 99.95% uptime;
+Prevenir falhas de comunicação entre serviços/módulos;
 Manter confiabilidade e velocidade de entrega (KR3a)
 ```
 
@@ -234,7 +250,10 @@ O JSON também contém os novos campos:
   "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado; Validações específicas aumentam confiabilidade",
   "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
   "functionUnderTest": "validateUser",
-  "given": ["Mock do repositório de usuários retornando usuário válido", "Token JWT válido gerado"],
+  "given": [
+    "Mock do repositório de usuários retornando usuário válido",
+    "Token JWT válido gerado"
+  ],
   "when": "validateUser(userId, token)",
   "then": [
     { "type": "status", "value": 200 },
@@ -281,4 +300,3 @@ cat qa/my-app/tests/analyses/test-explanations.json
 
 **Gerado por**: MCP Quality CLI - explain-tests v2.0  
 **Data**: 2025-11-04
-
