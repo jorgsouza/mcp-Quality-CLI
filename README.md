@@ -1118,6 +1118,76 @@ quality auto --mode scaffold  # Só cria estrutura
 DEBUG=quality:* quality auto --repo .
 ```
 
+## 🌐 Suporte Multi-Linguagem
+
+O Quality MCP oferece suporte **END-TO-END** para múltiplas linguagens com adapters nativos!
+
+| Linguagem | Analyze | Coverage | Mutation | Scaffold | Status |
+|-----------|---------|----------|----------|----------|--------|
+| **TypeScript** | ✅ | ✅ | ✅ | ✅ | 🟢 **Completo** |
+| **JavaScript** | ✅ | ✅ | ✅ | ✅ | 🟢 **Completo** |
+| **Python** | ✅ | ✅ | ✅ | ✅ | 🟢 **Completo** |
+| **Go** | ✅ | ✅ | 🟡 | ✅ | 🟡 **Beta** |
+| **Java** | 🟡 | 🟡 | ⚪ | 🟡 | ⚪ **Planejado** |
+| **Ruby** | ⚪ | ⚪ | ⚪ | ⚪ | ⚪ **Planejado** |
+
+### Legenda
+- ✅ **Suportado** - Funcional e testado
+- 🟡 **Parcial** - Funcional mas não testado extensivamente
+- ⚪ **Planejado** - Em desenvolvimento
+
+### Detalhes por Linguagem
+
+#### TypeScript/JavaScript
+- **Frameworks**: Vitest, Jest, Mocha
+- **Coverage**: Coverage-v8, istanbul/nyc
+- **Mutation**: Stryker
+- **Formats**: LCOV, JSON (Istanbul)
+- **Status**: ✅ Produção
+
+#### Python
+- **Frameworks**: pytest, unittest
+- **Coverage**: coverage.py, pytest-cov
+- **Mutation**: mutmut
+- **Formats**: Cobertura XML, JSON
+- **Status**: ✅ Produção
+
+#### Go
+- **Frameworks**: go test (built-in)
+- **Coverage**: go test -cover
+- **Mutation**: go-mutesting (experimental)
+- **Formats**: coverage.out
+- **Status**: 🟡 Beta
+
+#### Java (Em Desenvolvimento)
+- **Frameworks**: JUnit 5, TestNG
+- **Coverage**: JaCoCo, Cobertura
+- **Mutation**: PIT
+- **Formats**: JaCoCo XML, Cobertura XML
+- **Status**: ⚪ Q1 2026
+
+### Setup Rápido por Linguagem
+
+Para instruções detalhadas de setup, veja: [SETUP-BY-LANGUAGE.md](docs/SETUP-BY-LANGUAGE.md)
+
+**TypeScript/JavaScript:**
+```bash
+npm install -D vitest @vitest/coverage-v8 @stryker-mutator/core
+```
+
+**Python:**
+```bash
+pip install pytest pytest-cov mutmut hypothesis
+```
+
+**Go:**
+```bash
+go install gotest.tools/gotestsum@latest
+go install github.com/zimmski/go-mutesting/cmd/go-mutesting@latest
+```
+
+---
+
 ## 📝 Licença
 
 MIT License - veja o arquivo [LICENSE](LICENSE) para detalhes.
