@@ -14,6 +14,7 @@ import { access, mkdir } from 'node:fs/promises';
 import { constants } from 'node:fs';
 import { join } from 'node:path';
 import { execSync } from 'node:child_process';
+import { writeFileSafe } from '../utils/fs.js';
 
 interface CheckResult {
   name: string;
@@ -26,6 +27,7 @@ interface SelfCheckOptions {
   repo: string;
   product?: string;  // [FASE 4] Para verificar permissões em qa/<product>/
   fix?: boolean;
+  bootstrapDeps?: boolean;  // [FASE D.2] Gerar scripts de instalação
 }
 
 export interface SelfCheckResult {
@@ -77,12 +79,32 @@ export async function selfCheck(options: SelfCheckOptions): Promise<SelfCheckRes
   // 9. [FASE 4] Verificar Playwright Browsers
   results.push(await checkPlaywrightBrowsers());
   
+  // 10. [FASE D.1] Verificar Python (pytest, coverage.py, mutmut)
+  results.push(await checkPython());
+  results.push(await checkPytest());
+  results.push(await checkPythonCoverage());
+  results.push(await checkMutmut());
+  
+  // 11. [FASE D.1] Verificar Go (go test, gotestsum, go-mutesting)
+  results.push(await checkGo());
+  results.push(await checkGoTest());
+  results.push(await checkGotestsum());
+  results.push(await checkGoMutesting());
+  
   // Aplicar fixes se solicitado
   if (options.fix) {
     if (isCLI) {
       console.log('\n🔧 Tentando corrigir problemas...\n');
     }
     await applyFixes(results, options.repo);
+  }
+  
+  // [FASE D.2] Gerar scripts de bootstrap se solicitado
+  if (options.bootstrapDeps) {
+    if (isCLI) {
+      console.log('\n📦 Gerando scripts de instalação de dependências...\n');
+    }
+    await generateBootstrapScripts(results, options.repo);
   }
   
   // Exibir resultados APENAS no modo CLI
@@ -567,6 +589,176 @@ async function generateSelfCheckReport(
 }
 
 /**
+ * [FASE D.1] Verifica Python
+ */
+async function checkPython(): Promise<CheckResult> {
+  try {
+    const output = execSync('python --version || python3 --version', { encoding: 'utf-8', stdio: 'pipe' });
+    const version = output.trim();
+    return {
+      name: 'Python',
+      status: 'ok',
+      message: version,
+    };
+  } catch {
+    return {
+      name: 'Python',
+      status: 'warning',
+      message: 'Python não encontrado (opcional para projetos Python)',
+      fix: 'Instale Python: https://www.python.org/downloads/',
+    };
+  }
+}
+
+/**
+ * [FASE D.1] Verifica pytest
+ */
+async function checkPytest(): Promise<CheckResult> {
+  try {
+    execSync('python -m pytest --version || python3 -m pytest --version', { stdio: 'pipe' });
+    return {
+      name: 'pytest',
+      status: 'ok',
+      message: 'pytest instalado',
+    };
+  } catch {
+    return {
+      name: 'pytest',
+      status: 'warning',
+      message: 'pytest não encontrado (necessário para projetos Python)',
+      fix: 'pip install pytest pytest-cov',
+    };
+  }
+}
+
+/**
+ * [FASE D.1] Verifica coverage.py
+ */
+async function checkPythonCoverage(): Promise<CheckResult> {
+  try {
+    execSync('python -m coverage --version || python3 -m coverage --version', { stdio: 'pipe' });
+    return {
+      name: 'coverage.py',
+      status: 'ok',
+      message: 'coverage.py instalado',
+    };
+  } catch {
+    return {
+      name: 'coverage.py',
+      status: 'warning',
+      message: 'coverage.py não encontrado (necessário para coverage Python)',
+      fix: 'pip install coverage pytest-cov',
+    };
+  }
+}
+
+/**
+ * [FASE D.1] Verifica mutmut
+ */
+async function checkMutmut(): Promise<CheckResult> {
+  try {
+    execSync('mutmut --version', { stdio: 'pipe' });
+    return {
+      name: 'mutmut',
+      status: 'ok',
+      message: 'mutmut instalado',
+    };
+  } catch {
+    return {
+      name: 'mutmut',
+      status: 'warning',
+      message: 'mutmut não encontrado (necessário para mutation testing Python)',
+      fix: 'pip install mutmut',
+    };
+  }
+}
+
+/**
+ * [FASE D.1] Verifica Go
+ */
+async function checkGo(): Promise<CheckResult> {
+  try {
+    const output = execSync('go version', { encoding: 'utf-8', stdio: 'pipe' });
+    const version = output.trim();
+    return {
+      name: 'Go',
+      status: 'ok',
+      message: version,
+    };
+  } catch {
+    return {
+      name: 'Go',
+      status: 'warning',
+      message: 'Go não encontrado (opcional para projetos Go)',
+      fix: 'Instale Go: https://golang.org/dl/',
+    };
+  }
+}
+
+/**
+ * [FASE D.1] Verifica go test (já vem com Go)
+ */
+async function checkGoTest(): Promise<CheckResult> {
+  try {
+    execSync('go version', { stdio: 'pipe' }); // go test vem com Go
+    return {
+      name: 'go test',
+      status: 'ok',
+      message: 'go test disponível (built-in)',
+    };
+  } catch {
+    return {
+      name: 'go test',
+      status: 'warning',
+      message: 'go test não disponível',
+      fix: 'Instale Go: https://golang.org/dl/',
+    };
+  }
+}
+
+/**
+ * [FASE D.1] Verifica gotestsum
+ */
+async function checkGotestsum(): Promise<CheckResult> {
+  try {
+    execSync('gotestsum --version', { stdio: 'pipe' });
+    return {
+      name: 'gotestsum',
+      status: 'ok',
+      message: 'gotestsum instalado (melhor output)',
+    };
+  } catch {
+    return {
+      name: 'gotestsum',
+      status: 'warning',
+      message: 'gotestsum não encontrado (opcional, melhora output)',
+      fix: 'go install gotest.tools/gotestsum@latest',
+    };
+  }
+}
+
+/**
+ * [FASE D.1] Verifica go-mutesting
+ */
+async function checkGoMutesting(): Promise<CheckResult> {
+  try {
+    execSync('go-mutesting --help', { stdio: 'pipe' });
+    return {
+      name: 'go-mutesting',
+      status: 'ok',
+      message: 'go-mutesting instalado',
+    };
+  } catch {
+    return {
+      name: 'go-mutesting',
+      status: 'warning',
+      message: 'go-mutesting não encontrado (necessário para mutation testing Go)',
+      fix: 'go install github.com/zimmski/go-mutesting/cmd/go-mutesting@latest',
+    };
+  }
+}
+
+/**
  * Aplica fixes automaticamente
  * 
  * [FASE 3 FIX] NÃO cria tests/analyses na raiz!
@@ -598,6 +790,139 @@ async function applyFixes(results: CheckResult[], repo: string): Promise<void> {
       }
     }
   }
+}
+
+/**
+ * [FASE D.2] Gera scripts de instalação de dependências
+ * 
+ * Detecta linguagem e cria scripts .sh/.bat com comandos de instalação
+ */
+async function generateBootstrapScripts(results: CheckResult[], repo: string): Promise<void> {
+  const warnings = results.filter(r => r.status === 'warning' && r.fix);
+  
+  if (warnings.length === 0) {
+    console.log('✅ Todas as dependências estão instaladas!');
+    return;
+  }
+  
+  // Detectar linguagem principal
+  const hasTypeScript = existsSync(join(repo, 'package.json')) || existsSync(join(repo, 'tsconfig.json'));
+  const hasPython = existsSync(join(repo, 'requirements.txt')) || existsSync(join(repo, 'setup.py'));
+  const hasGo = existsSync(join(repo, 'go.mod'));
+  
+  // Script Unix (sh)
+  let shScript = '#!/bin/bash\n\n';
+  shScript += '# 📦 Quality MCP - Bootstrap Dependencies\n';
+  shScript += '# Gerado automaticamente\n\n';
+  shScript += 'set -e  # Parar em caso de erro\n\n';
+  shScript += 'echo "📦 Instalando dependências..."\n\n';
+  
+  // Script Windows (bat)
+  let batScript = '@echo off\n';
+  batScript += 'REM 📦 Quality MCP - Bootstrap Dependencies\n';
+  batScript += 'REM Gerado automaticamente\n\n';
+  batScript += 'echo 📦 Instalando dependências...\n\n';
+  
+  // Agrupar por categoria
+  const tsCommands: string[] = [];
+  const pyCommands: string[] = [];
+  const goCommands: string[] = [];
+  
+  for (const warning of warnings) {
+    if (!warning.fix) continue;
+    
+    if (warning.fix.startsWith('npm') || warning.fix.startsWith('npx')) {
+      tsCommands.push(warning.fix);
+    } else if (warning.fix.startsWith('pip')) {
+      pyCommands.push(warning.fix);
+    } else if (warning.fix.startsWith('go install')) {
+      goCommands.push(warning.fix);
+    }
+  }
+  
+  // TypeScript/JavaScript
+  if (hasTypeScript && tsCommands.length > 0) {
+    shScript += '# TypeScript/JavaScript\n';
+    shScript += `echo "🔷 Instalando dependências Node.js..."\n`;
+    for (const cmd of tsCommands) {
+      shScript += `${cmd}\n`;
+      batScript += `${cmd}\n`;
+    }
+    shScript += '\n';
+    batScript += '\n';
+  }
+  
+  // Python
+  if (hasPython && pyCommands.length > 0) {
+    shScript += '# Python\n';
+    shScript += `echo "🐍 Instalando dependências Python..."\n`;
+    shScript += '# Criar virtual environment (recomendado)\n';
+    shScript += 'if [ ! -d "venv" ]; then\n';
+    shScript += '  python3 -m venv venv\n';
+    shScript += '  echo "✅ Virtual environment criado"\n';
+    shScript += 'fi\n';
+    shScript += 'source venv/bin/activate\n\n';
+    
+    batScript += 'REM Python\n';
+    batScript += 'echo 🐍 Instalando dependências Python...\n';
+    batScript += 'REM Criar virtual environment (recomendado)\n';
+    batScript += 'if not exist "venv" (\n';
+    batScript += '  python -m venv venv\n';
+    batScript += '  echo ✅ Virtual environment criado\n';
+    batScript += ')\n';
+    batScript += 'call venv\\Scripts\\activate.bat\n\n';
+    
+    for (const cmd of pyCommands) {
+      shScript += `${cmd}\n`;
+      batScript += `${cmd}\n`;
+    }
+    shScript += '\n';
+    batScript += '\n';
+  }
+  
+  // Go
+  if (hasGo && goCommands.length > 0) {
+    shScript += '# Go\n';
+    shScript += `echo "🔷 Instalando ferramentas Go..."\n`;
+    for (const cmd of goCommands) {
+      shScript += `${cmd}\n`;
+      batScript += `${cmd}\n`;
+    }
+    shScript += '\n';
+    batScript += '\n';
+  }
+  
+  shScript += 'echo "✅ Todas as dependências foram instaladas!"\n';
+  shScript += 'echo ""\n';
+  shScript += 'echo "🎯 Próximo passo: quality auto --repo . --product YourProduct"\n';
+  
+  batScript += 'echo ✅ Todas as dependências foram instaladas!\n';
+  batScript += 'echo.\n';
+  batScript += 'echo 🎯 Próximo passo: quality auto --repo . --product YourProduct\n';
+  batScript += 'pause\n';
+  
+  // Escrever arquivos
+  const shPath = join(repo, 'bootstrap-deps.sh');
+  const batPath = join(repo, 'bootstrap-deps.bat');
+  
+  await writeFileSafe(shPath, shScript);
+  await writeFileSafe(batPath, batScript);
+  
+  // Dar permissão de execução no Linux/Mac
+  try {
+    execSync(`chmod +x "${shPath}"`, { stdio: 'ignore' });
+  } catch {
+    // Windows não precisa
+  }
+  
+  console.log(`✅ Script Unix criado: ${shPath}`);
+  console.log(`✅ Script Windows criado: ${batPath}`);
+  console.log('');
+  console.log('📋 Para instalar as dependências:');
+  console.log(`   Linux/Mac: ./bootstrap-deps.sh`);
+  console.log(`   Windows:   bootstrap-deps.bat`);
+  console.log('');
+  console.log('⚠️  IMPORTANTE: Revise os scripts antes de executá-los!');
 }
 
 export default selfCheck;
