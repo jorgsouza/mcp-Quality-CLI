@@ -63,8 +63,17 @@ import { scaffoldApprovalTests } from './scaffold-approval-tests.js';
 // [QUALITY GATES] FASE 7: Suite Health
 import { suiteHealth } from './suite-health.js';
 
-// [QUALITY GATES] FASE 8: Mutation Testing
+// [QUALITY GATES] FASE 6: Mutation Testing
 import { runMutationTests } from './run-mutation-tests.js';
+
+// [QUALITY GATES] FASE 8: Prod Metrics
+import { prodMetricsIngest } from './prod-metrics-ingest.js';
+
+// [QUALITY GATES] FASE 9: SLO Canary
+import { sloCanaryCheck } from './slo-canary-check.js';
+
+// [QUALITY GATES] FASE 10: Quality Gates
+import { releaseQualityGate } from './release-quality-gate.js';
 
 // [CONSOLIDATION] Consolidated Reports
 import { consolidateCodeAnalysisReport, consolidateTestPlanReport } from './consolidate-reports.js';
@@ -103,6 +112,32 @@ export interface AutoResult {
       unit?: string;
       integration?: string;
       e2e?: string;
+    };
+    /** 🆕 Mutation testing score */
+    mutation?: {
+      overall_score: number;
+      critical_score: number;
+      passed: boolean;
+    };
+    /** 🆕 Prod metrics & DORA */
+    prod_metrics?: {
+      deployment_frequency: number;
+      mttr_minutes: number;
+      change_failure_rate: number;
+      dora_tier: string;
+    };
+    /** 🆕 SLO Canary status */
+    slo_canary?: {
+      cujs_met: number;
+      cujs_violated: number;
+      critical_violations: number;
+    };
+    /** 🆕 Quality Gates result */
+    quality_gate?: {
+      passed: boolean;
+      exit_code: number;
+      total_violations: number;
+      blocking_violations: number;
     };
   };
   steps: string[];
