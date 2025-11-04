@@ -26,6 +26,8 @@ export interface ValidateOptions {
   minErrorHandling?: number;     // % funções com error handling (0-100)
   maxWeakAsserts?: number;       // Máximo de assertions fracas permitidas
   requireCritical?: boolean;     // Exige 100% de funções críticas testadas
+  minDiffCoverage?: number;      // 🆕 Diff coverage mínimo (0-100) - PR-aware
+  requireContractsPassing?: boolean; // 🆕 Exige contratos CDC/Pact passando
   failFast?: boolean;            // Para na primeira falha
 }
 
@@ -58,7 +60,9 @@ export async function validate(options: ValidateOptions): Promise<ValidationResu
     minEdgeCases,
     minErrorHandling,
     maxWeakAsserts,
-    requireCritical, 
+    requireCritical,
+    minDiffCoverage, // 🆕
+    requireContractsPassing, // 🆕
     failFast 
   } = options;
   
@@ -145,6 +149,28 @@ export async function validate(options: ValidateOptions): Promise<ValidationResu
   // Gate 9: Critical Functions (stub - para implementar depois)
   if (requireCritical) {
     console.log(`ℹ️  Critical functions validation ainda não implementado`);
+  }
+  
+  // 🆕 Gate 10: Diff Coverage (PR-aware)
+  if (minDiffCoverage !== undefined) {
+    const diffViolation = await validateDiffCoverage(repo, product, minDiffCoverage);
+    if (diffViolation) {
+      violations.push(diffViolation);
+      if (failFast) {
+        return buildResult(violations);
+      }
+    }
+  }
+  
+  // 🆕 Gate 11: Contracts (CDC/Pact)
+  if (requireContractsPassing) {
+    const contractViolation = await validateContracts(repo, product);
+    if (contractViolation) {
+      violations.push(contractViolation);
+      if (failFast) {
+        return buildResult(violations);
+      }
+    }
   }
   
   return buildResult(violations);
@@ -415,6 +441,133 @@ async function validateWeakAssertions(repo: string, maxAllowed: number): Promise
     
   } catch (error) {
     return null;
+  }
+}
+
+/**
+ * 🔀 Valida diff coverage mínimo (PR-aware)
+ */
+async function validateDiffCoverage(repo: string, product: string, threshold: number): Promise<Violation | null> {
+  const paths = getPaths(repo, product);
+  const diffCoveragePath = join(paths.analyses, 'diff-coverage.json');
+  
+  if (!existsSync(diffCoveragePath)) {
+    return {
+      gate: 'Diff Coverage',
+      threshold,
+      actual: 0,
+      message: `❌ Nenhum relatório de diff coverage encontrado`,
+      suggestions: [
+        '1. Execute: quality analyze --repo . --product <nome>',
+        '2. O diff coverage é calculado automaticamente se houver diff em relação ao main',
+        '3. Certifique-se de estar em uma branch diferente de main',
+      ],
+    };
+  }
+  
+  try {
+    const content = await fs.readFile(diffCoveragePath, 'utf-8');
+    const diffData = JSON.parse(content);
+    
+    const diffCoverage = diffData.diffCoverage || 0;
+    
+    if (diffCoverage < threshold) {
+      return {
+        gate: 'Diff Coverage',
+        threshold,
+        actual: Math.round(diffCoverage),
+        message: `❌ Cobertura do diff (${diffCoverage.toFixed(1)}%) abaixo do mínimo (${threshold}%)`,
+        suggestions: [
+          `Linhas adicionadas: ${diffData.linesAdded || 0}`,
+          `Linhas cobertas: ${diffData.linesCovered || 0}`,
+          'Adicione testes para cobrir as linhas novas do diff',
+          'Execute: quality scaffold --repo . --product <nome>',
+        ],
+      };
+    }
+    
+    console.log(`✅ Diff Coverage: ${diffCoverage.toFixed(1)}% (mínimo: ${threshold}%)`);
+    return null;
+  } catch (error) {
+    return {
+      gate: 'Diff Coverage',
+      threshold,
+      actual: 0,
+      message: `❌ Erro ao ler diff coverage: ${error instanceof Error ? error.message : error}`,
+      suggestions: [
+        'Execute a análise completa novamente',
+      ],
+    };
+  }
+}
+
+/**
+ * 🤝 Valida contratos CDC/Pact
+ */
+async function validateContracts(repo: string, product: string): Promise<Violation | null> {
+  const paths = getPaths(repo, product);
+  
+  // Procura por arquivos de verificação de contratos
+  const contractCatalogPath = join(paths.analyses, 'contract-catalog.json');
+  const contractVerifyPath = join(paths.analyses, 'contracts-verify.json');
+  
+  if (!existsSync(contractCatalogPath) && !existsSync(contractVerifyPath)) {
+    return {
+      gate: 'Contracts (CDC/Pact)',
+      threshold: 100,
+      actual: 0,
+      message: `❌ Nenhum relatório de contratos encontrado`,
+      suggestions: [
+        '1. Execute: quality analyze --repo . --product <nome>',
+        '2. Certifique-se de que os contratos Pact foram gerados',
+        '3. Execute: quality run-contracts-verify --repo . --product <nome>',
+      ],
+    };
+  }
+  
+  try {
+    // Lê o catálogo de contratos
+    let totalContracts = 0;
+    let verifiedContracts = 0;
+    let failedContracts = 0;
+    
+    if (existsSync(contractCatalogPath)) {
+      const catalog = JSON.parse(await fs.readFile(contractCatalogPath, 'utf-8'));
+      totalContracts = catalog.contracts?.length || 0;
+    }
+    
+    if (existsSync(contractVerifyPath)) {
+      const verify = JSON.parse(await fs.readFile(contractVerifyPath, 'utf-8'));
+      verifiedContracts = verify.verified || 0;
+      failedContracts = verify.failed || 0;
+    }
+    
+    if (failedContracts > 0 || (totalContracts > 0 && verifiedContracts === 0)) {
+      return {
+        gate: 'Contracts (CDC/Pact)',
+        threshold: 100,
+        actual: totalContracts > 0 ? Math.round((verifiedContracts / totalContracts) * 100) : 0,
+        message: `❌ Contratos falharam: ${failedContracts} falhas, ${verifiedContracts}/${totalContracts} verificados`,
+        suggestions: [
+          'Revise os contratos que falharam',
+          'Execute: quality run-contracts-verify --repo . --product <nome>',
+          'Corrija as incompatibilidades de contrato',
+        ],
+      };
+    }
+    
+    console.log(`✅ Contracts: ${verifiedContracts}/${totalContracts} verificados com sucesso`);
+    return null;
+  } catch (error) {
+    return {
+      gate: 'Contracts (CDC/Pact)',
+      threshold: 100,
+      actual: 0,
+      message: `❌ Erro ao validar contratos: ${error instanceof Error ? error.message : error}`,
+      suggestions: [
+        'Execute a verificação de contratos novamente',
+      ],
+    };
   }
 }
 

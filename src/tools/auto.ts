@@ -78,6 +78,9 @@ import { releaseQualityGate } from './release-quality-gate.js';
 // [CONSOLIDATION] Consolidated Reports
 import { consolidateCodeAnalysisReport, consolidateTestPlanReport } from './consolidate-reports.js';
 
+// [QUALITY GATES] Diff Coverage (PR-aware)
+import { runDiffCoverage } from './run-diff-coverage.js';
+
 export type AutoMode = 'full' | 'analyze' | 'plan' | 'scaffold' | 'run';
 
 export interface AutoOptions {
@@ -644,6 +647,33 @@ async function runCoverageAnalysisPhase(ctx: PipelineContext): Promise<void> {
   } catch (error) {
     console.log(`⚠️  Erro na análise de lógica: ${error instanceof Error ? error.message : error}\n`);
   }
+
+  // 2.6. Diff Coverage (PR-aware)
+  console.log('🔀 [2.6/11] Analisando cobertura do diff (PR-aware)...');
+  try {
+    const diffResult = await runDiffCoverage({
+      repo: ctx.repoPath,
+      product: ctx.product,
+      baseBranch: 'main',
+      minCoverage: 80
+    });
+    ctx.steps.push('diff-coverage');
+    ctx.outputs.diffCoverage = join('tests/analyses/diff-coverage.json');
+    
+    if (!ctx.metrics) {
+      ctx.metrics = {};
+    }
+    ctx.metrics.diff_coverage_percent = diffResult.diffCoverage;
+    ctx.metrics.diff_lines_added = diffResult.linesAdded;
+    ctx.metrics.diff_lines_covered = diffResult.linesCovered;
+    
+    console.log(`✅ Diff Coverage: ${diffResult.diffCoverage.toFixed(1)}%`);
+    console.log(`   📝 Linhas Adicionadas: ${diffResult.linesAdded}`);
+    console.log(`   ✅ Linhas Cobertas: ${diffResult.linesCovered}`);
+    console.log(`   📄 Relatório: ${diffResult.reportPath}\n`);
+  } catch (error) {
+    console.log(`⚠️  Erro no diff coverage (talvez não há diff): ${error instanceof Error ? error.message : error}\n`);
+  }
 }
 
 /**
@@ -948,9 +978,8 @@ async function cleanupRedundantReports(ctx: PipelineContext): Promise<void> {
     join(ctx.paths.reports, 'INTEGRATION-TESTING-GUIDE.md'),
     join(ctx.paths.reports, 'UNIT-TESTING-GUIDE.md'),
     
-    // === RELATÓRIOS DE EXECUÇÃO (gerados apenas se run) ===
-    join(ctx.paths.reports, 'DIFF-COVERAGE-REPORT.md'),
-    join(ctx.paths.reports, 'CONTRACTS-VERIFY.md'),
+    // === RELATÓRIOS DE EXECUÇÃO (mantidos) ===
+    // DIFF-COVERAGE-REPORT.md e CONTRACTS-VERIFY.md são mantidos (não excluídos)
     
     // === RELATÓRIOS DE CATALOGAÇÃO ===
     join(ctx.paths.reports, 'SCENARIO-CATALOG.md'),
