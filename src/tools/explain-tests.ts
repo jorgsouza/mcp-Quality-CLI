@@ -50,7 +50,11 @@ export interface ExplainTestsOptions {
 export interface TestExplanation {
   file: string;
   name: string;
+  testType: 'unit' | 'integration' | 'e2e' | 'unknown'; // 🆕 Tipo do teste
   functionUnderTest?: string;
+  whatItTests: string; // 🆕 O que está testando (mais descritivo)
+  whyItTests: string; // 🆕 Por que está testando (justificativa técnica)
+  purposeForWhat: string; // 🆕 Para que está testando (objetivo de negócio)
   given: string[];
   when: string;
   then: AssertInfo[];
@@ -69,6 +73,7 @@ export interface TestExplanation {
   risk?: {
     cuj?: string;
     level?: 'baixo' | 'médio' | 'alto';
+    slo?: string;
   };
   assertStrength: 'forte' | 'médio' | 'fraco';
   smells: string[];
@@ -290,6 +295,14 @@ async function analyzeTestFile(
     return analysis.testCases.map(testCase => {
       const assertStrength = calculateAssertStrength(testCase);
       
+      // 🆕 Detectar tipo do teste baseado no caminho
+      const testType = detectTestType(testFile);
+      
+      // 🆕 Gerar descrições contextuais
+      const whatItTests = generateWhatItTests(testCase, testFile);
+      const whyItTests = generateWhyItTests(testCase, testType, assertStrength);
+      const purposeForWhat = generatePurposeForWhat(testCase, testType);
+      
       // Detectar smells
       const smells: string[] = [];
       if (testCase.then.length === 0) {
@@ -321,7 +334,11 @@ async function analyzeTestFile(
       return {
         file: testFile,
         name: testCase.name,
+        testType,
         functionUnderTest: testCase.when !== 'NÃO DETERMINADO' ? testCase.when : undefined,
+        whatItTests,
+        whyItTests,
+        purposeForWhat,
         given: testCase.given.length > 0 ? testCase.given : ['NÃO DETERMINADO (sem evidência)'],
         when: testCase.when,
         then: testCase.then,
@@ -346,6 +363,120 @@ async function analyzeTestFile(
     console.warn(`⚠️  Erro ao analisar ${testFile}: ${error instanceof Error ? error.message : error}`);
     return [];
   }
+}
+
+// 🆕 Detecta o tipo do teste baseado no caminho do arquivo
+function detectTestType(filePath: string): 'unit' | 'integration' | 'e2e' | 'unknown' {
+  const lowerPath = filePath.toLowerCase();
+  
+  if (lowerPath.includes('/e2e/') || lowerPath.includes('/end-to-end/') || lowerPath.includes('.e2e.')) {
+    return 'e2e';
+  }
+  
+  if (lowerPath.includes('/integration/') || lowerPath.includes('.integration.')) {
+    return 'integration';
+  }
+  
+  if (lowerPath.includes('/unit/') || lowerPath.includes('/__tests__/') || 
+      lowerPath.includes('.spec.') || lowerPath.includes('.test.')) {
+    return 'unit';
+  }
+  
+  return 'unknown';
+}
+
+// 🆕 Gera descrição "O que está testando"
+function generateWhatItTests(testCase: any, filePath: string): string {
+  const functionName = testCase.when !== 'NÃO DETERMINADO' ? testCase.when : 'função não identificada';
+  const fileName = filePath.split('/').pop()?.replace(/\.(spec|test)\.(ts|js)$/, '') || 'módulo';
+  
+  // Tentar extrair contexto do nome do teste
+  const testNameLower = testCase.name.toLowerCase();
+  
+  if (testNameLower.includes('should') || testNameLower.includes('deve')) {
+    return `Testa se ${functionName} ${extractBehavior(testCase.name)}`;
+  }
+  
+  if (testNameLower.includes('when') || testNameLower.includes('quando')) {
+    return `Testa o comportamento de ${functionName} ${extractCondition(testCase.name)}`;
+  }
+  
+  // Fallback: descrição genérica mas útil
+  if (testCase.then.length > 0) {
+    const firstAssert = testCase.then[0];
+    return `Testa ${functionName} do módulo ${fileName}, validando ${firstAssert.matcher || firstAssert.type}`;
+  }
+  
+  return `Testa a função ${functionName} no contexto de ${fileName}`;
+}
+
+// 🆕 Gera justificativa "Por que está testando"
+function generateWhyItTests(testCase: any, testType: string, assertStrength: string): string {
+  const reasons: string[] = [];
+  
+  // Razão baseada no tipo
+  if (testType === 'unit') {
+    reasons.push('Garante comportamento isolado da unidade de código');
+  } else if (testType === 'integration') {
+    reasons.push('Valida integração entre componentes/módulos');
+  } else if (testType === 'e2e') {
+    reasons.push('Verifica fluxo completo do ponto de vista do usuário');
+  }
+  
+  // Razão baseada em erro/edge case
+  const testNameLower = testCase.name.toLowerCase();
+  if (testNameLower.includes('error') || testNameLower.includes('erro') || testNameLower.includes('fail')) {
+    reasons.push('Previne regressões em cenários de erro');
+  } else if (testNameLower.includes('edge') || testNameLower.includes('boundary') || testNameLower.includes('limite')) {
+    reasons.push('Protege contra edge cases e limites');
+  } else {
+    reasons.push('Previne regressões no comportamento esperado');
+  }
+  
+  // Razão baseada na força dos asserts
+  if (assertStrength === 'forte') {
+    reasons.push('Validações específicas aumentam confiabilidade');
+  } else if (assertStrength === 'fraco') {
+    reasons.push('⚠️ Asserts genéricos podem deixar bugs passar');
+  }
+  
+  return reasons.join('; ');
+}
+
+// 🆕 Gera propósito "Para que está testando"
+function generatePurposeForWhat(testCase: any, testType: string): string {
+  const purposes: string[] = [];
+  
+  // Propósito baseado no tipo
+  if (testType === 'unit') {
+    purposes.push('Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy');
+  } else if (testType === 'integration') {
+    purposes.push('Prevenir falhas de comunicação entre serviços/módulos');
+  } else if (testType === 'e2e') {
+    purposes.push('Garantir que fluxos críticos de usuário funcionem ponta a ponta');
+  }
+  
+  // Propósito DORA
+  if (testCase.then.length > 2) {
+    purposes.push('Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido');
+  }
+  
+  // Propósito de negócio (será enriquecido com CUJ/SLO posteriormente)
+  purposes.push('Manter confiabilidade e velocidade de entrega (KR3a)');
+  
+  return purposes.join('; ');
+}
+
+// Helper: extrai comportamento do nome do teste
+function extractBehavior(testName: string): string {
+  const match = testName.match(/(?:should|deve)\s+(.+)/i);
+  return match ? match[1] : testName;
+}
+
+// Helper: extrai condição do nome do teste
+function extractCondition(testName: string): string {
+  const match = testName.match(/(?:when|quando)\s+(.+)/i);
+  return match ? match[1] : testName;
 }
 
 async function enrichWithCoverage(
@@ -522,7 +653,11 @@ async function enrichWithRisks(
         exp.risk = {
           cuj: cuj.name,
           level: determineRiskLevel(cuj.priority || 'medium'),
+          slo: cuj.slo || undefined,
         };
+        
+        // 🆕 Enriquecer propósito com CUJ específico
+        exp.purposeForWhat = `Protege o CUJ crítico "${cuj.name}" (risco ${exp.risk.level})${cuj.slo ? ` com SLO de ${cuj.slo}` : ''}; ${exp.purposeForWhat}`;
         break;
       }
     }
@@ -535,6 +670,9 @@ async function enrichWithRisks(
             cuj: `Módulo: ${module.name}`,
             level: module.risk_level || 'médio',
           };
+          
+          // 🆕 Enriquecer propósito com módulo de risco
+          exp.purposeForWhat = `Protege módulo de risco ${exp.risk.level} "${module.name}"; ${exp.purposeForWhat}`;
           break;
         }
       }
@@ -675,57 +813,101 @@ async function generateOutputs(
 }
 
 function generateExplanationsMarkdown(explanations: TestExplanation[]): string {
-  let md = `# 🔍 Explicação dos Testes\n\n`;
-  md += `**Total de Testes**: ${explanations.length}\n\n`;
+  let md = `# 🔍 Explicação Detalhada dos Testes\n\n`;
+  md += `> Análise AST de cada teste com contexto, propósito e qualidade\n\n`;
+  md += `**Total de Testes Analisados**: ${explanations.length}\n\n`;
   md += `---\n\n`;
 
   for (const exp of explanations) {
-    md += `## 📝 ${exp.name}\n\n`;
-    md += `**Arquivo**: \`${exp.file}\`\n\n`;
+    // 🆕 Cabeçalho com nome e tipo
+    const typeEmoji = exp.testType === 'unit' ? '🔬' : 
+                     exp.testType === 'integration' ? '🔗' : 
+                     exp.testType === 'e2e' ? '🎭' : '❓';
+    const typeLabel = exp.testType === 'unit' ? 'Unit' : 
+                     exp.testType === 'integration' ? 'Integration' : 
+                     exp.testType === 'e2e' ? 'E2E' : 'Unknown';
+    
+    md += `## ${typeEmoji} ${exp.name}\n\n`;
+    md += `**📁 Arquivo**: \`${exp.file}\`  \n`;
+    md += `**🏷️ Tipo**: ${typeLabel}\n\n`;
+    
+    // 🆕 Seção "O que testa?" - destaque principal
+    md += `### 🎯 O que testa?\n\n`;
+    md += `${exp.whatItTests}\n\n`;
     
     if (exp.functionUnderTest) {
-      md += `**Função Testada**: \`${exp.functionUnderTest}\`\n\n`;
+      md += `**Função alvo**: \`${exp.functionUnderTest}\`\n\n`;
     }
 
-    md += `### Para quê?\n\n`;
-    if (exp.risk?.cuj) {
-      md += `Protege o CUJ: **${exp.risk.cuj}** (risco: ${exp.risk.level})\n\n`;
-    } else {
-      md += `*NÃO DETERMINADO (sem evidência de CUJ)*\n\n`;
-    }
+    // 🆕 Seção "Por que testa?" - justificativa técnica
+    md += `### ❓ Por que testa isso?\n\n`;
+    md += `${exp.whyItTests}\n\n`;
 
-    md += `### O que testa?\n\n`;
-    md += `**Given** (arranjo):\n`;
+    // 🆕 Seção "Para que testa?" - propósito de negócio/DORA
+    md += `### 🎯 Para que testa?\n\n`;
+    md += `${exp.purposeForWhat}\n\n`;
+
+    // Detalhes Given/When/Then
+    md += `### 📋 Estrutura do Teste (Given-When-Then)\n\n`;
+    md += `**Given** (pré-condições):\n`;
     exp.given.forEach(g => md += `- ${g}\n`);
-    md += `\n**When** (ação):\n- ${exp.when}\n\n`;
-    md += `**Then** (asserts):\n`;
+    md += `\n**When** (ação testada):\n- ${exp.when}\n\n`;
+    md += `**Then** (validações):\n`;
     exp.then.forEach(t => md += `- ${t.type}: ${t.matcher || t.value}\n`);
     md += `\n`;
 
-    md += `### Cobertura\n\n`;
-    md += `- **Arquivos cobertos**: ${exp.coverage.files.join(', ') || '*nenhum*'}\n`;
-    md += `- **Linhas cobertas**: ${exp.coverage.linesCovered}/${exp.coverage.linesTotal}\n`;
-    md += `- **% no diff**: ${exp.coverage.coveredInDiffPct.toFixed(1)}%\n\n`;
+    // Força dos asserts
+    const strengthEmoji = exp.assertStrength === 'forte' ? '🟢' : 
+                         exp.assertStrength === 'médio' ? '🟡' : '🔴';
+    md += `### 💪 Força dos Asserts: ${strengthEmoji} **${exp.assertStrength.toUpperCase()}**\n\n`;
 
-    md += `### Força\n\n`;
-    md += `**Assert Strength**: ${exp.assertStrength}\n\n`;
+    // Cobertura
+    md += `### 📊 Cobertura\n\n`;
+    if (exp.coverage.files.length > 0) {
+      md += `- **Arquivos cobertos**: ${exp.coverage.files.join(', ')}\n`;
+      md += `- **Linhas cobertas no diff**: ${exp.coverage.linesCovered}/${exp.coverage.linesTotal}\n`;
+      md += `- **% no diff (PR-aware)**: ${exp.coverage.coveredInDiffPct.toFixed(1)}%\n\n`;
+    } else {
+      md += `*Nenhum arquivo de cobertura associado*\n\n`;
+    }
 
+    // Mocks
     if (exp.mocks.length > 0) {
-      md += `**Mocks**: ${exp.mocks.join(', ')}\n\n`;
+      md += `### 🎭 Mocks/Spies\n\n`;
+      exp.mocks.forEach(m => md += `- ${m}\n`);
+      md += `\n`;
     }
 
+    // Contratos
     if (exp.contracts.pact) {
-      md += `**Contratos**: ${exp.contracts.interactions} interações, ${exp.contracts.failed} falhas\n\n`;
+      md += `### 🤝 Contratos (CDC/Pact)\n\n`;
+      md += `- **Interações testadas**: ${exp.contracts.interactions}\n`;
+      md += `- **Falhas**: ${exp.contracts.failed}\n\n`;
     }
 
+    // Risco/CUJ
+    if (exp.risk) {
+      const riskLevel = exp.risk.level || 'médio';
+      const riskEmoji = riskLevel === 'alto' ? '🔴' : 
+                       riskLevel === 'médio' ? '🟡' : '🟢';
+      md += `### ${riskEmoji} Risco/CUJ: **${riskLevel.toUpperCase()}**\n\n`;
+      md += `- **CUJ**: ${exp.risk.cuj}\n`;
+      if (exp.risk.slo) {
+        md += `- **SLO**: ${exp.risk.slo}\n`;
+      }
+      md += `\n`;
+    }
+
+    // Problemas
     if (exp.smells.length > 0) {
-      md += `### ⚠️ Problemas\n\n`;
+      md += `### ⚠️ Problemas Detectados\n\n`;
       exp.smells.forEach(s => md += `- ${s}\n`);
       md += `\n`;
     }
 
+    // Sugestões
     if (exp.suggestions.length > 0) {
-      md += `### 💡 Sugestões\n\n`;
+      md += `### 💡 Sugestões de Melhoria\n\n`;
       exp.suggestions.forEach(s => md += `- ${s}\n`);
       md += `\n`;
     }
