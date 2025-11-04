@@ -3,6 +3,8 @@
  * 
  * Executa pipeline de análise de qualidade de forma modular e extensível.
  * Suporta múltiplas linguagens via adapters.
+ * 
+ * 🆕 Agora usa os adapters modernos de src/adapters/ via wrapper
  */
 
 import type {
@@ -17,6 +19,7 @@ import type {
   MutationResult,
   MockInfo
 } from './capabilities.js';
+import { getAllEngineAdapters } from './adapter-to-engine.js';
 
 /**
  * 🔍 Detecta linguagem do repositório
@@ -33,11 +36,15 @@ export async function detectLanguage(repo: string, adapters: LanguageAdapter[]):
 
 /**
  * 🚀 Executa pipeline completo de análise
+ * 
+ * 🆕 Se adapters não for fornecido, usa adapters modernos automaticamente
  */
 export async function runPipeline(
   options: PipelineOptions,
-  adapters: LanguageAdapter[]
+  adapters?: LanguageAdapter[]
 ): Promise<AggregatedResult> {
+  // 🆕 Usa adapters modernos como padrão
+  const adaptersList = adapters || getAllEngineAdapters();
   const startTime = Date.now();
   const started = new Date().toISOString();
   const stepsExecuted: string[] = [];
@@ -48,12 +55,12 @@ export async function runPipeline(
     // 1. Detectar linguagem e adapter
     console.log('🔍 Detectando linguagem...');
     const adapter = options.language
-      ? adapters.find(a => a.language === options.language)
-      : await detectLanguage(options.repo, adapters);
+      ? adaptersList.find(a => a.language === options.language)
+      : await detectLanguage(options.repo, adaptersList);
 
     if (!adapter) {
       throw new Error(
-        `Linguagem não detectada ou não suportada. Suportadas: ${adapters.map(a => a.language).join(', ')}`
+        `Linguagem não detectada ou não suportada. Suportadas: ${adaptersList.map(a => a.language).join(', ')}`
       );
     }
 
