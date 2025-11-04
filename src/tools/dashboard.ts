@@ -79,7 +79,6 @@ async function loadAnalysisData(paths: ReturnType<typeof getPaths>): Promise<any
     'test-catalog.json',
     'analyze.json',
     'diff-coverage.json', // 🆕
-    'contracts-verify.json' // 🆕
   ];
 
   for (const file of files) {
@@ -92,6 +91,20 @@ async function loadAnalysisData(paths: ReturnType<typeof getPaths>): Promise<any
         Object.assign(data, { [file.replace('.json', '')]: json });
       } catch {}
     }
+  }
+  
+  // 🆕 Contracts: tentar reports primeiro, depois analyses (fallback)
+  const contractsFile = 'contracts-verify.json';
+  let contractsPath = join(paths.reports, contractsFile);
+  if (!await fileExists(contractsPath)) {
+    contractsPath = join(paths.analyses, contractsFile);
+  }
+  if (await fileExists(contractsPath)) {
+    try {
+      const content = await readFile(contractsPath);
+      const json = JSON.parse(content);
+      Object.assign(data, { 'contracts-verify': json });
+    } catch {}
   }
 
   // Extrai dados da pirâmide de coverage-analysis.json

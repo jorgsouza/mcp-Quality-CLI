@@ -615,6 +615,10 @@ export default async function run(args: any) {
     minScenarios: args.minScenarios,
     requireCritical: args.requireCritical,
     failFast: args.failFast,
+    
+    // 🆕 Gates adicionais (diff coverage + contracts)
+    minDiffCoverage: args.minDiffCoverage || args.min_diff_coverage,  // --min-diff-coverage
+    requireContractsPassing: args.requireContracts || args.require_contracts,  // --require-contracts
   };
   
   const result = await validate(options);
