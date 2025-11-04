@@ -1099,7 +1099,253 @@ export async function autoQualityRun(options: AutoOptions): Promise<AutoResult> 
 
 ---
 
-**Status**: 📝 PLANEJADO  
+**Status**: 🚧 EM PROGRESSO (6/12 fases completas - 50%)  
 **Prioridade**: 🔥 ALTA (próxima evolução natural)  
-**Esforço**: 38-50 dias (2-2.5 meses)  
+**Esforço Inicial**: 38-50 dias → **Revisado**: 25-30 dias (ritmo acelerado)  
 **ROI**: ⭐⭐⭐⭐⭐ (transforma de "ferramenta de cobertura" para "plataforma de qualidade")
+
+---
+
+## ⚠️ Lacunas e Inconsistências Identificadas
+
+**Data**: 2025-11-04 (Auditoria Técnica Completa)
+
+### 1. Engine Multi-Linguagem Incompleta
+
+**Problema**: `src/engine/adapters/` contém apenas TypeScript. Apesar de existirem adapters em `src/adapters/` (Python/Go/Java/Ruby) para gerar testes, o engine (descoberta, mutation, coverage parsing consolidado, execução) não usa esses adapters consistentemente.
+
+**Impacto**: O comando `quality analyze/auto` não entrega o mesmo "one-shot" fora do TS/JS.
+
+**Solução**:
+- Padronizar interface do engine para receber um `LanguageAdapter` unificado
+- Mover adapter TypeScript atual para `src/adapters/` (mesma família)
+- Criar contrato único: `LanguageAdapter` com métodos:
+  - `detectFramework()`
+  - `runTests()`
+  - `parseCoverage()`
+  - `runMutation()`
+  - `discoverEndpoints()`
+
+**Prioridade**: 🔴 ALTA (bloqueia suporte real multi-linguagem)
+
+---
+
+### 2. CDC/Pact "Meio do Caminho"
+
+**Problema**: Há scaffolding de Pact (`scaffold-contracts-pact.ts`) mas o passo "run/verify Pact" não está integrado ao pipeline. Não há coleta de relatórios Pact no `consolidate-reports.ts`.
+
+**Impacto**: CDC gerado mas nunca executado automaticamente.
+
+**Solução**:
+- ✅ `run-contracts-verify.ts` já existe mas não integrado
+- Adicionar parsing de relatórios Pact (JSON/HTML)
+- Integrar no `auto.ts` antes de `validate`
+- Consolidar em `CODE-ANALYSIS.md` ou `TEST-PLAN.md`
+
+**Prioridade**: 🟡 MÉDIA (funcionalidade parcialmente implementada)
+
+---
+
+### 3. Coverage & Mutation Fora de TS/JS
+
+**Problema**: `run-coverage.ts` trata vários formatos, mas a execução depende do framework (pytest, junit, go test) e não há runners específicos por linguagem.
+
+**Impacto**: Cobertura e mutation score só funciona para TS/JS.
+
+**Solução**:
+- Criar executores por linguagem:
+  - `runners/python-runner.ts` (pytest + coverage.py)
+  - `runners/go-runner.ts` (go test -cover)
+  - `runners/java-runner.ts` (JUnit + JaCoCo)
+- Criar parsers de cobertura:
+  - `parsers/cobertura-parser.ts` (Python/Java)
+  - `parsers/jacoco-parser.ts` (Java)
+  - `parsers/lcov-parser.ts` (JS/TS)
+  - `parsers/gocov-parser.ts` (Go)
+
+**Prioridade**: 🔴 ALTA (funcionalidade core limitada)
+
+---
+
+### 4. Dois "Sistemas de Adapters"
+
+**Problema**: `src/engine/adapters` (TS) vs `src/adapters` (multi-linguagem). Cada parte usa um sistema diferente.
+
+**Impacto**: Duplicação de lógica, manutenção difícil, evolução divergente.
+
+**Solução**:
+- Unificar em **um único contrato** `LanguageAdapter`:
+```typescript
+interface LanguageAdapter {
+  language: string;
+  detectFramework(repo: string): Promise<Framework>;
+  discoverTests(repo: string): Promise<TestFile[]>;
+  runTests(repo: string, options: RunOptions): Promise<TestResult>;
+  parseCoverage(coverageFile: string): Promise<Coverage>;
+  runMutation(repo: string, targets: string[]): Promise<MutationResult>;
+  scaffoldTest(target: TestTarget): Promise<string>;
+}
+```
+- Migrar adapter TS do engine para `src/adapters/typescript.ts`
+- Engine consome adapters de forma polimórfica
+
+**Prioridade**: 🔴 ALTA (arquitetura fundamental)
+
+---
+
+### 5. Dependências Externas em Runtime
+
+**Problema**: O fluxo supõe que o repo já tem Playwright/Vitest/Jest/pytest instalados.
+
+**Impacto**: Primeiras execuções falham com erros crípticos.
+
+**Solução**:
+- Expandir `self-check.ts` para:
+  - Detectar ferramentas faltantes
+  - Imprimir comandos exatos: `npm i -D vitest @vitest/coverage-v8`
+  - Modo `--bootstrap-deps` que instala automaticamente
+  - Lockar versões recomendadas
+- Criar `docs/SETUP-BY-LANGUAGE.md`:
+  - TypeScript: vitest + coverage-v8 + stryker
+  - Python: pytest + pytest-cov + mutmut
+  - Go: go test + gotestsum + go-mutesting
+  - Java: JUnit 5 + JaCoCo + PIT
+
+**Prioridade**: 🟡 MÉDIA (UX crítico para onboarding)
+
+---
+
+### 6. Plan/Strategy Podem Se Beneficiar do Risco Real
+
+**Problema**: Heurística de risco é estática (rotas críticas, endpoints sem contrato). Não usa métricas reais do repositório.
+
+**Impacto**: Plano pode não priorizar os módulos realmente problemáticos.
+
+**Solução**:
+- Puxar sinais reais:
+  - **Git churn**: arquivos com mais commits (código volátil)
+  - **Complexidade ciclomática**: funções complexas (risk-prone)
+  - **Histórico de flakiness**: testes que falharam intermitentemente
+  - **MTTR por módulo**: tempo médio de reparo
+  - **Tamanho de diff**: arquivos com grandes mudanças
+- Integrar no `risk-register.ts`:
+  - Calcular score composto: `impact × probability × volatility`
+  - Priorizar no `portfolio-plan.ts`
+
+**Prioridade**: 🟢 BAIXA (enhancement, não blocker)
+
+---
+
+### 7. Validação "Diff Coverage"
+
+**Problema**: Schema prevê `diff_coverage_min`, mas não há coleta de LCOV por diff de PR integrada (apenas cobertura global).
+
+**Impacto**: Não valida se código novo está testado.
+
+**Solução**:
+- Criar `run-diff-coverage.ts`:
+  - Integrar com `git diff main...HEAD`
+  - Gerar coverage focado no diff
+  - Parser: `nyc report --include <diff-files>` ou coverage filtrado
+- Adicionar gate em `validate.ts`:
+  - `diff_coverage >= 60%` (threshold configurável)
+- Reportar em `DIFF-COVERAGE.md`
+
+**Prioridade**: 🟡 MÉDIA (CI/CD quality gate importante)
+
+---
+
+## 🛠️ Roadmap para "Fechar" a V1 Sólida
+
+### Fase A: Unificar Adapters (5-7 dias)
+1. Criar contrato `LanguageAdapter` unificado
+2. Migrar adapter TS do engine para `src/adapters/typescript.ts`
+3. Implementar adapters completos:
+   - Python: pytest + coverage.py + mutmut
+   - Go: go test + gocov + go-mutesting
+4. Engine passa a consumir adapters polimorficamente
+
+### Fase B: CDC Completo (2-3 dias)
+1. Integrar `run-contracts-verify.ts` no pipeline
+2. Parser de relatórios Pact (JSON/HTML)
+3. Consolidar em relatórios principais
+4. Adicionar gate: `contract_verification_rate >= 95%`
+
+### Fase C: Coverage/Mutation Multi-Linguagem (4-5 dias)
+1. Criar runners por linguagem (Python, Go, Java)
+2. Criar parsers de cobertura (Cobertura, JaCoCo, gocov)
+3. Integrar mutation testing multi-linguagem
+4. Testar com projetos reais em cada stack
+
+### Fase D: Bootstrap de Dependências (2 dias)
+1. Expandir `self-check.ts` com detecção de faltas
+2. Modo `--bootstrap-deps` para instalação automática
+3. Criar `SETUP-BY-LANGUAGE.md` com receitas prontas
+
+### Fase E: Diff Coverage (3 dias)
+1. Implementar `run-diff-coverage.ts`
+2. Integrar com git diff
+3. Adicionar gate em `validate.ts`
+4. Reportar em `DIFF-COVERAGE.md`
+
+### Fase F: Risco Dinâmico (3-4 dias)
+1. Coletar git churn por arquivo
+2. Calcular complexidade ciclomática
+3. Integrar flakiness histórico
+4. Score composto em `risk-register.ts`
+
+### Fase G: Documentação e Testes (2-3 dias)
+1. Tabela "Linguagem × Suporte" no README
+2. Testes E2E por linguagem
+3. CI matrix com Python/Go/TS
+4. Guias de uso por stack
+
+---
+
+## 📊 Cronograma Revisado
+
+| Fase Original | Status | Nova Fase | Status | Prioridade |
+|---------------|--------|-----------|--------|------------|
+| 1. CUJ/SLO/Risk | ✅ 100% | A. Unificar Adapters | ❌ 0% | 🔴 ALTA |
+| 2. Portfolio Planning | ✅ 100% | B. CDC Completo | ⚠️ 50% | 🟡 MÉDIA |
+| 3. CDC (Pact) | ✅ 80% | C. Coverage Multi-Lang | ❌ 20% | 🔴 ALTA |
+| 4. Property Tests | ✅ 100% | D. Bootstrap Deps | ❌ 0% | 🟡 MÉDIA |
+| 5. Approval Tests | ✅ 100% | E. Diff Coverage | ❌ 0% | 🟡 MÉDIA |
+| 6. Mutation Testing | ❌ 0% | F. Risco Dinâmico | ❌ 0% | 🟢 BAIXA |
+| 7. Suite Health | ✅ 100% | G. Docs & Testes | ⚠️ 30% | 🟡 MÉDIA |
+| 8. Prod Metrics | ❌ 0% | - | - | - |
+| 9. SLO Canary | ❌ 0% | - | - | - |
+| 10. Quality Gates | ❌ 0% | - | - | - |
+| 11. Integration | ⚠️ 50% | - | - | - |
+| 12. MCP + Docs | ⚠️ 20% | - | - | - |
+
+**Novo Esforço Total**: 21-27 dias (3-4 semanas)  
+**Prioridade 1 (Blockers)**: Fases A, C (9-12 dias)  
+**Prioridade 2 (Importante)**: Fases B, D, E, G (9-11 dias)  
+**Prioridade 3 (Enhancement)**: Fase F (3-4 dias)
+
+---
+
+## ✅ Critérios de Sucesso V1 (Revisado)
+
+### Must Have
+- [x] 6/12 fases originais implementadas (50%)
+- [x] Property Tests + Approval Tests funcionais
+- [x] Suite Health monitorando flakiness
+- [ ] **Suporte real multi-linguagem (TS + Python + Go)**
+- [ ] **Coverage + Mutation para ≥3 stacks**
+- [ ] **CDC integrado ao pipeline**
+- [ ] **Bootstrap de dependências**
+- [ ] 700+ testes passando (666 atuais + ~50 novos)
+
+### Should Have
+- [ ] Diff Coverage validado em PRs
+- [ ] Risco dinâmico (git churn + complexidade)
+- [ ] Documentação completa por linguagem
+- [ ] CI matrix testando Python/Go/TS
+
+### Could Have
+- [ ] Dashboard interativo (quality gates visíveis)
+- [ ] Pact Broker integration
+- [ ] Chaos Engineering tests
+- [ ] Prod metrics (Sentry/Datadog)
