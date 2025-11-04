@@ -557,32 +557,89 @@ async function runContractTestingPhase(ctx: PipelineContext): Promise<void> {
       return;
     }
     
-    // Step 2: Verify contracts (if pacts exist)
+    // Step 2: Verify contracts (🆕 usando adapters quando disponível)
     const pactsDir = join(ctx.paths.contracts, 'pacts');
     const pactsExist = await fileExists(pactsDir);
     
     if (pactsExist) {
       console.log('  🔍 Verificando contratos...');
-      const verifyResult = await runContractsVerify({
-        repo: ctx.repoPath,
-        product: ctx.product,
-        provider_base_url: 'http://localhost:3000', // Default
-      });
       
-      if (verifyResult.ok) {
-        ctx.steps.push('contract-verify');
-        if (verifyResult.report_path) {
-          ctx.outputs.contractVerify = verifyResult.report_path;
-        }
-        console.log(`  ✅ Verificação: ${Math.round(verifyResult.verification_rate * 100)}% (${verifyResult.verified}/${verifyResult.total_interactions})`);
-        
-        if (ctx.metrics) {
-          ctx.metrics.verification_rate = verifyResult.verification_rate;
-          ctx.metrics.verified = verifyResult.verified;
-          ctx.metrics.failed = verifyResult.failed;
+      // 🆕 Tentar usar adapter primeiro (para Java/Python/Go)
+      const adapter = await getAdapter(ctx.repoPath);
+      const adapterAny = adapter as any;
+      
+      if (adapter && adapterAny.verifyContracts) {
+        console.log(`  🌐 Usando adapter ${adapter.language} para verificação...`);
+        try {
+          const adapterResult = await adapterAny.verifyContracts(ctx.repoPath, {
+            providerBaseUrl: 'http://localhost:3000',
+            pactBrokerUrl: process.env.PACT_BROKER_URL,
+          });
+          
+          if (adapterResult.ok) {
+            ctx.steps.push('contract-verify');
+            if (adapterResult.reportPath) {
+              ctx.outputs.contractVerify = adapterResult.reportPath;
+            }
+            console.log(`  ✅ Verificação via adapter: ${adapterResult.verified}/${adapterResult.total} passaram`);
+            
+            if (ctx.metrics) {
+              ctx.metrics.verification_rate = adapterResult.verified / adapterResult.total;
+              ctx.metrics.verified = adapterResult.verified;
+              ctx.metrics.failed = adapterResult.failed;
+            }
+          } else {
+            console.log(`  ⚠️  Verificação via adapter falhou, tentando fallback...`);
+            throw new Error('Adapter verification failed');
+          }
+        } catch (adapterError) {
+          console.log(`  ⚠️  Erro no adapter, usando verificação genérica...`);
+          // Fallback para verificação genérica
+          const verifyResult = await runContractsVerify({
+            repo: ctx.repoPath,
+            product: ctx.product,
+            provider_base_url: 'http://localhost:3000',
+          });
+          
+          if (verifyResult.ok) {
+            ctx.steps.push('contract-verify');
+            if (verifyResult.report_path) {
+              ctx.outputs.contractVerify = verifyResult.report_path;
+            }
+            console.log(`  ✅ Verificação: ${Math.round(verifyResult.verification_rate * 100)}% (${verifyResult.verified}/${verifyResult.total_interactions})`);
+            
+            if (ctx.metrics) {
+              ctx.metrics.verification_rate = verifyResult.verification_rate;
+              ctx.metrics.verified = verifyResult.verified;
+              ctx.metrics.failed = verifyResult.failed;
+            }
+          } else {
+            console.log(`  ⚠️  Verificação falhou: ${verifyResult.message}`);
+          }
         }
       } else {
-        console.log(`  ⚠️  Verificação falhou: ${verifyResult.message}`);
+        // Verificação genérica (TypeScript/fallback)
+        const verifyResult = await runContractsVerify({
+          repo: ctx.repoPath,
+          product: ctx.product,
+          provider_base_url: 'http://localhost:3000',
+        });
+        
+        if (verifyResult.ok) {
+          ctx.steps.push('contract-verify');
+          if (verifyResult.report_path) {
+            ctx.outputs.contractVerify = verifyResult.report_path;
+          }
+          console.log(`  ✅ Verificação: ${Math.round(verifyResult.verification_rate * 100)}% (${verifyResult.verified}/${verifyResult.total_interactions})`);
+          
+          if (ctx.metrics) {
+            ctx.metrics.verification_rate = verifyResult.verification_rate;
+            ctx.metrics.verified = verifyResult.verified;
+            ctx.metrics.failed = verifyResult.failed;
+          }
+        } else {
+          console.log(`  ⚠️  Verificação falhou: ${verifyResult.message}`);
+        }
       }
     } else {
       console.log('  ℹ️  Pact files não encontrados (execute consumer tests primeiro)');
@@ -1076,18 +1133,97 @@ async function runTestingPhase(ctx: PipelineContext, skipRun: boolean): Promise<
     return;
   }
   
-  // 7. Run Tests with Coverage
-  console.log('🧪 [7/9] Executando testes com cobertura...');
+  // 🆕 7. Run Tests with Coverage (usando adapters multi-linguagem)
+  console.log('🧪 [7/9] Executando testes com cobertura via adapter...');
   try {
-    const coverageResult = await runCoverageAnalysis({
-      repo: ctx.repoPath,
-      product: ctx.product
-    });
-    ctx.steps.push('coverage');
-    ctx.outputs.coverage = coverageResult.reportPath;
-    console.log(`✅ Testes executados com sucesso!\n`);
+    // 7.1. Detectar linguagem e obter adapter
+    const adapter = await getAdapter(ctx.repoPath);
+    
+    if (!adapter) {
+      console.log('⚠️  Adapter não encontrado, usando fallback genérico\n');
+      const coverageResult = await runCoverageAnalysis({
+        repo: ctx.repoPath,
+        product: ctx.product
+      });
+      ctx.steps.push('coverage');
+      ctx.outputs.coverage = coverageResult.reportPath;
+      console.log(`✅ Testes executados com sucesso!\n`);
+      return;
+    }
+
+    console.log(`🌐 Usando adapter: ${adapter.language}`);
+
+    // 7.2. Verificar dependências (ensureDeps) - se disponível
+    const adapterAny = adapter as any;
+    if (adapterAny.ensureDeps) {
+      console.log('  🔍 Verificando dependências...');
+      try {
+        const depsResult = await adapterAny.ensureDeps(ctx.repoPath);
+        if (!depsResult.ok && depsResult.missing && depsResult.missing.length > 0) {
+          console.log(`  ⚠️  Dependências faltando: ${depsResult.missing.join(', ')}`);
+          if (depsResult.commands && depsResult.commands.length > 0) {
+            console.log('  💡 Comandos para instalar:');
+            depsResult.commands.forEach((cmd: string) => console.log(`     ${cmd}`));
+          }
+        } else {
+          console.log('  ✅ Dependências OK');
+        }
+      } catch (error) {
+        console.log(`  ⚠️  Erro ao verificar dependências: ${error instanceof Error ? error.message : error}`);
+      }
+    }
+
+    // 7.3. Build (se necessário - Java/Go)
+    if (adapterAny.build) {
+      console.log('  🔨 Compilando projeto...');
+      try {
+        const buildResult = await adapterAny.build(ctx.repoPath, { skipTests: false });
+        if (buildResult.ok) {
+          console.log('  ✅ Build concluído com sucesso');
+        } else {
+          console.log(`  ⚠️  Build falhou: ${buildResult.error || 'Erro desconhecido'}`);
+        }
+      } catch (error) {
+        console.log(`  ⚠️  Erro no build: ${error instanceof Error ? error.message : error}`);
+      }
+    }
+
+    // 7.4. Executar testes (runTests)
+    console.log('  🧪 Executando testes...');
+    const testResult = await adapter.runTests(ctx.repoPath, { coverage: true });
+    
+    if (testResult.ok && testResult.coverage) {
+      console.log(`  ✅ Testes: ${testResult.passed}/${testResult.totalTests} passaram`);
+      console.log(`  📊 Coverage: ${testResult.coverage.lines.pct.toFixed(1)}% lines, ${testResult.coverage.branches.pct.toFixed(1)}% branches`);
+      
+      // Salvar métricas de coverage
+      if (!ctx.metrics) ctx.metrics = {};
+      ctx.metrics.test_total = testResult.totalTests;
+      ctx.metrics.test_passed = testResult.passed;
+      ctx.metrics.coverage_lines = testResult.coverage.lines.pct;
+      ctx.metrics.coverage_branches = testResult.coverage.branches.pct;
+      
+      ctx.steps.push('coverage');
+      ctx.outputs.coverage = 'tests/analyses/coverage-analysis.json';
+      console.log(`✅ Testes executados com sucesso via ${adapter.language} adapter!\n`);
+    } else {
+      console.log(`  ⚠️  Testes falharam ou coverage não disponível`);
+      console.log(`     Passed: ${testResult.passed}/${testResult.totalTests}, Failed: ${testResult.failed}`);
+    }
   } catch (error) {
-    console.log(`⚠️  Erro ao executar testes: ${error instanceof Error ? error.message : error}\n`);
+    console.log(`⚠️  Erro ao executar testes via adapter: ${error instanceof Error ? error.message : error}`);
+    console.log('   Tentando fallback genérico...\n');
+    try {
+      const coverageResult = await runCoverageAnalysis({
+        repo: ctx.repoPath,
+        product: ctx.product
+      });
+      ctx.steps.push('coverage');
+      ctx.outputs.coverage = coverageResult.reportPath;
+      console.log(`✅ Testes executados com sucesso via fallback!\n`);
+    } catch (fallbackError) {
+      console.log(`⚠️  Fallback também falhou: ${fallbackError instanceof Error ? fallbackError.message : fallbackError}\n`);
+    }
   }
   
   // 8. Validate Gates
