@@ -54,6 +54,12 @@ import { portfolioPlan } from './portfolio-plan.js';
 import { scaffoldContractsPact } from './scaffold-contracts-pact.js';
 import { runContractsVerify } from './run-contracts-verify.js';
 
+// [QUALITY GATES] FASE 4: Property-Based Tests
+import { scaffoldPropertyTests } from './scaffold-property-tests.js';
+
+// [QUALITY GATES] FASE 5: Approval Tests
+import { scaffoldApprovalTests } from './scaffold-approval-tests.js';
+
 // [QUALITY GATES] FASE 7: Suite Health
 import { suiteHealth } from './suite-health.js';
 
