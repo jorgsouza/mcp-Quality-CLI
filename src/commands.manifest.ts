@@ -123,6 +123,27 @@ export const COMMANDS: readonly CommandDefinition[] = [
   },
   
   {
+    name: 'explain-tests',
+    module: './tools/explain-tests.js',
+    description: '🔍 Explica propósito e força dos testes (AST + Coverage + Contracts)',
+    flags: [
+      { name: 'repo', description: 'Caminho do repositório', required: true },
+      { name: 'product', description: 'Nome do produto', required: true },
+      { name: 'format', description: 'Formato: md|json', required: false, defaultValue: 'md' },
+      { name: 'out-dir', description: 'Diretório de saída customizado', required: false },
+      { name: 'base-branch', description: 'Branch base para diff', required: false, defaultValue: 'main' },
+      { name: 'min-diff-coverage', description: 'Cobertura mínima do diff (%, default: 80)', required: false },
+      { name: 'min-asserts', description: 'Número mínimo de asserts por teste (default: 1)', required: false },
+      { name: 'fail-on', description: 'Falhar quando: weak|none', required: false, defaultValue: 'none' },
+    ],
+    examples: [
+      'quality explain-tests --repo . --product my-app',
+      'quality explain-tests --repo . --product my-app --fail-on weak',
+      'quality explain-tests --repo . --product my-app --min-diff-coverage 90',
+    ],
+  },
+
+  {
     name: 'self-check',
     module: './tools/self-check.js',
     description: '🔍 Verifica ambiente e dependências (Node, vitest, stryker)',
