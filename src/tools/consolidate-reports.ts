@@ -28,6 +28,7 @@ export async function consolidateCodeAnalysisReport(
   const riskData = await loadJsonIfExists(join(paths.analyses, 'risk-register.json'));
   const cujData = await loadJsonIfExists(join(paths.analyses, 'cuj-catalog.json'));
   const sloData = await loadJsonIfExists(join(paths.analyses, 'slo-definitions.json'));
+  const contractData = await loadJsonIfExists(join(paths.analyses, 'contract-catalog.json'));
   
   // Construir relatório consolidado
   const sections: string[] = [];
@@ -137,7 +138,43 @@ export async function consolidateCodeAnalysisReport(
     sections.push('\n');
   }
   
-  // 6. Cobertura de Testes
+  // 6. Contract Testing (CDC/Pact)
+  sections.push(`## 🤝 Contract Testing (CDC/Pact)\n`);
+  if (contractData) {
+    sections.push(`### Catálogo de Contratos\n`);
+    
+    if (contractData.contracts) {
+      sections.push(`**Total de Contratos:** ${contractData.contracts.length}\n`);
+      sections.push('| Consumer | Provider | Interações | Status |');
+      sections.push('|----------|----------|------------|--------|');
+      contractData.contracts.forEach((contract: any) => {
+        const status = contract.verified ? '✅ Verificado' : '⏳ Pendente';
+        const interactions = contract.interactions?.length || 0;
+        sections.push(`| ${contract.consumer || 'N/A'} | ${contract.provider || 'N/A'} | ${interactions} | ${status} |`);
+      });
+      sections.push('\n');
+    }
+    
+    if (contractData.verification_summary) {
+      sections.push('### Resumo de Verificação\n');
+      const summary = contractData.verification_summary;
+      sections.push(`- **Contratos Verificados:** ${summary.verified || 0}/${summary.total || 0}`);
+      sections.push(`- **Taxa de Sucesso:** ${summary.success_rate || 0}%`);
+      sections.push(`- **Última Verificação:** ${summary.last_verification || 'N/A'}`);
+      sections.push('\n');
+    }
+    
+    sections.push('### Recomendações CDC\n');
+    sections.push('- 🎯 Manter contratos atualizados com cada mudança de API');
+    sections.push('- 📝 Documentar todos os endpoints no Pact Broker');
+    sections.push('- ✅ Executar testes de contrato no CI/CD');
+    sections.push('- 🔄 Versionar contratos junto com as APIs\n');
+  } else {
+    sections.push('_Contract testing não configurado. Recomenda-se implementar CDC para serviços distribuídos._\n');
+  }
+  sections.push('\n');
+  
+  // 7. Cobertura de Testes
   sections.push(`## 📊 Cobertura de Testes\n`);
   if (coverageData) {
     sections.push(`### Saúde Geral: **${coverageData.health || 'N/A'}**\n`);
@@ -164,7 +201,7 @@ export async function consolidateCodeAnalysisReport(
     sections.push('_Análise de cobertura não disponível. Execute os testes primeiro._\n');
   }
   
-  // 7. Qualidade dos Testes
+  // 8. Qualidade dos Testes
   sections.push(`## 🔬 Qualidade dos Testes\n`);
   if (testLogicData?.metrics) {
     const { qualityScore, grade, scenarioCoverage, assertions, mocking } = testLogicData.metrics;
@@ -196,7 +233,7 @@ export async function consolidateCodeAnalysisReport(
     sections.push('_Análise de qualidade não disponível._\n');
   }
   
-  // 8. Recomendações
+  // 9. Recomendações
   if (analyzeData?.recommendations && analyzeData.recommendations.length > 0) {
     sections.push(`## 💡 Recomendações\n`);
     analyzeData.recommendations.forEach((rec: string, idx: number) => {

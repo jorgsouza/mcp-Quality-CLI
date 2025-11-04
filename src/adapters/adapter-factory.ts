@@ -15,6 +15,7 @@ import type { LanguageAdapter, LanguageDetection } from './base/LanguageAdapter.
 import { TypeScriptAdapter } from './typescript.js';
 import { PythonAdapter } from './python.js';
 import { GoAdapter } from './go.js';
+import { JavaAdapter } from './java.js';
 
 /**
  * Registro de adapters disponíveis
@@ -23,6 +24,7 @@ const ADAPTER_REGISTRY: LanguageAdapter[] = [
   new TypeScriptAdapter(),
   new PythonAdapter(),
   new GoAdapter(),
+  new JavaAdapter(),
 ];
 
 /**

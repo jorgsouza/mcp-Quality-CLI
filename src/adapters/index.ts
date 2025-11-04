@@ -29,6 +29,7 @@ export type {
 export { TypeScriptAdapter, typescriptAdapter } from './typescript.js';
 export { PythonAdapter, pythonAdapter } from './python.js';
 export { GoAdapter, goAdapter } from './go.js';
+export { JavaAdapter, javaAdapter } from './java.js';
 
 // Factory e utilities
 export {
