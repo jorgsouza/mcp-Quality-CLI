@@ -15,6 +15,7 @@ import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
 import { parseCoverageAuto } from '../parsers/coverage-parsers.js';
 import { parseLCOV, findLCOVFile, findFileInReport, calculateLineCoverage, type LCOVReport } from '../parsers/lcov-line-parser.js'; // 🆕 Parser preciso
+import { parseJaCoCoDetailedXml, findJaCoCoFile as findJaCoCoFileInReport, calculateJaCoCoLineCoverage, type JaCoCoDetailedReport } from '../parsers/jacoco-detailed-parser.js'; // 🆕 JaCoCo para Java
 import { getPaths } from '../utils/paths.js';
 import { writeFileSafe } from '../utils/fs.js';
 
@@ -68,17 +69,36 @@ export async function runDiffCoverage(
   // 2. Obter linhas alteradas por arquivo
   const diffData = await getDiffLinesPerFile(repo, baseBranch, changedFiles);
 
-  // 🆕 3. Obter coverage LCOV preciso linha-a-linha
-  const lcovFile = await findLCOVFile(repo);
+  // 🆕 3. Detectar tipo de projeto e carregar coverage apropriado
+  const isJavaProject = existsSync(join(repo, 'pom.xml')) || existsSync(join(repo, 'build.gradle'));
+  
   let lcovReport: LCOVReport | null = null;
+  let jacocoReport: JaCoCoDetailedReport | null = null;
 
-  if (lcovFile) {
-    try {
-      const lcovContent = await fs.readFile(lcovFile, 'utf-8');
-      lcovReport = parseLCOV(lcovContent);
-      console.log(`📊 LCOV carregado: ${lcovReport.files.size} arquivos, ${lcovReport.totalLines} linhas`);
-    } catch (error) {
-      console.warn('⚠️  Erro ao parsear LCOV, usando fallback:', error);
+  // 🆕 3.1. Tentar JaCoCo primeiro (para projetos Java)
+  if (isJavaProject) {
+    const jacocoFile = await findJaCoCoFile(repo);
+    if (jacocoFile) {
+      try {
+        jacocoReport = await parseJaCoCoDetailedXml(jacocoFile);
+        console.log(`📊 JaCoCo carregado: ${jacocoReport.files.size} arquivos, ${jacocoReport.summary.totalLines} linhas`);
+      } catch (error) {
+        console.warn('⚠️  Erro ao parsear JaCoCo, tentando LCOV:', error);
+      }
+    }
+  }
+
+  // 🆕 3.2. Fallback para LCOV (TypeScript, JavaScript, Python, Go)
+  if (!jacocoReport) {
+    const lcovFile = await findLCOVFile(repo);
+    if (lcovFile) {
+      try {
+        const lcovContent = await fs.readFile(lcovFile, 'utf-8');
+        lcovReport = parseLCOV(lcovContent);
+        console.log(`📊 LCOV carregado: ${lcovReport.files.size} arquivos, ${lcovReport.totalLines} linhas`);
+      } catch (error) {
+        console.warn('⚠️  Erro ao parsear LCOV, usando fallback:', error);
+      }
     }
   }
 
@@ -100,8 +120,19 @@ export async function runDiffCoverage(
 
     let linesCovered = 0;
 
-    if (lcovReport && changedLines.length > 0) {
-      // 🆕 CÁLCULO PRECISO: Verifica cada linha alterada no LCOV
+    // 🆕 CÁLCULO PRECISO: JaCoCo (Java)
+    if (jacocoReport && changedLines.length > 0) {
+      const jacocoFileKey = findJaCoCoFileInReport(jacocoReport, file);
+      if (jacocoFileKey) {
+        const result = calculateJaCoCoLineCoverage(jacocoReport, jacocoFileKey, changedLines);
+        linesCovered = result.covered;
+        console.log(`  ${file}: ${linesCovered}/${linesAdded} linhas cobertas (${result.percentage.toFixed(1)}%)`);
+      } else {
+        console.log(`  ${file}: não encontrado no JaCoCo (0% coverage)`);
+      }
+    }
+    // 🆕 CÁLCULO PRECISO: LCOV (TS/JS/Python/Go)
+    else if (lcovReport && changedLines.length > 0) {
       const lcovFile = findFileInReport(lcovReport, file);
       if (lcovFile) {
         const result = calculateLineCoverage(lcovReport, lcovFile, changedLines);
@@ -253,6 +284,31 @@ async function getDiffLinesPerFile(
   }
 
   return result;
+}
+
+/**
+ * 🆕 Encontra arquivo JaCoCo XML (Java)
+ */
+async function findJaCoCoFile(repo: string): Promise<string | null> {
+  const candidates = [
+    // Maven
+    join(repo, 'target', 'site', 'jacoco', 'jacoco.xml'),
+    // Gradle
+    join(repo, 'build', 'reports', 'jacoco', 'test', 'jacocoTestReport.xml'),
+    join(repo, 'build', 'reports', 'jacoco', 'jacocoTestReport.xml'),
+    // Multi-module Maven
+    join(repo, 'target', 'jacoco.xml'),
+  ];
+
+  for (const candidate of candidates) {
+    if (existsSync(candidate)) {
+      console.log(`✅ JaCoCo XML encontrado: ${candidate}`);
+      return candidate;
+    }
+  }
+
+  console.warn('⚠️  JaCoCo XML não encontrado. Execute: mvn test jacoco:report');
+  return null;
 }
 
 /**

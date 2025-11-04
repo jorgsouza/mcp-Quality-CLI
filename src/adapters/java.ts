@@ -23,6 +23,7 @@ import type {
   TestTarget,
 } from './base/LanguageAdapter.js';
 import { parseJaCoCoXml } from '../parsers/coverage-parsers.js';
+import { parsePITReport } from '../parsers/pit-parser.js';
 
 export class JavaAdapter implements LanguageAdapter {
   language = 'java';
@@ -213,8 +214,24 @@ export class JavaAdapter implements LanguageAdapter {
       output = error.stdout || error.stderr || '';
     }
 
-    // Parse PIT output
-    return this.parsePitOutput(output, ok);
+    // 🆕 Tentar parsear XML do PIT primeiro (mais preciso)
+    const pitXmlPaths = [
+      join(repo, 'target', 'pit-reports', 'mutations.xml'),
+      join(repo, 'build', 'reports', 'pitest', 'mutations.xml'),
+    ];
+
+    for (const xmlPath of pitXmlPaths) {
+      if (existsSync(xmlPath)) {
+        try {
+          return await parsePITReport(xmlPath, true);
+        } catch (error) {
+          console.warn('⚠️  Erro ao parsear PIT XML, usando fallback:', error);
+        }
+      }
+    }
+
+    // 🆕 Fallback: parsear stdout
+    return parsePITReport(output, false);
   }
 
   /**
@@ -241,6 +258,257 @@ export class JavaAdapter implements LanguageAdapter {
   }
 
   /**
+   * 🆕 Garante dependências Java instaladas
+   */
+  async ensureDeps(repo: string, options?: { bootstrap?: boolean }): Promise<{
+    ok: boolean;
+    installed: string[];
+    missing: string[];
+    commands?: string[];
+  }> {
+    const installed: string[] = [];
+    const missing: string[] = [];
+    const commands: string[] = [];
+
+    // Verificar Java
+    try {
+      const javaVersion = execSync('java -version', { encoding: 'utf-8', stdio: 'pipe' });
+      installed.push(`Java: ${javaVersion.split('\n')[0]}`);
+    } catch {
+      missing.push('Java JDK 11+');
+      commands.push('# Ubuntu/Debian:\nsudo apt-get install -y openjdk-17-jdk');
+      commands.push('# macOS:\nbrew install openjdk@17');
+    }
+
+    // Verificar Maven
+    const hasMaven = existsSync(join(repo, 'pom.xml'));
+    if (hasMaven) {
+      try {
+        const mvnVersion = execSync('mvn -v', { encoding: 'utf-8', stdio: 'pipe' });
+        installed.push(`Maven: ${mvnVersion.split('\n')[0]}`);
+      } catch {
+        missing.push('Maven 3.6+');
+        commands.push('# Ubuntu/Debian:\nsudo apt-get install -y maven');
+        commands.push('# macOS:\nbrew install maven');
+      }
+
+      // Verificar JaCoCo no pom.xml
+      const pomContent = readFileSync(join(repo, 'pom.xml'), 'utf-8');
+      if (pomContent.includes('jacoco')) {
+        installed.push('JaCoCo plugin (pom.xml)');
+      } else {
+        missing.push('JaCoCo plugin no pom.xml');
+        commands.push('# Adicionar ao pom.xml:\n<plugin>\n  <groupId>org.jacoco</groupId>\n  <artifactId>jacoco-maven-plugin</artifactId>\n  <version>0.8.10</version>\n</plugin>');
+      }
+    }
+
+    // Verificar Gradle
+    const hasGradle = existsSync(join(repo, 'build.gradle')) || existsSync(join(repo, 'build.gradle.kts'));
+    if (hasGradle) {
+      const gradlewExists = existsSync(join(repo, 'gradlew'));
+      if (gradlewExists) {
+        installed.push('Gradle wrapper (./gradlew)');
+      } else {
+        try {
+          const gradleVersion = execSync('gradle -v', { encoding: 'utf-8', stdio: 'pipe' });
+          installed.push(`Gradle: ${gradleVersion.split('\n')[0]}`);
+        } catch {
+          missing.push('Gradle 7+');
+          commands.push('# Ubuntu/Debian:\nsudo apt-get install -y gradle');
+          commands.push('# macOS:\nbrew install gradle');
+        }
+      }
+    }
+
+    // Verificar Pact (opcional)
+    if (hasMaven) {
+      const pomContent = readFileSync(join(repo, 'pom.xml'), 'utf-8');
+      if (pomContent.includes('pact')) {
+        installed.push('Pact JVM (pom.xml)');
+      }
+    }
+
+    return {
+      ok: missing.length === 0,
+      installed,
+      missing,
+      commands: missing.length > 0 ? commands : undefined,
+    };
+  }
+
+  /**
+   * 🆕 Compila projeto Java
+   */
+  async build(repo: string, options?: { skipTests?: boolean }): Promise<{
+    ok: boolean;
+    output: string;
+    duration: number;
+  }> {
+    const hasMaven = existsSync(join(repo, 'pom.xml'));
+    const hasGradle = existsSync(join(repo, 'build.gradle')) || existsSync(join(repo, 'build.gradle.kts'));
+
+    let command = '';
+
+    if (hasMaven) {
+      command = 'mvn clean compile';
+      if (options?.skipTests) {
+        command += ' -DskipTests';
+      }
+    } else if (hasGradle) {
+      command = './gradlew clean build';
+      if (options?.skipTests) {
+        command += ' -x test';
+      }
+    } else {
+      throw new Error('Build tool não encontrado (Maven ou Gradle)');
+    }
+
+    const startTime = Date.now();
+    let output = '';
+    let ok = true;
+
+    try {
+      output = execSync(command, {
+        cwd: repo,
+        encoding: 'utf-8',
+        stdio: 'pipe',
+      });
+    } catch (error: any) {
+      ok = false;
+      output = error.stdout || error.stderr || error.message;
+    }
+
+    const duration = Date.now() - startTime;
+
+    return { ok, output, duration };
+  }
+
+  /**
+   * 🆕 Descobre contratos Pact
+   */
+  async discoverContracts(repo: string): Promise<Array<{
+    file: string;
+    consumer: string;
+    provider: string;
+    type: 'consumer' | 'provider';
+  }>> {
+    const contracts: Array<{
+      file: string;
+      consumer: string;
+      provider: string;
+      type: 'consumer' | 'provider';
+    }> = [];
+
+    // Maven: target/pacts/*.json
+    // Gradle: build/pacts/*.json
+    const pactDirs = [
+      join(repo, 'target', 'pacts'),
+      join(repo, 'build', 'pacts'),
+    ];
+
+    for (const pactDir of pactDirs) {
+      if (!existsSync(pactDir)) continue;
+
+      try {
+        const output = execSync(`find "${pactDir}" -name "*.json"`, {
+          encoding: 'utf-8',
+          stdio: 'pipe',
+        });
+
+        const files = output.trim().split('\n').filter(Boolean);
+
+        for (const file of files) {
+          try {
+            const content = readFileSync(file, 'utf-8');
+            const pact = JSON.parse(content);
+
+            contracts.push({
+              file: file.replace(repo + '/', ''),
+              consumer: pact.consumer?.name || 'unknown',
+              provider: pact.provider?.name || 'unknown',
+              type: 'consumer', // Pacts gerados são sempre do lado consumer
+            });
+          } catch {
+            // Ignorar arquivos inválidos
+          }
+        }
+      } catch {
+        // Ignorar erro de find
+      }
+    }
+
+    return contracts;
+  }
+
+  /**
+   * 🆕 Verifica contratos Pact
+   */
+  async verifyContracts(repo: string, options?: {
+    broker?: string;
+    token?: string;
+    provider?: string;
+  }): Promise<{
+    ok: boolean;
+    total: number;
+    verified: number;
+    failed: number;
+    results: Array<{
+      contract: string;
+      status: 'passed' | 'failed';
+      message?: string;
+    }>;
+  }> {
+    const hasMaven = existsSync(join(repo, 'pom.xml'));
+
+    let command = '';
+
+    if (hasMaven) {
+      command = 'mvn pact:verify';
+      if (options?.broker) {
+        command += ` -Dpact.broker.url=${options.broker}`;
+      }
+      if (options?.token) {
+        command += ` -Dpact.broker.token=${options.token}`;
+      }
+      if (options?.provider) {
+        command += ` -Dpact.provider.name=${options.provider}`;
+      }
+    } else {
+      command = './gradlew pactVerify';
+    }
+
+    let output = '';
+    let ok = true;
+
+    try {
+      output = execSync(command, {
+        cwd: repo,
+        encoding: 'utf-8',
+        stdio: 'pipe',
+        timeout: 120000, // 2 min
+      });
+    } catch (error: any) {
+      ok = false;
+      output = error.stdout || error.stderr || error.message;
+    }
+
+    // Parse output
+    // Maven Pact output: "Verified X out of Y interactions"
+    const verifiedMatch = output.match(/Verified (\d+) out of (\d+)/);
+    const total = verifiedMatch ? parseInt(verifiedMatch[2]) : 0;
+    const verified = verifiedMatch ? parseInt(verifiedMatch[1]) : 0;
+    const failed = total - verified;
+
+    return {
+      ok,
+      total,
+      verified,
+      failed,
+      results: [], // TODO: Parsear resultados detalhados
+    };
+  }
+
+  /**
    * Valida ambiente Java
    */
   async validate(repo: string): Promise<{
@@ -249,39 +517,14 @@ export class JavaAdapter implements LanguageAdapter {
     missing?: string[];
     warnings?: string[];
   }> {
-    const missing: string[] = [];
-    const warnings: string[] = [];
-
-    // Verificar Java
-    try {
-      execSync('java -version', { stdio: 'pipe' });
-    } catch {
-      missing.push('Java JDK (https://adoptium.net/)');
-    }
-
-    // Verificar Maven ou Gradle
-    const hasMaven = existsSync(join(repo, 'pom.xml'));
-    const hasGradle = existsSync(join(repo, 'build.gradle'));
-
-    if (!hasMaven && !hasGradle) {
-      missing.push('pom.xml ou build.gradle');
-    }
-
-    // Verificar JaCoCo
-    if (hasMaven) {
-      const pomContent = readFileSync(join(repo, 'pom.xml'), 'utf-8');
-      if (!pomContent.includes('jacoco')) {
-        warnings.push('JaCoCo não configurado no pom.xml');
-      }
-    }
-
+    const depsResult = await this.ensureDeps(repo);
     const framework = await this.detectFramework(repo);
 
     return {
-      ok: missing.length === 0,
+      ok: depsResult.ok,
       framework: framework || undefined,
-      missing,
-      warnings,
+      missing: depsResult.missing,
+      warnings: [],
     };
   }
 
@@ -321,29 +564,7 @@ export class JavaAdapter implements LanguageAdapter {
     };
   }
 
-  private parsePitOutput(output: string, ok: boolean): MutationResult {
-    // PIT output: "Generated 150 mutations Killed 120 (80%)"
-    
-    const totalMatch = output.match(/Generated\s+(\d+)\s+mutations/);
-    const killedMatch = output.match(/Killed\s+(\d+)/);
-    const scoreMatch = output.match(/(\d+)%/);
-
-    const totalMutants = totalMatch ? parseInt(totalMatch[1]) : 0;
-    const killed = killedMatch ? parseInt(killedMatch[1]) : 0;
-    const score = scoreMatch ? parseInt(scoreMatch[1]) / 100 : 0;
-
-    return {
-      ok,
-      framework: 'pitest',
-      totalMutants,
-      killed,
-      survived: totalMutants - killed,
-      timeout: 0,
-      noCoverage: 0,
-      score,
-      mutations: [],
-    };
-  }
+  // parsePitOutput removido - agora usa parsePITReport()
 
   private extractClassName(filePath: string): string {
     // "src/main/java/com/example/UserService.java" -> "UserService"
