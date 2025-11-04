@@ -52,8 +52,9 @@ describe('releaseQualityGate', () => {
   });
 
   it('deve retornar exit_code=1 com violações bloqueantes', async () => {
-    const { fileExists } = await import('../../utils/fs.js');
-    vi.mocked(fileExists).mockResolvedValue(true);
+    const { fileExists, writeFileSafe } = await import('../../utils/fs.js');
+    vi.mocked(fileExists).mockResolvedValue(false); // Não há thresholds.json
+    vi.mocked(writeFileSafe).mockResolvedValue(undefined); // 🆕
     
     // Mock com mutation critical baixo (bloqueante)
     vi.spyOn(fs, 'readFile').mockImplementation(async (path: any) => {
@@ -76,8 +77,9 @@ describe('releaseQualityGate', () => {
   });
 
   it('deve retornar exit_code=2 com apenas warnings', async () => {
-    const { fileExists } = await import('../../utils/fs.js');
-    vi.mocked(fileExists).mockResolvedValue(true);
+    const { fileExists, writeFileSafe } = await import('../../utils/fs.js');
+    vi.mocked(fileExists).mockResolvedValue(false); // Não há thresholds.json
+    vi.mocked(writeFileSafe).mockResolvedValue(undefined); // 🆕
     
     // Mock com coverage baixo (não-bloqueante)
     vi.spyOn(fs, 'readFile').mockImplementation(async (path: any) => {

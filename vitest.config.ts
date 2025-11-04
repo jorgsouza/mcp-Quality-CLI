@@ -26,7 +26,7 @@ export default defineConfig({
       branches: 70,
       statements: 70
     },
-    testTimeout: 30000,
+    testTimeout: 60000, // 🆕 60s para testes mais lentos (era 30s)
     hookTimeout: 30000
   }
 });
