@@ -1,0 +1,179 @@
+// Jenkinsfile for Quality Gates Pipeline
+// Place this file in your project root
+
+pipeline {
+  agent any
+  
+  environment {
+    PRODUCT_NAME = "${env.JOB_NAME.split('/')[0]}"
+    SENTRY_DSN = credentials('sentry-dsn')
+    DD_API_KEY = credentials('datadog-api-key')
+  }
+  
+  options {
+    timeout(time: 30, unit: 'MINUTES')
+    buildDiscarder(logRotator(numToKeepStr: '10'))
+  }
+  
+  stages {
+    stage('Setup') {
+      steps {
+        script {
+          echo "🔧 Installing dependencies..."
+          sh 'npm ci'
+          sh 'npm install -g @quality/mcp-cli || echo "Using local version"'
+        }
+      }
+    }
+    
+    stage('Quality Analysis') {
+      steps {
+        script {
+          echo "🔍 Running quality analysis..."
+          sh """
+            npx quality-cli analyze \
+              --repo . \
+              --product ${PRODUCT_NAME} \
+              --mode full
+          """
+        }
+      }
+    }
+    
+    stage('Mutation Testing') {
+      steps {
+        script {
+          echo "🧬 Running mutation testing..."
+          try {
+            sh """
+              npx quality-cli run-mutation-tests \
+                --repo . \
+                --product ${PRODUCT_NAME}
+            """
+          } catch (Exception e) {
+            echo "⚠️ Mutation testing failed (non-blocking)"
+            currentBuild.result = 'UNSTABLE'
+          }
+        }
+      }
+    }
+    
+    stage('Production Metrics') {
+      when {
+        branch 'main'
+      }
+      steps {
+        script {
+          echo "📊 Collecting production metrics..."
+          try {
+            sh """
+              npx quality-cli prod-metrics-ingest \
+                --repo . \
+                --product ${PRODUCT_NAME}
+            """
+          } catch (Exception e) {
+            echo "⚠️ Prod metrics collection failed (non-blocking)"
+          }
+        }
+      }
+    }
+    
+    stage('SLO Canary') {
+      when {
+        branch 'main'
+      }
+      steps {
+        script {
+          echo "🕯️ Checking SLO canary..."
+          try {
+            sh """
+              npx quality-cli slo-canary-check \
+                --repo . \
+                --product ${PRODUCT_NAME}
+            """
+          } catch (Exception e) {
+            echo "⚠️ SLO canary check failed (non-blocking)"
+          }
+        }
+      }
+    }
+    
+    stage('Quality Gates') {
+      steps {
+        script {
+          echo "🚦 Applying quality gates..."
+          
+          def exitCode = sh(
+            script: """
+              npx quality-cli release-quality-gate \
+                --repo . \
+                --product ${PRODUCT_NAME}
+            """,
+            returnStatus: true
+          )
+          
+          echo "Quality Gates exit code: ${exitCode}"
+          
+          if (exitCode == 0) {
+            echo "✅ Quality Gates: PASSED"
+            currentBuild.result = 'SUCCESS'
+          } else if (exitCode == 1) {
+            echo "❌ Quality Gates: BLOCKED"
+            error('Blocking violations detected')
+          } else if (exitCode == 2) {
+            echo "⚠️ Quality Gates: WARNINGS"
+            currentBuild.result = 'UNSTABLE'
+          } else {
+            echo "❓ Quality Gates: UNKNOWN"
+            error("Unknown exit code: ${exitCode}")
+          }
+        }
+      }
+    }
+    
+    stage('Deploy') {
+      when {
+        allOf {
+          branch 'main'
+          expression { currentBuild.result != 'FAILURE' }
+        }
+      }
+      steps {
+        script {
+          echo "🚀 Deploying to production..."
+          sh 'npm run deploy'
+        }
+      }
+    }
+  }
+  
+  post {
+    always {
+      // Archive quality reports
+      archiveArtifacts artifacts: 'qa/**/tests/reports/*.md, qa/**/tests/analyses/*.json', allowEmptyArchive: true
+      
+      // Publish HTML reports
+      publishHTML([
+        allowMissing: true,
+        alwaysLinkToLastBuild: false,
+        keepAll: true,
+        reportDir: 'qa/**/tests/reports',
+        reportFiles: 'dashboard.html',
+        reportName: 'Quality Dashboard'
+      ])
+    }
+    
+    success {
+      echo '✅ Pipeline completed successfully'
+    }
+    
+    unstable {
+      echo '⚠️ Pipeline completed with warnings'
+    }
+    
+    failure {
+      echo '❌ Pipeline failed'
+    }
+  }
+}
+

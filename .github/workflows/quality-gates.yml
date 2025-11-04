@@ -1,0 +1,166 @@
+name: Quality Gates
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+
+jobs:
+  quality-gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for diff coverage
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Install MCP Quality CLI
+        run: npm install -g @quality/mcp-cli || echo "Using local version"
+      
+      - name: Run Full Quality Analysis
+        id: analysis
+        run: |
+          npx quality-cli analyze \
+            --repo . \
+            --product ${{ github.event.repository.name }} \
+            --mode full
+        continue-on-error: true
+      
+      - name: Run Mutation Testing
+        id: mutation
+        run: |
+          npx quality-cli run-mutation-tests \
+            --repo . \
+            --product ${{ github.event.repository.name }}
+        continue-on-error: true
+      
+      - name: Collect Production Metrics
+        id: prod-metrics
+        if: github.ref == 'refs/heads/main'
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          DD_API_KEY: ${{ secrets.DD_API_KEY }}
+          GRAFANA_URL: ${{ secrets.GRAFANA_URL }}
+        run: |
+          npx quality-cli prod-metrics-ingest \
+            --repo . \
+            --product ${{ github.event.repository.name }}
+        continue-on-error: true
+      
+      - name: SLO Canary Check
+        id: slo-canary
+        if: github.ref == 'refs/heads/main'
+        run: |
+          npx quality-cli slo-canary-check \
+            --repo . \
+            --product ${{ github.event.repository.name }}
+        continue-on-error: true
+      
+      - name: Apply Quality Gates
+        id: gates
+        run: |
+          npx quality-cli release-quality-gate \
+            --repo . \
+            --product ${{ github.event.repository.name }}
+          echo "exit_code=$?" >> $GITHUB_OUTPUT
+      
+      - name: Upload Quality Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-reports
+          path: |
+            qa/**/tests/reports/*.md
+            qa/**/tests/analyses/*.json
+          retention-days: 30
+      
+      - name: Comment PR with Results
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            try {
+              // Ler quality-gate.json
+              const gateFile = fs.readdirSync('qa')
+                .flatMap(dir => {
+                  const analysesDir = path.join('qa', dir, 'tests', 'analyses');
+                  if (fs.existsSync(analysesDir)) {
+                    const gateJson = path.join(analysesDir, 'quality-gate.json');
+                    return fs.existsSync(gateJson) ? [gateJson] : [];
+                  }
+                  return [];
+                })[0];
+              
+              if (!gateFile) {
+                console.log('quality-gate.json not found');
+                return;
+              }
+              
+              const report = JSON.parse(fs.readFileSync(gateFile, 'utf8'));
+              
+              const status = report.exit_code === 0 ? '✅ PASSED' : 
+                            report.exit_code === 1 ? '❌ BLOCKED' : 
+                            '⚠️ WARNINGS';
+              
+              const emoji = report.exit_code === 0 ? '✅' : 
+                           report.exit_code === 1 ? '🚫' : '⚠️';
+              
+              let body = `## ${emoji} Quality Gates: ${status}\n\n`;
+              body += `**Summary**\n`;
+              body += `- Gates Passed: ${report.summary.passed_gates}/${report.summary.total_gates}\n`;
+              body += `- Blocking Violations: ${report.summary.blocking_violations}\n`;
+              body += `- Non-blocking Warnings: ${report.summary.non_blocking_violations}\n\n`;
+              
+              if (report.violations && report.violations.length > 0) {
+                body += `**Violations**\n`;
+                report.violations.slice(0, 5).forEach(v => {
+                  const icon = v.severity === 'blocking' ? '🔴' : '⚠️';
+                  body += `- ${icon} **${v.gate}**: ${v.message}\n`;
+                });
+                
+                if (report.violations.length > 5) {
+                  body += `\n_...and ${report.violations.length - 5} more violations_\n`;
+                }
+              }
+              
+              body += `\n[View full report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
+              
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body
+              });
+            } catch (error) {
+              console.error('Error commenting PR:', error);
+            }
+      
+      - name: Fail if Quality Gates Blocked
+        if: steps.gates.outputs.exit_code == '1'
+        run: |
+          echo "❌ Quality Gates: BLOCKED"
+          echo "Blocking violations detected. Please fix before merging."
+          exit 1
+      
+      - name: Warn if Quality Gates have warnings
+        if: steps.gates.outputs.exit_code == '2'
+        run: |
+          echo "⚠️ Quality Gates: WARNINGS"
+          echo "Non-blocking violations detected. Consider fixing before merging."
+          # Don't fail the build for warnings
+

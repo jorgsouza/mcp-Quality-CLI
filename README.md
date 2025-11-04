@@ -60,6 +60,102 @@ qa/MyApp/                      # 🎯 TUDO em um único diretório!
         └── storageState.json  # Sessões autenticadas
 ```
 
+---
+
+## 🚦 Quality Gates & DORA Metrics (NEW v0.4.0!)
+
+O MCP Quality CLI agora inclui **Quality Gates completos** para garantir que seu código atenda aos padrões de qualidade antes de ir para produção!
+
+### 🎯 O que são Quality Gates?
+
+São **portas de qualidade** que validam métricas críticas e **bloqueiam deploys arriscados** automaticamente:
+
+```bash
+# Executar pipeline completo + Quality Gates
+npx quality-cli analyze --mode full
+
+# Aplicar quality gates (exit code 0/1/2)
+npx quality-cli release-quality-gate
+```
+
+### 📊 Métricas Monitoradas
+
+| Categoria | Métricas | Threshold | Bloqueante? |
+|-----------|----------|-----------|-------------|
+| **Coverage** | Lines, Branches, Functions | ≥80%, ≥75%, ≥80% | ⚠️ Warning |
+| **Mutation** | Overall, Critical Modules | ≥50%, ≥60% | ❌ Yes (critical) |
+| **Contracts** | CDC Verification, Breaking Changes | ≥95%, 0 | ❌ Yes (breaking) |
+| **Suite Health** | Flakiness, Runtime, Parallelism | ≤3%, ≤12min, ≥4 | ⚠️ Warning |
+| **Portfolio** | E2E%, Unit% | ≤15%, ≥60% | ⚠️ Warning |
+| **Production** | CFR, MTTR, Deploy Freq | ≤15%, ≤60min, ≥1/month | ❌ Yes (CFR) |
+
+### 🚨 Exit Codes para CI/CD
+
+```bash
+0 → ✅ All gates passed (deploy allowed)
+1 → ❌ BLOCKED (blocking violations - stop deploy!)
+2 → ⚠️ WARNINGS (non-blocking - allow with caution)
+```
+
+### 📈 DORA Metrics (Production)
+
+Colete métricas DORA automaticamente de Sentry, Datadog, Grafana, Jira:
+
+```bash
+# Configurar credenciais
+export SENTRY_DSN="..."
+export DD_API_KEY="..."
+
+# Coletar metrics
+npx quality-cli prod-metrics-ingest --repo . --product MyApp
+
+# Comparar vs SLOs
+npx quality-cli slo-canary-check --repo . --product MyApp
+```
+
+**Métricas DORA calculadas:**
+- 🚀 **Deployment Frequency**: Quantos deploys/mês
+- ⏱️ **Lead Time for Changes**: Tempo médio de commit→deploy
+- 🔥 **Change Failure Rate**: % de deploys que falharam
+- 🛠️ **MTTR**: Tempo médio para resolver incidents
+
+**Classificação DORA Tier:**
+- 🏆 **Elite**: Deploy on-demand, LT < 1h, CFR < 5%, MTTR < 1h
+- 🥇 **High**: Deploy 1x/dia-1x/semana, LT < 1 dia, CFR 5-15%, MTTR < 1 dia
+- 🥈 **Medium**: Deploy 1x/semana-1x/mês, LT < 1 semana, CFR 16-30%, MTTR < 1 semana
+- 🥉 **Low**: Deploy < 1x/mês, LT > 1 semana, CFR > 30%, MTTR > 1 semana
+
+### 🔗 Integração CI/CD
+
+**GitHub Actions:**
+```yaml
+- name: Apply Quality Gates
+  run: npx quality-cli release-quality-gate
+  
+- name: Fail if blocked
+  if: failure()
+  run: exit 1
+```
+
+**GitLab CI:**
+```yaml
+quality_gates:
+  script:
+    - npx quality-cli release-quality-gate
+  allow_failure:
+    exit_codes: 2  # Warnings OK
+```
+
+**Jenkins:**
+```groovy
+def exitCode = sh(script: 'npx quality-cli release-quality-gate', returnStatus: true)
+if (exitCode == 1) { error('BLOCKED') }
+```
+
+📚 **[Guia Completo de Quality Gates](docs/QUALITY-GATES-GUIDE.md)** | **[Exemplos CI/CD](docs/ci-cd/)**
+
+---
+
 **✨ Novidade v0.3.1:** Retorno estruturado!
 
 O comando `auto` agora retorna um objeto organizado com todos os paths gerados:

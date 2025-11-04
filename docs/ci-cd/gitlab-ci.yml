@@ -1,0 +1,120 @@
+# GitLab CI/CD Pipeline with Quality Gates
+# Copy this file to .gitlab-ci.yml in your project root
+
+stages:
+  - test
+  - quality
+  - deploy
+
+variables:
+  PRODUCT_NAME: "${CI_PROJECT_NAME}"
+
+# Install dependencies (shared)
+.install_deps:
+  before_script:
+    - npm ci
+    - npm install -g @quality/mcp-cli || echo "Using local version"
+
+# Quality Analysis
+quality_analysis:
+  extends: .install_deps
+  stage: quality
+  image: node:20
+  script:
+    - npx quality-cli analyze --repo . --product ${PRODUCT_NAME} --mode full
+  artifacts:
+    when: always
+    paths:
+      - qa/**/tests/reports/
+      - qa/**/tests/analyses/
+    reports:
+      junit: qa/**/tests/reports/junit.xml
+    expire_in: 30 days
+  allow_failure: false
+
+# Mutation Testing
+mutation_testing:
+  extends: .install_deps
+  stage: quality
+  image: node:20
+  script:
+    - npx quality-cli run-mutation-tests --repo . --product ${PRODUCT_NAME}
+  artifacts:
+    when: always
+    paths:
+      - qa/**/tests/reports/MUTATION-SCORE.md
+    expire_in: 30 days
+  allow_failure: true  # Non-blocking
+
+# Production Metrics (only on main)
+prod_metrics:
+  extends: .install_deps
+  stage: quality
+  image: node:20
+  only:
+    - main
+    - master
+  script:
+    - npx quality-cli prod-metrics-ingest --repo . --product ${PRODUCT_NAME}
+  allow_failure: true
+
+# SLO Canary (only on main)
+slo_canary:
+  extends: .install_deps
+  stage: quality
+  image: node:20
+  only:
+    - main
+    - master
+  script:
+    - npx quality-cli slo-canary-check --repo . --product ${PRODUCT_NAME}
+  allow_failure: true
+
+# Quality Gates (Final Validation)
+quality_gates:
+  extends: .install_deps
+  stage: quality
+  image: node:20
+  script:
+    - |
+      set +e
+      npx quality-cli release-quality-gate --repo . --product ${PRODUCT_NAME}
+      EXIT_CODE=$?
+      
+      echo "Quality Gates exit code: ${EXIT_CODE}"
+      
+      if [ ${EXIT_CODE} -eq 0 ]; then
+        echo "✅ Quality Gates: PASSED"
+        exit 0
+      elif [ ${EXIT_CODE} -eq 1 ]; then
+        echo "❌ Quality Gates: BLOCKED (blocking violations)"
+        exit 1
+      elif [ ${EXIT_CODE} -eq 2 ]; then
+        echo "⚠️ Quality Gates: WARNINGS (non-blocking)"
+        exit 0  # Don't fail for warnings
+      else
+        echo "❓ Quality Gates: UNKNOWN"
+        exit ${EXIT_CODE}
+      fi
+  artifacts:
+    when: always
+    paths:
+      - qa/**/tests/analyses/quality-gate.json
+    expire_in: 30 days
+  allow_failure:
+    exit_codes: 2  # Allow warnings
+
+# Deploy (only if quality gates pass)
+deploy_production:
+  stage: deploy
+  image: node:20
+  only:
+    - main
+    - master
+  when: on_success
+  dependencies:
+    - quality_gates
+  script:
+    - echo "Deploying to production..."
+    - npm run deploy
+

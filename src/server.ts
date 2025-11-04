@@ -27,6 +27,11 @@ import { scaffoldPlaywright } from './tools/scaffold.js';
 import { scaffoldUnitTests } from './tools/scaffold-unit.js';
 import { scaffoldIntegrationTests } from './tools/scaffold-integration.js';
 import selfCheck from './tools/self-check.js';
+// 🆕 Quality Gates tools
+import { runMutationTests } from './tools/run-mutation-tests.js';
+import { releaseQualityGate } from './tools/release-quality-gate.js';
+import { prodMetricsIngest } from './tools/prod-metrics-ingest.js';
+import { sloCanaryCheck } from './tools/slo-canary-check.js';
 
 class QualityMCPServer {
   private server: Server;
@@ -161,6 +166,48 @@ class QualityMCPServer {
             break;
           }
 
+          case 'run_mutation_tests': {
+            // 🆕 Mutation Testing
+            result = await runMutationTests({
+              repo: args.repo as string,
+              product: args.product as string,
+              targets: args.targets,
+              minScore: args.minScore || 0.5,
+            });
+            break;
+          }
+
+          case 'release_quality_gate': {
+            // 🆕 Quality Gates
+            result = await releaseQualityGate({
+              repo: args.repo as string,
+              product: args.product as string,
+            });
+            break;
+          }
+
+          case 'prod_metrics_ingest': {
+            // 🆕 Production Metrics (DORA)
+            result = await prodMetricsIngest({
+              repo: args.repo as string,
+              product: args.product as string,
+              sources: args.sources || {},
+              period: args.period,
+            });
+            break;
+          }
+
+          case 'slo_canary_check': {
+            // 🆕 SLO Canary
+            result = await sloCanaryCheck({
+              repo: args.repo as string,
+              product: args.product as string,
+              slosFile: args.slosFile,
+              prodMetricsFile: args.prodMetricsFile,
+            });
+            break;
+          }
+
           default:
             throw new Error(`Tool desconhecido: ${toolName}`);
         }
@@ -206,7 +253,7 @@ class QualityMCPServer {
   async run(): Promise<void> {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
-    console.error('🎯 MCP Quality Server v0.3.1 rodando (5 tools consolidados)');
+    console.error('🎯 MCP Quality Server v0.4.0 rodando (9 tools consolidados + 4 Quality Gates)');
   }
 }
 

@@ -205,6 +205,121 @@ export const MCP_TOOLS: readonly MCPToolDefinition[] = [
       required: [],
     },
   },
+
+  // 🆕 Quality Gates Tools
+  {
+    name: 'run_mutation_tests',
+    description: '🧬 Executa mutation testing em módulos críticos. Mede a qualidade dos testes através de mutação de código.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        repo: {
+          type: 'string',
+          description: 'Caminho do repositório'
+        },
+        product: {
+          type: 'string',
+          description: 'Nome do produto'
+        },
+        targets: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Lista de módulos/arquivos para testar (opcional, usa risk-register se vazio)'
+        },
+        minScore: {
+          type: 'number',
+          description: 'Score mínimo de mutação (%)',
+          default: 50,
+          minimum: 0,
+          maximum: 100
+        },
+      },
+      required: ['repo', 'product'],
+    },
+  },
+
+  {
+    name: 'release_quality_gate',
+    description: '🚦 Aplica quality gates e retorna exit code para CI. Valida coverage, mutation, contracts, suite health, production metrics.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        repo: {
+          type: 'string',
+          description: 'Caminho do repositório'
+        },
+        product: {
+          type: 'string',
+          description: 'Nome do produto'
+        },
+      },
+      required: ['repo', 'product'],
+    },
+  },
+
+  {
+    name: 'prod_metrics_ingest',
+    description: '📊 Coleta métricas de produção (Sentry, Datadog, Grafana, Jira) e calcula DORA metrics (CFR, MTTR, Deploy Freq, Lead Time).',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        repo: {
+          type: 'string',
+          description: 'Caminho do repositório'
+        },
+        product: {
+          type: 'string',
+          description: 'Nome do produto'
+        },
+        sources: {
+          type: 'object',
+          description: 'Configuração de fontes externas (Sentry, Datadog, Grafana, Jira)',
+          properties: {
+            sentry: { type: 'object' },
+            datadog: { type: 'object' },
+            grafana: { type: 'object' },
+            jira: { type: 'object' },
+          }
+        },
+        period: {
+          type: 'object',
+          description: 'Período de coleta (start/end em ISO date)',
+          properties: {
+            start: { type: 'string' },
+            end: { type: 'string' },
+          }
+        },
+      },
+      required: ['repo', 'product'],
+    },
+  },
+
+  {
+    name: 'slo_canary_check',
+    description: '🕯️ Compara métricas de produção vs SLOs definidos. Detecta violações de SLOs por CUJ e gera recomendações.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        repo: {
+          type: 'string',
+          description: 'Caminho do repositório'
+        },
+        product: {
+          type: 'string',
+          description: 'Nome do produto'
+        },
+        slosFile: {
+          type: 'string',
+          description: 'Caminho para slos.json (opcional, usa qa/<product>/tests/analyses/slos.json)'
+        },
+        prodMetricsFile: {
+          type: 'string',
+          description: 'Caminho para prod-metrics.json (opcional, usa qa/<product>/tests/analyses/prod-metrics.json)'
+        },
+      },
+      required: ['repo', 'product'],
+    },
+  },
 ] as const;
 
 /**
