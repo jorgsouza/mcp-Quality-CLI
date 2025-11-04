@@ -8,9 +8,29 @@ vi.mock('../analyze.js');
 vi.mock('../plan.js');
 vi.mock('../scaffold-unit.js');
 vi.mock('../run-coverage.js');
+vi.mock('../run-diff-coverage.js'); // 🆕 Mock diff coverage
 vi.mock('../dashboard.js');
 vi.mock('../consolidate-reports.js');
 vi.mock('../recommend-strategy.js');
+vi.mock('../pyramid-report.js'); // 🆕
+vi.mock('../scaffold.js'); // 🆕
+vi.mock('../self-check.js'); // 🆕
+vi.mock('../coverage.js'); // 🆕
+vi.mock('../analyze-test-logic.js'); // 🆕
+vi.mock('../validate.js'); // 🆕
+vi.mock('../catalog-cujs.js'); // 🆕
+vi.mock('../define-slos.js'); // 🆕
+vi.mock('../risk-register.js'); // 🆕
+vi.mock('../portfolio-plan.js'); // 🆕
+vi.mock('../scaffold-contracts-pact.js'); // 🆕
+vi.mock('../run-contracts-verify.js'); // 🆕
+vi.mock('../scaffold-property-tests.js'); // 🆕
+vi.mock('../scaffold-approval-tests.js'); // 🆕
+vi.mock('../suite-health.js'); // 🆕
+vi.mock('../run-mutation-tests.js'); // 🆕
+vi.mock('../prod-metrics-ingest.js'); // 🆕
+vi.mock('../slo-canary-check.js'); // 🆕
+vi.mock('../release-quality-gate.js'); // 🆕
 
 describe('auto.ts - detectRepoContext', () => {
   let tempDir: string;
