@@ -38,6 +38,21 @@ describe('auto.ts - detectRepoContext', () => {
   beforeEach(async () => {
     tempDir = join(process.cwd(), '.test-auto-' + Date.now());
     await fs.mkdir(tempDir, { recursive: true });
+    
+    // 🆕 Mock TODOS os tools para retornarem sucesso
+    const { analyze } = await import('../analyze.js');
+    const { selfCheck } = await import('../self-check.js');
+    const { catalogCUJs } = await import('../catalog-cujs.js');
+    const { defineSLOs } = await import('../define-slos.js');
+    const { riskRegister } = await import('../risk-register.js');
+    const { portfolioPlan } = await import('../portfolio-plan.js');
+    
+    vi.mocked(analyze).mockResolvedValue({ summary: 'OK', findings: { routes: [], endpoints: [], events: [], risk_map: [] }, recommendations: [], plan_path: '' } as any);
+    vi.mocked(selfCheck).mockResolvedValue({ ok: true, checks: [], missing: [], commands: [] } as any);
+    vi.mocked(catalogCUJs).mockResolvedValue({ ok: true } as any);
+    vi.mocked(defineSLOs).mockResolvedValue({ ok: true } as any);
+    vi.mocked(riskRegister).mockResolvedValue({ ok: true } as any);
+    vi.mocked(portfolioPlan).mockResolvedValue({ ok: true } as any);
   });
 
   afterEach(async () => {

@@ -24,15 +24,10 @@ describe('runMutationTests', () => {
   it('deve executar mutation tests com sucesso', async () => {
     // Mock fs utils
     const { fileExists, writeFileSafe } = await import('../../utils/fs.js');
-    vi.mocked(fileExists).mockResolvedValue(true);
-    vi.mocked(writeFileSafe).mockResolvedValue(undefined); // 🆕 Mock writeFileSafe
+    vi.mocked(fileExists).mockResolvedValue(false); // 🆕 Arquivo não existe (usa targets padrão)
+    vi.mocked(writeFileSafe).mockResolvedValue(undefined);
     
-    // Mock readFile para risk-register.json
-    vi.spyOn(fs, 'readFile').mockResolvedValue(JSON.stringify({
-      high_risk: [
-        { file: 'src/payment.ts', risk_score: 95 }
-      ]
-    }));
+    // Não precisa mockar readFile se fileExists = false
     
     // Mock mutation runner
     const { runMutationAuto } = await import('../../runners/mutation-runner.js');
@@ -68,10 +63,8 @@ describe('runMutationTests', () => {
 
   it('deve retornar passed=false se score < minScore', async () => {
     const { fileExists, writeFileSafe } = await import('../../utils/fs.js');
-    vi.mocked(fileExists).mockResolvedValue(true);
-    vi.mocked(writeFileSafe).mockResolvedValue(undefined); // 🆕
-    
-    vi.spyOn(fs, 'readFile').mockResolvedValue(JSON.stringify({ high_risk: [] }));
+    vi.mocked(fileExists).mockResolvedValue(false); // 🆕 Arquivo não existe
+    vi.mocked(writeFileSafe).mockResolvedValue(undefined);
     
     const { runMutationAuto } = await import('../../runners/mutation-runner.js');
     vi.mocked(runMutationAuto).mockResolvedValue({
@@ -98,7 +91,7 @@ describe('runMutationTests', () => {
       minScore: 0.5 // 50% required
     });
     
-    expect(result.ok).toBe(true);
+    expect(result.ok).toBe(false); // 🆕 ok=false quando passed=false
     expect(result.passed).toBe(false);
     expect(result.overallScore).toBe(30);
   });

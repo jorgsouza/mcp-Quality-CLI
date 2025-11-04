@@ -53,15 +53,30 @@ describe('releaseQualityGate', () => {
 
   it('deve retornar exit_code=1 com violações bloqueantes', async () => {
     const { fileExists, writeFileSafe } = await import('../../utils/fs.js');
-    vi.mocked(fileExists).mockResolvedValue(false); // Não há thresholds.json
-    vi.mocked(writeFileSafe).mockResolvedValue(undefined); // 🆕
+    vi.mocked(fileExists).mockImplementation(async (path: any) => {
+      if (path.includes('thresholds.json')) return false;
+      if (path.includes('mutation-score.json')) return true;
+      if (path.includes('coverage-analysis.json')) return true;
+      return false;
+    });
+    vi.mocked(writeFileSafe).mockResolvedValue(undefined);
     
-    // Mock com mutation critical baixo (bloqueante)
+    // Mock fs.readFile para retornar dados mockados
     vi.spyOn(fs, 'readFile').mockImplementation(async (path: any) => {
-      if (path.includes('mutation')) {
+      const pathStr = path.toString();
+      if (pathStr.includes('mutation')) {
         return JSON.stringify({
           overallScore: 55,
-          criticalScore: 40 // < 60% (bloqueante!)
+          criticalScore: 40, // < 60% (bloqueante!)
+          passed: false
+        });
+      }
+      if (pathStr.includes('coverage')) {
+        return JSON.stringify({
+          coverage: {
+            lines: 85
+          },
+          lines: 85
         });
       }
       return JSON.stringify({});
@@ -78,16 +93,28 @@ describe('releaseQualityGate', () => {
 
   it('deve retornar exit_code=2 com apenas warnings', async () => {
     const { fileExists, writeFileSafe } = await import('../../utils/fs.js');
-    vi.mocked(fileExists).mockResolvedValue(false); // Não há thresholds.json
-    vi.mocked(writeFileSafe).mockResolvedValue(undefined); // 🆕
+    vi.mocked(fileExists).mockImplementation(async (path: any) => {
+      if (path.includes('thresholds.json')) return false;
+      if (path.includes('mutation-score.json')) return true;
+      if (path.includes('coverage-analysis.json')) return true;
+      return false;
+    });
+    vi.mocked(writeFileSafe).mockResolvedValue(undefined);
     
-    // Mock com coverage baixo (não-bloqueante)
     vi.spyOn(fs, 'readFile').mockImplementation(async (path: any) => {
-      if (path.includes('coverage')) {
+      const pathStr = path.toString();
+      if (pathStr.includes('coverage')) {
         return JSON.stringify({
-          lines: { pct: 70 }, // < 80% (warning)
-          branches: { pct: 70 },
-          functions: { pct: 70 }
+          coverage: {
+            lines: 70 // < 80% (warning)
+          },
+          lines: 70
+        });
+      }
+      if (pathStr.includes('mutation')) {
+        return JSON.stringify({
+          overallScore: 65, // OK
+          criticalScore: 65 // OK
         });
       }
       return JSON.stringify({});
