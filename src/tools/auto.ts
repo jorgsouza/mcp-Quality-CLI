@@ -48,12 +48,14 @@ import { defineSLOs } from './define-slos.js';
 import { riskRegister } from './risk-register.js';
 
 // [QUALITY GATES] FASE 2: Portfolio Planning
-// TODO: Implementar portfolio-plan.ts
-// import { portfolioPlan } from './portfolio-plan.js';
+import { portfolioPlan } from './portfolio-plan.js';
 
 // [QUALITY GATES] FASE 3: CDC/Pact Contract Testing
 import { scaffoldContractsPact } from './scaffold-contracts-pact.js';
 import { runContractsVerify } from './run-contracts-verify.js';
+
+// [QUALITY GATES] FASE 7: Suite Health
+import { suiteHealth } from './suite-health.js';
 
 // [CONSOLIDATION] Consolidated Reports
 import { consolidateCodeAnalysisReport, consolidateTestPlanReport } from './consolidate-reports.js';
@@ -424,20 +426,19 @@ async function runPortfolioPlanningPhase(ctx: PipelineContext): Promise<void> {
   }
   
   console.log('📊 [PHASE 1.5] Portfolio Planning...');
-  console.log('  ⏭️  Pulando: feature em desenvolvimento (portfolio-plan.ts)\n');
-  
-  // TODO: Descomentar quando implementado
-  // try {
-  //   const portfolioResult = await portfolioPlan({
-  //     repo: ctx.repoPath,
-  //     product: ctx.product,
-  //   });
-  //   ctx.steps.push('portfolio-plan');
-  //   ctx.outputs.portfolioPlan = portfolioResult.output;
-  //   console.log(`  ✅ Portfolio plan gerado\n`);
-  // } catch (error) {
-  //   console.log(`⚠️  Erro: ${error instanceof Error ? error.message : error}\n`);
-  // }
+  try {
+    const portfolioResult = await portfolioPlan({
+      repo: ctx.repoPath,
+      product: ctx.product,
+      risk_file: ctx.outputs.riskRegister,
+      coverage_file: ctx.outputs.coverageAnalysis,
+    });
+    ctx.steps.push('portfolio-plan');
+    ctx.outputs.portfolioPlan = portfolioResult.output;
+    console.log(`  ✅ Portfolio plan gerado: ${portfolioResult.recommendations_count} recomendações\n`);
+  } catch (error) {
+    console.log(`  ⚠️  Erro ao gerar portfolio plan: ${error instanceof Error ? error.message : error}\n`);
+  }
 }
 
 /**
@@ -638,6 +639,39 @@ async function runPlanningPhase(ctx: PipelineContext): Promise<void> {
     console.log(`✅ Dados de plano gerados (será consolidado)\n`);
   } catch (error) {
     console.log(`⚠️  Erro no plano: ${error instanceof Error ? error.message : error}\n`);
+  }
+}
+
+/**
+ * Phase 4.5: Suite Health Measurement 🆕
+ * Mede saúde da suíte: flakiness, runtime, parallelism
+ */
+async function runSuiteHealthPhase(ctx: PipelineContext): Promise<void> {
+  if (!['full', 'run'].includes(ctx.mode)) {
+    return;
+  }
+  
+  console.log('🏥 [PHASE 4.5] Suite Health Measurement...');
+  try {
+    const healthResult = await suiteHealth({
+      repo: ctx.repoPath,
+      product: ctx.product,
+      history_days: 30,
+    });
+    ctx.steps.push('suite-health');
+    ctx.outputs.suiteHealth = healthResult.output;
+    
+    if (healthResult.instability_index > 0.03) {
+      console.log(`  ⚠️  Instability Index: ${(healthResult.instability_index * 100).toFixed(2)}% (acima de 3%)`);
+      console.log(`  🔴 ${healthResult.flaky_tests_count} testes flaky detectados`);
+    } else {
+      console.log(`  ✅ Suite saudável (instability: ${(healthResult.instability_index * 100).toFixed(2)}%)`);
+    }
+    
+    console.log(`  ⏱️  Runtime: ${healthResult.total_runtime_sec.toFixed(1)}s`);
+    console.log(`  💡 ${healthResult.recommendations.length} recomendação(ões)\n`);
+  } catch (error) {
+    console.log(`  ⚠️  Erro ao medir suite health: ${error instanceof Error ? error.message : error}\n`);
   }
 }
 
@@ -924,6 +958,7 @@ export async function autoQualityRun(options: AutoOptions = {}): Promise<AutoRes
     await runAnalysisPhase(ctx);
     await runCoverageAnalysisPhase(ctx);
     await runPlanningPhase(ctx);
+    await runSuiteHealthPhase(ctx); // 🆕 FASE 7: Suite Health
     await runConsolidatedReporting(ctx); // 🆕 CONSOLIDATED REPORTS (2 arquivos principais)
     await runScaffoldPhase(ctx, options.skipScaffold || false);
     await runTestingPhase(ctx, options.skipRun || false);
