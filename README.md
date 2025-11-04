@@ -1127,9 +1127,9 @@ O Quality MCP oferece suporte **END-TO-END** para múltiplas linguagens com adap
 | **TypeScript** | ✅ | ✅ | ✅ | ✅ | 🟢 **Completo** |
 | **JavaScript** | ✅ | ✅ | ✅ | ✅ | 🟢 **Completo** |
 | **Python** | ✅ | ✅ | ✅ | ✅ | 🟢 **Completo** |
-| **Go** | ✅ | ✅ | 🟡 | ✅ | 🟡 **Beta** |
-| **Java** | 🟡 | 🟡 | ⚪ | 🟡 | ⚪ **Planejado** |
-| **Ruby** | ⚪ | ⚪ | ⚪ | ⚪ | ⚪ **Planejado** |
+| **Go** | ✅ | ✅ | ✅ | ✅ | 🟢 **Completo** |
+| **Java** | ✅ | ✅ | ✅ | ✅ | 🟢 **Completo** |
+| **Ruby** | ⚪ | ⚪ | ⚪ | ⚪ | ⚪ **Planejado Q2 2026** |
 
 ### Legenda
 - ✅ **Suportado** - Funcional e testado
@@ -1149,6 +1149,23 @@ O Quality MCP oferece suporte **END-TO-END** para múltiplas linguagens com adap
 - **Frameworks**: pytest, unittest
 - **Coverage**: coverage.py, pytest-cov
 - **Mutation**: mutmut
+- **Formats**: Cobertura XML
+- **Status**: ✅ Produção
+
+#### Go
+- **Frameworks**: go test
+- **Coverage**: go test -cover
+- **Mutation**: go-mutesting
+- **Formats**: coverage.out
+- **Status**: ✅ Produção
+
+#### Java
+- **Frameworks**: JUnit 5, JUnit 4, TestNG
+- **Build Tools**: Maven, Gradle
+- **Coverage**: JaCoCo
+- **Mutation**: PIT (PITest)
+- **Formats**: JaCoCo XML/CSV/HTML
+- **Status**: ✅ Produção
 - **Formats**: Cobertura XML, JSON
 - **Status**: ✅ Produção
 
