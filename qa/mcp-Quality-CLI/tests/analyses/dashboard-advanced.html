@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 ReclameAQUI - Test Explorer</title>
+    <style>
+        /* Trust DS Design Tokens */
+        :root {
+            /* Cores */
+            --trust-primary: #006837;
+            --trust-primary-dark: #004d28;
+            --trust-primary-light: #e8f5e9;
+            --trust-blue: #0ea5e9;
+            --trust-success: #22c55e;
+            --trust-warning: #f59e0b;
+            --trust-danger: #ef4444;
+            --trust-purple: #9333ea;
+            --trust-gray-50: #f9fafb;
+            --trust-gray-100: #f3f4f6;
+            --trust-gray-200: #e5e7eb;
+            --trust-gray-300: #d1d5db;
+            --trust-gray-500: #6b7280;
+            --trust-gray-600: #4b5563;
+            --trust-gray-700: #374151;
+            --trust-gray-900: #111827;
+            
+            /* Espaçamento */
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            
+            /* Tipografia */
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.25rem;
+            
+            /* Sombras */
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            
+            /* Bordas */
+            --radius-md: 0.375rem;
+            --radius-lg: 0.5rem;
+            --radius-xl: 0.75rem;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-sans);
+            background: var(--trust-gray-50);
+            color: var(--trust-gray-900);
+            line-height: 1.6;
+        }
+        
+        /* Header com logo */
+        .header {
+            background: var(--trust-primary);
+            color: white;
+            padding: var(--space-4) var(--space-6);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            font-size: var(--text-xl);
+            font-weight: 700;
+        }
+        
+        .logo-icon {
+            background: white;
+            color: var(--trust-primary);
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+        }
+        
+        /* Filtros Section */
+        .filters-section {
+            background: white;
+            border-bottom: 2px solid var(--trust-gray-200);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .filters-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .search-bar {
+            display: flex;
+            gap: var(--space-4);
+            margin-bottom: var(--space-4);
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: var(--space-3) var(--space-4);
+            border: 2px solid var(--trust-gray-300);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-base);
+            transition: all 0.2s;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--trust-primary);
+            box-shadow: 0 0 0 3px var(--trust-primary-light);
+        }
+        
+        .filter-row {
+            display: flex;
+            gap: var(--space-4);
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+        
+        .filter-label {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--trust-gray-700);
+        }
+        
+        .filter-select {
+            padding: var(--space-2) var(--space-4);
+            border: 2px solid var(--trust-gray-300);
+            border-radius: var(--radius-md);
+            font-size: var(--text-sm);
+            background: white;
+            cursor: pointer;
+            min-width: 180px;
+        }
+        
+        .clear-filters-btn {
+            padding: var(--space-2) var(--space-4);
+            background: white;
+            border: 2px solid var(--trust-gray-300);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--trust-gray-700);
+            transition: all 0.2s;
+        }
+        
+        .clear-filters-btn:hover {
+            background: var(--trust-gray-50);
+            border-color: var(--trust-danger);
+            color: var(--trust-danger);
+        }
+        
+        /* Stats Bar */
+        .stats-bar {
+            background: var(--trust-primary-light);
+            padding: var(--space-4) var(--space-6);
+            border-left: 4px solid var(--trust-primary);
+        }
+        
+        .stats-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: var(--text-sm);
+            color: var(--trust-gray-700);
+        }
+        
+        .stats-info {
+            font-weight: 600;
+        }
+        
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-6);
+        }
+        
+        .tests-grid {
+            display: grid;
+            gap: var(--space-4);
+        }
+        
+        /* Test Card */
+        .test-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            border: 2px solid var(--trust-gray-200);
+            padding: var(--space-6);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .test-card:hover {
+            border-color: var(--trust-primary);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+        
+        .test-card.expanded {
+            border-color: var(--trust-primary);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        /* Card Header */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-4);
+            gap: var(--space-4);
+        }
+        
+        .card-title {
+            flex: 1;
+        }
+        
+        .test-name {
+            font-size: var(--text-lg);
+            font-weight: 700;
+            color: var(--trust-gray-900);
+            margin-bottom: var(--space-2);
+            line-height: 1.4;
+        }
+        
+        .test-file {
+            font-size: var(--text-sm);
+            color: var(--trust-gray-600);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .badges {
+            display: flex;
+            gap: var(--space-2);
+            flex-wrap: wrap;
+        }
+        
+        .badge {
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-md);
+            font-size: var(--text-xs);
+            font-weight: 700;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .badge-e2e {
+            background: #fae8ff;
+            color: #9333ea;
+        }
+        
+        .badge-unit {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+        
+        .badge-integration {
+            background: #fef3c7;
+            color: #b45309;
+        }
+        
+        .badge-assert-strong {
+            background: #dcfce7;
+            color: #15803d;
+        }
+        
+        .badge-assert-medium {
+            background: #fef3c7;
+            color: #b45309;
+        }
+        
+        .badge-assert-weak {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        
+        /* Card Content */
+        .card-content {
+            display: grid;
+            gap: var(--space-4);
+        }
+        
+        .info-row {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: var(--space-3);
+            padding: var(--space-3);
+            background: var(--trust-gray-50);
+            border-radius: var(--radius-md);
+        }
+        
+        .info-label {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--trust-gray-600);
+        }
+        
+        .info-value {
+            font-size: var(--text-sm);
+            color: var(--trust-gray-900);
+        }
+        
+        /* Code Smells Section */
+        .smells-section {
+            background: #fef2f2;
+            border-left: 4px solid var(--trust-danger);
+            padding: var(--space-4);
+            border-radius: var(--radius-md);
+        }
+        
+        .smells-title {
+            font-size: var(--text-sm);
+            font-weight: 700;
+            color: var(--trust-danger);
+            margin-bottom: var(--space-2);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .smells-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+        
+        .smell-item {
+            font-size: var(--text-sm);
+            color: var(--trust-gray-700);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .smell-item::before {
+            content: '⚠️';
+            font-size: 14px;
+        }
+        
+        /* Suggestions Section */
+        .suggestions-section {
+            background: #eff6ff;
+            border-left: 4px solid var(--trust-blue);
+            padding: var(--space-4);
+            border-radius: var(--radius-md);
+        }
+        
+        .suggestions-title {
+            font-size: var(--text-sm);
+            font-weight: 700;
+            color: var(--trust-blue);
+            margin-bottom: var(--space-2);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .suggestions-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+        
+        .suggestion-item {
+            font-size: var(--text-sm);
+            color: var(--trust-gray-700);
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-2);
+        }
+        
+        .suggestion-item::before {
+            content: '💡';
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        
+        /* Expandable Details */
+        .details-section {
+            margin-top: var(--space-4);
+            padding-top: var(--space-4);
+            border-top: 2px solid var(--trust-gray-200);
+            display: none;
+        }
+        
+        .details-section.visible {
+            display: block;
+        }
+        
+        .detail-block {
+            margin-bottom: var(--space-4);
+        }
+        
+        .detail-title {
+            font-size: var(--text-sm);
+            font-weight: 700;
+            color: var(--trust-gray-700);
+            margin-bottom: var(--space-2);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .detail-content {
+            background: var(--trust-gray-50);
+            padding: var(--space-3);
+            border-radius: var(--radius-md);
+            font-size: var(--text-sm);
+            color: var(--trust-gray-700);
+            font-family: var(--font-mono);
+        }
+        
+        .detail-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+        
+        .detail-list li {
+            padding: var(--space-2);
+            background: white;
+            border-radius: var(--radius-md);
+            border-left: 3px solid var(--trust-primary);
+        }
+        
+        /* Expand Button */
+        .expand-btn {
+            margin-top: var(--space-4);
+            width: 100%;
+            padding: var(--space-3);
+            background: var(--trust-gray-100);
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--trust-gray-700);
+            transition: all 0.2s;
+        }
+        
+        .expand-btn:hover {
+            background: var(--trust-primary-light);
+            color: var(--trust-primary-dark);
+        }
+        
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: var(--space-3);
+            margin-top: var(--space-8);
+            padding: var(--space-4);
+        }
+        
+        .pagination button {
+            padding: var(--space-3) var(--space-6);
+            background: white;
+            border: 2px solid var(--trust-gray-300);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .pagination button:hover:not(:disabled) {
+            background: var(--trust-primary);
+            color: white;
+            border-color: var(--trust-primary);
+        }
+        
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .pagination-info {
+            font-size: var(--text-sm);
+            color: var(--trust-gray-600);
+            font-weight: 600;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: var(--space-8);
+            color: var(--trust-gray-500);
+        }
+        
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: var(--space-4);
+        }
+        
+        /* Coverage Bar */
+        .coverage-bar {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            margin-top: var(--space-2);
+        }
+        
+        .coverage-progress {
+            flex: 1;
+            height: 8px;
+            background: var(--trust-gray-200);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+        
+        .coverage-fill {
+            height: 100%;
+            background: var(--trust-success);
+            transition: width 0.3s;
+        }
+        
+        .coverage-text {
+            font-size: var(--text-xs);
+            font-weight: 700;
+            color: var(--trust-gray-600);
+            min-width: 50px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-select {
+                width: 100%;
+            }
+            
+            .info-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-bar {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">RA</div>
+                <span>ReclameAQUI - Test Explorer</span>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Filters Section -->
+    <section class="filters-section">
+        <div class="filters-container">
+            <div class="search-bar">
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    id="searchInput" 
+                    placeholder="Ex: nl-command-flow.spec.ts"
+                >
+                <button class="clear-filters-btn" onclick="clearFilters()">
+                    ✕ Limpar Filtros
+                </button>
+            </div>
+            
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label class="filter-label">Tipo de Teste</label>
+                    <select class="filter-select" id="typeFilter">
+                        <option value="all">Todos os Tipos</option>
+                        <option value="unit">Unit</option>
+                        <option value="integration">Integration</option>
+                        <option value="e2e">E2E</option>
+                        <option value="unknown">Unknown</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Força do Assert</label>
+                    <select class="filter-select" id="assertFilter">
+                        <option value="all">Todas as Forças</option>
+                        <option value="forte">Forte</option>
+                        <option value="médio">Médio</option>
+                        <option value="fraco">Fraco</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Code Smells</label>
+                    <select class="filter-select" id="smellsFilter">
+                        <option value="all">Todos</option>
+                        <option value="with">Com Smells</option>
+                        <option value="without">Sem Smells</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+        <div class="stats-content">
+            <span class="stats-info">Mostrando <span id="statsShowing">0</span> de <span id="statsTotal">0</span> testes</span>
+            <span id="statsFilters"></span>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="tests-grid" id="testsGrid">
+            <!-- Cards serão inseridos aqui -->
+        </div>
+        
+        <div class="pagination">
+            <button onclick="changePage(-1)" id="prevBtn">← Anterior</button>
+            <span class="pagination-info" id="pageInfo">Página 1 de 1</span>
+            <button onclick="changePage(1)" id="nextBtn">Próxima →</button>
+        </div>
+    </main>
+    
+    <script>
+        let allTests = [];
+        let filteredTests = [];
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        
+        // Carregar dados
+        async function loadData() {
+            try {
+                const response = await fetch('test-explanations.json');
+                allTests = await response.json();
+                filteredTests = [...allTests];
+                applyFilters();
+            } catch (error) {
+                console.error('Erro ao carregar:', error);
+                document.getElementById('testsGrid').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">❌</div>
+                        <p>Erro ao carregar dados. Verifique se test-explanations.json está no mesmo diretório.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Aplicar filtros
+        function applyFilters() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const typeFilter = document.getElementById('typeFilter').value;
+            const assertFilter = document.getElementById('assertFilter').value;
+            const smellsFilter = document.getElementById('smellsFilter').value;
+            
+            filteredTests = allTests.filter(test => {
+                // Busca por nome ou arquivo
+                const matchSearch = !search || 
+                    test.name.toLowerCase().includes(search) ||
+                    test.file.toLowerCase().includes(search);
+                
+                // Filtro de tipo
+                const matchType = typeFilter === 'all' || test.testType === typeFilter;
+                
+                // Filtro de assert
+                const matchAssert = assertFilter === 'all' || test.assertStrength === assertFilter;
+                
+                // Filtro de smells
+                const matchSmells = smellsFilter === 'all' ||
+                    (smellsFilter === 'with' && test.smells.length > 0) ||
+                    (smellsFilter === 'without' && test.smells.length === 0);
+                
+                return matchSearch && matchType && matchAssert && matchSmells;
+            });
+            
+            currentPage = 1;
+            updateStats();
+            renderTests();
+        }
+        
+        // Atualizar stats
+        function updateStats() {
+            const start = (currentPage - 1) * itemsPerPage + 1;
+            const end = Math.min(currentPage * itemsPerPage, filteredTests.length);
+            
+            document.getElementById('statsShowing').textContent = filteredTests.length === 0 ? 0 : `${start}-${end}`;
+            document.getElementById('statsTotal').textContent = allTests.length;
+            
+            const filters = [];
+            const search = document.getElementById('searchInput').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+            const assertFilter = document.getElementById('assertFilter').value;
+            const smellsFilter = document.getElementById('smellsFilter').value;
+            
+            if (search) filters.push(`Busca: "${search}"`);
+            if (typeFilter !== 'all') filters.push(`Tipo: ${typeFilter}`);
+            if (assertFilter !== 'all') filters.push(`Assert: ${assertFilter}`);
+            if (smellsFilter !== 'all') filters.push(`Smells: ${smellsFilter}`);
+            
+            document.getElementById('statsFilters').textContent = filters.length > 0 
+                ? `Filtros ativos: ${filters.join(' • ')}` 
+                : '';
+        }
+        
+        // Renderizar testes
+        function renderTests() {
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageTests = filteredTests.slice(start, end);
+            
+            if (pageTests.length === 0) {
+                document.getElementById('testsGrid').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🔍</div>
+                        <p>Nenhum teste encontrado com os filtros selecionados.</p>
+                    </div>
+                `;
+            } else {
+                document.getElementById('testsGrid').innerHTML = pageTests.map((test, idx) => 
+                    createTestCard(test, idx)
+                ).join('');
+            }
+            
+            // Atualizar paginação
+            const totalPages = Math.ceil(filteredTests.length / itemsPerPage);
+            document.getElementById('pageInfo').textContent = `Página ${currentPage} de ${totalPages}`;
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage >= totalPages;
+        }
+        
+        // Criar card de teste
+        function createTestCard(test, idx) {
+            const assertClass = test.assertStrength === 'forte' ? 'assert-strong' :
+                               test.assertStrength === 'médio' ? 'assert-medium' : 'assert-weak';
+            
+            const fileName = test.file.split('/').pop();
+            const coveragePct = test.coverage.linesTotal > 0 
+                ? ((test.coverage.linesCovered / test.coverage.linesTotal) * 100).toFixed(1)
+                : 0;
+            
+            return `
+                <div class="test-card" id="card-${idx}">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <h3 class="test-name">${test.name}</h3>
+                            <div class="test-file">
+                                📄 ${fileName}
+                            </div>
+                        </div>
+                        <div class="badges">
+                            <span class="badge badge-${test.testType}">${test.testType}</span>
+                            <span class="badge badge-${assertClass}">Assert: ${test.assertStrength}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-content">
+                        <div class="info-row">
+                            <span class="info-label">🎯 O que testa:</span>
+                            <span class="info-value">${test.whatItTests}</span>
+                        </div>
+                        
+                        <div class="info-row">
+                            <span class="info-label">❓ Por que testa:</span>
+                            <span class="info-value">${test.whyItTests}</span>
+                        </div>
+                        
+                        <div class="info-row">
+                            <span class="info-label">🎬 Para que:</span>
+                            <span class="info-value">${test.purposeForWhat}</span>
+                        </div>
+                        
+                        <div class="info-row">
+                            <span class="info-label">⚙️ Função:</span>
+                            <span class="info-value"><code>${test.functionUnderTest}</code></span>
+                        </div>
+                        
+                        ${test.smells.length > 0 ? `
+                        <div class="smells-section">
+                            <div class="smells-title">
+                                ⚠️ Code Smells (${test.smells.length})
+                            </div>
+                            <ul class="smells-list">
+                                ${test.smells.map(smell => `<li class="smell-item">${smell}</li>`).join('')}
+                            </ul>
+                        </div>
+                        ` : ''}
+                        
+                        ${test.suggestions.length > 0 ? `
+                        <div class="suggestions-section">
+                            <div class="suggestions-title">
+                                💡 Sugestões (${test.suggestions.length})
+                            </div>
+                            <ul class="suggestions-list">
+                                ${test.suggestions.map(sug => `<li class="suggestion-item">${sug}</li>`).join('')}
+                            </ul>
+                        </div>
+                        ` : ''}
+                    </div>
+                    
+                    <div class="details-section" id="details-${idx}">
+                        <div class="detail-block">
+                            <div class="detail-title">📝 Given (Setup)</div>
+                            ${test.given.length > 0 ? `
+                                <ul class="detail-list">
+                                    ${test.given.map(g => `<li>${g}</li>`).join('')}
+                                </ul>
+                            ` : '<div class="detail-content">Nenhum setup identificado</div>'}
+                        </div>
+                        
+                        <div class="detail-block">
+                            <div class="detail-title">⚡ When (Ação)</div>
+                            <div class="detail-content">${test.when || 'N/A'}</div>
+                        </div>
+                        
+                        <div class="detail-block">
+                            <div class="detail-title">✅ Then (Asserts)</div>
+                            ${test.then.length > 0 ? `
+                                <ul class="detail-list">
+                                    ${test.then.map(t => `<li>${t}</li>`).join('')}
+                                </ul>
+                            ` : '<div class="detail-content">Nenhum assert identificado</div>'}
+                        </div>
+                        
+                        ${test.mocks.length > 0 ? `
+                        <div class="detail-block">
+                            <div class="detail-title">🎭 Mocks/Spies</div>
+                            <ul class="detail-list">
+                                ${test.mocks.map(m => `<li>${m}</li>`).join('')}
+                            </ul>
+                        </div>
+                        ` : ''}
+                        
+                        <div class="detail-block">
+                            <div class="detail-title">📊 Coverage</div>
+                            <div class="coverage-bar">
+                                <div class="coverage-progress">
+                                    <div class="coverage-fill" style="width: ${coveragePct}%"></div>
+                                </div>
+                                <span class="coverage-text">${coveragePct}%</span>
+                            </div>
+                            <div class="detail-content" style="margin-top: 0.5rem;">
+                                Linhas: ${test.coverage.linesCovered}/${test.coverage.linesTotal} • 
+                                Diff: ${test.coverage.coveredInDiffPct.toFixed(1)}%
+                            </div>
+                        </div>
+                        
+                        <div class="detail-block">
+                            <div class="detail-title">🤝 Contracts (CDC/Pact)</div>
+                            <div class="detail-content">
+                                Pact: ${test.contracts.pact ? '✅ Sim' : '❌ Não'} • 
+                                Interações: ${test.contracts.interactions} • 
+                                Falhas: ${test.contracts.failed}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="expand-btn" onclick="toggleDetails(${idx})">
+                        <span id="expand-text-${idx}">▼ Ver Detalhes Completos</span>
+                    </button>
+                </div>
+            `;
+        }
+        
+        // Toggle detalhes
+        function toggleDetails(idx) {
+            const card = document.getElementById(`card-${idx}`);
+            const details = document.getElementById(`details-${idx}`);
+            const text = document.getElementById(`expand-text-${idx}`);
+            
+            if (details.classList.contains('visible')) {
+                details.classList.remove('visible');
+                card.classList.remove('expanded');
+                text.textContent = '▼ Ver Detalhes Completos';
+            } else {
+                details.classList.add('visible');
+                card.classList.add('expanded');
+                text.textContent = '▲ Ocultar Detalhes';
+            }
+        }
+        
+        // Mudar página
+        function changePage(delta) {
+            currentPage += delta;
+            renderTests();
+            updateStats();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // Limpar filtros
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('typeFilter').value = 'all';
+            document.getElementById('assertFilter').value = 'all';
+            document.getElementById('smellsFilter').value = 'all';
+            applyFilters();
+        }
+        
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', applyFilters);
+        document.getElementById('typeFilter').addEventListener('change', applyFilters);
+        document.getElementById('assertFilter').addEventListener('change', applyFilters);
+        document.getElementById('smellsFilter').addEventListener('change', applyFilters);
+        
+        // Iniciar
+        loadData();
+    </script>
+</body>
+</html>
+
