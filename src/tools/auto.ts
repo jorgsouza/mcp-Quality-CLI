@@ -75,11 +75,11 @@ import { sloCanaryCheck } from './slo-canary-check.js';
 // [QUALITY GATES] FASE 10: Quality Gates
 import { releaseQualityGate } from './release-quality-gate.js';
 
+// [DIFF COVERAGE] Diff Coverage for PRs  
+import { runDiffCoverage } from './run-diff-coverage.js';
+
 // [CONSOLIDATION] Consolidated Reports
 import { consolidateCodeAnalysisReport, consolidateTestPlanReport } from './consolidate-reports.js';
-
-// [QUALITY GATES] Diff Coverage (PR-aware)
-import { runDiffCoverage } from './run-diff-coverage.js';
 
 export type AutoMode = 'full' | 'analyze' | 'plan' | 'scaffold' | 'run';
 

@@ -69,13 +69,17 @@ async function loadAnalysisData(paths: ReturnType<typeof getPaths>): Promise<any
     health: {
       status: 'unknown',
       score: 0
-    }
+    },
+    diffCoverage: null, // 🆕 Diff Coverage
+    contracts: null      // 🆕 Contracts
   };
 
   const files = [
     'coverage-analysis.json',
     'test-catalog.json',
-    'analyze.json'
+    'analyze.json',
+    'diff-coverage.json', // 🆕
+    'contracts-verify.json' // 🆕
   ];
 
   for (const file of files) {
@@ -127,6 +131,26 @@ async function loadAnalysisData(paths: ReturnType<typeof getPaths>): Promise<any
     if (data['coverage-analysis'].recommendations) {
       data.health.recommendations = data['coverage-analysis'].recommendations;
     }
+  }
+  
+  // 🆕 Extrai Diff Coverage
+  if (data['diff-coverage']) {
+    data.diffCoverage = {
+      percent: data['diff-coverage'].diffCoverage || 0,
+      linesAdded: data['diff-coverage'].linesAdded || 0,
+      linesCovered: data['diff-coverage'].linesCovered || 0,
+      baseBranch: data['diff-coverage'].baseBranch || 'main'
+    };
+  }
+  
+  // 🆕 Extrai Contracts
+  if (data['contracts-verify']) {
+    data.contracts = {
+      total: data['contracts-verify'].total || 0,
+      verified: data['contracts-verify'].verified || 0,
+      failed: data['contracts-verify'].failed || 0,
+      status: (data['contracts-verify'].failed || 0) === 0 ? 'success' : 'error'
+    };
   }
 
   return data;
@@ -388,6 +412,41 @@ function generateDashboardHTML(data: any, settings: any): string {
           Ideal: 70:20:10
         </div>
       </div>
+      
+      ${data.diffCoverage ? `
+      <div class="card">
+        <h2><span class="emoji">📐</span> Diff Coverage (PR-Aware)</h2>
+        <div class="metric" style="color: ${data.diffCoverage.percent >= 80 ? '#38a169' : '#ed8936'};">
+          ${data.diffCoverage.percent.toFixed(1)}%
+        </div>
+        <div class="metric-label">Linhas alteradas cobertas</div>
+        <div class="stats-grid" style="margin-top: 12px; grid-template-columns: 1fr 1fr;">
+          <div class="stat-item">
+            <span class="stat-label">Base:</span>
+            <span class="stat-value">${data.diffCoverage.baseBranch}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Linhas:</span>
+            <span class="stat-value">${data.diffCoverage.linesCovered}/${data.diffCoverage.linesAdded}</span>
+          </div>
+        </div>
+      </div>
+      ` : ''}
+      
+      ${data.contracts ? `
+      <div class="card">
+        <h2><span class="emoji">🤝</span> Contracts (CDC/Pact)</h2>
+        <div class="metric" style="color: ${data.contracts.status === 'success' ? '#38a169' : '#e53e3e'};">
+          ${data.contracts.verified}/${data.contracts.total}
+        </div>
+        <div class="metric-label">Contratos verificados</div>
+        <div style="margin-top: 12px;">
+          <span class="status ${data.contracts.status}">
+            ${data.contracts.failed > 0 ? `❌ ${data.contracts.failed} falhas` : '✅ Todos passando'}
+          </span>
+        </div>
+      </div>
+      ` : ''}
     </div>
 
     <div class="card" style="margin-bottom: 20px;">
