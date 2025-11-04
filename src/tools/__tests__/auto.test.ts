@@ -8,8 +8,9 @@ vi.mock('../analyze.js');
 vi.mock('../plan.js');
 vi.mock('../scaffold-unit.js');
 vi.mock('../run-coverage.js');
-vi.mock('../pyramid-report.js');
 vi.mock('../dashboard.js');
+vi.mock('../consolidate-reports.js');
+vi.mock('../recommend-strategy.js');
 
 describe('auto.ts - detectRepoContext', () => {
   let tempDir: string;
@@ -240,9 +241,10 @@ describe('auto.ts - autoQualityRun', () => {
 
     const { analyze } = await import('../analyze.js');
     const { generatePlan } = await import('../plan.js');
+    const { recommendTestStrategy } = await import('../recommend-strategy.js');
     const { runCoverageAnalysis } = await import('../run-coverage.js');
-    const { generatePyramidReport } = await import('../pyramid-report.js');
     const { generateDashboard } = await import('../dashboard.js');
+    const { consolidateCodeAnalysisReport, consolidateTestPlanReport } = await import('../consolidate-reports.js');
 
     vi.mocked(analyze).mockResolvedValue({
       summary: 'Test',
@@ -254,6 +256,22 @@ describe('auto.ts - autoQualityRun', () => {
     vi.mocked(generatePlan).mockResolvedValue({
       ok: true,
       plan: join(tempDir, 'TEST-PLAN.md')
+    });
+
+    vi.mocked(recommendTestStrategy).mockResolvedValue({
+      ok: true,
+      summary: 'Test strategy',
+      recommendations: []
+    });
+
+    vi.mocked(consolidateCodeAnalysisReport).mockResolvedValue({
+      ok: true,
+      path: join(tempDir, 'CODE-ANALYSIS.md')
+    });
+
+    vi.mocked(consolidateTestPlanReport).mockResolvedValue({
+      ok: true,
+      path: join(tempDir, 'TEST-PLAN.md')
     });
 
     vi.mocked(runCoverageAnalysis).mockResolvedValue({
@@ -275,11 +293,6 @@ describe('auto.ts - autoQualityRun', () => {
       reportPath: join(tempDir, 'coverage-report.md')
     });
 
-    vi.mocked(generatePyramidReport).mockResolvedValue({
-      ok: true,
-      report_path: join(tempDir, 'pyramid.html')
-    });
-
     vi.mocked(generateDashboard).mockResolvedValue({
       ok: true,
       dashboard_path: join(tempDir, 'dashboard.html')
@@ -293,8 +306,9 @@ describe('auto.ts - autoQualityRun', () => {
     expect(result.ok).toBe(true);
     expect(result.steps).toContain('analyze');
     expect(result.steps).toContain('plan');
+    expect(result.steps).toContain('code-analysis-report');
+    expect(result.steps).toContain('test-plan-report');
     expect(result.steps).toContain('coverage');
-    expect(result.steps).toContain('pyramid-report');
     expect(result.steps).toContain('dashboard');
   });
 

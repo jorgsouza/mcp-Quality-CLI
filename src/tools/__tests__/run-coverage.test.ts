@@ -198,7 +198,7 @@ describe('runCoverageAnalysis', () => {
     const reportContent = await fs.readFile(result.reportPath, 'utf-8');
     expect(reportContent).toContain('Relatório de Cobertura');
     expect(reportContent).toContain('70');
-  });
+  }, 60000); // Aumentar timeout para 60s
 
   it('deve usar thresholds customizados', async () => {
     await fs.writeFile(

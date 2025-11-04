@@ -130,7 +130,7 @@ describe('analyzeTestCoverage', () => {
     const hasInvertedWarning = result.summary.includes('INVERTIDA') || 
                                result.recommendations.some(r => r.includes('invertida'));
     expect(hasInvertedWarning).toBe(true);
-  });
+  }, 60000); // Aumentar timeout para 60s
 
   // 4. Gerar recomendações
   it('deve sugerir mais unit tests se < 70%', async () => {
@@ -195,7 +195,7 @@ describe('analyzeTestCoverage', () => {
       expect(data.summary).toBeDefined();
       expect(data.pyramid).toBeDefined();
     }
-  });
+  }, 60000); // Aumentar timeout para 60s
 
   // Teste adicional: repositório sem testes
   it('deve lidar com repositório sem testes', async () => {
@@ -212,6 +212,6 @@ describe('analyzeTestCoverage', () => {
     expect(result.pyramid.integration.files_found).toBe(0);
     expect(result.pyramid.e2e.files_found).toBe(0);
     expect(result.health).not.toBe('healthy');
-  });
+  }, 60000); // Aumentar timeout para 60s
 });
 

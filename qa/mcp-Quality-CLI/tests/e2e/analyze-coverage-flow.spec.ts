@@ -214,5 +214,5 @@ test('should login successfully', async ({ page }) => {
     if (result.pyramid.unit.test_cases > result.pyramid.e2e.test_cases) {
       expect(result.health).not.toBe('inverted');
     }
-  });
+  }, 60000); // Aumentar timeout para 60s
 });

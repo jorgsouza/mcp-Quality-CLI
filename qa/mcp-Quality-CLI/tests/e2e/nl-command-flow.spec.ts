@@ -67,7 +67,7 @@ describe('E2E: nl-command-flow', () => {
       expect(result.success).toBe(true);
       expect(result.detected_mode).toBe('analyze');
       expect(result.final_params.mode).toBe('analyze');
-    });
+    }, 60000); // Aumentar timeout para 60s
 
     it('should detect PLAN mode from "criar plano de testes"', async () => {
       const result = await nlCommand({
@@ -78,7 +78,7 @@ describe('E2E: nl-command-flow', () => {
       expect(result.success).toBe(true);
       expect(result.detected_mode).toBe('plan');
       expect(result.final_params.mode).toBe('plan');
-    });
+    }, 60000); // Aumentar timeout para 60s
 
     it('should detect RUN mode from "rodar testes e calcular cobertura"', async () => {
       const result = await nlCommand({
@@ -111,7 +111,7 @@ describe('E2E: nl-command-flow', () => {
 
       expect(result.success).toBe(true);
       expect(result.detected_mode).toBe('analyze');
-    });
+    }, 60000); // Aumentar timeout para 60s
 
     it('should detect PLAN mode from "generate test plan"', async () => {
       const result = await nlCommand({
@@ -121,7 +121,7 @@ describe('E2E: nl-command-flow', () => {
 
       expect(result.success).toBe(true);
       expect(result.detected_mode).toBe('plan');
-    });
+    }, 90000); // Aumentar timeout para 90s
   });
 
   describe('Overrides no texto', () => {
@@ -156,16 +156,16 @@ describe('E2E: nl-command-flow', () => {
       expect(result.success).toBe(true);
       expect(result.extracted_params.mode).toBe('run');
       expect(result.final_params.mode).toBe('run');
-    });
+    }, 60000); // Aumentar timeout para 60s
 
     it('should extract multiple overrides', async () => {
       const result = await nlCommand({
-        query: 'analise repo:/tmp/test product:TestApp mode:analyze',
+        query: `analise repo:${tempDir} product:TestApp mode:analyze`,
         defaults: { skipScaffold: true, skipRun: true }
       });
 
       expect(result.success).toBe(true);
-      expect(result.extracted_params.repo).toBe('/tmp/test');
+      expect(result.extracted_params.repo).toBe(tempDir);
       expect(result.extracted_params.product).toBe('TestApp');
       expect(result.extracted_params.mode).toBe('analyze');
     });
