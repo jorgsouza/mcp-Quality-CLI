@@ -1,0 +1,3555 @@
+{
+  "tests": [
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "Comandos PT simples > should detect FULL mode from \"analise meu repositório\"",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe detect FULL mode from \"analise meu repositório\"",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "Comandos PT simples > should detect ANALYZE mode from \"apenas analisar o código\"",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe detect ANALYZE mode from \"apenas analisar o código\"",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "Comandos PT simples > should detect PLAN mode from \"criar plano de testes\"",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe detect PLAN mode from \"criar plano de testes\"",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "Comandos PT simples > should detect RUN mode from \"rodar testes e calcular cobertura\"",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe detect RUN mode from \"rodar testes e calcular cobertura\"",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "should detect FULL mode from \"analise meu repositório\"",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe detect FULL mode from \"analise meu repositório\"",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "should detect ANALYZE mode from \"apenas analisar o código\"",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe detect ANALYZE mode from \"apenas analisar o código\"",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "should detect PLAN mode from \"criar plano de testes\"",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe detect PLAN mode from \"criar plano de testes\"",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "should detect RUN mode from \"rodar testes e calcular cobertura\"",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe detect RUN mode from \"rodar testes e calcular cobertura\"",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "Comandos EN simples > should detect FULL mode from \"run all tests\"",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe detect FULL mode from \"run all tests\"",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "Comandos EN simples > should detect ANALYZE mode from \"only analyze\"",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe detect ANALYZE mode from \"only analyze\"",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "Comandos EN simples > should detect PLAN mode from \"generate test plan\"",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe detect PLAN mode from \"generate test plan\"",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "should detect FULL mode from \"run all tests\"",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe detect FULL mode from \"run all tests\"",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "should detect ANALYZE mode from \"only analyze\"",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe detect ANALYZE mode from \"only analyze\"",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "should detect PLAN mode from \"generate test plan\"",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe detect PLAN mode from \"generate test plan\"",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "Overrides no texto > should extract repo override",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe extract repo override",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "Overrides no texto > should extract mode override",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe extract mode override",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "Overrides no texto > should extract multiple overrides",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe extract multiple overrides",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "should extract repo override",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe extract repo override",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "should extract mode override",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe extract mode override",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "should extract multiple overrides",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe extract multiple overrides",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "Defaults globais > should apply defaults when no override present",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe apply defaults when no override present",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "Defaults globais > should prioritize explicit overrides over defaults",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe prioritize explicit overrides over defaults",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "should apply defaults when no override present",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe apply defaults when no override present",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "should prioritize explicit overrides over defaults",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe prioritize explicit overrides over defaults",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "Error handling > should handle empty query gracefully",
+      "testType": "e2e",
+      "functionUnderTest": ".toBeDefined",
+      "whatItTests": "Testa se .toBeDefined handle empty query gracefully",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões em cenários de erro; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBeDefined",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "Error handling > should handle query with only whitespace",
+      "testType": "e2e",
+      "functionUnderTest": ".toBeDefined",
+      "whatItTests": "Testa se .toBeDefined handle query with only whitespace",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões em cenários de erro; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBeDefined",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "should handle empty query gracefully",
+      "testType": "e2e",
+      "functionUnderTest": ".toBeDefined",
+      "whatItTests": "Testa se .toBeDefined handle empty query gracefully",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBeDefined",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/nl-command-flow.spec.ts",
+      "name": "should handle query with only whitespace",
+      "testType": "e2e",
+      "functionUnderTest": ".toBeDefined",
+      "whatItTests": "Testa se .toBeDefined handle query with only whitespace",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBeDefined",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/init-product-flow.spec.ts",
+      "name": "E2E: quality init-product > deve criar estrutura completa de QA",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe criar estrutura completa de QA",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/init-product-flow.spec.ts",
+      "name": "E2E: quality init-product > deve criar mcp-settings.json com configurações corretas",
+      "testType": "e2e",
+      "functionUnderTest": ".toMatchObject",
+      "whatItTests": "Testa se .toMatchObject criar mcp-settings.json com configurações corretas",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "settingsPath = ...",
+        "settingsContent = ...",
+        "settings = ..."
+      ],
+      "when": ".toMatchObject",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/init-product-flow.spec.ts",
+      "name": "E2E: quality init-product > deve criar estrutura de diretórios completa",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe criar estrutura de diretórios completa",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "qaDir = ...",
+        "expectedDirs = ...",
+        "dirPath = ...",
+        "exists = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/init-product-flow.spec.ts",
+      "name": "E2E: quality init-product > deve criar GETTING_STARTED.md com documentação",
+      "testType": "e2e",
+      "functionUnderTest": ".toContain",
+      "whatItTests": "Testa se .toContain criar GETTING_STARTED.md com documentação",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "gettingStartedPath = ...",
+        "content = ..."
+      ],
+      "when": ".toContain",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/init-product-flow.spec.ts",
+      "name": "E2E: quality init-product > deve criar README.md",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe criar README.md",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "readmePath = ...",
+        "exists = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/init-product-flow.spec.ts",
+      "name": "E2E: quality init-product > deve criar .gitignore apropriado",
+      "testType": "e2e",
+      "functionUnderTest": ".toContain",
+      "whatItTests": "Testa se .toContain criar .gitignore apropriado",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "gitignorePath = ...",
+        "content = ..."
+      ],
+      "when": ".toContain",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/init-product-flow.spec.ts",
+      "name": "E2E: quality init-product > não deve sobrescrever mcp-settings.json existente",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe sobrescrever mcp-settings.json existente",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "settingsPath = ...",
+        "originalSettings = ...",
+        "newSettings = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/init-product-flow.spec.ts",
+      "name": "E2E: quality init-product > deve permitir criar múltiplos produtos no mesmo repo",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe permitir criar múltiplos produtos no mesmo repo",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "ecommerceExists = ...",
+        "paymentExists = ...",
+        "ecommerceSettings = ...",
+        "paymentSettings = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/init-product-flow.spec.ts",
+      "name": "deve criar estrutura completa de QA",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe criar estrutura completa de QA",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/init-product-flow.spec.ts",
+      "name": "deve criar mcp-settings.json com configurações corretas",
+      "testType": "e2e",
+      "functionUnderTest": ".toMatchObject",
+      "whatItTests": "Testa se .toMatchObject criar mcp-settings.json com configurações corretas",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "settingsPath = ...",
+        "settingsContent = ...",
+        "settings = ..."
+      ],
+      "when": ".toMatchObject",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/init-product-flow.spec.ts",
+      "name": "deve criar estrutura de diretórios completa",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe criar estrutura de diretórios completa",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "qaDir = ...",
+        "expectedDirs = ...",
+        "dirPath = ...",
+        "exists = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/init-product-flow.spec.ts",
+      "name": "deve criar GETTING_STARTED.md com documentação",
+      "testType": "e2e",
+      "functionUnderTest": ".toContain",
+      "whatItTests": "Testa se .toContain criar GETTING_STARTED.md com documentação",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "gettingStartedPath = ...",
+        "content = ..."
+      ],
+      "when": ".toContain",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/init-product-flow.spec.ts",
+      "name": "deve criar README.md",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe criar README.md",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "readmePath = ...",
+        "exists = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/init-product-flow.spec.ts",
+      "name": "deve criar .gitignore apropriado",
+      "testType": "e2e",
+      "functionUnderTest": ".toContain",
+      "whatItTests": "Testa se .toContain criar .gitignore apropriado",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "gitignorePath = ...",
+        "content = ..."
+      ],
+      "when": ".toContain",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/init-product-flow.spec.ts",
+      "name": "não deve sobrescrever mcp-settings.json existente",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe sobrescrever mcp-settings.json existente",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "settingsPath = ...",
+        "originalSettings = ...",
+        "newSettings = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/init-product-flow.spec.ts",
+      "name": "deve permitir criar múltiplos produtos no mesmo repo",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe permitir criar múltiplos produtos no mesmo repo",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "ecommerceExists = ...",
+        "paymentExists = ...",
+        "ecommerceSettings = ...",
+        "paymentSettings = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/diff-coverage-gate.spec.ts",
+      "name": "E2E: quality diff-coverage (CI gate) > deve ter a tool diff-coverage disponível",
+      "testType": "e2e",
+      "functionUnderTest": ".toBeDefined",
+      "whatItTests": "Testa se .toBeDefined ter a tool diff-coverage disponível",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "NÃO DETERMINADO (sem evidência)"
+      ],
+      "when": ".toBeDefined",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/diff-coverage-gate.spec.ts",
+      "name": "E2E: quality diff-coverage (CI gate) > deve exportar schema de parâmetros",
+      "testType": "e2e",
+      "functionUnderTest": ".toBeDefined",
+      "whatItTests": "Testa se .toBeDefined exportar schema de parâmetros",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "module = ..."
+      ],
+      "when": ".toBeDefined",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/diff-coverage-gate.spec.ts",
+      "name": "deve ter a tool diff-coverage disponível",
+      "testType": "e2e",
+      "functionUnderTest": ".toBeDefined",
+      "whatItTests": "Testa se .toBeDefined ter a tool diff-coverage disponível",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "NÃO DETERMINADO (sem evidência)"
+      ],
+      "when": ".toBeDefined",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/diff-coverage-gate.spec.ts",
+      "name": "deve exportar schema de parâmetros",
+      "testType": "e2e",
+      "functionUnderTest": ".toBeDefined",
+      "whatItTests": "Testa se .toBeDefined exportar schema de parâmetros",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "module = ..."
+      ],
+      "when": ".toBeDefined",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "FULL mode em diferentes contextos > should work in empty repo",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe work in empty repo",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "FULL mode em diferentes contextos > should work in repo with package.json",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe work in repo with package.json",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "FULL mode em diferentes contextos > should work with existing mcp-settings.json",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe work with existing mcp-settings.json",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "should work in empty repo",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe work in empty repo",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "should work in repo with package.json",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe work in repo with package.json",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "should work with existing mcp-settings.json",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe work with existing mcp-settings.json",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "Modos parciais > should execute ANALYZE mode correctly",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe execute ANALYZE mode correctly",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "Modos parciais > should execute PLAN mode correctly",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe execute PLAN mode correctly",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "should execute ANALYZE mode correctly",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe execute ANALYZE mode correctly",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "should execute PLAN mode correctly",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe execute PLAN mode correctly",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "Auto-detecção de contexto > should auto-detect repo from cwd",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe auto-detect repo from cwd",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "Auto-detecção de contexto > should infer product from package.json",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe infer product from package.json",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "should auto-detect repo from cwd",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe auto-detect repo from cwd",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "should infer product from package.json",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe infer product from package.json",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "Criação de estrutura de artifacts > should create qa/<product>/ directory structure",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe create qa/<product>/ directory structure",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "Criação de estrutura de artifacts > should generate all expected artifacts in FULL mode",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe generate all expected artifacts in FULL mode",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "should create qa/<product>/ directory structure",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe create qa/<product>/ directory structure",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "should generate all expected artifacts in FULL mode",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe generate all expected artifacts in FULL mode",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "Error handling > should handle invalid repo path gracefully",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe handle invalid repo path gracefully",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões em cenários de erro; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "Error handling > should handle missing product name",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe handle missing product name",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões em cenários de erro; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "Error handling > should handle filesystem errors gracefully",
+      "testType": "e2e",
+      "functionUnderTest": ".toBeDefined",
+      "whatItTests": "Testa se .toBeDefined handle filesystem errors gracefully",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões em cenários de erro; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBeDefined",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "should handle invalid repo path gracefully",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe handle invalid repo path gracefully",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "should handle missing product name",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe handle missing product name",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "should handle filesystem errors gracefully",
+      "testType": "e2e",
+      "functionUnderTest": ".toBeDefined",
+      "whatItTests": "Testa se .toBeDefined handle filesystem errors gracefully",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões em cenários de erro; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBeDefined",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "Integration with existing test framework > should detect vitest framework",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe detect vitest framework",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "Integration with existing test framework > should detect existing test files",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe detect existing test files",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "should detect vitest framework",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe detect vitest framework",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/auto-full-cycle.spec.ts",
+      "name": "should detect existing test files",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe detect existing test files",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/analyze-coverage-flow.spec.ts",
+      "name": "E2E: quality analyze → quality coverage > deve executar analyze e detectar endpoints",
+      "testType": "e2e",
+      "functionUnderTest": ".toBeDefined",
+      "whatItTests": "Testa se .toBeDefined executar analyze e detectar endpoints",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBeDefined",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/analyze-coverage-flow.spec.ts",
+      "name": "E2E: quality analyze → quality coverage > deve criar analyze.json com findings",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe criar analyze.json com findings",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "analyzePath = ...",
+        "exists = ...",
+        "content = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/analyze-coverage-flow.spec.ts",
+      "name": "E2E: quality analyze → quality coverage > deve permitir pipeline completo: analyze → coverage → plan",
+      "testType": "e2e",
+      "functionUnderTest": ".toBeDefined",
+      "whatItTests": "Testa se .toBeDefined permitir pipeline completo: analyze → coverage → plan",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "analyzeResult = ...",
+        "coverageResult = ...",
+        "planResult = ...",
+        "testsDir = ...",
+        "exists = ..."
+      ],
+      "when": ".toBeDefined",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/analyze-coverage-flow.spec.ts",
+      "name": "E2E: quality analyze → quality coverage > deve usar configuração centralizada de mcp-settings.json",
+      "testType": "e2e",
+      "functionUnderTest": ".toBeDefined",
+      "whatItTests": "Testa se .toBeDefined usar configuração centralizada de mcp-settings.json",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "settingsPath = ...",
+        "settings = ...",
+        "result = ..."
+      ],
+      "when": ".toBeDefined",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/analyze-coverage-flow.spec.ts",
+      "name": "E2E: quality analyze → quality coverage > deve validar health da pirâmide corretamente",
+      "testType": "e2e",
+      "functionUnderTest": ".toContain",
+      "whatItTests": "Testa se .toContain validar health da pirâmide corretamente",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toContain",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/analyze-coverage-flow.spec.ts",
+      "name": "deve executar analyze e detectar endpoints",
+      "testType": "e2e",
+      "functionUnderTest": ".toBeDefined",
+      "whatItTests": "Testa se .toBeDefined executar analyze e detectar endpoints",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toBeDefined",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/analyze-coverage-flow.spec.ts",
+      "name": "deve criar analyze.json com findings",
+      "testType": "e2e",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe criar analyze.json com findings",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "analyzePath = ...",
+        "exists = ...",
+        "content = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/analyze-coverage-flow.spec.ts",
+      "name": "deve permitir pipeline completo: analyze → coverage → plan",
+      "testType": "e2e",
+      "functionUnderTest": ".toBeDefined",
+      "whatItTests": "Testa se .toBeDefined permitir pipeline completo: analyze → coverage → plan",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "analyzeResult = ...",
+        "coverageResult = ...",
+        "planResult = ...",
+        "testsDir = ...",
+        "exists = ..."
+      ],
+      "when": ".toBeDefined",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/analyze-coverage-flow.spec.ts",
+      "name": "deve usar configuração centralizada de mcp-settings.json",
+      "testType": "e2e",
+      "functionUnderTest": ".toBeDefined",
+      "whatItTests": "Testa se .toBeDefined usar configuração centralizada de mcp-settings.json",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "settingsPath = ...",
+        "settings = ...",
+        "result = ..."
+      ],
+      "when": ".toBeDefined",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/analyze-coverage-flow.spec.ts",
+      "name": "deve validar health da pirâmide corretamente",
+      "testType": "e2e",
+      "functionUnderTest": ".toContain",
+      "whatItTests": "Testa se .toContain validar health da pirâmide corretamente",
+      "whyItTests": "Verifica fluxo completo do ponto de vista do usuário; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Garantir que fluxos críticos de usuário funcionem ponta a ponta; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "result = ..."
+      ],
+      "when": ".toContain",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/__tests__/server.test.ts",
+      "name": "analyze_codebase > deve validar parâmetros válidos",
+      "testType": "unit",
+      "functionUnderTest": ".not.toThrow",
+      "whatItTests": "Testa se .not.toThrow validar parâmetros válidos",
+      "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "AnalyzeSchema = ...",
+        "validData = ..."
+      ],
+      "when": ".not.toThrow",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/__tests__/server.test.ts",
+      "name": "analyze_codebase > deve rejeitar sem repo",
+      "testType": "unit",
+      "functionUnderTest": ".toThrow",
+      "whatItTests": "Testa se .toThrow rejeitar sem repo",
+      "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "AnalyzeSchema = ...",
+        "invalidData = ..."
+      ],
+      "when": ".toThrow",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/__tests__/server.test.ts",
+      "name": "QualityMCPServer - Schema Validations > deve validar parâmetros válidos",
+      "testType": "unit",
+      "functionUnderTest": ".not.toThrow",
+      "whatItTests": "Testa se .not.toThrow validar parâmetros válidos",
+      "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "AnalyzeSchema = ...",
+        "validData = ..."
+      ],
+      "when": ".not.toThrow",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/__tests__/server.test.ts",
+      "name": "QualityMCPServer - Schema Validations > deve rejeitar sem repo",
+      "testType": "unit",
+      "functionUnderTest": ".toThrow",
+      "whatItTests": "Testa se .toThrow rejeitar sem repo",
+      "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "AnalyzeSchema = ...",
+        "invalidData = ..."
+      ],
+      "when": ".toThrow",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/__tests__/server.test.ts",
+      "name": "generate_test_plan > deve validar URL válida",
+      "testType": "unit",
+      "functionUnderTest": ".not.toThrow",
+      "whatItTests": "Testa se .not.toThrow validar URL válida",
+      "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "PlanSchema = ...",
+        "validData = ..."
+      ],
+      "when": ".not.toThrow",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/__tests__/server.test.ts",
+      "name": "generate_test_plan > deve rejeitar URL inválida",
+      "testType": "unit",
+      "functionUnderTest": ".toThrow",
+      "whatItTests": "Testa se .toThrow rejeitar URL inválida",
+      "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "PlanSchema = ..."
+      ],
+      "when": ".toThrow",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/__tests__/server.test.ts",
+      "name": "QualityMCPServer - Schema Validations > deve validar URL válida",
+      "testType": "unit",
+      "functionUnderTest": ".not.toThrow",
+      "whatItTests": "Testa se .not.toThrow validar URL válida",
+      "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "PlanSchema = ...",
+        "validData = ..."
+      ],
+      "when": ".not.toThrow",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/__tests__/server.test.ts",
+      "name": "QualityMCPServer - Schema Validations > deve rejeitar URL inválida",
+      "testType": "unit",
+      "functionUnderTest": ".toThrow",
+      "whatItTests": "Testa se .toThrow rejeitar URL inválida",
+      "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "PlanSchema = ..."
+      ],
+      "when": ".toThrow",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/__tests__/server.test.ts",
+      "name": "init_product > deve validar nome de produto alphanumeric",
+      "testType": "unit",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe validar nome de produto alphanumeric",
+      "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "regex = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/__tests__/server.test.ts",
+      "name": "init_product > deve validar schema completo",
+      "testType": "unit",
+      "functionUnderTest": ".not.toThrow",
+      "whatItTests": "Testa se .not.toThrow validar schema completo",
+      "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "InitSchema = ...",
+        "validData = ..."
+      ],
+      "when": ".not.toThrow",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/__tests__/server.test.ts",
+      "name": "QualityMCPServer - Schema Validations > deve validar nome de produto alphanumeric",
+      "testType": "unit",
+      "functionUnderTest": ".toBe",
+      "whatItTests": "Testa se .toBe validar nome de produto alphanumeric",
+      "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "regex = ..."
+      ],
+      "when": ".toBe",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/__tests__/server.test.ts",
+      "name": "QualityMCPServer - Schema Validations > deve validar schema completo",
+      "testType": "unit",
+      "functionUnderTest": ".not.toThrow",
+      "whatItTests": "Testa se .not.toThrow validar schema completo",
+      "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "InitSchema = ...",
+        "validData = ..."
+      ],
+      "when": ".not.toThrow",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/__tests__/server.test.ts",
+      "name": "Tool Names > deve ter todos os nomes de tools essenciais",
+      "testType": "unit",
+      "functionUnderTest": ".toHaveLength",
+      "whatItTests": "Testa se .toHaveLength ter todos os nomes de tools essenciais",
+      "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "toolNames = ..."
+      ],
+      "when": ".toHaveLength",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    },
+    {
+      "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/__tests__/server.test.ts",
+      "name": "QualityMCPServer - Schema Validations > deve ter todos os nomes de tools essenciais",
+      "testType": "unit",
+      "functionUnderTest": ".toHaveLength",
+      "whatItTests": "Testa se .toHaveLength ter todos os nomes de tools essenciais",
+      "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado; ⚠️ Asserts genéricos podem deixar bugs passar",
+      "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
+      "given": [
+        "toolNames = ..."
+      ],
+      "when": ".toHaveLength",
+      "then": [],
+      "mocks": [],
+      "coverage": {
+        "files": [],
+        "linesCovered": 0,
+        "linesTotal": 0,
+        "coveredInDiffPct": 0
+      },
+      "contracts": {
+        "pact": false,
+        "failed": 0,
+        "interactions": 0
+      },
+      "assertStrength": "fraco",
+      "smells": [
+        "Teste sem asserts"
+      ],
+      "suggestions": [
+        "Trocar toBeTruthy/toBeFalsy por matchers específicos",
+        "Validar status + corpo + headers em vez de só chamadas",
+        "Adicionar cenário de erro (try-catch)"
+      ]
+    }
+  ],
+  "count": 100
+}
