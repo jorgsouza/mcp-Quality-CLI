@@ -47,6 +47,18 @@ export interface ExplainTestsOptions {
   failOn?: 'weak' | 'none';
 }
 
+export interface CodeSmell {
+  type: 'no-asserts' | 'excessive-mocks' | 'missing-error-handling' | 'too-long';
+  description: string;
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  impact: string;
+  howToFix: {
+    before: string;
+    after: string;
+    explanation: string;
+  };
+}
+
 export interface TestExplanation {
   file: string;
   name: string;
@@ -76,7 +88,7 @@ export interface TestExplanation {
     slo?: string;
   };
   assertStrength: 'forte' | 'médio' | 'fraco';
-  smells: string[];
+  smells: CodeSmell[]; // 🆕 Agora com exemplos de correção!
   suggestions: string[];
 }
 
@@ -303,19 +315,19 @@ async function analyzeTestFile(
       const whyItTests = generateWhyItTests(testCase, testType, assertStrength);
       const purposeForWhat = generatePurposeForWhat(testCase, testType);
       
-      // Detectar smells
-      const smells: string[] = [];
+      // Detectar smells com exemplos de correção
+      const smells: CodeSmell[] = [];
       if (testCase.then.length === 0) {
-        smells.push('Teste sem asserts');
+        smells.push(createNoAssertsSmell(testCase));
       }
       if (testCase.mocks.length > 3) {
-        smells.push(`Excesso de mocks (${testCase.mocks.length})`);
+        smells.push(createExcessiveMocksSmell(testCase.mocks.length));
       }
       if (!testCase.hasErrorHandling && testCase.when.toLowerCase().includes('error')) {
-        smells.push('Teste de erro sem try-catch');
+        smells.push(createMissingErrorHandlingSmell(testCase));
       }
       if (testCase.lineCount > 100) {
-        smells.push('Teste muito longo (>100 linhas)');
+        smells.push(createTooLongSmell(testCase.lineCount));
       }
       
       // Gerar sugestões
@@ -363,6 +375,231 @@ async function analyzeTestFile(
     console.warn(`⚠️  Erro ao analisar ${testFile}: ${error instanceof Error ? error.message : error}`);
     return [];
   }
+}
+
+// ============================================================================
+// CODE SMELLS GENERATORS (com exemplos práticos de correção)
+// ============================================================================
+
+function createNoAssertsSmell(testCase: any): CodeSmell {
+  const functionName = testCase.when !== 'NÃO DETERMINADO' ? testCase.when : 'processData';
+  
+  return {
+    type: 'no-asserts',
+    description: 'Teste sem assertions - não valida nenhum comportamento',
+    severity: 'critical',
+    impact: 'Teste sempre passa (falso positivo). Bugs não são detectados. Coverage inflado artificialmente.',
+    howToFix: {
+      before: `// ❌ MAU - Teste sem validação
+it('${testCase.name.substring(0, 50)}...', () => {
+  const result = ${functionName}(input);
+  // Não valida nada! 🚨
+});`,
+      after: `// ✅ BOM - Teste com validações específicas
+it('${testCase.name.substring(0, 50)}...', () => {
+  const result = ${functionName}(input);
+  
+  // Validar retorno
+  expect(result).toBeDefined();
+  expect(result.status).toBe('success');
+  
+  // Validar dados processados
+  expect(result.data).toHaveLength(3);
+  expect(result.data[0]).toHaveProperty('id');
+  
+  // Validar efeitos colaterais
+  expect(result.timestamp).toBeGreaterThan(0);
+});`,
+      explanation: 'Adicione asserts específicos que validam: (1) Valores de retorno, (2) Estrutura dos dados, (3) Estados esperados, (4) Efeitos colaterais. Use matchers específicos ao invés de genéricos.'
+    }
+  };
+}
+
+function createExcessiveMocksSmell(mockCount: number): CodeSmell {
+  return {
+    type: 'excessive-mocks',
+    description: `Excesso de mocks (${mockCount} mocks) - teste muito acoplado à implementação`,
+    severity: 'high',
+    impact: 'Teste frágil que quebra com mudanças internas. Dificulta refatoração. Baixo acoplamento com código real.',
+    howToFix: {
+      before: `// ❌ MAU - Muitos mocks (${mockCount} mocks)
+it('should send email', () => {
+  const mockDb = vi.fn();
+  const mockLogger = vi.fn();
+  const mockEmailService = vi.fn();
+  const mockQueue = vi.fn();
+  const mockCache = vi.fn(); // ${mockCount}º mock! 🚨
+  const mockMetrics = vi.fn();
+  
+  sendEmailWithLogging(data, mockDb, mockLogger, ...);
+  
+  expect(mockDb).toHaveBeenCalled();
+  expect(mockLogger).toHaveBeenCalled();
+  // Testando demais a implementação!
+});`,
+      after: `// ✅ BOM - Teste de integração com mocks essenciais
+it('should send email', async () => {
+  // Mock apenas APIs externas (não controláveis)
+  const mockEmailProvider = vi.fn().mockResolvedValue({ sent: true });
+  
+  // Use implementações reais para o resto
+  const result = await emailService.send({
+    to: 'test@example.com',
+    subject: 'Test',
+    provider: mockEmailProvider
+  });
+  
+  // Valide o COMPORTAMENTO, não a implementação
+  expect(result.sent).toBe(true);
+  expect(mockEmailProvider).toHaveBeenCalledWith(
+    expect.objectContaining({ to: 'test@example.com' })
+  );
+});
+
+// 💡 Alternativa: Teste de integração real
+it('should send email (integration)', async () => {
+  // Sem mocks - usa banco de teste real
+  const result = await emailService.send({
+    to: 'test@example.com',
+    subject: 'Test'
+  });
+  
+  expect(result.sent).toBe(true);
+  
+  // Verificar no banco de teste
+  const sentEmails = await db.emails.findAll();
+  expect(sentEmails).toHaveLength(1);
+});`,
+      explanation: `Reduza mocks para o mínimo necessário: (1) APIs externas não controláveis, (2) Recursos caros (rede, I/O). Para o resto, use implementações reais. Considere testes de integração ao invés de unit tests com muitos mocks.`
+    }
+  };
+}
+
+function createMissingErrorHandlingSmell(testCase: any): CodeSmell {
+  const functionName = testCase.when !== 'NÃO DETERMINADO' ? testCase.when : 'validateInput';
+  
+  return {
+    type: 'missing-error-handling',
+    description: 'Teste de erro sem try-catch - validação genérica de exceções',
+    severity: 'medium',
+    impact: 'Não valida tipo, mensagem ou causa do erro. Error handling superficial. Bugs em error flow podem passar.',
+    howToFix: {
+      before: `// ❌ MAU - Validação genérica
+it('should throw error on invalid input', () => {
+  expect(() => ${functionName}(invalidData)).toThrow();
+  // Não valida QUAL erro! 🚨
+});`,
+      after: `// ✅ BOM - Validação detalhada com try-catch
+it('should throw ValidationError with specific message', async () => {
+  try {
+    await ${functionName}(invalidData);
+    fail('Deveria ter lançado ValidationError'); // ✅ Fail explícito
+  } catch (error) {
+    // Validar tipo do erro
+    expect(error).toBeInstanceOf(ValidationError);
+    
+    // Validar mensagem específica
+    expect(error.message).toBe('Email is required');
+    
+    // Validar código de erro
+    expect(error.code).toBe('VALIDATION_ERROR');
+    
+    // Validar campos inválidos
+    expect(error.fields).toContain('email');
+  }
+});
+
+// 💡 Alternativa: expect().rejects (async)
+it('should reject with ValidationError', async () => {
+  await expect(${functionName}(invalidData))
+    .rejects
+    .toThrow(ValidationError);
+    
+  await expect(${functionName}(invalidData))
+    .rejects
+    .toThrow('Email is required');
+});`,
+      explanation: 'Use try-catch para validar: (1) Tipo correto da exceção (instanceof), (2) Mensagem de erro específica, (3) Código/campos de erro, (4) Stack trace quando relevante. Para async, use expect().rejects.'
+    }
+  };
+}
+
+function createTooLongSmell(lineCount: number): CodeSmell {
+  return {
+    type: 'too-long',
+    description: `Teste muito longo (${lineCount} linhas) - viola Single Responsibility Principle`,
+    severity: 'low',
+    impact: 'Difícil de entender e debugar. Provavelmente testa múltiplas coisas. Tempo de execução elevado.',
+    howToFix: {
+      before: `// ❌ MAU - Teste monolítico (${lineCount} linhas)
+it('should process entire user flow', async () => {
+  // Setup (30 linhas)
+  const user = createUser({ name: 'Test', email: 'test@example.com' });
+  const product = createProduct({ name: 'Product', price: 100 });
+  // ... mais 25 linhas de setup
+  
+  // Ação 1: Criar carrinho (20 linhas)
+  const cart = await createCart(user.id);
+  await addToCart(cart.id, product.id);
+  // ... mais 15 linhas
+  
+  // Validação 1 (10 linhas)
+  expect(cart.items).toHaveLength(1);
+  // ... mais 8 linhas
+  
+  // Ação 2: Checkout (20 linhas)
+  // ... e assim por diante
+  // Total: ${lineCount} linhas! 🚨
+});`,
+      after: `// ✅ BOM - Testes separados e focados
+
+describe('User Cart Flow', () => {
+  let user: User;
+  let product: Product;
+  
+  beforeEach(async () => {
+    // Setup compartilhado (DRY)
+    user = await createUser({ name: 'Test', email: 'test@example.com' });
+    product = await createProduct({ name: 'Product', price: 100 });
+  });
+  
+  it('should create empty cart for new user', async () => {
+    const cart = await createCart(user.id);
+    
+    expect(cart.userId).toBe(user.id);
+    expect(cart.items).toHaveLength(0);
+    expect(cart.total).toBe(0);
+  }); // ✅ 8 linhas - foco único
+  
+  it('should add product to cart', async () => {
+    const cart = await createCart(user.id);
+    await addToCart(cart.id, product.id);
+    
+    expect(cart.items).toHaveLength(1);
+    expect(cart.items[0].productId).toBe(product.id);
+    expect(cart.total).toBe(product.price);
+  }); // ✅ 10 linhas - foco único
+  
+  it('should calculate total with multiple items', async () => {
+    const cart = await createCart(user.id);
+    await addToCart(cart.id, product.id, { quantity: 2 });
+    
+    expect(cart.items[0].quantity).toBe(2);
+    expect(cart.total).toBe(product.price * 2);
+  }); // ✅ 8 linhas - foco único
+  
+  it('should complete checkout successfully', async () => {
+    const cart = await createCartWithItems(user.id, [product]);
+    const order = await checkout(cart.id, { paymentMethod: 'credit_card' });
+    
+    expect(order.status).toBe('completed');
+    expect(order.total).toBe(cart.total);
+    expect(order.userId).toBe(user.id);
+  }); // ✅ 10 linhas - foco único
+});`,
+      explanation: `Quebre em múltiplos testes menores: (1) Um teste = uma responsabilidade, (2) Use beforeEach para setup compartilhado (DRY), (3) Agrupe testes relacionados com describe(), (4) Target: 10-30 linhas por teste. Cada teste deve testar UMA coisa específica.`
+    }
+  };
 }
 
 // 🆕 Detecta o tipo do teste baseado no caminho do arquivo
@@ -898,11 +1135,28 @@ function generateExplanationsMarkdown(explanations: TestExplanation[]): string {
       md += `\n`;
     }
 
-    // Problemas
+    // Problemas (com exemplos de correção)
     if (exp.smells.length > 0) {
-      md += `### ⚠️ Problemas Detectados\n\n`;
-      exp.smells.forEach(s => md += `- ${s}\n`);
-      md += `\n`;
+      md += `### ⚠️ Problemas Detectados (Code Smells)\n\n`;
+      
+      for (const smell of exp.smells) {
+        const severityEmoji = smell.severity === 'critical' ? '🚨' : 
+                             smell.severity === 'high' ? '⚠️' : 
+                             smell.severity === 'medium' ? '🟡' : 'ℹ️';
+        
+        md += `#### ${severityEmoji} ${smell.description}\n\n`;
+        md += `**Severidade**: ${smell.severity.toUpperCase()}  \n`;
+        md += `**Impacto**: ${smell.impact}\n\n`;
+        
+        md += `**❌ Antes (Problema):**\n\n`;
+        md += `\`\`\`typescript\n${smell.howToFix.before}\n\`\`\`\n\n`;
+        
+        md += `**✅ Depois (Corrigido):**\n\n`;
+        md += `\`\`\`typescript\n${smell.howToFix.after}\n\`\`\`\n\n`;
+        
+        md += `**💡 Como corrigir**: ${smell.howToFix.explanation}\n\n`;
+        md += `---\n\n`;
+      }
     }
 
     // Sugestões
