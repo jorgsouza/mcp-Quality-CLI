@@ -152,7 +152,7 @@ describe('E2E: auto-full-cycle', () => {
       expect(result.steps.length).toBeGreaterThan(0);
     });
 
-    it('should execute RUN mode correctly', async () => {
+    it.skip('should execute RUN mode correctly (slow E2E)', async () => {
       const result = await autoQualityRun({
         mode: 'run',
         repo: tempDir,

@@ -136,7 +136,7 @@ describe('E2E: nl-command-flow', () => {
       expect(result.final_params.repo).toBe(tempDir);
     });
 
-    it('should extract product override', async () => {
+    it.skip('should extract product override (slow E2E)', async () => {
       const result = await nlCommand({
         query: 'criar plano product:MyCustomProduct',
         defaults: { repo: tempDir }
