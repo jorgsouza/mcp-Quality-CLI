@@ -79,6 +79,7 @@ async function loadAnalysisData(paths: ReturnType<typeof getPaths>): Promise<any
     'test-catalog.json',
     'analyze.json',
     'diff-coverage.json', // 🆕
+    'test-quality-metrics.json', // 🆕 explain-tests integration
   ];
 
   for (const file of files) {
@@ -457,6 +458,36 @@ function generateDashboardHTML(data: any, settings: any): string {
           <span class="status ${data.contracts.status}">
             ${data.contracts.failed > 0 ? `❌ ${data.contracts.failed} falhas` : '✅ Todos passando'}
           </span>
+        </div>
+      </div>
+      ` : ''}
+      
+      ${data['test-quality-metrics'] ? `
+      <div class="card">
+        <h2><span class="emoji">🎯</span> Test Quality (KR3a)</h2>
+        <div class="metric" style="font-size: 32px; color: ${data['test-quality-metrics'].assertStrongPct >= 70 ? '#38a169' : '#ed8936'};">
+          ${data['test-quality-metrics'].assertStrongPct.toFixed(1)}%
+        </div>
+        <div class="metric-label">Testes Fortes</div>
+        <div class="stats-grid" style="margin-top: 12px;">
+          <div class="stat-item">
+            <span class="stat-label">Fracos:</span>
+            <span class="stat-value">${data['test-quality-metrics'].assertWeakPct.toFixed(1)}%</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Diff Cov:</span>
+            <span class="stat-value">${data['test-quality-metrics'].diffCoveredPct.toFixed(1)}%</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Contracts:</span>
+            <span class="stat-value">${data['test-quality-metrics'].contractsProtectedPct.toFixed(1)}%</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">DORA Impact:</span>
+            <span class="stat-value" style="color: ${data['test-quality-metrics'].weakTestsInDiffPct <= 5 ? '#38a169' : '#e53e3e'};">
+              ${data['test-quality-metrics'].weakTestsInDiffPct <= 5 && data['test-quality-metrics'].contractsProtectedPct >= 90 ? '✅ CFR↓' : '⚠️ RISK'}
+            </span>
+          </div>
         </div>
       </div>
       ` : ''}

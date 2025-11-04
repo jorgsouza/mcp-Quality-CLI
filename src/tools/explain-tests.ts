@@ -242,18 +242,110 @@ export async function explainTests(options: ExplainTestsOptions): Promise<Explai
 // ============================================================================
 
 async function discoverTestFiles(repo: string): Promise<string[]> {
-  // 🚧 TODO: Implementar descoberta real via glob
-  // Por ora, retornar vazio (será implementado incrementalmente)
-  return [];
+  // Descoberta real via glob
+  const { glob } = await import('glob');
+  
+  const patterns = [
+    '**/*.spec.ts',
+    '**/*.spec.js',
+    '**/*.test.ts',
+    '**/*.test.js',
+    '**/__tests__/**/*.ts',
+    '**/__tests__/**/*.js',
+  ];
+  
+  const ignore = [
+    '**/node_modules/**',
+    '**/dist/**',
+    '**/build/**',
+    '**/.next/**',
+    '**/coverage/**',
+  ];
+  
+  const files: string[] = [];
+  
+  for (const pattern of patterns) {
+    const matches = await glob(pattern, { 
+      cwd: repo, 
+      ignore,
+      absolute: true,
+    });
+    files.push(...matches);
+  }
+  
+  // Remover duplicatas
+  return [...new Set(files)];
 }
 
 async function analyzeTestFile(
   testFile: string,
   repo: string
 ): Promise<TestExplanation[]> {
-  // 🚧 TODO: Implementar parsing AST real
-  // Por ora, retornar vazio (será implementado incrementalmente)
-  return [];
+  // Parsing AST real
+  const { parseTestFile, calculateAssertStrength } = await import('../parsers/test-ast-parser.js');
+  
+  try {
+    const analysis = await parseTestFile(testFile);
+    
+    return analysis.testCases.map(testCase => {
+      const assertStrength = calculateAssertStrength(testCase);
+      
+      // Detectar smells
+      const smells: string[] = [];
+      if (testCase.then.length === 0) {
+        smells.push('Teste sem asserts');
+      }
+      if (testCase.mocks.length > 3) {
+        smells.push(`Excesso de mocks (${testCase.mocks.length})`);
+      }
+      if (!testCase.hasErrorHandling && testCase.when.toLowerCase().includes('error')) {
+        smells.push('Teste de erro sem try-catch');
+      }
+      if (testCase.lineCount > 100) {
+        smells.push('Teste muito longo (>100 linhas)');
+      }
+      
+      // Gerar sugestões
+      const suggestions: string[] = [];
+      if (assertStrength === 'fraco') {
+        suggestions.push('Trocar toBeTruthy/toBeFalsy por matchers específicos');
+        suggestions.push('Validar status + corpo + headers em vez de só chamadas');
+      }
+      if (testCase.mocks.length > 3) {
+        suggestions.push('Reduzir dependências mockadas, considerar testes de integração');
+      }
+      if (!testCase.hasErrorHandling) {
+        suggestions.push('Adicionar cenário de erro (try-catch)');
+      }
+      
+      return {
+        file: testFile,
+        name: testCase.name,
+        functionUnderTest: testCase.when !== 'NÃO DETERMINADO' ? testCase.when : undefined,
+        given: testCase.given.length > 0 ? testCase.given : ['NÃO DETERMINADO (sem evidência)'],
+        when: testCase.when,
+        then: testCase.then,
+        mocks: [...testCase.mocks, ...testCase.spies],
+        coverage: {
+          files: [],
+          linesCovered: 0,
+          linesTotal: 0,
+          coveredInDiffPct: 0,
+        },
+        contracts: {
+          pact: false,
+          failed: 0,
+          interactions: 0,
+        },
+        assertStrength,
+        smells,
+        suggestions,
+      };
+    });
+  } catch (error) {
+    console.warn(`⚠️  Erro ao analisar ${testFile}: ${error instanceof Error ? error.message : error}`);
+    return [];
+  }
 }
 
 async function enrichWithCoverage(
@@ -262,24 +354,205 @@ async function enrichWithCoverage(
   product: string,
   baseBranch: string
 ): Promise<void> {
-  // 🚧 TODO: Integrar com LCOV/diff-coverage.json
-  // Por ora, skip (será implementado incrementalmente)
+  // Integrar com diff-coverage.json e LCOV
+  const paths = getPaths(repo, product);
+  const diffCoverageFile = join(paths.analyses, 'diff-coverage.json');
+  
+  if (await fileExists(diffCoverageFile)) {
+    try {
+      const diffCoverageContent = await fs.readFile(diffCoverageFile, 'utf-8');
+      const diffCoverage = JSON.parse(diffCoverageContent);
+      
+      // Mapear arquivos alterados no diff
+      const diffFiles = new Set(diffCoverage.files?.map((f: any) => f.file) || []);
+      
+      for (const exp of explanations) {
+        // Heurística: associar teste a arquivo sendo testado
+        // Ex: src/__tests__/user/create.spec.ts → src/user/create.ts
+        const possibleSourceFiles = inferSourceFiles(exp.file);
+        
+        // Verificar se algum arquivo fonte está no diff
+        const filesInDiff = possibleSourceFiles.filter(f => diffFiles.has(f));
+        
+        if (filesInDiff.length > 0) {
+          const diffFileData = diffCoverage.files.find((f: any) => f.file === filesInDiff[0]);
+          if (diffFileData) {
+            exp.coverage.files = [filesInDiff[0]];
+            exp.coverage.linesCovered = diffFileData.covered || 0;
+            exp.coverage.linesTotal = diffFileData.added || 0;
+            exp.coverage.coveredInDiffPct = diffFileData.coverage || 0;
+          }
+        }
+      }
+      
+      console.log(`✅ Diff coverage associado de ${diffCoverageFile}`);
+    } catch (error) {
+      console.warn(`⚠️  Erro ao ler diff-coverage.json: ${error instanceof Error ? error.message : error}`);
+    }
+  } else {
+    console.warn(`⚠️  diff-coverage.json não encontrado em ${diffCoverageFile}`);
+  }
+}
+
+function inferSourceFiles(testFile: string): string[] {
+  // Heurística para mapear arquivo de teste → arquivo fonte
+  // src/__tests__/user/create.spec.ts → [src/user/create.ts, src/user/create.js]
+  // src/user/create.test.ts → [src/user/create.ts, src/user/create.js]
+  
+  const possibleFiles: string[] = [];
+  
+  let sourcePath = testFile
+    .replace('/__tests__/', '/')
+    .replace('.spec.ts', '.ts')
+    .replace('.spec.js', '.js')
+    .replace('.test.ts', '.ts')
+    .replace('.test.js', '.js');
+  
+  possibleFiles.push(sourcePath);
+  possibleFiles.push(sourcePath.replace('.ts', '.js'));
+  possibleFiles.push(sourcePath.replace('.js', '.ts'));
+  
+  return possibleFiles;
 }
 
 async function enrichWithContracts(
   explanations: TestExplanation[],
   paths: ReturnType<typeof getPaths>
 ): Promise<void> {
-  // 🚧 TODO: Integrar com contracts-verify.json
-  // Por ora, skip (será implementado incrementalmente)
+  // Integrar com contracts-verify.json
+  const contractsFile = join(paths.reports, 'contracts-verify.json');
+  
+  if (await fileExists(contractsFile)) {
+    try {
+      const contractsContent = await fs.readFile(contractsFile, 'utf-8');
+      const contracts = JSON.parse(contractsContent);
+      
+      // Mapear contratos por consumer/provider
+      const contractMap = new Map<string, any>();
+      if (contracts.contracts && Array.isArray(contracts.contracts)) {
+        for (const contract of contracts.contracts) {
+          const key = `${contract.consumer}-${contract.provider}`;
+          contractMap.set(key, contract);
+        }
+      }
+      
+      for (const exp of explanations) {
+        // Heurística: se teste menciona 'pact' ou 'contract', associar
+        const testNameLower = exp.name.toLowerCase();
+        const fileLower = exp.file.toLowerCase();
+        
+        if (testNameLower.includes('pact') || 
+            testNameLower.includes('contract') ||
+            fileLower.includes('pact') ||
+            fileLower.includes('contract')) {
+          
+          exp.contracts.pact = true;
+          
+          // Tentar encontrar contrato específico
+          for (const [, contract] of contractMap) {
+            if (contract.interactions && Array.isArray(contract.interactions)) {
+              exp.contracts.interactions = contract.interactions.length;
+              exp.contracts.failed = contract.interactions.filter((i: any) => !i.success).length;
+            }
+          }
+        }
+      }
+      
+      console.log(`✅ Contracts associados de ${contractsFile}`);
+    } catch (error) {
+      console.warn(`⚠️  Erro ao ler contracts-verify.json: ${error instanceof Error ? error.message : error}`);
+    }
+  } else {
+    console.warn(`⚠️  contracts-verify.json não encontrado em ${contractsFile}`);
+  }
 }
 
 async function enrichWithRisks(
   explanations: TestExplanation[],
   paths: ReturnType<typeof getPaths>
 ): Promise<void> {
-  // 🚧 TODO: Integrar com risk-register.json e cujs-catalog.json
-  // Por ora, skip (será implementado incrementalmente)
+  // Integrar com risk-register.json e cujs-catalog.json
+  const riskRegisterFile = join(paths.analyses, 'risk-register.json');
+  const cujsCatalogFile = join(paths.analyses, 'cujs-catalog.json');
+  
+  let riskMap = new Map<string, any>();
+  let cujMap = new Map<string, any>();
+  
+  // Carregar risk register
+  if (await fileExists(riskRegisterFile)) {
+    try {
+      const riskContent = await fs.readFile(riskRegisterFile, 'utf-8');
+      const risks = JSON.parse(riskContent);
+      
+      if (risks.modules && Array.isArray(risks.modules)) {
+        for (const module of risks.modules) {
+          riskMap.set(module.name.toLowerCase(), module);
+        }
+      }
+    } catch (error) {
+      console.warn(`⚠️  Erro ao ler risk-register.json: ${error instanceof Error ? error.message : error}`);
+    }
+  }
+  
+  // Carregar CUJs catalog
+  if (await fileExists(cujsCatalogFile)) {
+    try {
+      const cujContent = await fs.readFile(cujsCatalogFile, 'utf-8');
+      const cujs = JSON.parse(cujContent);
+      
+      if (cujs.cujs && Array.isArray(cujs.cujs)) {
+        for (const cuj of cujs.cujs) {
+          const key = cuj.name.toLowerCase();
+          cujMap.set(key, cuj);
+        }
+      }
+    } catch (error) {
+      console.warn(`⚠️  Erro ao ler cujs-catalog.json: ${error instanceof Error ? error.message : error}`);
+    }
+  }
+  
+  // Associar riscos/CUJs aos testes
+  for (const exp of explanations) {
+    const testNameLower = exp.name.toLowerCase();
+    const fileLower = exp.file.toLowerCase();
+    
+    // Tentar mapear via nome do teste ou arquivo
+    for (const [key, cuj] of cujMap) {
+      if (testNameLower.includes(key) || fileLower.includes(key)) {
+        exp.risk = {
+          cuj: cuj.name,
+          level: determineRiskLevel(cuj.priority || 'medium'),
+        };
+        break;
+      }
+    }
+    
+    // Se não encontrou CUJ, tentar mapear via módulo de risco
+    if (!exp.risk) {
+      for (const [key, module] of riskMap) {
+        if (fileLower.includes(key)) {
+          exp.risk = {
+            cuj: `Módulo: ${module.name}`,
+            level: module.risk_level || 'médio',
+          };
+          break;
+        }
+      }
+    }
+  }
+  
+  console.log(`✅ Riscos/CUJs associados`);
+}
+
+function determineRiskLevel(priority: string): 'baixo' | 'médio' | 'alto' {
+  const p = priority.toLowerCase();
+  if (p.includes('high') || p.includes('critical') || p.includes('alto')) {
+    return 'alto';
+  }
+  if (p.includes('low') || p.includes('baixo')) {
+    return 'baixo';
+  }
+  return 'médio';
 }
 
 function calculateMetrics(explanations: TestExplanation[]): TestQualityMetrics {
