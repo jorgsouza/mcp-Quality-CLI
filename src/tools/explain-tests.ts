@@ -626,82 +626,94 @@ function detectTestType(filePath: string): 'unit' | 'integration' | 'e2e' | 'unk
 function generateWhatItTests(testCase: any, filePath: string): string {
   const functionName = testCase.when !== 'NÃO DETERMINADO' ? testCase.when : 'função não identificada';
   const fileName = filePath.split('/').pop()?.replace(/\.(spec|test)\.(ts|js)$/, '') || 'módulo';
-  
-  // Tentar extrair contexto do nome do teste
   const testNameLower = testCase.name.toLowerCase();
   
-  if (testNameLower.includes('should') || testNameLower.includes('deve')) {
-    return `Testa se ${functionName} ${extractBehavior(testCase.name)}`;
-  }
-  
-  if (testNameLower.includes('when') || testNameLower.includes('quando')) {
-    return `Testa o comportamento de ${functionName} ${extractCondition(testCase.name)}`;
-  }
-  
-  // Fallback: descrição genérica mas útil
+  // Se tem asserts, descrever o que está sendo validado ESPECIFICAMENTE
   if (testCase.then.length > 0) {
-    const firstAssert = testCase.then[0];
-    return `Testa ${functionName} do módulo ${fileName}, validando ${firstAssert.matcher || firstAssert.type}`;
+    const assertions = testCase.then.map((t: any) => t.matcher || t.type).join(', ');
+    const behavior = extractBehavior(testCase.name);
+    
+    return `Testa **\`${functionName}\`** validando: ${behavior}. ` +
+           `**Evidência**: ${testCase.then.length} assert(s) (${assertions})`;
   }
   
-  return `Testa a função ${functionName} no contexto de ${fileName}`;
+  // Sem asserts - indicar claramente
+  if (testCase.then.length === 0) {
+    return `⚠️ Testa **\`${functionName}\`** mas **sem validações detectadas**. ` +
+           `Teste pode ser falso positivo (sempre passa).`;
+  }
+  
+  // Fallback com base no nome
+  if (testNameLower.includes('should') || testNameLower.includes('deve')) {
+    return `Testa se **\`${functionName}\`** ${extractBehavior(testCase.name)}`;
+  }
+  
+  return `Testa a função **\`${functionName}\`** no módulo \`${fileName}\``;
 }
 
 // 🆕 Gera justificativa "Por que está testando"
 function generateWhyItTests(testCase: any, testType: string, assertStrength: string): string {
   const reasons: string[] = [];
-  
-  // Razão baseada no tipo
-  if (testType === 'unit') {
-    reasons.push('Garante comportamento isolado da unidade de código');
-  } else if (testType === 'integration') {
-    reasons.push('Valida integração entre componentes/módulos');
-  } else if (testType === 'e2e') {
-    reasons.push('Verifica fluxo completo do ponto de vista do usuário');
-  }
-  
-  // Razão baseada em erro/edge case
   const testNameLower = testCase.name.toLowerCase();
-  if (testNameLower.includes('error') || testNameLower.includes('erro') || testNameLower.includes('fail')) {
-    reasons.push('Previne regressões em cenários de erro');
-  } else if (testNameLower.includes('edge') || testNameLower.includes('boundary') || testNameLower.includes('limite')) {
-    reasons.push('Protege contra edge cases e limites');
+  
+  // Razão técnica baseada em evidências
+  if (testCase.then.length === 0) {
+    reasons.push('⚠️ **Sem validações** - teste pode não detectar regressões');
+  } else if (testCase.then.length === 1) {
+    reasons.push(`Valida 1 aspecto (${testCase.then[0].matcher || testCase.then[0].type})`);
   } else {
-    reasons.push('Previne regressões no comportamento esperado');
+    const matchers = testCase.then.map((t: any) => t.matcher || t.type).filter((m: string) => m);
+    reasons.push(`Valida ${testCase.then.length} aspectos: ${matchers.slice(0, 3).join(', ')}${testCase.then.length > 3 ? '...' : ''}`);
   }
   
-  // Razão baseada na força dos asserts
+  // Razão baseada no cenário de teste
+  if (testNameLower.includes('error') || testNameLower.includes('erro') || testNameLower.includes('fail') || testNameLower.includes('invalid')) {
+    reasons.push('**Cenário de erro** - garante error handling robusto');
+  } else if (testNameLower.includes('edge') || testNameLower.includes('boundary') || testNameLower.includes('limite')) {
+    reasons.push('**Edge case** - protege contra inputs extremos');
+  } else if (testNameLower.includes('success') || testNameLower.includes('valid') || testNameLower.includes('correct')) {
+    reasons.push('**Happy path** - valida comportamento esperado principal');
+  }
+  
+  // Razão baseada na força (com evidência)
   if (assertStrength === 'forte') {
-    reasons.push('Validações específicas aumentam confiabilidade');
-  } else if (assertStrength === 'fraco') {
-    reasons.push('⚠️ Asserts genéricos podem deixar bugs passar');
+    reasons.push('✅ Asserts **específicos** (status + corpo + headers/state)');
+  } else if (assertStrength === 'médio') {
+    reasons.push('⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar');
+  } else {
+    reasons.push('🚨 Asserts **fracos/ausentes** - alto risco de falso positivo');
   }
   
-  return reasons.join('; ');
+  return reasons.join(' | ');
 }
 
 // 🆕 Gera propósito "Para que está testando"
 function generatePurposeForWhat(testCase: any, testType: string): string {
   const purposes: string[] = [];
   
-  // Propósito baseado no tipo
+  // Propósito DORA específico por tipo
   if (testType === 'unit') {
-    purposes.push('Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy');
+    purposes.push('📉 **CFR (Change Failure Rate)**: Detectar bugs em segundos, antes do CI/CD');
+    purposes.push('⚡ **Deploy Frequency**: Feedback rápido permite mais deploys com segurança');
   } else if (testType === 'integration') {
-    purposes.push('Prevenir falhas de comunicação entre serviços/módulos');
+    purposes.push('📉 **CFR**: Prevenir breaking changes em APIs/contratos entre serviços');
+    purposes.push('⏱️ **MTTR**: Identificar exatamente qual integração falhou');
   } else if (testType === 'e2e') {
-    purposes.push('Garantir que fluxos críticos de usuário funcionem ponta a ponta');
+    purposes.push('📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos');
+    purposes.push('⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso');
   }
   
-  // Propósito DORA
-  if (testCase.then.length > 2) {
-    purposes.push('Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido');
+  // Propósito baseado em qualidade dos asserts
+  if (testCase.then.length >= 3) {
+    purposes.push('🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou');
+  } else if (testCase.then.length === 0) {
+    purposes.push('⚠️ **Risco**: Sem asserts, teste não contribui para redução de CFR/MTTR');
   }
   
-  // Propósito de negócio (será enriquecido com CUJ/SLO posteriormente)
-  purposes.push('Manter confiabilidade e velocidade de entrega (KR3a)');
+  // Propósito de negócio
+  purposes.push('🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)');
   
-  return purposes.join('; ');
+  return purposes.join('\n- ');
 }
 
 // Helper: extrai comportamento do nome do teste
@@ -1087,10 +1099,30 @@ function generateExplanationsMarkdown(explanations: TestExplanation[]): string {
     // Detalhes Given/When/Then
     md += `### 📋 Estrutura do Teste (Given-When-Then)\n\n`;
     md += `**Given** (pré-condições):\n`;
-    exp.given.forEach(g => md += `- ${g}\n`);
-    md += `\n**When** (ação testada):\n- ${exp.when}\n\n`;
+    if (exp.given.length > 0) {
+      exp.given.forEach(g => md += `- ${g}\n`);
+    } else {
+      md += `- _(nenhuma pré-condição identificada)_\n`;
+    }
+    md += `\n**When** (ação testada):\n- \`${exp.when}\`\n\n`;
     md += `**Then** (validações):\n`;
-    exp.then.forEach(t => md += `- ${t.type}: ${t.matcher || t.value}\n`);
+    if (exp.then.length > 0) {
+      exp.then.forEach(t => {
+        // Formatar assert de forma legível
+        if (t.matcher && t.path) {
+          // expect(obj.prop).toBe(value)
+          md += `- \`${t.path}\` → **${t.matcher}** → \`${t.value || 'esperado'}\`\n`;
+        } else if (t.matcher) {
+          // expect(result).toBe(value)
+          md += `- **${t.matcher}**(\`${t.value || 'esperado'}\`)\n`;
+        } else {
+          // Outros tipos de assert
+          md += `- **${t.type}**: ${t.path ? `\`${t.path}\`` : ''} ${t.value ? `→ \`${t.value}\`` : ''}\n`;
+        }
+      });
+    } else {
+      md += `- ⚠️ **Nenhum assert detectado!**\n`;
+    }
     md += `\n`;
 
     // Força dos asserts

@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-11-05T12:06:49.727Z",
+  "timestamp": "2025-11-05T13:37:58.937Z",
   "repo": ".",
   "product": "mcp-Quality-CLI",
   "risks": [
@@ -12,10 +12,7 @@
       "probability": "low",
       "risk_score": 10,
       "affected_modules": [],
-      "mitigation_strategies": [
-        "Aumentar cobertura de testes unitários e integração",
-        "Adicionar testes E2E para validar user flow completo"
-      ],
+      "mitigation_strategies": [],
       "has_cdc": false,
       "recommended_tests": [
         "unit",
@@ -32,10 +29,7 @@
       "probability": "low",
       "risk_score": 10,
       "affected_modules": [],
-      "mitigation_strategies": [
-        "Aumentar cobertura de testes unitários e integração",
-        "Adicionar testes E2E para validar user flow completo"
-      ],
+      "mitigation_strategies": [],
       "has_cdc": false,
       "recommended_tests": [
         "unit",
