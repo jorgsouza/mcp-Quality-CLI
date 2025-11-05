@@ -211,6 +211,16 @@ function analyzeTestBody(node: any, name: string, line: number, content: string)
           const assertInfo = extractAssertInfo(bodyNode);
           if (assertInfo) then.push(assertInfo);
         }
+        
+        // 🆕 Detectar expect().not.toThrow() recursivamente
+        if (bodyNode.callee.object.callee && 
+            bodyNode.callee.object.callee.type === 'MemberExpression') {
+          const deepCalleeName = getCalleeName(bodyNode.callee.object.callee.object?.callee);
+          if (deepCalleeName === 'expect' || deepCalleeName === 'assert') {
+            const assertInfo = extractAssertInfo(bodyNode);
+            if (assertInfo) then.push(assertInfo);
+          }
+        }
       }
       
       // When: função sendo testada (heurística: await/call principal)
@@ -322,19 +332,41 @@ function extractAssertInfo(node: any): AssertInfo | null {
 
 /**
  * Extrai matcher (toBe, toEqual, toHaveBeenCalled, etc)
+ * 🆕 Melhorado para detectar .not. corretamente
  */
 function extractMatcher(node: any): string | undefined {
   if (node.type === 'CallExpression' && node.callee) {
     if (node.callee.type === 'MemberExpression') {
-      // expect(...).toBe(...)
-      if (node.callee.property && node.callee.property.name) {
-        return node.callee.property.name;
+      const property = node.callee.property?.name;
+      
+      if (!property) return undefined;
+      
+      // Verificar se há .not. na chain
+      // expect(...).not.toBe(...) ou expect(...).resolves.not.toBe(...)
+      if (node.callee.object && node.callee.object.type === 'MemberExpression') {
+        const objectProperty = node.callee.object.property?.name;
+        
+        // expect(...).not.toBe(...)
+        if (objectProperty === 'not') {
+          return `not.${property}`;
+        }
+        
+        // expect(...).resolves.not.toBe(...) ou expect(...).rejects.not.toBe(...)
+        if (objectProperty === 'not' || 
+            (node.callee.object.object && 
+             node.callee.object.object.type === 'MemberExpression' &&
+             node.callee.object.object.property?.name === 'not')) {
+          return `not.${property}`;
+        }
+        
+        // expect(...).resolves.toBe(...) ou expect(...).rejects.toBe(...)
+        if (objectProperty === 'resolves' || objectProperty === 'rejects') {
+          return `${objectProperty}.${property}`;
+        }
       }
       
-      // expect(...).not.toBe(...)
-      if (node.callee.object && node.callee.object.property) {
-        return `not.${node.callee.property.name}`;
-      }
+      // expect(...).toBe(...) - caso simples
+      return property;
     }
   }
   return undefined;
