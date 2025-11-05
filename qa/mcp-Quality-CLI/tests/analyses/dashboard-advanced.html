@@ -877,14 +877,27 @@
                             ${test.then.length > 0 ? `
                                 <ul class="detail-list">
                                     ${test.then.map(t => {
-                                        if (typeof t === 'object') {
-                                            // Formatar objeto AssertInfo
-                                            if (t.matcher && t.path) {
-                                                return `<li><code>${t.path}</code> → <strong>${t.matcher}</strong> → <code>${t.value !== undefined ? t.value : 'esperado'}</code></li>`;
+                                        if (typeof t === 'object' && t !== null) {
+                                            // Helper: formatar valor de forma inteligente
+                                            const formatValue = (val) => {
+                                                if (val === undefined) return 'esperado';
+                                                if (val === null) return 'null';
+                                                if (typeof val === 'string') return JSON.stringify(val);
+                                                if (typeof val === 'boolean' || typeof val === 'number') return String(val);
+                                                if (typeof val === 'object') return JSON.stringify(val);
+                                                return String(val);
+                                            };
+                                            
+                                            // Formatar objeto AssertInfo completo
+                                            if (t.path && t.matcher) {
+                                                return `<li><code>${t.path}</code> → <strong>${t.matcher}</strong>${t.value !== undefined ? ` → <code>${formatValue(t.value)}</code>` : ''}</li>`;
                                             } else if (t.matcher) {
-                                                return `<li><strong>${t.matcher}</strong>(<code>${t.value !== undefined ? t.value : 'esperado'}</code>)</li>`;
+                                                return `<li><strong>${t.matcher}</strong>${t.value !== undefined ? `(<code>${formatValue(t.value)}</code>)` : ''}</li>`;
+                                            } else if (t.type) {
+                                                return `<li><strong>${t.type}</strong>${t.path ? `: <code>${t.path}</code>` : ''}${t.value !== undefined ? ` → <code>${formatValue(t.value)}</code>` : ''}</li>`;
                                             } else {
-                                                return `<li><strong>${t.type}</strong>: ${t.path ? `<code>${t.path}</code>` : ''} ${t.value !== undefined ? `→ <code>${t.value}</code>` : ''}</li>`;
+                                                // Fallback: mostrar JSON do objeto
+                                                return `<li><code>${JSON.stringify(t)}</code></li>`;
                                             }
                                         }
                                         // Fallback para string
