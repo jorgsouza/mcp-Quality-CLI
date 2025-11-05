@@ -85963,6 +85963,2848 @@
     ]
   },
   {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-3-cdc-pact.e2e.test.ts",
+    "name": "FASE 3: CDC/Pact E2E Tests > [1/4] scaffold_contracts_pact - deve detectar serviços e gerar contratos",
+    "testType": "e2e",
+    "functionUnderTest": "scaffoldContractsPact",
+    "whatItTests": "Testa **`scaffoldContractsPact`** validando: detectar serviços e gerar contratos. **Evidência**: 29 assert(s) (toBe, toContain, toBeGreaterThan, toBeGreaterThan, toBeDefined, toBeDefined, toBeDefined, toBeDefined, toBe, toBeDefined, toBe, toBeDefined, toBe, toBeGreaterThan, toBeDefined, toBeDefined, toBeGreaterThan, toContain, toContain, toContain, toContain, toBeGreaterThan, toContain, toContain, toContain, toContain, toBeDefined, toBeGreaterThan, toBe)",
+    "whyItTests": "Valida 29 aspectos: toBe, toContain, toBeGreaterThan... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
+    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
+    "given": [
+      "result = ...",
+      "catalog = ...",
+      "configContent = ...",
+      "testContent = ...",
+      "testContent = ..."
+    ],
+    "when": "scaffoldContractsPact",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "Generated",
+        "path": "result.message"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.total_contracts"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.total_interactions"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "result.catalog_path"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "result.config_path"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "result.consumer_tests"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "result.provider_tests"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "existsSync()"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "catalog.timestamp"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "test-cdc-app",
+        "path": "catalog.product"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "catalog.services"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "Array.isArray()"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "catalog.services.length"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "catalog.potential_contracts"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "catalog.coverage"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "catalog.coverage.total_integrations"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "pactConfig",
+        "path": "configContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "test-cdc-app",
+        "path": "configContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "consumer",
+        "path": "configContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "provider",
+        "path": "configContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "unknown.length"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "consumer",
+        "path": "testContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "provider",
+        "path": "testContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "interaction",
+        "path": "testContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "verify",
+        "path": "testContent"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "result.recommendations"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.recommendations.length"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "result.recommendations.some()"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-3-cdc-pact.e2e.test.ts",
+    "name": "FASE 3: CDC/Pact E2E Tests > [2/4] scaffold_contracts_pact - deve detectar múltiplas APIs corretamente",
+    "testType": "e2e",
+    "functionUnderTest": "scaffoldContractsPact",
+    "whatItTests": "Testa **`scaffoldContractsPact`** validando: detectar múltiplas APIs corretamente. **Evidência**: 10 assert(s) (toBe, toBeDefined, toBe, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toContain, toBeGreaterThanOrEqual)",
+    "whyItTests": "Valida 10 aspectos: toBe, toBeDefined, toBe... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
+    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
+    "given": [
+      "result = ...",
+      "catalog = ...",
+      "serviceNames = ..."
+    ],
+    "when": "scaffoldContractsPact",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "serviceNames.some()"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "service.endpoints"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "Array.isArray()"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "method",
+        "path": "service.endpoints.?"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "path",
+        "path": "service.endpoints.?"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "consumer",
+        "path": "contract"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "provider",
+        "path": "contract"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "priority",
+        "path": "contract"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "path": "unknown"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThanOrEqual",
+        "value": 0,
+        "path": "contract.estimated_interactions"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-3-cdc-pact.e2e.test.ts",
+    "name": "FASE 3: CDC/Pact E2E Tests > [3/4] run_contracts_verify - deve verificar contratos gerados",
+    "testType": "e2e",
+    "functionUnderTest": "scaffoldContractsPact",
+    "whatItTests": "Testa **`scaffoldContractsPact`** validando: verificar contratos gerados. **Evidência**: 23 assert(s) (toBe, toBeGreaterThanOrEqual, toBeLessThanOrEqual, toBeGreaterThan, toBeGreaterThanOrEqual, toBeGreaterThanOrEqual, toBeDefined, toBe, toBeDefined, toBe, toBe, toBeGreaterThan, toBeGreaterThan, toBeGreaterThanOrEqual, toBeDefined, toBe, toBeGreaterThan, toBeDefined, toBeGreaterThan, toContain, toContain, toContain, toContain)",
+    "whyItTests": "Valida 23 aspectos: toBe, toBeGreaterThanOrEqual, toBeLessThanOrEqual... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
+    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
+    "given": [
+      "pactsDir = ...",
+      "mockPactContent = ...",
+      "result = ...",
+      "report = ...",
+      "mdPath = ...",
+      "mdContent = ..."
+    ],
+    "when": "scaffoldContractsPact",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThanOrEqual",
+        "value": 0,
+        "path": "result.verification_rate"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeLessThanOrEqual",
+        "value": 1,
+        "path": "result.verification_rate"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.total_interactions"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThanOrEqual",
+        "value": 0,
+        "path": "result.verified"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThanOrEqual",
+        "value": 0,
+        "path": "result.failed"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "result.report_path"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "existsSync()"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "report.timestamp"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "testProduct",
+        "path": "report.product"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "typescript",
+        "path": "report.language"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "report.total_contracts"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "report.total_interactions"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThanOrEqual",
+        "value": 0,
+        "path": "report.verification_rate"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "report.results"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "Array.isArray()"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "report.duration_total_ms"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "result.recommendations"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.recommendations.length"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "Contract Verification Report",
+        "path": "mdContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "Summary",
+        "path": "mdContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "Verification Rate",
+        "path": "mdContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "path": "mdContent"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-3-cdc-pact.e2e.test.ts",
+    "name": "FASE 3: CDC/Pact E2E Tests > [4/4] FULL PIPELINE - scaffold + verify funcionam em sequência",
+    "testType": "e2e",
+    "functionUnderTest": "scaffoldContractsPact",
+    "whatItTests": "Testa **`scaffoldContractsPact`** validando: FASE 3: CDC/Pact E2E Tests > [4/4] FULL PIPELINE - scaffold + verify funcionam em sequência. **Evidência**: 12 assert(s) (toBe, toBeGreaterThan, toContain, toBe, toBe, toBeGreaterThan, toBe, toBe, toBeGreaterThanOrEqual, toBeGreaterThanOrEqual, toBe, toBe)",
+    "whyItTests": "Valida 12 aspectos: toBe, toBeGreaterThan, toContain... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
+    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
+    "given": [
+      "scaffoldResult = ...",
+      "configContent = ...",
+      "pactsDir = ...",
+      "services = ...",
+      "pactContent = ...",
+      "verifyResult = ...",
+      "report = ..."
+    ],
+    "when": "scaffoldContractsPact",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "scaffoldResult.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "scaffoldResult.total_contracts"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "pact-broker.example.com",
+        "path": "configContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "verifyResult.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": 6,
+        "path": "verifyResult.total_interactions"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "verifyResult.verification_rate"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": 3,
+        "path": "report.total_contracts"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": 6,
+        "path": "report.total_interactions"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThanOrEqual",
+        "value": 0,
+        "path": "report.verified"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThanOrEqual",
+        "value": 0,
+        "path": "report.failed"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": 6,
+        "path": "unknown"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "existsSync()"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-3-cdc-pact.e2e.test.ts",
+    "name": "[1/4] scaffold_contracts_pact - deve detectar serviços e gerar contratos",
+    "testType": "e2e",
+    "functionUnderTest": "scaffoldContractsPact",
+    "whatItTests": "Testa **`scaffoldContractsPact`** validando: detectar serviços e gerar contratos. **Evidência**: 29 assert(s) (toBe, toContain, toBeGreaterThan, toBeGreaterThan, toBeDefined, toBeDefined, toBeDefined, toBeDefined, toBe, toBeDefined, toBe, toBeDefined, toBe, toBeGreaterThan, toBeDefined, toBeDefined, toBeGreaterThan, toContain, toContain, toContain, toContain, toBeGreaterThan, toContain, toContain, toContain, toContain, toBeDefined, toBeGreaterThan, toBe)",
+    "whyItTests": "Valida 29 aspectos: toBe, toContain, toBeGreaterThan... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
+    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
+    "given": [
+      "result = ...",
+      "catalog = ...",
+      "configContent = ...",
+      "testContent = ...",
+      "testContent = ..."
+    ],
+    "when": "scaffoldContractsPact",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "Generated",
+        "path": "result.message"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.total_contracts"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.total_interactions"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "result.catalog_path"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "result.config_path"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "result.consumer_tests"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "result.provider_tests"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "existsSync()"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "catalog.timestamp"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "test-cdc-app",
+        "path": "catalog.product"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "catalog.services"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "Array.isArray()"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "catalog.services.length"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "catalog.potential_contracts"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "catalog.coverage"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "catalog.coverage.total_integrations"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "pactConfig",
+        "path": "configContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "test-cdc-app",
+        "path": "configContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "consumer",
+        "path": "configContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "provider",
+        "path": "configContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "unknown.length"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "consumer",
+        "path": "testContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "provider",
+        "path": "testContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "interaction",
+        "path": "testContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "verify",
+        "path": "testContent"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "result.recommendations"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.recommendations.length"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "result.recommendations.some()"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-3-cdc-pact.e2e.test.ts",
+    "name": "[2/4] scaffold_contracts_pact - deve detectar múltiplas APIs corretamente",
+    "testType": "e2e",
+    "functionUnderTest": "scaffoldContractsPact",
+    "whatItTests": "Testa **`scaffoldContractsPact`** validando: detectar múltiplas APIs corretamente. **Evidência**: 10 assert(s) (toBe, toBeDefined, toBe, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toContain, toBeGreaterThanOrEqual)",
+    "whyItTests": "Valida 10 aspectos: toBe, toBeDefined, toBe... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
+    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
+    "given": [
+      "result = ...",
+      "catalog = ...",
+      "serviceNames = ..."
+    ],
+    "when": "scaffoldContractsPact",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "serviceNames.some()"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "service.endpoints"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "Array.isArray()"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "method",
+        "path": "service.endpoints.?"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "path",
+        "path": "service.endpoints.?"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "consumer",
+        "path": "contract"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "provider",
+        "path": "contract"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "priority",
+        "path": "contract"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "path": "unknown"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThanOrEqual",
+        "value": 0,
+        "path": "contract.estimated_interactions"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-3-cdc-pact.e2e.test.ts",
+    "name": "[3/4] run_contracts_verify - deve verificar contratos gerados",
+    "testType": "e2e",
+    "functionUnderTest": "scaffoldContractsPact",
+    "whatItTests": "Testa **`scaffoldContractsPact`** validando: verificar contratos gerados. **Evidência**: 23 assert(s) (toBe, toBeGreaterThanOrEqual, toBeLessThanOrEqual, toBeGreaterThan, toBeGreaterThanOrEqual, toBeGreaterThanOrEqual, toBeDefined, toBe, toBeDefined, toBe, toBe, toBeGreaterThan, toBeGreaterThan, toBeGreaterThanOrEqual, toBeDefined, toBe, toBeGreaterThan, toBeDefined, toBeGreaterThan, toContain, toContain, toContain, toContain)",
+    "whyItTests": "Valida 23 aspectos: toBe, toBeGreaterThanOrEqual, toBeLessThanOrEqual... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
+    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
+    "given": [
+      "pactsDir = ...",
+      "mockPactContent = ...",
+      "result = ...",
+      "report = ...",
+      "mdPath = ...",
+      "mdContent = ..."
+    ],
+    "when": "scaffoldContractsPact",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThanOrEqual",
+        "value": 0,
+        "path": "result.verification_rate"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeLessThanOrEqual",
+        "value": 1,
+        "path": "result.verification_rate"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.total_interactions"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThanOrEqual",
+        "value": 0,
+        "path": "result.verified"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThanOrEqual",
+        "value": 0,
+        "path": "result.failed"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "result.report_path"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "existsSync()"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "report.timestamp"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "testProduct",
+        "path": "report.product"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "typescript",
+        "path": "report.language"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "report.total_contracts"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "report.total_interactions"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThanOrEqual",
+        "value": 0,
+        "path": "report.verification_rate"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "report.results"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "Array.isArray()"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "report.duration_total_ms"
+      },
+      {
+        "type": "generic",
+        "matcher": "toBeDefined",
+        "path": "result.recommendations"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.recommendations.length"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "Contract Verification Report",
+        "path": "mdContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "Summary",
+        "path": "mdContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "Verification Rate",
+        "path": "mdContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "path": "mdContent"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-3-cdc-pact.e2e.test.ts",
+    "name": "[4/4] FULL PIPELINE - scaffold + verify funcionam em sequência",
+    "testType": "e2e",
+    "functionUnderTest": "scaffoldContractsPact",
+    "whatItTests": "Testa **`scaffoldContractsPact`** validando: [4/4] FULL PIPELINE - scaffold + verify funcionam em sequência. **Evidência**: 12 assert(s) (toBe, toBeGreaterThan, toContain, toBe, toBe, toBeGreaterThan, toBe, toBe, toBeGreaterThanOrEqual, toBeGreaterThanOrEqual, toBe, toBe)",
+    "whyItTests": "Valida 12 aspectos: toBe, toBeGreaterThan, toContain... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
+    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
+    "given": [
+      "scaffoldResult = ...",
+      "configContent = ...",
+      "pactsDir = ...",
+      "services = ...",
+      "pactContent = ...",
+      "verifyResult = ...",
+      "report = ..."
+    ],
+    "when": "scaffoldContractsPact",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "scaffoldResult.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "scaffoldResult.total_contracts"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "pact-broker.example.com",
+        "path": "configContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "verifyResult.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": 6,
+        "path": "verifyResult.total_interactions"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "verifyResult.verification_rate"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": 3,
+        "path": "report.total_contracts"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": 6,
+        "path": "report.total_interactions"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThanOrEqual",
+        "value": 0,
+        "path": "report.verified"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThanOrEqual",
+        "value": 0,
+        "path": "report.failed"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": 6,
+        "path": "unknown"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "existsSync()"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-2-portfolio-plan.e2e.test.ts",
+    "name": "FASE 2 E2E: Portfolio Planning > [FULL PIPELINE] FASE 1 + FASE 2 completa",
+    "testType": "e2e",
+    "functionUnderTest": "console.log",
+    "whatItTests": "Testa **`console.log`** validando: FASE 2 E2E: Portfolio Planning > [FULL PIPELINE] FASE 1 + FASE 2 completa. **Evidência**: 20 assert(s) (toBe, toBe, toBe, toBe, toContain, toBe, toBeGreaterThanOrEqual, toContain, toContain, toContain, toContain, toContain, toContain, toContain, toContain, toContain, toContain, toContain, toContain, toContain)",
+    "whyItTests": "Valida 20 aspectos: toBe, toBe, toBe... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
+    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
+    "given": [
+      "cujResult = ...",
+      "slosResult = ...",
+      "riskResult = ...",
+      "portfolioResult = ...",
+      "reportContent = ..."
+    ],
+    "when": "console.log",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "cujResult.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "slosResult.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "riskResult.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "portfolioResult.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "PORTFOLIO-PLAN.md",
+        "path": "portfolioResult.output"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "existsSync()"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThanOrEqual",
+        "value": 0,
+        "path": "portfolioResult.recommendations_count"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "# Test Portfolio Plan",
+        "path": "reportContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "## 📊 Current State",
+        "path": "reportContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "## 🎯 Target Distribution",
+        "path": "reportContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "## 🎯 Module Recommendations",
+        "path": "reportContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "## ✅ Action Items",
+        "path": "reportContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "Fowler",
+        "path": "reportContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "70%",
+        "path": "reportContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "20%",
+        "path": "reportContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "10%",
+        "path": "reportContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "| Test Type | Count | Percentage | Target | Gap |",
+        "path": "reportContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "Unit",
+        "path": "reportContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "Integration",
+        "path": "reportContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "E2E",
+        "path": "reportContent"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-2-portfolio-plan.e2e.test.ts",
+    "name": "FASE 2 E2E: Portfolio Planning > [VALIDATION] Portfolio plan deve ter estrutura correta",
+    "testType": "e2e",
+    "functionUnderTest": "resolve",
+    "whatItTests": "Testa **`resolve`** validando: ter estrutura correta. **Evidência**: 3 assert(s) (toBe, toContain, toMatch)",
+    "whyItTests": "Valida 3 aspectos: toBe, toContain, toMatch | **Happy path** - valida comportamento esperado principal | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
+    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
+    "given": [
+      "analyses = ...",
+      "reports = ...",
+      "portfolioPath = ...",
+      "content = ...",
+      "sections = ..."
+    ],
+    "when": "resolve",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "existsSync()"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "section",
+        "path": "content"
+      },
+      {
+        "type": "value",
+        "matcher": "toMatch",
+        "value": {},
+        "path": "content"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-2-portfolio-plan.e2e.test.ts",
+    "name": "FASE 2 E2E: Portfolio Planning > [INTEGRATION] Recommendations devem estar baseadas em riscos",
+    "testType": "e2e",
+    "functionUnderTest": "resolve",
+    "whatItTests": "Testa **`resolve`** validando: FASE 2 E2E: Portfolio Planning > [INTEGRATION] Recommendations devem estar baseadas em riscos. **Evidência**: 2 assert(s) (toContain, toContain)",
+    "whyItTests": "Valida 2 aspectos: toContain, toContain | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
+    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
+    "given": [
+      "riskPath = ...",
+      "portfolioPath = ...",
+      "riskData = ...",
+      "portfolioContent = ...",
+      "criticalRisks = ...",
+      "module = ..."
+    ],
+    "when": "resolve",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "🚨 Top 5 Critical Risks",
+        "path": "portfolioContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "Module Recommendations",
+        "path": "portfolioContent"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-2-portfolio-plan.e2e.test.ts",
+    "name": "FASE 2 E2E: Portfolio Planning > [METRICS] Distribuição deve somar 100%",
+    "testType": "e2e",
+    "functionUnderTest": "resolve",
+    "whatItTests": "Testa **`resolve`** validando: somar 100%. **Evidência**: 3 assert(s) (toBeGreaterThanOrEqual, toBeLessThanOrEqual, toContain)",
+    "whyItTests": "Valida 3 aspectos: toBeGreaterThanOrEqual, toBeLessThanOrEqual, toContain | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
+    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
+    "given": [
+      "portfolioPath = ...",
+      "content = ...",
+      "tableMatch = ...",
+      "unitPercent = ...",
+      "integrationPercent = ...",
+      "e2ePercent = ...",
+      "total = ..."
+    ],
+    "when": "resolve",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThanOrEqual",
+        "value": 99.9,
+        "path": "total"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeLessThanOrEqual",
+        "value": 100.1,
+        "path": "total"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "Current State",
+        "path": "content"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-2-portfolio-plan.e2e.test.ts",
+    "name": "[FULL PIPELINE] FASE 1 + FASE 2 completa",
+    "testType": "e2e",
+    "functionUnderTest": "console.log",
+    "whatItTests": "Testa **`console.log`** validando: [FULL PIPELINE] FASE 1 + FASE 2 completa. **Evidência**: 20 assert(s) (toBe, toBe, toBe, toBe, toContain, toBe, toBeGreaterThanOrEqual, toContain, toContain, toContain, toContain, toContain, toContain, toContain, toContain, toContain, toContain, toContain, toContain, toContain)",
+    "whyItTests": "Valida 20 aspectos: toBe, toBe, toBe... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
+    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
+    "given": [
+      "cujResult = ...",
+      "slosResult = ...",
+      "riskResult = ...",
+      "portfolioResult = ...",
+      "reportContent = ..."
+    ],
+    "when": "console.log",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "cujResult.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "slosResult.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "riskResult.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "portfolioResult.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "PORTFOLIO-PLAN.md",
+        "path": "portfolioResult.output"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "existsSync()"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThanOrEqual",
+        "value": 0,
+        "path": "portfolioResult.recommendations_count"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "# Test Portfolio Plan",
+        "path": "reportContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "## 📊 Current State",
+        "path": "reportContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "## 🎯 Target Distribution",
+        "path": "reportContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "## 🎯 Module Recommendations",
+        "path": "reportContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "## ✅ Action Items",
+        "path": "reportContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "Fowler",
+        "path": "reportContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "70%",
+        "path": "reportContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "20%",
+        "path": "reportContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "10%",
+        "path": "reportContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "| Test Type | Count | Percentage | Target | Gap |",
+        "path": "reportContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "Unit",
+        "path": "reportContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "Integration",
+        "path": "reportContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "E2E",
+        "path": "reportContent"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-2-portfolio-plan.e2e.test.ts",
+    "name": "[VALIDATION] Portfolio plan deve ter estrutura correta",
+    "testType": "e2e",
+    "functionUnderTest": "resolve",
+    "whatItTests": "Testa **`resolve`** validando: ter estrutura correta. **Evidência**: 3 assert(s) (toBe, toContain, toMatch)",
+    "whyItTests": "Valida 3 aspectos: toBe, toContain, toMatch | **Happy path** - valida comportamento esperado principal | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
+    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
+    "given": [
+      "analyses = ...",
+      "reports = ...",
+      "portfolioPath = ...",
+      "content = ...",
+      "sections = ..."
+    ],
+    "when": "resolve",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "existsSync()"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "section",
+        "path": "content"
+      },
+      {
+        "type": "value",
+        "matcher": "toMatch",
+        "value": {},
+        "path": "content"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-2-portfolio-plan.e2e.test.ts",
+    "name": "[INTEGRATION] Recommendations devem estar baseadas em riscos",
+    "testType": "e2e",
+    "functionUnderTest": "resolve",
+    "whatItTests": "Testa **`resolve`** validando: [INTEGRATION] Recommendations devem estar baseadas em riscos. **Evidência**: 2 assert(s) (toContain, toContain)",
+    "whyItTests": "Valida 2 aspectos: toContain, toContain | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
+    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
+    "given": [
+      "riskPath = ...",
+      "portfolioPath = ...",
+      "riskData = ...",
+      "portfolioContent = ...",
+      "criticalRisks = ...",
+      "module = ..."
+    ],
+    "when": "resolve",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "🚨 Top 5 Critical Risks",
+        "path": "portfolioContent"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "Module Recommendations",
+        "path": "portfolioContent"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-2-portfolio-plan.e2e.test.ts",
+    "name": "[METRICS] Distribuição deve somar 100%",
+    "testType": "e2e",
+    "functionUnderTest": "resolve",
+    "whatItTests": "Testa **`resolve`** validando: somar 100%. **Evidência**: 3 assert(s) (toBeGreaterThanOrEqual, toBeLessThanOrEqual, toContain)",
+    "whyItTests": "Valida 3 aspectos: toBeGreaterThanOrEqual, toBeLessThanOrEqual, toContain | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
+    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
+    "given": [
+      "portfolioPath = ...",
+      "content = ...",
+      "tableMatch = ...",
+      "unitPercent = ...",
+      "integrationPercent = ...",
+      "e2ePercent = ...",
+      "total = ..."
+    ],
+    "when": "resolve",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThanOrEqual",
+        "value": 99.9,
+        "path": "total"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeLessThanOrEqual",
+        "value": 100.1,
+        "path": "total"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "Current State",
+        "path": "content"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-1-cuj-slo-risk.e2e.test.ts",
+    "name": "FASE 1 E2E: CUJ → SLO → Risk Pipeline > [1/3] catalog_cujs deve gerar cuj-catalog.json",
+    "testType": "e2e",
+    "functionUnderTest": "catalogCUJs",
+    "whatItTests": "Testa **`catalogCUJs`** validando: gerar cuj-catalog.json. **Evidência**: 14 assert(s) (toBe, toBeGreaterThan, toContain, toBe, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toBe, toBeGreaterThan, toHaveProperty, toHaveProperty, toHaveProperty, toContain)",
+    "whyItTests": "Valida 14 aspectos: toBe, toBeGreaterThan, toContain... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
+    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
+    "given": [
+      "result = ...",
+      "catalogRaw = ...",
+      "catalog = ...",
+      "firstCUJ = ..."
+    ],
+    "when": "catalogCUJs",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.cujs_count"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "cuj-catalog.json",
+        "path": "result.output"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "existsSync()"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "timestamp",
+        "path": "catalog"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "repo",
+        "path": "catalog"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "product",
+        "path": "catalog"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "cujs",
+        "path": "catalog"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "Array.isArray()"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "catalog.cujs.length"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "id",
+        "path": "firstCUJ"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "name",
+        "path": "firstCUJ"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "criticality",
+        "path": "firstCUJ"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "path": "unknown"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-1-cuj-slo-risk.e2e.test.ts",
+    "name": "FASE 1 E2E: CUJ → SLO → Risk Pipeline > [2/3] define_slos deve gerar slos.json baseado em CUJs",
+    "testType": "e2e",
+    "functionUnderTest": "defineSLOs",
+    "whatItTests": "Testa **`defineSLOs`** validando: gerar slos.json baseado em CUJs. **Evidência**: 17 assert(s) (toBe, toBeGreaterThan, toContain, toBe, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toBe, toHaveProperty, toHaveProperty, toHaveProperty, toBeGreaterThanOrEqual, toBeLessThanOrEqual, toBeGreaterThanOrEqual, toBeLessThanOrEqual)",
+    "whyItTests": "Valida 17 aspectos: toBe, toBeGreaterThan, toContain... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
+    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
+    "given": [
+      "result = ...",
+      "slosRaw = ...",
+      "slos = ...",
+      "firstSLO = ..."
+    ],
+    "when": "defineSLOs",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.slos_count"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "slos.json",
+        "path": "result.output"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "existsSync()"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "timestamp",
+        "path": "slos"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "repo",
+        "path": "slos"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "product",
+        "path": "slos"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "slos",
+        "path": "slos"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "defaults_applied",
+        "path": "slos"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "boolean",
+        "path": "unknown"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "cuj_id",
+        "path": "firstSLO"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "error_rate_max",
+        "path": "firstSLO"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "availability_min",
+        "path": "firstSLO"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThanOrEqual",
+        "value": 0,
+        "path": "firstSLO.error_rate_max"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeLessThanOrEqual",
+        "value": 1,
+        "path": "firstSLO.error_rate_max"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThanOrEqual",
+        "value": 0,
+        "path": "firstSLO.availability_min"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeLessThanOrEqual",
+        "value": 1,
+        "path": "firstSLO.availability_min"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-1-cuj-slo-risk.e2e.test.ts",
+    "name": "FASE 1 E2E: CUJ → SLO → Risk Pipeline > [3/3] risk_register deve gerar risk-register.json cruzando CUJs + SLOs",
+    "testType": "e2e",
+    "functionUnderTest": "riskRegister",
+    "whatItTests": "Testa **`riskRegister`** validando: gerar risk-register.json cruzando CUJs + SLOs. **Evidência**: 28 assert(s) (toBe, toBeGreaterThan, toContain, toBe, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toBe, toBeLessThanOrEqual, toBe, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toBeGreaterThanOrEqual, toBeLessThanOrEqual, toContain, toContain)",
+    "whyItTests": "Valida 28 aspectos: toBe, toBeGreaterThan, toContain... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
+    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
+    "given": [
+      "result = ...",
+      "riskRaw = ...",
+      "riskReg = ...",
+      "firstRisk = ...",
+      "validTests = ..."
+    ],
+    "when": "riskRegister",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.total_risks"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "risk-register.json",
+        "path": "result.output"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "existsSync()"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "timestamp",
+        "path": "riskReg"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "repo",
+        "path": "riskReg"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "product",
+        "path": "riskReg"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "risks",
+        "path": "riskReg"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "top_5_critical",
+        "path": "riskReg"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "total_risk_score",
+        "path": "riskReg"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "coverage_gaps",
+        "path": "riskReg"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "Array.isArray()"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeLessThanOrEqual",
+        "value": 5,
+        "path": "riskReg.top_5_critical.length"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "string",
+        "path": "unknown"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "id",
+        "path": "firstRisk"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "cuj_id",
+        "path": "firstRisk"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "title",
+        "path": "firstRisk"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "description",
+        "path": "firstRisk"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "impact",
+        "path": "firstRisk"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "probability",
+        "path": "firstRisk"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "risk_score",
+        "path": "firstRisk"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "affected_modules",
+        "path": "firstRisk"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "mitigation_strategies",
+        "path": "firstRisk"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "recommended_tests",
+        "path": "firstRisk"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThanOrEqual",
+        "value": 0,
+        "path": "firstRisk.risk_score"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeLessThanOrEqual",
+        "value": 100,
+        "path": "firstRisk.risk_score"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "path": "unknown"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "test",
+        "path": "validTests"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-1-cuj-slo-risk.e2e.test.ts",
+    "name": "FASE 1 E2E: CUJ → SLO → Risk Pipeline > [FULL] Pipeline completo deve criar 3 arquivos consistentes",
+    "testType": "e2e",
+    "functionUnderTest": "resolve",
+    "whatItTests": "Testa **`resolve`** validando: criar 3 arquivos consistentes. **Evidência**: 6 assert(s) (toBe, toBe, toBe, toBe, toBe, toBe)",
+    "whyItTests": "Valida 6 aspectos: toBe, toBe, toBe... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
+    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
+    "given": [
+      "analyses = ...",
+      "cujFile = ...",
+      "slosFile = ...",
+      "riskFile = ...",
+      "catalog = ...",
+      "slos = ...",
+      "risks = ...",
+      "cujIds = ...",
+      "sloIds = ...",
+      "riskIds = ..."
+    ],
+    "when": "resolve",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "existsSync()"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "path": "catalog.cujs.length"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "sloIds.has()"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "path": "r.id"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "cujIds.has()"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "riskIds.has()"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-1-cuj-slo-risk.e2e.test.ts",
+    "name": "[1/3] catalog_cujs deve gerar cuj-catalog.json",
+    "testType": "e2e",
+    "functionUnderTest": "catalogCUJs",
+    "whatItTests": "Testa **`catalogCUJs`** validando: gerar cuj-catalog.json. **Evidência**: 14 assert(s) (toBe, toBeGreaterThan, toContain, toBe, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toBe, toBeGreaterThan, toHaveProperty, toHaveProperty, toHaveProperty, toContain)",
+    "whyItTests": "Valida 14 aspectos: toBe, toBeGreaterThan, toContain... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
+    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
+    "given": [
+      "result = ...",
+      "catalogRaw = ...",
+      "catalog = ...",
+      "firstCUJ = ..."
+    ],
+    "when": "catalogCUJs",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.cujs_count"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "cuj-catalog.json",
+        "path": "result.output"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "existsSync()"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "timestamp",
+        "path": "catalog"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "repo",
+        "path": "catalog"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "product",
+        "path": "catalog"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "cujs",
+        "path": "catalog"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "Array.isArray()"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "catalog.cujs.length"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "id",
+        "path": "firstCUJ"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "name",
+        "path": "firstCUJ"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "criticality",
+        "path": "firstCUJ"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "path": "unknown"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-1-cuj-slo-risk.e2e.test.ts",
+    "name": "[2/3] define_slos deve gerar slos.json baseado em CUJs",
+    "testType": "e2e",
+    "functionUnderTest": "defineSLOs",
+    "whatItTests": "Testa **`defineSLOs`** validando: gerar slos.json baseado em CUJs. **Evidência**: 17 assert(s) (toBe, toBeGreaterThan, toContain, toBe, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toBe, toHaveProperty, toHaveProperty, toHaveProperty, toBeGreaterThanOrEqual, toBeLessThanOrEqual, toBeGreaterThanOrEqual, toBeLessThanOrEqual)",
+    "whyItTests": "Valida 17 aspectos: toBe, toBeGreaterThan, toContain... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
+    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
+    "given": [
+      "result = ...",
+      "slosRaw = ...",
+      "slos = ...",
+      "firstSLO = ..."
+    ],
+    "when": "defineSLOs",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.slos_count"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "slos.json",
+        "path": "result.output"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "existsSync()"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "timestamp",
+        "path": "slos"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "repo",
+        "path": "slos"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "product",
+        "path": "slos"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "slos",
+        "path": "slos"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "defaults_applied",
+        "path": "slos"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "boolean",
+        "path": "unknown"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "cuj_id",
+        "path": "firstSLO"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "error_rate_max",
+        "path": "firstSLO"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "availability_min",
+        "path": "firstSLO"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThanOrEqual",
+        "value": 0,
+        "path": "firstSLO.error_rate_max"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeLessThanOrEqual",
+        "value": 1,
+        "path": "firstSLO.error_rate_max"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThanOrEqual",
+        "value": 0,
+        "path": "firstSLO.availability_min"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeLessThanOrEqual",
+        "value": 1,
+        "path": "firstSLO.availability_min"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-1-cuj-slo-risk.e2e.test.ts",
+    "name": "[3/3] risk_register deve gerar risk-register.json cruzando CUJs + SLOs",
+    "testType": "e2e",
+    "functionUnderTest": "riskRegister",
+    "whatItTests": "Testa **`riskRegister`** validando: gerar risk-register.json cruzando CUJs + SLOs. **Evidência**: 28 assert(s) (toBe, toBeGreaterThan, toContain, toBe, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toBe, toBeLessThanOrEqual, toBe, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toBeGreaterThanOrEqual, toBeLessThanOrEqual, toContain, toContain)",
+    "whyItTests": "Valida 28 aspectos: toBe, toBeGreaterThan, toContain... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
+    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
+    "given": [
+      "result = ...",
+      "riskRaw = ...",
+      "riskReg = ...",
+      "firstRisk = ...",
+      "validTests = ..."
+    ],
+    "when": "riskRegister",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.total_risks"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "risk-register.json",
+        "path": "result.output"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "existsSync()"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "timestamp",
+        "path": "riskReg"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "repo",
+        "path": "riskReg"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "product",
+        "path": "riskReg"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "risks",
+        "path": "riskReg"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "top_5_critical",
+        "path": "riskReg"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "total_risk_score",
+        "path": "riskReg"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "coverage_gaps",
+        "path": "riskReg"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "Array.isArray()"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeLessThanOrEqual",
+        "value": 5,
+        "path": "riskReg.top_5_critical.length"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "string",
+        "path": "unknown"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "id",
+        "path": "firstRisk"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "cuj_id",
+        "path": "firstRisk"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "title",
+        "path": "firstRisk"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "description",
+        "path": "firstRisk"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "impact",
+        "path": "firstRisk"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "probability",
+        "path": "firstRisk"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "risk_score",
+        "path": "firstRisk"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "affected_modules",
+        "path": "firstRisk"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "mitigation_strategies",
+        "path": "firstRisk"
+      },
+      {
+        "type": "value",
+        "matcher": "toHaveProperty",
+        "value": "recommended_tests",
+        "path": "firstRisk"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThanOrEqual",
+        "value": 0,
+        "path": "firstRisk.risk_score"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeLessThanOrEqual",
+        "value": 100,
+        "path": "firstRisk.risk_score"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "path": "unknown"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "test",
+        "path": "validTests"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-1-cuj-slo-risk.e2e.test.ts",
+    "name": "[FULL] Pipeline completo deve criar 3 arquivos consistentes",
+    "testType": "e2e",
+    "functionUnderTest": "resolve",
+    "whatItTests": "Testa **`resolve`** validando: criar 3 arquivos consistentes. **Evidência**: 6 assert(s) (toBe, toBe, toBe, toBe, toBe, toBe)",
+    "whyItTests": "Valida 6 aspectos: toBe, toBe, toBe... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
+    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
+    "given": [
+      "analyses = ...",
+      "cujFile = ...",
+      "slosFile = ...",
+      "riskFile = ...",
+      "catalog = ...",
+      "slos = ...",
+      "risks = ...",
+      "cujIds = ...",
+      "sloIds = ...",
+      "riskIds = ..."
+    ],
+    "when": "resolve",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "existsSync()"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "path": "catalog.cujs.length"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "sloIds.has()"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "path": "r.id"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "cujIds.has()"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "riskIds.has()"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
     "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/integration/recommend-to-scaffold.test.ts",
     "name": "Fluxo: Recommend → Scaffold > deve recomendar quais arquivos testar primeiro",
     "testType": "integration",
@@ -90888,2848 +93730,6 @@
         "matcher": "toBeGreaterThan",
         "value": 100,
         "path": "planContent.length"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-3-cdc-pact.e2e.test.ts",
-    "name": "FASE 3: CDC/Pact E2E Tests > [1/4] scaffold_contracts_pact - deve detectar serviços e gerar contratos",
-    "testType": "e2e",
-    "functionUnderTest": "scaffoldContractsPact",
-    "whatItTests": "Testa **`scaffoldContractsPact`** validando: detectar serviços e gerar contratos. **Evidência**: 29 assert(s) (toBe, toContain, toBeGreaterThan, toBeGreaterThan, toBeDefined, toBeDefined, toBeDefined, toBeDefined, toBe, toBeDefined, toBe, toBeDefined, toBe, toBeGreaterThan, toBeDefined, toBeDefined, toBeGreaterThan, toContain, toContain, toContain, toContain, toBeGreaterThan, toContain, toContain, toContain, toContain, toBeDefined, toBeGreaterThan, toBe)",
-    "whyItTests": "Valida 29 aspectos: toBe, toContain, toBeGreaterThan... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
-    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
-    "given": [
-      "result = ...",
-      "catalog = ...",
-      "configContent = ...",
-      "testContent = ...",
-      "testContent = ..."
-    ],
-    "when": "scaffoldContractsPact",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "Generated",
-        "path": "result.message"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.total_contracts"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.total_interactions"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "result.catalog_path"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "result.config_path"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "result.consumer_tests"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "result.provider_tests"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "existsSync()"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "catalog.timestamp"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "test-cdc-app",
-        "path": "catalog.product"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "catalog.services"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "Array.isArray()"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "catalog.services.length"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "catalog.potential_contracts"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "catalog.coverage"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "catalog.coverage.total_integrations"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "pactConfig",
-        "path": "configContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "test-cdc-app",
-        "path": "configContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "consumer",
-        "path": "configContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "provider",
-        "path": "configContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "unknown.length"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "consumer",
-        "path": "testContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "provider",
-        "path": "testContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "interaction",
-        "path": "testContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "verify",
-        "path": "testContent"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "result.recommendations"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.recommendations.length"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "result.recommendations.some()"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-3-cdc-pact.e2e.test.ts",
-    "name": "FASE 3: CDC/Pact E2E Tests > [2/4] scaffold_contracts_pact - deve detectar múltiplas APIs corretamente",
-    "testType": "e2e",
-    "functionUnderTest": "scaffoldContractsPact",
-    "whatItTests": "Testa **`scaffoldContractsPact`** validando: detectar múltiplas APIs corretamente. **Evidência**: 10 assert(s) (toBe, toBeDefined, toBe, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toContain, toBeGreaterThanOrEqual)",
-    "whyItTests": "Valida 10 aspectos: toBe, toBeDefined, toBe... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
-    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
-    "given": [
-      "result = ...",
-      "catalog = ...",
-      "serviceNames = ..."
-    ],
-    "when": "scaffoldContractsPact",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "serviceNames.some()"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "service.endpoints"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "Array.isArray()"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "method",
-        "path": "service.endpoints.?"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "path",
-        "path": "service.endpoints.?"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "consumer",
-        "path": "contract"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "provider",
-        "path": "contract"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "priority",
-        "path": "contract"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "path": "unknown"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThanOrEqual",
-        "value": 0,
-        "path": "contract.estimated_interactions"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-3-cdc-pact.e2e.test.ts",
-    "name": "FASE 3: CDC/Pact E2E Tests > [3/4] run_contracts_verify - deve verificar contratos gerados",
-    "testType": "e2e",
-    "functionUnderTest": "scaffoldContractsPact",
-    "whatItTests": "Testa **`scaffoldContractsPact`** validando: verificar contratos gerados. **Evidência**: 23 assert(s) (toBe, toBeGreaterThanOrEqual, toBeLessThanOrEqual, toBeGreaterThan, toBeGreaterThanOrEqual, toBeGreaterThanOrEqual, toBeDefined, toBe, toBeDefined, toBe, toBe, toBeGreaterThan, toBeGreaterThan, toBeGreaterThanOrEqual, toBeDefined, toBe, toBeGreaterThan, toBeDefined, toBeGreaterThan, toContain, toContain, toContain, toContain)",
-    "whyItTests": "Valida 23 aspectos: toBe, toBeGreaterThanOrEqual, toBeLessThanOrEqual... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
-    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
-    "given": [
-      "pactsDir = ...",
-      "mockPactContent = ...",
-      "result = ...",
-      "report = ...",
-      "mdPath = ...",
-      "mdContent = ..."
-    ],
-    "when": "scaffoldContractsPact",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThanOrEqual",
-        "value": 0,
-        "path": "result.verification_rate"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeLessThanOrEqual",
-        "value": 1,
-        "path": "result.verification_rate"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.total_interactions"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThanOrEqual",
-        "value": 0,
-        "path": "result.verified"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThanOrEqual",
-        "value": 0,
-        "path": "result.failed"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "result.report_path"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "existsSync()"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "report.timestamp"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "testProduct",
-        "path": "report.product"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "typescript",
-        "path": "report.language"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "report.total_contracts"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "report.total_interactions"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThanOrEqual",
-        "value": 0,
-        "path": "report.verification_rate"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "report.results"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "Array.isArray()"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "report.duration_total_ms"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "result.recommendations"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.recommendations.length"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "Contract Verification Report",
-        "path": "mdContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "Summary",
-        "path": "mdContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "Verification Rate",
-        "path": "mdContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "path": "mdContent"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-3-cdc-pact.e2e.test.ts",
-    "name": "FASE 3: CDC/Pact E2E Tests > [4/4] FULL PIPELINE - scaffold + verify funcionam em sequência",
-    "testType": "e2e",
-    "functionUnderTest": "scaffoldContractsPact",
-    "whatItTests": "Testa **`scaffoldContractsPact`** validando: FASE 3: CDC/Pact E2E Tests > [4/4] FULL PIPELINE - scaffold + verify funcionam em sequência. **Evidência**: 12 assert(s) (toBe, toBeGreaterThan, toContain, toBe, toBe, toBeGreaterThan, toBe, toBe, toBeGreaterThanOrEqual, toBeGreaterThanOrEqual, toBe, toBe)",
-    "whyItTests": "Valida 12 aspectos: toBe, toBeGreaterThan, toContain... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
-    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
-    "given": [
-      "scaffoldResult = ...",
-      "configContent = ...",
-      "pactsDir = ...",
-      "services = ...",
-      "pactContent = ...",
-      "verifyResult = ...",
-      "report = ..."
-    ],
-    "when": "scaffoldContractsPact",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "scaffoldResult.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "scaffoldResult.total_contracts"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "pact-broker.example.com",
-        "path": "configContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "verifyResult.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": 6,
-        "path": "verifyResult.total_interactions"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "verifyResult.verification_rate"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": 3,
-        "path": "report.total_contracts"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": 6,
-        "path": "report.total_interactions"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThanOrEqual",
-        "value": 0,
-        "path": "report.verified"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThanOrEqual",
-        "value": 0,
-        "path": "report.failed"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": 6,
-        "path": "unknown"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "existsSync()"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-3-cdc-pact.e2e.test.ts",
-    "name": "[1/4] scaffold_contracts_pact - deve detectar serviços e gerar contratos",
-    "testType": "e2e",
-    "functionUnderTest": "scaffoldContractsPact",
-    "whatItTests": "Testa **`scaffoldContractsPact`** validando: detectar serviços e gerar contratos. **Evidência**: 29 assert(s) (toBe, toContain, toBeGreaterThan, toBeGreaterThan, toBeDefined, toBeDefined, toBeDefined, toBeDefined, toBe, toBeDefined, toBe, toBeDefined, toBe, toBeGreaterThan, toBeDefined, toBeDefined, toBeGreaterThan, toContain, toContain, toContain, toContain, toBeGreaterThan, toContain, toContain, toContain, toContain, toBeDefined, toBeGreaterThan, toBe)",
-    "whyItTests": "Valida 29 aspectos: toBe, toContain, toBeGreaterThan... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
-    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
-    "given": [
-      "result = ...",
-      "catalog = ...",
-      "configContent = ...",
-      "testContent = ...",
-      "testContent = ..."
-    ],
-    "when": "scaffoldContractsPact",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "Generated",
-        "path": "result.message"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.total_contracts"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.total_interactions"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "result.catalog_path"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "result.config_path"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "result.consumer_tests"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "result.provider_tests"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "existsSync()"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "catalog.timestamp"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "test-cdc-app",
-        "path": "catalog.product"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "catalog.services"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "Array.isArray()"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "catalog.services.length"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "catalog.potential_contracts"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "catalog.coverage"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "catalog.coverage.total_integrations"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "pactConfig",
-        "path": "configContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "test-cdc-app",
-        "path": "configContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "consumer",
-        "path": "configContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "provider",
-        "path": "configContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "unknown.length"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "consumer",
-        "path": "testContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "provider",
-        "path": "testContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "interaction",
-        "path": "testContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "verify",
-        "path": "testContent"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "result.recommendations"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.recommendations.length"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "result.recommendations.some()"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-3-cdc-pact.e2e.test.ts",
-    "name": "[2/4] scaffold_contracts_pact - deve detectar múltiplas APIs corretamente",
-    "testType": "e2e",
-    "functionUnderTest": "scaffoldContractsPact",
-    "whatItTests": "Testa **`scaffoldContractsPact`** validando: detectar múltiplas APIs corretamente. **Evidência**: 10 assert(s) (toBe, toBeDefined, toBe, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toContain, toBeGreaterThanOrEqual)",
-    "whyItTests": "Valida 10 aspectos: toBe, toBeDefined, toBe... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
-    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
-    "given": [
-      "result = ...",
-      "catalog = ...",
-      "serviceNames = ..."
-    ],
-    "when": "scaffoldContractsPact",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "serviceNames.some()"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "service.endpoints"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "Array.isArray()"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "method",
-        "path": "service.endpoints.?"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "path",
-        "path": "service.endpoints.?"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "consumer",
-        "path": "contract"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "provider",
-        "path": "contract"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "priority",
-        "path": "contract"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "path": "unknown"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThanOrEqual",
-        "value": 0,
-        "path": "contract.estimated_interactions"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-3-cdc-pact.e2e.test.ts",
-    "name": "[3/4] run_contracts_verify - deve verificar contratos gerados",
-    "testType": "e2e",
-    "functionUnderTest": "scaffoldContractsPact",
-    "whatItTests": "Testa **`scaffoldContractsPact`** validando: verificar contratos gerados. **Evidência**: 23 assert(s) (toBe, toBeGreaterThanOrEqual, toBeLessThanOrEqual, toBeGreaterThan, toBeGreaterThanOrEqual, toBeGreaterThanOrEqual, toBeDefined, toBe, toBeDefined, toBe, toBe, toBeGreaterThan, toBeGreaterThan, toBeGreaterThanOrEqual, toBeDefined, toBe, toBeGreaterThan, toBeDefined, toBeGreaterThan, toContain, toContain, toContain, toContain)",
-    "whyItTests": "Valida 23 aspectos: toBe, toBeGreaterThanOrEqual, toBeLessThanOrEqual... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
-    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
-    "given": [
-      "pactsDir = ...",
-      "mockPactContent = ...",
-      "result = ...",
-      "report = ...",
-      "mdPath = ...",
-      "mdContent = ..."
-    ],
-    "when": "scaffoldContractsPact",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThanOrEqual",
-        "value": 0,
-        "path": "result.verification_rate"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeLessThanOrEqual",
-        "value": 1,
-        "path": "result.verification_rate"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.total_interactions"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThanOrEqual",
-        "value": 0,
-        "path": "result.verified"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThanOrEqual",
-        "value": 0,
-        "path": "result.failed"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "result.report_path"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "existsSync()"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "report.timestamp"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "testProduct",
-        "path": "report.product"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "typescript",
-        "path": "report.language"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "report.total_contracts"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "report.total_interactions"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThanOrEqual",
-        "value": 0,
-        "path": "report.verification_rate"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "report.results"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "Array.isArray()"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "report.duration_total_ms"
-      },
-      {
-        "type": "generic",
-        "matcher": "toBeDefined",
-        "path": "result.recommendations"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.recommendations.length"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "Contract Verification Report",
-        "path": "mdContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "Summary",
-        "path": "mdContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "Verification Rate",
-        "path": "mdContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "path": "mdContent"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-3-cdc-pact.e2e.test.ts",
-    "name": "[4/4] FULL PIPELINE - scaffold + verify funcionam em sequência",
-    "testType": "e2e",
-    "functionUnderTest": "scaffoldContractsPact",
-    "whatItTests": "Testa **`scaffoldContractsPact`** validando: [4/4] FULL PIPELINE - scaffold + verify funcionam em sequência. **Evidência**: 12 assert(s) (toBe, toBeGreaterThan, toContain, toBe, toBe, toBeGreaterThan, toBe, toBe, toBeGreaterThanOrEqual, toBeGreaterThanOrEqual, toBe, toBe)",
-    "whyItTests": "Valida 12 aspectos: toBe, toBeGreaterThan, toContain... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
-    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
-    "given": [
-      "scaffoldResult = ...",
-      "configContent = ...",
-      "pactsDir = ...",
-      "services = ...",
-      "pactContent = ...",
-      "verifyResult = ...",
-      "report = ..."
-    ],
-    "when": "scaffoldContractsPact",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "scaffoldResult.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "scaffoldResult.total_contracts"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "pact-broker.example.com",
-        "path": "configContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "verifyResult.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": 6,
-        "path": "verifyResult.total_interactions"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "verifyResult.verification_rate"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": 3,
-        "path": "report.total_contracts"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": 6,
-        "path": "report.total_interactions"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThanOrEqual",
-        "value": 0,
-        "path": "report.verified"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThanOrEqual",
-        "value": 0,
-        "path": "report.failed"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": 6,
-        "path": "unknown"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "existsSync()"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-2-portfolio-plan.e2e.test.ts",
-    "name": "FASE 2 E2E: Portfolio Planning > [FULL PIPELINE] FASE 1 + FASE 2 completa",
-    "testType": "e2e",
-    "functionUnderTest": "console.log",
-    "whatItTests": "Testa **`console.log`** validando: FASE 2 E2E: Portfolio Planning > [FULL PIPELINE] FASE 1 + FASE 2 completa. **Evidência**: 20 assert(s) (toBe, toBe, toBe, toBe, toContain, toBe, toBeGreaterThanOrEqual, toContain, toContain, toContain, toContain, toContain, toContain, toContain, toContain, toContain, toContain, toContain, toContain, toContain)",
-    "whyItTests": "Valida 20 aspectos: toBe, toBe, toBe... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
-    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
-    "given": [
-      "cujResult = ...",
-      "slosResult = ...",
-      "riskResult = ...",
-      "portfolioResult = ...",
-      "reportContent = ..."
-    ],
-    "when": "console.log",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "cujResult.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "slosResult.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "riskResult.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "portfolioResult.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "PORTFOLIO-PLAN.md",
-        "path": "portfolioResult.output"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "existsSync()"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThanOrEqual",
-        "value": 0,
-        "path": "portfolioResult.recommendations_count"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "# Test Portfolio Plan",
-        "path": "reportContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "## 📊 Current State",
-        "path": "reportContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "## 🎯 Target Distribution",
-        "path": "reportContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "## 🎯 Module Recommendations",
-        "path": "reportContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "## ✅ Action Items",
-        "path": "reportContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "Fowler",
-        "path": "reportContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "70%",
-        "path": "reportContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "20%",
-        "path": "reportContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "10%",
-        "path": "reportContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "| Test Type | Count | Percentage | Target | Gap |",
-        "path": "reportContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "Unit",
-        "path": "reportContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "Integration",
-        "path": "reportContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "E2E",
-        "path": "reportContent"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-2-portfolio-plan.e2e.test.ts",
-    "name": "FASE 2 E2E: Portfolio Planning > [VALIDATION] Portfolio plan deve ter estrutura correta",
-    "testType": "e2e",
-    "functionUnderTest": "resolve",
-    "whatItTests": "Testa **`resolve`** validando: ter estrutura correta. **Evidência**: 3 assert(s) (toBe, toContain, toMatch)",
-    "whyItTests": "Valida 3 aspectos: toBe, toContain, toMatch | **Happy path** - valida comportamento esperado principal | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
-    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
-    "given": [
-      "analyses = ...",
-      "reports = ...",
-      "portfolioPath = ...",
-      "content = ...",
-      "sections = ..."
-    ],
-    "when": "resolve",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "existsSync()"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "section",
-        "path": "content"
-      },
-      {
-        "type": "value",
-        "matcher": "toMatch",
-        "value": {},
-        "path": "content"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-2-portfolio-plan.e2e.test.ts",
-    "name": "FASE 2 E2E: Portfolio Planning > [INTEGRATION] Recommendations devem estar baseadas em riscos",
-    "testType": "e2e",
-    "functionUnderTest": "resolve",
-    "whatItTests": "Testa **`resolve`** validando: FASE 2 E2E: Portfolio Planning > [INTEGRATION] Recommendations devem estar baseadas em riscos. **Evidência**: 2 assert(s) (toContain, toContain)",
-    "whyItTests": "Valida 2 aspectos: toContain, toContain | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
-    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
-    "given": [
-      "riskPath = ...",
-      "portfolioPath = ...",
-      "riskData = ...",
-      "portfolioContent = ...",
-      "criticalRisks = ...",
-      "module = ..."
-    ],
-    "when": "resolve",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "🚨 Top 5 Critical Risks",
-        "path": "portfolioContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "Module Recommendations",
-        "path": "portfolioContent"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-2-portfolio-plan.e2e.test.ts",
-    "name": "FASE 2 E2E: Portfolio Planning > [METRICS] Distribuição deve somar 100%",
-    "testType": "e2e",
-    "functionUnderTest": "resolve",
-    "whatItTests": "Testa **`resolve`** validando: somar 100%. **Evidência**: 3 assert(s) (toBeGreaterThanOrEqual, toBeLessThanOrEqual, toContain)",
-    "whyItTests": "Valida 3 aspectos: toBeGreaterThanOrEqual, toBeLessThanOrEqual, toContain | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
-    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
-    "given": [
-      "portfolioPath = ...",
-      "content = ...",
-      "tableMatch = ...",
-      "unitPercent = ...",
-      "integrationPercent = ...",
-      "e2ePercent = ...",
-      "total = ..."
-    ],
-    "when": "resolve",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThanOrEqual",
-        "value": 99.9,
-        "path": "total"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeLessThanOrEqual",
-        "value": 100.1,
-        "path": "total"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "Current State",
-        "path": "content"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-2-portfolio-plan.e2e.test.ts",
-    "name": "[FULL PIPELINE] FASE 1 + FASE 2 completa",
-    "testType": "e2e",
-    "functionUnderTest": "console.log",
-    "whatItTests": "Testa **`console.log`** validando: [FULL PIPELINE] FASE 1 + FASE 2 completa. **Evidência**: 20 assert(s) (toBe, toBe, toBe, toBe, toContain, toBe, toBeGreaterThanOrEqual, toContain, toContain, toContain, toContain, toContain, toContain, toContain, toContain, toContain, toContain, toContain, toContain, toContain)",
-    "whyItTests": "Valida 20 aspectos: toBe, toBe, toBe... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
-    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
-    "given": [
-      "cujResult = ...",
-      "slosResult = ...",
-      "riskResult = ...",
-      "portfolioResult = ...",
-      "reportContent = ..."
-    ],
-    "when": "console.log",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "cujResult.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "slosResult.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "riskResult.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "portfolioResult.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "PORTFOLIO-PLAN.md",
-        "path": "portfolioResult.output"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "existsSync()"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThanOrEqual",
-        "value": 0,
-        "path": "portfolioResult.recommendations_count"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "# Test Portfolio Plan",
-        "path": "reportContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "## 📊 Current State",
-        "path": "reportContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "## 🎯 Target Distribution",
-        "path": "reportContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "## 🎯 Module Recommendations",
-        "path": "reportContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "## ✅ Action Items",
-        "path": "reportContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "Fowler",
-        "path": "reportContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "70%",
-        "path": "reportContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "20%",
-        "path": "reportContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "10%",
-        "path": "reportContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "| Test Type | Count | Percentage | Target | Gap |",
-        "path": "reportContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "Unit",
-        "path": "reportContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "Integration",
-        "path": "reportContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "E2E",
-        "path": "reportContent"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-2-portfolio-plan.e2e.test.ts",
-    "name": "[VALIDATION] Portfolio plan deve ter estrutura correta",
-    "testType": "e2e",
-    "functionUnderTest": "resolve",
-    "whatItTests": "Testa **`resolve`** validando: ter estrutura correta. **Evidência**: 3 assert(s) (toBe, toContain, toMatch)",
-    "whyItTests": "Valida 3 aspectos: toBe, toContain, toMatch | **Happy path** - valida comportamento esperado principal | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
-    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
-    "given": [
-      "analyses = ...",
-      "reports = ...",
-      "portfolioPath = ...",
-      "content = ...",
-      "sections = ..."
-    ],
-    "when": "resolve",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "existsSync()"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "section",
-        "path": "content"
-      },
-      {
-        "type": "value",
-        "matcher": "toMatch",
-        "value": {},
-        "path": "content"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-2-portfolio-plan.e2e.test.ts",
-    "name": "[INTEGRATION] Recommendations devem estar baseadas em riscos",
-    "testType": "e2e",
-    "functionUnderTest": "resolve",
-    "whatItTests": "Testa **`resolve`** validando: [INTEGRATION] Recommendations devem estar baseadas em riscos. **Evidência**: 2 assert(s) (toContain, toContain)",
-    "whyItTests": "Valida 2 aspectos: toContain, toContain | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
-    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
-    "given": [
-      "riskPath = ...",
-      "portfolioPath = ...",
-      "riskData = ...",
-      "portfolioContent = ...",
-      "criticalRisks = ...",
-      "module = ..."
-    ],
-    "when": "resolve",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "🚨 Top 5 Critical Risks",
-        "path": "portfolioContent"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "Module Recommendations",
-        "path": "portfolioContent"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-2-portfolio-plan.e2e.test.ts",
-    "name": "[METRICS] Distribuição deve somar 100%",
-    "testType": "e2e",
-    "functionUnderTest": "resolve",
-    "whatItTests": "Testa **`resolve`** validando: somar 100%. **Evidência**: 3 assert(s) (toBeGreaterThanOrEqual, toBeLessThanOrEqual, toContain)",
-    "whyItTests": "Valida 3 aspectos: toBeGreaterThanOrEqual, toBeLessThanOrEqual, toContain | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
-    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
-    "given": [
-      "portfolioPath = ...",
-      "content = ...",
-      "tableMatch = ...",
-      "unitPercent = ...",
-      "integrationPercent = ...",
-      "e2ePercent = ...",
-      "total = ..."
-    ],
-    "when": "resolve",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThanOrEqual",
-        "value": 99.9,
-        "path": "total"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeLessThanOrEqual",
-        "value": 100.1,
-        "path": "total"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "Current State",
-        "path": "content"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-1-cuj-slo-risk.e2e.test.ts",
-    "name": "FASE 1 E2E: CUJ → SLO → Risk Pipeline > [1/3] catalog_cujs deve gerar cuj-catalog.json",
-    "testType": "e2e",
-    "functionUnderTest": "catalogCUJs",
-    "whatItTests": "Testa **`catalogCUJs`** validando: gerar cuj-catalog.json. **Evidência**: 14 assert(s) (toBe, toBeGreaterThan, toContain, toBe, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toBe, toBeGreaterThan, toHaveProperty, toHaveProperty, toHaveProperty, toContain)",
-    "whyItTests": "Valida 14 aspectos: toBe, toBeGreaterThan, toContain... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
-    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
-    "given": [
-      "result = ...",
-      "catalogRaw = ...",
-      "catalog = ...",
-      "firstCUJ = ..."
-    ],
-    "when": "catalogCUJs",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.cujs_count"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "cuj-catalog.json",
-        "path": "result.output"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "existsSync()"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "timestamp",
-        "path": "catalog"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "repo",
-        "path": "catalog"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "product",
-        "path": "catalog"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "cujs",
-        "path": "catalog"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "Array.isArray()"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "catalog.cujs.length"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "id",
-        "path": "firstCUJ"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "name",
-        "path": "firstCUJ"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "criticality",
-        "path": "firstCUJ"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "path": "unknown"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-1-cuj-slo-risk.e2e.test.ts",
-    "name": "FASE 1 E2E: CUJ → SLO → Risk Pipeline > [2/3] define_slos deve gerar slos.json baseado em CUJs",
-    "testType": "e2e",
-    "functionUnderTest": "defineSLOs",
-    "whatItTests": "Testa **`defineSLOs`** validando: gerar slos.json baseado em CUJs. **Evidência**: 17 assert(s) (toBe, toBeGreaterThan, toContain, toBe, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toBe, toHaveProperty, toHaveProperty, toHaveProperty, toBeGreaterThanOrEqual, toBeLessThanOrEqual, toBeGreaterThanOrEqual, toBeLessThanOrEqual)",
-    "whyItTests": "Valida 17 aspectos: toBe, toBeGreaterThan, toContain... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
-    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
-    "given": [
-      "result = ...",
-      "slosRaw = ...",
-      "slos = ...",
-      "firstSLO = ..."
-    ],
-    "when": "defineSLOs",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.slos_count"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "slos.json",
-        "path": "result.output"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "existsSync()"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "timestamp",
-        "path": "slos"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "repo",
-        "path": "slos"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "product",
-        "path": "slos"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "slos",
-        "path": "slos"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "defaults_applied",
-        "path": "slos"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "boolean",
-        "path": "unknown"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "cuj_id",
-        "path": "firstSLO"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "error_rate_max",
-        "path": "firstSLO"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "availability_min",
-        "path": "firstSLO"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThanOrEqual",
-        "value": 0,
-        "path": "firstSLO.error_rate_max"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeLessThanOrEqual",
-        "value": 1,
-        "path": "firstSLO.error_rate_max"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThanOrEqual",
-        "value": 0,
-        "path": "firstSLO.availability_min"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeLessThanOrEqual",
-        "value": 1,
-        "path": "firstSLO.availability_min"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-1-cuj-slo-risk.e2e.test.ts",
-    "name": "FASE 1 E2E: CUJ → SLO → Risk Pipeline > [3/3] risk_register deve gerar risk-register.json cruzando CUJs + SLOs",
-    "testType": "e2e",
-    "functionUnderTest": "riskRegister",
-    "whatItTests": "Testa **`riskRegister`** validando: gerar risk-register.json cruzando CUJs + SLOs. **Evidência**: 28 assert(s) (toBe, toBeGreaterThan, toContain, toBe, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toBe, toBeLessThanOrEqual, toBe, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toBeGreaterThanOrEqual, toBeLessThanOrEqual, toContain, toContain)",
-    "whyItTests": "Valida 28 aspectos: toBe, toBeGreaterThan, toContain... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
-    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
-    "given": [
-      "result = ...",
-      "riskRaw = ...",
-      "riskReg = ...",
-      "firstRisk = ...",
-      "validTests = ..."
-    ],
-    "when": "riskRegister",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.total_risks"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "risk-register.json",
-        "path": "result.output"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "existsSync()"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "timestamp",
-        "path": "riskReg"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "repo",
-        "path": "riskReg"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "product",
-        "path": "riskReg"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "risks",
-        "path": "riskReg"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "top_5_critical",
-        "path": "riskReg"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "total_risk_score",
-        "path": "riskReg"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "coverage_gaps",
-        "path": "riskReg"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "Array.isArray()"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeLessThanOrEqual",
-        "value": 5,
-        "path": "riskReg.top_5_critical.length"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "string",
-        "path": "unknown"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "id",
-        "path": "firstRisk"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "cuj_id",
-        "path": "firstRisk"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "title",
-        "path": "firstRisk"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "description",
-        "path": "firstRisk"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "impact",
-        "path": "firstRisk"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "probability",
-        "path": "firstRisk"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "risk_score",
-        "path": "firstRisk"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "affected_modules",
-        "path": "firstRisk"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "mitigation_strategies",
-        "path": "firstRisk"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "recommended_tests",
-        "path": "firstRisk"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThanOrEqual",
-        "value": 0,
-        "path": "firstRisk.risk_score"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeLessThanOrEqual",
-        "value": 100,
-        "path": "firstRisk.risk_score"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "path": "unknown"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "test",
-        "path": "validTests"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-1-cuj-slo-risk.e2e.test.ts",
-    "name": "FASE 1 E2E: CUJ → SLO → Risk Pipeline > [FULL] Pipeline completo deve criar 3 arquivos consistentes",
-    "testType": "e2e",
-    "functionUnderTest": "resolve",
-    "whatItTests": "Testa **`resolve`** validando: criar 3 arquivos consistentes. **Evidência**: 6 assert(s) (toBe, toBe, toBe, toBe, toBe, toBe)",
-    "whyItTests": "Valida 6 aspectos: toBe, toBe, toBe... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
-    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
-    "given": [
-      "analyses = ...",
-      "cujFile = ...",
-      "slosFile = ...",
-      "riskFile = ...",
-      "catalog = ...",
-      "slos = ...",
-      "risks = ...",
-      "cujIds = ...",
-      "sloIds = ...",
-      "riskIds = ..."
-    ],
-    "when": "resolve",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "existsSync()"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "path": "catalog.cujs.length"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "sloIds.has()"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "path": "r.id"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "cujIds.has()"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "riskIds.has()"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-1-cuj-slo-risk.e2e.test.ts",
-    "name": "[1/3] catalog_cujs deve gerar cuj-catalog.json",
-    "testType": "e2e",
-    "functionUnderTest": "catalogCUJs",
-    "whatItTests": "Testa **`catalogCUJs`** validando: gerar cuj-catalog.json. **Evidência**: 14 assert(s) (toBe, toBeGreaterThan, toContain, toBe, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toBe, toBeGreaterThan, toHaveProperty, toHaveProperty, toHaveProperty, toContain)",
-    "whyItTests": "Valida 14 aspectos: toBe, toBeGreaterThan, toContain... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
-    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
-    "given": [
-      "result = ...",
-      "catalogRaw = ...",
-      "catalog = ...",
-      "firstCUJ = ..."
-    ],
-    "when": "catalogCUJs",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.cujs_count"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "cuj-catalog.json",
-        "path": "result.output"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "existsSync()"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "timestamp",
-        "path": "catalog"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "repo",
-        "path": "catalog"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "product",
-        "path": "catalog"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "cujs",
-        "path": "catalog"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "Array.isArray()"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "catalog.cujs.length"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "id",
-        "path": "firstCUJ"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "name",
-        "path": "firstCUJ"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "criticality",
-        "path": "firstCUJ"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "path": "unknown"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-1-cuj-slo-risk.e2e.test.ts",
-    "name": "[2/3] define_slos deve gerar slos.json baseado em CUJs",
-    "testType": "e2e",
-    "functionUnderTest": "defineSLOs",
-    "whatItTests": "Testa **`defineSLOs`** validando: gerar slos.json baseado em CUJs. **Evidência**: 17 assert(s) (toBe, toBeGreaterThan, toContain, toBe, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toBe, toHaveProperty, toHaveProperty, toHaveProperty, toBeGreaterThanOrEqual, toBeLessThanOrEqual, toBeGreaterThanOrEqual, toBeLessThanOrEqual)",
-    "whyItTests": "Valida 17 aspectos: toBe, toBeGreaterThan, toContain... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
-    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
-    "given": [
-      "result = ...",
-      "slosRaw = ...",
-      "slos = ...",
-      "firstSLO = ..."
-    ],
-    "when": "defineSLOs",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.slos_count"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "slos.json",
-        "path": "result.output"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "existsSync()"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "timestamp",
-        "path": "slos"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "repo",
-        "path": "slos"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "product",
-        "path": "slos"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "slos",
-        "path": "slos"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "defaults_applied",
-        "path": "slos"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "boolean",
-        "path": "unknown"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "cuj_id",
-        "path": "firstSLO"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "error_rate_max",
-        "path": "firstSLO"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "availability_min",
-        "path": "firstSLO"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThanOrEqual",
-        "value": 0,
-        "path": "firstSLO.error_rate_max"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeLessThanOrEqual",
-        "value": 1,
-        "path": "firstSLO.error_rate_max"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThanOrEqual",
-        "value": 0,
-        "path": "firstSLO.availability_min"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeLessThanOrEqual",
-        "value": 1,
-        "path": "firstSLO.availability_min"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-1-cuj-slo-risk.e2e.test.ts",
-    "name": "[3/3] risk_register deve gerar risk-register.json cruzando CUJs + SLOs",
-    "testType": "e2e",
-    "functionUnderTest": "riskRegister",
-    "whatItTests": "Testa **`riskRegister`** validando: gerar risk-register.json cruzando CUJs + SLOs. **Evidência**: 28 assert(s) (toBe, toBeGreaterThan, toContain, toBe, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toBe, toBeLessThanOrEqual, toBe, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toHaveProperty, toBeGreaterThanOrEqual, toBeLessThanOrEqual, toContain, toContain)",
-    "whyItTests": "Valida 28 aspectos: toBe, toBeGreaterThan, toContain... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
-    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
-    "given": [
-      "result = ...",
-      "riskRaw = ...",
-      "riskReg = ...",
-      "firstRisk = ...",
-      "validTests = ..."
-    ],
-    "when": "riskRegister",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.total_risks"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "risk-register.json",
-        "path": "result.output"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "existsSync()"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "timestamp",
-        "path": "riskReg"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "repo",
-        "path": "riskReg"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "product",
-        "path": "riskReg"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "risks",
-        "path": "riskReg"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "top_5_critical",
-        "path": "riskReg"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "total_risk_score",
-        "path": "riskReg"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "coverage_gaps",
-        "path": "riskReg"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "Array.isArray()"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeLessThanOrEqual",
-        "value": 5,
-        "path": "riskReg.top_5_critical.length"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "string",
-        "path": "unknown"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "id",
-        "path": "firstRisk"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "cuj_id",
-        "path": "firstRisk"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "title",
-        "path": "firstRisk"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "description",
-        "path": "firstRisk"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "impact",
-        "path": "firstRisk"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "probability",
-        "path": "firstRisk"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "risk_score",
-        "path": "firstRisk"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "affected_modules",
-        "path": "firstRisk"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "mitigation_strategies",
-        "path": "firstRisk"
-      },
-      {
-        "type": "value",
-        "matcher": "toHaveProperty",
-        "value": "recommended_tests",
-        "path": "firstRisk"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThanOrEqual",
-        "value": 0,
-        "path": "firstRisk.risk_score"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeLessThanOrEqual",
-        "value": 100,
-        "path": "firstRisk.risk_score"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "path": "unknown"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "test",
-        "path": "validTests"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/e2e/phase-1-cuj-slo-risk.e2e.test.ts",
-    "name": "[FULL] Pipeline completo deve criar 3 arquivos consistentes",
-    "testType": "e2e",
-    "functionUnderTest": "resolve",
-    "whatItTests": "Testa **`resolve`** validando: criar 3 arquivos consistentes. **Evidência**: 6 assert(s) (toBe, toBe, toBe, toBe, toBe, toBe)",
-    "whyItTests": "Valida 6 aspectos: toBe, toBe, toBe... | ⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar",
-    "purposeForWhat": "📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos\n- ⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso\n- 🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou\n- 🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)",
-    "given": [
-      "analyses = ...",
-      "cujFile = ...",
-      "slosFile = ...",
-      "riskFile = ...",
-      "catalog = ...",
-      "slos = ...",
-      "risks = ...",
-      "cujIds = ...",
-      "sloIds = ...",
-      "riskIds = ..."
-    ],
-    "when": "resolve",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "existsSync()"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "path": "catalog.cujs.length"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "sloIds.has()"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "path": "r.id"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "cujIds.has()"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "riskIds.has()"
       }
     ],
     "mocks": [],
