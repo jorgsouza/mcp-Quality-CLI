@@ -1,14 +1,14 @@
 {
   "assertStrongPct": 0,
-  "assertMediumPct": 0,
-  "assertWeakPct": 100,
+  "assertMediumPct": 91.78915357323872,
+  "assertWeakPct": 8.210846426761277,
   "diffCoveredPct": 0,
   "contractsProtectedPct": 0,
   "weakTestsInDiffPct": 0,
   "criticalEndpointsWithoutContract": 0,
   "suspectedFlakyPct": 0,
-  "diagnosticAssertsPct": 0,
+  "diagnosticAssertsPct": 96.85757729346174,
   "totalTests": 1973,
-  "testsWithAsserts": 0,
-  "testsWithoutAsserts": 1973
+  "testsWithAsserts": 1911,
+  "testsWithoutAsserts": 62
 }

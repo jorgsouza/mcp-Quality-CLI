@@ -196,9 +196,21 @@ function analyzeTestBody(node: any, name: string, line: number, content: string)
       }
       
       // Expect/Assert (Then)
+      // Detectar expect(...).toBe(...), expect(...).toEqual(...), etc
       if (calleeName === 'expect' || calleeName === 'assert') {
         const assertInfo = extractAssertInfo(bodyNode);
         if (assertInfo) then.push(assertInfo);
+      }
+      
+      // 🆕 Detectar também quando expect está no object (ex: expect().toBe())
+      if (bodyNode.callee.type === 'MemberExpression' && 
+          bodyNode.callee.object &&
+          bodyNode.callee.object.type === 'CallExpression') {
+        const objectCalleeName = getCalleeName(bodyNode.callee.object.callee);
+        if (objectCalleeName === 'expect' || objectCalleeName === 'assert') {
+          const assertInfo = extractAssertInfo(bodyNode);
+          if (assertInfo) then.push(assertInfo);
+        }
       }
       
       // When: função sendo testada (heurística: await/call principal)
@@ -216,7 +228,7 @@ function analyzeTestBody(node: any, name: string, line: number, content: string)
       hasErrorHandling = true;
     }
     
-    // Recursão
+    // Recursão em todas as estruturas possíveis
     if (bodyNode.body) {
       if (Array.isArray(bodyNode.body)) {
         bodyNode.body.forEach((child: any) => visitBody(child));
@@ -235,6 +247,29 @@ function analyzeTestBody(node: any, name: string, line: number, content: string)
     
     if (bodyNode.alternate) {
       visitBody(bodyNode.alternate);
+    }
+    
+    // 🆕 Visitar argumentos e declarações
+    if (bodyNode.arguments && Array.isArray(bodyNode.arguments)) {
+      bodyNode.arguments.forEach((arg: any) => visitBody(arg));
+    }
+    
+    if (bodyNode.declarations && Array.isArray(bodyNode.declarations)) {
+      bodyNode.declarations.forEach((decl: any) => {
+        if (decl.init) {
+          visitBody(decl.init);
+        }
+      });
+    }
+    
+    // 🆕 Visitar await expressions
+    if (bodyNode.type === 'AwaitExpression' && bodyNode.argument) {
+      visitBody(bodyNode.argument);
+    }
+    
+    // 🆕 Visitar ExpressionStatement (onde expect() normalmente está)
+    if (bodyNode.type === 'ExpressionStatement' && bodyNode.expression) {
+      visitBody(bodyNode.expression);
     }
   }
   

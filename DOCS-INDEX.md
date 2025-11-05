@@ -20,6 +20,7 @@
 | Documento | Descrição |
 |-----------|-----------|
 | **[docs/QUALITY-GATES-GUIDE.md](docs/QUALITY-GATES-GUIDE.md)** | 🎯 Guia completo de Quality Gates |
+| **[docs/EXPLAIN-TESTS-GUIDE.md](docs/EXPLAIN-TESTS-GUIDE.md)** | 🔍 Guia completo do explain-tests |
 | **[docs/SETUP-BY-LANGUAGE.md](docs/SETUP-BY-LANGUAGE.md)** | 🌐 Setup detalhado por linguagem |
 | **[docs/USAGE-BY-STACK.md](docs/USAGE-BY-STACK.md)** | 💼 Guias de uso por stack |
 
