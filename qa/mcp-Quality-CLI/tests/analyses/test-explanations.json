@@ -68533,1358 +68533,6 @@
     ]
   },
   {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "detectLanguage > deve detectar adapter baseado no método detect",
-    "testType": "unit",
-    "functionUnderTest": "detectLanguage",
-    "whatItTests": "Valida que **`detectLanguage`** consegue detectar adapter baseado no método detect. **Validações**: `result` = `\"mockAdapter2\"`, `unknown` = `\"typescript\"`",
-    "whyItTests": "Valida 2 aspecto(s) usando: toBe. **Cenário de parsing** - valida interpretação correta de entrada",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
-    "given": [
-      "mockAdapter1 = ...",
-      "mockAdapter2 = ...",
-      "result = ..."
-    ],
-    "when": "detectLanguage",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "mockAdapter2",
-        "path": "result"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "typescript",
-        "path": "unknown"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "detectLanguage > deve retornar null se nenhum adapter detectar",
-    "testType": "unit",
-    "functionUnderTest": "detectLanguage",
-    "whatItTests": "Valida que **`detectLanguage`** consegue retornar null se nenhum adapter detectar. **1 validações** usando: toBeNull",
-    "whyItTests": "Valida 1 aspecto(s) usando: toBeNull. **Cenário de parsing** - valida interpretação correta de entrada",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "detectLanguage",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBeNull",
-        "path": "result"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "Engine Modular > deve detectar adapter baseado no método detect",
-    "testType": "unit",
-    "functionUnderTest": "detectLanguage",
-    "whatItTests": "Valida que **`detectLanguage`** consegue detectar adapter baseado no método detect. **Validações**: `result` = `\"mockAdapter2\"`, `unknown` = `\"typescript\"`",
-    "whyItTests": "Valida 2 aspecto(s) usando: toBe. **Cenário de parsing** - valida interpretação correta de entrada",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
-    "given": [
-      "mockAdapter1 = ...",
-      "mockAdapter2 = ...",
-      "result = ..."
-    ],
-    "when": "detectLanguage",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "mockAdapter2",
-        "path": "result"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "typescript",
-        "path": "unknown"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "Engine Modular > deve retornar null se nenhum adapter detectar",
-    "testType": "unit",
-    "functionUnderTest": "detectLanguage",
-    "whatItTests": "Valida que **`detectLanguage`** consegue retornar null se nenhum adapter detectar. **1 validações** usando: toBeNull",
-    "whyItTests": "Valida 1 aspecto(s) usando: toBeNull. **Cenário de parsing** - valida interpretação correta de entrada",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "detectLanguage",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBeNull",
-        "path": "result"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "runPipeline > deve lançar erro se linguagem não detectada",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Valida que **`runPipeline`** consegue lançar erro se linguagem não detectada. **Validações**: `result.ok` = `false`, `result.errors.length` = `0`, `result.errors.?` = `\"não detectada\"`",
-    "whyItTests": "Valida 3 aspecto(s) usando: toBe, toBeGreaterThan, toContain. **Cenário de parsing** - valida interpretação correta de entrada",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo\n- ✅ **Valor**: Múltiplos asserts (~3) aumentam diagnóstico (sabe EXATAMENTE o que falhou)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": false,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.errors.length"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "não detectada",
-        "path": "result.errors.?"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "runPipeline > deve executar pipeline com adapter válido (stub)",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Valida que **`runPipeline`** consegue executar pipeline com adapter válido (stub). **Validações**: `result.ok` = `true`, `result.language` = `\"typescript\"`, `result.framework` = `\"vitest\"` e mais 3",
-    "whyItTests": "Valida 6 aspecto(s) usando: toBe, toContain",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo\n- ✅ **Valor**: Múltiplos asserts (~6) aumentam diagnóstico (sabe EXATAMENTE o que falhou)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "typescript",
-        "path": "result.language"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "vitest",
-        "path": "result.framework"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "functions",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "tests",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "cases",
-        "path": "result.execution.stepsExecuted"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "runPipeline > deve pular mutation em perfil ci-fast",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Valida que **`runPipeline`** consegue pular mutation em perfil ci-fast. **Validações**: `result.execution.stepsSkipped` = `\"mutation\"`",
-    "whyItTests": "Valida 1 aspecto(s) usando: toContain",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "mutation",
-        "path": "result.execution.stepsSkipped"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "runPipeline > deve executar mutation em perfil ci-strict",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Valida que **`runPipeline`** consegue executar mutation em perfil ci-strict. **Validações**: `result.execution.stepsExecuted` = `\"mutation\"`, `result.report.metrics.mutationScore` = `75`",
-    "whyItTests": "Valida 3 aspecto(s) usando: toContain, toHaveBeenCalled, toBe",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo\n- ✅ **Valor**: Múltiplos asserts (~3) aumentam diagnóstico (sabe EXATAMENTE o que falhou)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "mutation",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "called",
-        "matcher": "toHaveBeenCalled",
-        "path": "mockAdapter.capabilities.mutation"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": 75,
-        "path": "result.report.metrics.mutationScore"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "runPipeline > deve calcular quality score corretamente",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Valida que **`runPipeline`** consegue calcular quality score corretamente. **Validações**: `result.report.metrics.qualityScore` = `0`, `result.report.metrics.grade` = `{}`",
-    "whyItTests": "Valida 2 aspecto(s) usando: toBeGreaterThan, toMatch",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.report.metrics.qualityScore"
-      },
-      {
-        "type": "value",
-        "matcher": "toMatch",
-        "value": {},
-        "path": "result.report.metrics.grade"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "Engine Modular > deve lançar erro se linguagem não detectada",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Valida que **`runPipeline`** consegue lançar erro se linguagem não detectada. **Validações**: `result.ok` = `false`, `result.errors.length` = `0`, `result.errors.?` = `\"não detectada\"`",
-    "whyItTests": "Valida 3 aspecto(s) usando: toBe, toBeGreaterThan, toContain. **Cenário de parsing** - valida interpretação correta de entrada",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo\n- ✅ **Valor**: Múltiplos asserts (~3) aumentam diagnóstico (sabe EXATAMENTE o que falhou)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": false,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.errors.length"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "não detectada",
-        "path": "result.errors.?"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "Engine Modular > deve executar pipeline com adapter válido (stub)",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Valida que **`runPipeline`** consegue executar pipeline com adapter válido (stub). **Validações**: `result.ok` = `true`, `result.language` = `\"typescript\"`, `result.framework` = `\"vitest\"` e mais 3",
-    "whyItTests": "Valida 6 aspecto(s) usando: toBe, toContain",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo\n- ✅ **Valor**: Múltiplos asserts (~6) aumentam diagnóstico (sabe EXATAMENTE o que falhou)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "typescript",
-        "path": "result.language"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "vitest",
-        "path": "result.framework"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "functions",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "tests",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "cases",
-        "path": "result.execution.stepsExecuted"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "Engine Modular > deve pular mutation em perfil ci-fast",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Valida que **`runPipeline`** consegue pular mutation em perfil ci-fast. **Validações**: `result.execution.stepsSkipped` = `\"mutation\"`",
-    "whyItTests": "Valida 1 aspecto(s) usando: toContain",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "mutation",
-        "path": "result.execution.stepsSkipped"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "Engine Modular > deve executar mutation em perfil ci-strict",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Valida que **`runPipeline`** consegue executar mutation em perfil ci-strict. **Validações**: `result.execution.stepsExecuted` = `\"mutation\"`, `result.report.metrics.mutationScore` = `75`",
-    "whyItTests": "Valida 3 aspecto(s) usando: toContain, toHaveBeenCalled, toBe",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo\n- ✅ **Valor**: Múltiplos asserts (~3) aumentam diagnóstico (sabe EXATAMENTE o que falhou)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "mutation",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "called",
-        "matcher": "toHaveBeenCalled",
-        "path": "mockAdapter.capabilities.mutation"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": 75,
-        "path": "result.report.metrics.mutationScore"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "Engine Modular > deve calcular quality score corretamente",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Valida que **`runPipeline`** consegue calcular quality score corretamente. **Validações**: `result.report.metrics.qualityScore` = `0`, `result.report.metrics.grade` = `{}`",
-    "whyItTests": "Valida 2 aspecto(s) usando: toBeGreaterThan, toMatch",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.report.metrics.qualityScore"
-      },
-      {
-        "type": "value",
-        "matcher": "toMatch",
-        "value": {},
-        "path": "result.report.metrics.grade"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "detectLanguage > deve detectar adapter baseado no método detect",
-    "testType": "unit",
-    "functionUnderTest": "detectLanguage",
-    "whatItTests": "Valida que **`detectLanguage`** consegue detectar adapter baseado no método detect. **Validações**: `result` = `\"mockAdapter2\"`, `unknown` = `\"typescript\"`",
-    "whyItTests": "Valida 2 aspecto(s) usando: toBe. **Cenário de parsing** - valida interpretação correta de entrada",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
-    "given": [
-      "mockAdapter1 = ...",
-      "mockAdapter2 = ...",
-      "result = ..."
-    ],
-    "when": "detectLanguage",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "mockAdapter2",
-        "path": "result"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "typescript",
-        "path": "unknown"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "detectLanguage > deve retornar null se nenhum adapter detectar",
-    "testType": "unit",
-    "functionUnderTest": "detectLanguage",
-    "whatItTests": "Valida que **`detectLanguage`** consegue retornar null se nenhum adapter detectar. **1 validações** usando: toBeNull",
-    "whyItTests": "Valida 1 aspecto(s) usando: toBeNull. **Cenário de parsing** - valida interpretação correta de entrada",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "detectLanguage",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBeNull",
-        "path": "result"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "deve detectar adapter baseado no método detect",
-    "testType": "unit",
-    "functionUnderTest": "detectLanguage",
-    "whatItTests": "Valida que **`detectLanguage`** consegue detectar adapter baseado no método detect. **Validações**: `result` = `\"mockAdapter2\"`, `unknown` = `\"typescript\"`",
-    "whyItTests": "Valida 2 aspecto(s) usando: toBe. **Cenário de parsing** - valida interpretação correta de entrada",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
-    "given": [
-      "mockAdapter1 = ...",
-      "mockAdapter2 = ...",
-      "result = ..."
-    ],
-    "when": "detectLanguage",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "mockAdapter2",
-        "path": "result"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "typescript",
-        "path": "unknown"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "deve retornar null se nenhum adapter detectar",
-    "testType": "unit",
-    "functionUnderTest": "detectLanguage",
-    "whatItTests": "Valida que **`detectLanguage`** consegue retornar null se nenhum adapter detectar. **1 validações** usando: toBeNull",
-    "whyItTests": "Valida 1 aspecto(s) usando: toBeNull. **Cenário de parsing** - valida interpretação correta de entrada",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "detectLanguage",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBeNull",
-        "path": "result"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "runPipeline > deve lançar erro se linguagem não detectada",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Valida que **`runPipeline`** consegue lançar erro se linguagem não detectada. **Validações**: `result.ok` = `false`, `result.errors.length` = `0`, `result.errors.?` = `\"não detectada\"`",
-    "whyItTests": "Valida 3 aspecto(s) usando: toBe, toBeGreaterThan, toContain. **Cenário de parsing** - valida interpretação correta de entrada",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo\n- ✅ **Valor**: Múltiplos asserts (~3) aumentam diagnóstico (sabe EXATAMENTE o que falhou)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": false,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.errors.length"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "não detectada",
-        "path": "result.errors.?"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "runPipeline > deve executar pipeline com adapter válido (stub)",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Valida que **`runPipeline`** consegue executar pipeline com adapter válido (stub). **Validações**: `result.ok` = `true`, `result.language` = `\"typescript\"`, `result.framework` = `\"vitest\"` e mais 3",
-    "whyItTests": "Valida 6 aspecto(s) usando: toBe, toContain",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo\n- ✅ **Valor**: Múltiplos asserts (~6) aumentam diagnóstico (sabe EXATAMENTE o que falhou)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "typescript",
-        "path": "result.language"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "vitest",
-        "path": "result.framework"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "functions",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "tests",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "cases",
-        "path": "result.execution.stepsExecuted"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "runPipeline > deve pular mutation em perfil ci-fast",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Valida que **`runPipeline`** consegue pular mutation em perfil ci-fast. **Validações**: `result.execution.stepsSkipped` = `\"mutation\"`",
-    "whyItTests": "Valida 1 aspecto(s) usando: toContain",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "mutation",
-        "path": "result.execution.stepsSkipped"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "runPipeline > deve executar mutation em perfil ci-strict",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Valida que **`runPipeline`** consegue executar mutation em perfil ci-strict. **Validações**: `result.execution.stepsExecuted` = `\"mutation\"`, `result.report.metrics.mutationScore` = `75`",
-    "whyItTests": "Valida 3 aspecto(s) usando: toContain, toHaveBeenCalled, toBe",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo\n- ✅ **Valor**: Múltiplos asserts (~3) aumentam diagnóstico (sabe EXATAMENTE o que falhou)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "mutation",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "called",
-        "matcher": "toHaveBeenCalled",
-        "path": "mockAdapter.capabilities.mutation"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": 75,
-        "path": "result.report.metrics.mutationScore"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "runPipeline > deve calcular quality score corretamente",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Valida que **`runPipeline`** consegue calcular quality score corretamente. **Validações**: `result.report.metrics.qualityScore` = `0`, `result.report.metrics.grade` = `{}`",
-    "whyItTests": "Valida 2 aspecto(s) usando: toBeGreaterThan, toMatch",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.report.metrics.qualityScore"
-      },
-      {
-        "type": "value",
-        "matcher": "toMatch",
-        "value": {},
-        "path": "result.report.metrics.grade"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "deve lançar erro se linguagem não detectada",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Valida que **`runPipeline`** consegue lançar erro se linguagem não detectada. **Validações**: `result.ok` = `false`, `result.errors.length` = `0`, `result.errors.?` = `\"não detectada\"`",
-    "whyItTests": "Valida 3 aspecto(s) usando: toBe, toBeGreaterThan, toContain. **Cenário de parsing** - valida interpretação correta de entrada",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo\n- ✅ **Valor**: Múltiplos asserts (~3) aumentam diagnóstico (sabe EXATAMENTE o que falhou)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": false,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.errors.length"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "não detectada",
-        "path": "result.errors.?"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "deve executar pipeline com adapter válido (stub)",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Valida que **`runPipeline`** consegue executar pipeline com adapter válido (stub). **Validações**: `result.ok` = `true`, `result.language` = `\"typescript\"`, `result.framework` = `\"vitest\"` e mais 3",
-    "whyItTests": "Valida 6 aspecto(s) usando: toBe, toContain",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo\n- ✅ **Valor**: Múltiplos asserts (~6) aumentam diagnóstico (sabe EXATAMENTE o que falhou)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "typescript",
-        "path": "result.language"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "vitest",
-        "path": "result.framework"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "functions",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "tests",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "cases",
-        "path": "result.execution.stepsExecuted"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "deve pular mutation em perfil ci-fast",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Valida que **`runPipeline`** consegue pular mutation em perfil ci-fast. **Validações**: `result.execution.stepsSkipped` = `\"mutation\"`",
-    "whyItTests": "Valida 1 aspecto(s) usando: toContain",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "mutation",
-        "path": "result.execution.stepsSkipped"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "deve executar mutation em perfil ci-strict",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Valida que **`runPipeline`** consegue executar mutation em perfil ci-strict. **Validações**: `result.execution.stepsExecuted` = `\"mutation\"`, `result.report.metrics.mutationScore` = `75`",
-    "whyItTests": "Valida 3 aspecto(s) usando: toContain, toHaveBeenCalled, toBe",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo\n- ✅ **Valor**: Múltiplos asserts (~3) aumentam diagnóstico (sabe EXATAMENTE o que falhou)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "mutation",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "called",
-        "matcher": "toHaveBeenCalled",
-        "path": "mockAdapter.capabilities.mutation"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": 75,
-        "path": "result.report.metrics.mutationScore"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "deve calcular quality score corretamente",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Valida que **`runPipeline`** consegue calcular quality score corretamente. **Validações**: `result.report.metrics.qualityScore` = `0`, `result.report.metrics.grade` = `{}`",
-    "whyItTests": "Valida 2 aspecto(s) usando: toBeGreaterThan, toMatch",
-    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.report.metrics.qualityScore"
-      },
-      {
-        "type": "value",
-        "matcher": "toMatch",
-        "value": {},
-        "path": "result.report.metrics.grade"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
     "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/detectors/__tests__/tests.test.ts",
     "name": "findExistingTests > deve detectar arquivos *.test.ts com vitest",
     "testType": "unit",
@@ -78458,6 +77106,1358 @@
         "matcher": "toContain",
         "value": "event:template-literal",
         "path": "events"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "detectLanguage > deve detectar adapter baseado no método detect",
+    "testType": "unit",
+    "functionUnderTest": "detectLanguage",
+    "whatItTests": "Valida que **`detectLanguage`** consegue detectar adapter baseado no método detect. **Validações**: `result` = `\"mockAdapter2\"`, `unknown` = `\"typescript\"`",
+    "whyItTests": "Valida 2 aspecto(s) usando: toBe. **Cenário de parsing** - valida interpretação correta de entrada",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
+    "given": [
+      "mockAdapter1 = ...",
+      "mockAdapter2 = ...",
+      "result = ..."
+    ],
+    "when": "detectLanguage",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "mockAdapter2",
+        "path": "result"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "typescript",
+        "path": "unknown"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "detectLanguage > deve retornar null se nenhum adapter detectar",
+    "testType": "unit",
+    "functionUnderTest": "detectLanguage",
+    "whatItTests": "Valida que **`detectLanguage`** consegue retornar null se nenhum adapter detectar. **1 validações** usando: toBeNull",
+    "whyItTests": "Valida 1 aspecto(s) usando: toBeNull. **Cenário de parsing** - valida interpretação correta de entrada",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "detectLanguage",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBeNull",
+        "path": "result"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "Engine Modular > deve detectar adapter baseado no método detect",
+    "testType": "unit",
+    "functionUnderTest": "detectLanguage",
+    "whatItTests": "Valida que **`detectLanguage`** consegue detectar adapter baseado no método detect. **Validações**: `result` = `\"mockAdapter2\"`, `unknown` = `\"typescript\"`",
+    "whyItTests": "Valida 2 aspecto(s) usando: toBe. **Cenário de parsing** - valida interpretação correta de entrada",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
+    "given": [
+      "mockAdapter1 = ...",
+      "mockAdapter2 = ...",
+      "result = ..."
+    ],
+    "when": "detectLanguage",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "mockAdapter2",
+        "path": "result"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "typescript",
+        "path": "unknown"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "Engine Modular > deve retornar null se nenhum adapter detectar",
+    "testType": "unit",
+    "functionUnderTest": "detectLanguage",
+    "whatItTests": "Valida que **`detectLanguage`** consegue retornar null se nenhum adapter detectar. **1 validações** usando: toBeNull",
+    "whyItTests": "Valida 1 aspecto(s) usando: toBeNull. **Cenário de parsing** - valida interpretação correta de entrada",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "detectLanguage",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBeNull",
+        "path": "result"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "runPipeline > deve lançar erro se linguagem não detectada",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Valida que **`runPipeline`** consegue lançar erro se linguagem não detectada. **Validações**: `result.ok` = `false`, `result.errors.length` = `0`, `result.errors.?` = `\"não detectada\"`",
+    "whyItTests": "Valida 3 aspecto(s) usando: toBe, toBeGreaterThan, toContain. **Cenário de parsing** - valida interpretação correta de entrada",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo\n- ✅ **Valor**: Múltiplos asserts (~3) aumentam diagnóstico (sabe EXATAMENTE o que falhou)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": false,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.errors.length"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "não detectada",
+        "path": "result.errors.?"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "runPipeline > deve executar pipeline com adapter válido (stub)",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Valida que **`runPipeline`** consegue executar pipeline com adapter válido (stub). **Validações**: `result.ok` = `true`, `result.language` = `\"typescript\"`, `result.framework` = `\"vitest\"` e mais 3",
+    "whyItTests": "Valida 6 aspecto(s) usando: toBe, toContain",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo\n- ✅ **Valor**: Múltiplos asserts (~6) aumentam diagnóstico (sabe EXATAMENTE o que falhou)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "typescript",
+        "path": "result.language"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "vitest",
+        "path": "result.framework"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "functions",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "tests",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "cases",
+        "path": "result.execution.stepsExecuted"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "runPipeline > deve pular mutation em perfil ci-fast",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Valida que **`runPipeline`** consegue pular mutation em perfil ci-fast. **Validações**: `result.execution.stepsSkipped` = `\"mutation\"`",
+    "whyItTests": "Valida 1 aspecto(s) usando: toContain",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "mutation",
+        "path": "result.execution.stepsSkipped"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "runPipeline > deve executar mutation em perfil ci-strict",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Valida que **`runPipeline`** consegue executar mutation em perfil ci-strict. **Validações**: `result.execution.stepsExecuted` = `\"mutation\"`, `result.report.metrics.mutationScore` = `75`",
+    "whyItTests": "Valida 3 aspecto(s) usando: toContain, toHaveBeenCalled, toBe",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo\n- ✅ **Valor**: Múltiplos asserts (~3) aumentam diagnóstico (sabe EXATAMENTE o que falhou)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "mutation",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "called",
+        "matcher": "toHaveBeenCalled",
+        "path": "mockAdapter.capabilities.mutation"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": 75,
+        "path": "result.report.metrics.mutationScore"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "runPipeline > deve calcular quality score corretamente",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Valida que **`runPipeline`** consegue calcular quality score corretamente. **Validações**: `result.report.metrics.qualityScore` = `0`, `result.report.metrics.grade` = `{}`",
+    "whyItTests": "Valida 2 aspecto(s) usando: toBeGreaterThan, toMatch",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.report.metrics.qualityScore"
+      },
+      {
+        "type": "value",
+        "matcher": "toMatch",
+        "value": {},
+        "path": "result.report.metrics.grade"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "Engine Modular > deve lançar erro se linguagem não detectada",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Valida que **`runPipeline`** consegue lançar erro se linguagem não detectada. **Validações**: `result.ok` = `false`, `result.errors.length` = `0`, `result.errors.?` = `\"não detectada\"`",
+    "whyItTests": "Valida 3 aspecto(s) usando: toBe, toBeGreaterThan, toContain. **Cenário de parsing** - valida interpretação correta de entrada",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo\n- ✅ **Valor**: Múltiplos asserts (~3) aumentam diagnóstico (sabe EXATAMENTE o que falhou)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": false,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.errors.length"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "não detectada",
+        "path": "result.errors.?"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "Engine Modular > deve executar pipeline com adapter válido (stub)",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Valida que **`runPipeline`** consegue executar pipeline com adapter válido (stub). **Validações**: `result.ok` = `true`, `result.language` = `\"typescript\"`, `result.framework` = `\"vitest\"` e mais 3",
+    "whyItTests": "Valida 6 aspecto(s) usando: toBe, toContain",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo\n- ✅ **Valor**: Múltiplos asserts (~6) aumentam diagnóstico (sabe EXATAMENTE o que falhou)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "typescript",
+        "path": "result.language"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "vitest",
+        "path": "result.framework"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "functions",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "tests",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "cases",
+        "path": "result.execution.stepsExecuted"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "Engine Modular > deve pular mutation em perfil ci-fast",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Valida que **`runPipeline`** consegue pular mutation em perfil ci-fast. **Validações**: `result.execution.stepsSkipped` = `\"mutation\"`",
+    "whyItTests": "Valida 1 aspecto(s) usando: toContain",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "mutation",
+        "path": "result.execution.stepsSkipped"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "Engine Modular > deve executar mutation em perfil ci-strict",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Valida que **`runPipeline`** consegue executar mutation em perfil ci-strict. **Validações**: `result.execution.stepsExecuted` = `\"mutation\"`, `result.report.metrics.mutationScore` = `75`",
+    "whyItTests": "Valida 3 aspecto(s) usando: toContain, toHaveBeenCalled, toBe",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo\n- ✅ **Valor**: Múltiplos asserts (~3) aumentam diagnóstico (sabe EXATAMENTE o que falhou)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "mutation",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "called",
+        "matcher": "toHaveBeenCalled",
+        "path": "mockAdapter.capabilities.mutation"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": 75,
+        "path": "result.report.metrics.mutationScore"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "Engine Modular > deve calcular quality score corretamente",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Valida que **`runPipeline`** consegue calcular quality score corretamente. **Validações**: `result.report.metrics.qualityScore` = `0`, `result.report.metrics.grade` = `{}`",
+    "whyItTests": "Valida 2 aspecto(s) usando: toBeGreaterThan, toMatch",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.report.metrics.qualityScore"
+      },
+      {
+        "type": "value",
+        "matcher": "toMatch",
+        "value": {},
+        "path": "result.report.metrics.grade"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "detectLanguage > deve detectar adapter baseado no método detect",
+    "testType": "unit",
+    "functionUnderTest": "detectLanguage",
+    "whatItTests": "Valida que **`detectLanguage`** consegue detectar adapter baseado no método detect. **Validações**: `result` = `\"mockAdapter2\"`, `unknown` = `\"typescript\"`",
+    "whyItTests": "Valida 2 aspecto(s) usando: toBe. **Cenário de parsing** - valida interpretação correta de entrada",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
+    "given": [
+      "mockAdapter1 = ...",
+      "mockAdapter2 = ...",
+      "result = ..."
+    ],
+    "when": "detectLanguage",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "mockAdapter2",
+        "path": "result"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "typescript",
+        "path": "unknown"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "detectLanguage > deve retornar null se nenhum adapter detectar",
+    "testType": "unit",
+    "functionUnderTest": "detectLanguage",
+    "whatItTests": "Valida que **`detectLanguage`** consegue retornar null se nenhum adapter detectar. **1 validações** usando: toBeNull",
+    "whyItTests": "Valida 1 aspecto(s) usando: toBeNull. **Cenário de parsing** - valida interpretação correta de entrada",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "detectLanguage",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBeNull",
+        "path": "result"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "deve detectar adapter baseado no método detect",
+    "testType": "unit",
+    "functionUnderTest": "detectLanguage",
+    "whatItTests": "Valida que **`detectLanguage`** consegue detectar adapter baseado no método detect. **Validações**: `result` = `\"mockAdapter2\"`, `unknown` = `\"typescript\"`",
+    "whyItTests": "Valida 2 aspecto(s) usando: toBe. **Cenário de parsing** - valida interpretação correta de entrada",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
+    "given": [
+      "mockAdapter1 = ...",
+      "mockAdapter2 = ...",
+      "result = ..."
+    ],
+    "when": "detectLanguage",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "mockAdapter2",
+        "path": "result"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "typescript",
+        "path": "unknown"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "deve retornar null se nenhum adapter detectar",
+    "testType": "unit",
+    "functionUnderTest": "detectLanguage",
+    "whatItTests": "Valida que **`detectLanguage`** consegue retornar null se nenhum adapter detectar. **1 validações** usando: toBeNull",
+    "whyItTests": "Valida 1 aspecto(s) usando: toBeNull. **Cenário de parsing** - valida interpretação correta de entrada",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "detectLanguage",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBeNull",
+        "path": "result"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "runPipeline > deve lançar erro se linguagem não detectada",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Valida que **`runPipeline`** consegue lançar erro se linguagem não detectada. **Validações**: `result.ok` = `false`, `result.errors.length` = `0`, `result.errors.?` = `\"não detectada\"`",
+    "whyItTests": "Valida 3 aspecto(s) usando: toBe, toBeGreaterThan, toContain. **Cenário de parsing** - valida interpretação correta de entrada",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo\n- ✅ **Valor**: Múltiplos asserts (~3) aumentam diagnóstico (sabe EXATAMENTE o que falhou)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": false,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.errors.length"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "não detectada",
+        "path": "result.errors.?"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "runPipeline > deve executar pipeline com adapter válido (stub)",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Valida que **`runPipeline`** consegue executar pipeline com adapter válido (stub). **Validações**: `result.ok` = `true`, `result.language` = `\"typescript\"`, `result.framework` = `\"vitest\"` e mais 3",
+    "whyItTests": "Valida 6 aspecto(s) usando: toBe, toContain",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo\n- ✅ **Valor**: Múltiplos asserts (~6) aumentam diagnóstico (sabe EXATAMENTE o que falhou)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "typescript",
+        "path": "result.language"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "vitest",
+        "path": "result.framework"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "functions",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "tests",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "cases",
+        "path": "result.execution.stepsExecuted"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "runPipeline > deve pular mutation em perfil ci-fast",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Valida que **`runPipeline`** consegue pular mutation em perfil ci-fast. **Validações**: `result.execution.stepsSkipped` = `\"mutation\"`",
+    "whyItTests": "Valida 1 aspecto(s) usando: toContain",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "mutation",
+        "path": "result.execution.stepsSkipped"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "runPipeline > deve executar mutation em perfil ci-strict",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Valida que **`runPipeline`** consegue executar mutation em perfil ci-strict. **Validações**: `result.execution.stepsExecuted` = `\"mutation\"`, `result.report.metrics.mutationScore` = `75`",
+    "whyItTests": "Valida 3 aspecto(s) usando: toContain, toHaveBeenCalled, toBe",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo\n- ✅ **Valor**: Múltiplos asserts (~3) aumentam diagnóstico (sabe EXATAMENTE o que falhou)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "mutation",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "called",
+        "matcher": "toHaveBeenCalled",
+        "path": "mockAdapter.capabilities.mutation"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": 75,
+        "path": "result.report.metrics.mutationScore"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "runPipeline > deve calcular quality score corretamente",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Valida que **`runPipeline`** consegue calcular quality score corretamente. **Validações**: `result.report.metrics.qualityScore` = `0`, `result.report.metrics.grade` = `{}`",
+    "whyItTests": "Valida 2 aspecto(s) usando: toBeGreaterThan, toMatch",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.report.metrics.qualityScore"
+      },
+      {
+        "type": "value",
+        "matcher": "toMatch",
+        "value": {},
+        "path": "result.report.metrics.grade"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "deve lançar erro se linguagem não detectada",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Valida que **`runPipeline`** consegue lançar erro se linguagem não detectada. **Validações**: `result.ok` = `false`, `result.errors.length` = `0`, `result.errors.?` = `\"não detectada\"`",
+    "whyItTests": "Valida 3 aspecto(s) usando: toBe, toBeGreaterThan, toContain. **Cenário de parsing** - valida interpretação correta de entrada",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo\n- ✅ **Valor**: Múltiplos asserts (~3) aumentam diagnóstico (sabe EXATAMENTE o que falhou)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": false,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.errors.length"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "não detectada",
+        "path": "result.errors.?"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "deve executar pipeline com adapter válido (stub)",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Valida que **`runPipeline`** consegue executar pipeline com adapter válido (stub). **Validações**: `result.ok` = `true`, `result.language` = `\"typescript\"`, `result.framework` = `\"vitest\"` e mais 3",
+    "whyItTests": "Valida 6 aspecto(s) usando: toBe, toContain",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo\n- ✅ **Valor**: Múltiplos asserts (~6) aumentam diagnóstico (sabe EXATAMENTE o que falhou)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "typescript",
+        "path": "result.language"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "vitest",
+        "path": "result.framework"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "functions",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "tests",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "cases",
+        "path": "result.execution.stepsExecuted"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "deve pular mutation em perfil ci-fast",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Valida que **`runPipeline`** consegue pular mutation em perfil ci-fast. **Validações**: `result.execution.stepsSkipped` = `\"mutation\"`",
+    "whyItTests": "Valida 1 aspecto(s) usando: toContain",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "mutation",
+        "path": "result.execution.stepsSkipped"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "deve executar mutation em perfil ci-strict",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Valida que **`runPipeline`** consegue executar mutation em perfil ci-strict. **Validações**: `result.execution.stepsExecuted` = `\"mutation\"`, `result.report.metrics.mutationScore` = `75`",
+    "whyItTests": "Valida 3 aspecto(s) usando: toContain, toHaveBeenCalled, toBe",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo\n- ✅ **Valor**: Múltiplos asserts (~3) aumentam diagnóstico (sabe EXATAMENTE o que falhou)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "mutation",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "called",
+        "matcher": "toHaveBeenCalled",
+        "path": "mockAdapter.capabilities.mutation"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": 75,
+        "path": "result.report.metrics.mutationScore"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "deve calcular quality score corretamente",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Valida que **`runPipeline`** consegue calcular quality score corretamente. **Validações**: `result.report.metrics.qualityScore` = `0`, `result.report.metrics.grade` = `{}`",
+    "whyItTests": "Valida 2 aspecto(s) usando: toBeGreaterThan, toMatch",
+    "purposeForWhat": "📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)\n- ⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.report.metrics.qualityScore"
+      },
+      {
+        "type": "value",
+        "matcher": "toMatch",
+        "value": {},
+        "path": "result.report.metrics.grade"
       }
     ],
     "mocks": [],
