@@ -669,6 +669,25 @@
         let currentPage = 1;
         const itemsPerPage = 10;
         
+        // 🆕 Função para formatar markdown básico
+        function formatMarkdown(text) {
+            if (!text) return 'N/A';
+            
+            return text
+                // **bold** → <strong>
+                .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                // `code` → <code>
+                .replace(/`([^`]+)`/g, '<code>$1</code>')
+                // \n- lista → <br>• (quebra de linha + bullet)
+                .replace(/\n-\s/g, '<br>• ')
+                // \n simples → <br>
+                .replace(/\n/g, '<br>')
+                // | separador → <br>
+                .replace(/\s\|\s/g, '<br>')
+                // Emojis preservados
+                ;
+        }
+        
         // Carregar dados
         async function loadData() {
             try {
@@ -797,17 +816,17 @@
                     <div class="card-content">
                         <div class="info-row">
                             <span class="info-label">🎯 O que testa:</span>
-                            <span class="info-value">${test.whatItTests}</span>
+                            <span class="info-value">${formatMarkdown(test.whatItTests)}</span>
                         </div>
                         
                         <div class="info-row">
                             <span class="info-label">❓ Por que testa:</span>
-                            <span class="info-value">${test.whyItTests}</span>
+                            <span class="info-value">${formatMarkdown(test.whyItTests)}</span>
                         </div>
                         
                         <div class="info-row">
                             <span class="info-label">🎬 Para que:</span>
-                            <span class="info-value">${test.purposeForWhat}</span>
+                            <span class="info-value">${formatMarkdown(test.purposeForWhat)}</span>
                         </div>
                         
                         <div class="info-row">
@@ -857,9 +876,22 @@
                             <div class="detail-title">✅ Then (Asserts)</div>
                             ${test.then.length > 0 ? `
                                 <ul class="detail-list">
-                                    ${test.then.map(t => `<li>${t}</li>`).join('')}
+                                    ${test.then.map(t => {
+                                        if (typeof t === 'object') {
+                                            // Formatar objeto AssertInfo
+                                            if (t.matcher && t.path) {
+                                                return `<li><code>${t.path}</code> → <strong>${t.matcher}</strong> → <code>${t.value !== undefined ? t.value : 'esperado'}</code></li>`;
+                                            } else if (t.matcher) {
+                                                return `<li><strong>${t.matcher}</strong>(<code>${t.value !== undefined ? t.value : 'esperado'}</code>)</li>`;
+                                            } else {
+                                                return `<li><strong>${t.type}</strong>: ${t.path ? `<code>${t.path}</code>` : ''} ${t.value !== undefined ? `→ <code>${t.value}</code>` : ''}</li>`;
+                                            }
+                                        }
+                                        // Fallback para string
+                                        return `<li>${t}</li>`;
+                                    }).join('')}
                                 </ul>
-                            ` : '<div class="detail-content">Nenhum assert identificado</div>'}
+                            ` : '<div class="detail-content">⚠️ Nenhum assert identificado</div>'}
                         </div>
                         
                         ${test.mocks.length > 0 ? `
