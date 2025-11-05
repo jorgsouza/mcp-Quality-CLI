@@ -1,0 +1,17 @@
+{
+  "ok": true,
+  "period": {
+    "start": "2025-10-06T12:07:06.852Z",
+    "end": "2025-11-05T12:07:06.852Z"
+  },
+  "releases": [],
+  "incidents": [],
+  "dora_metrics": {
+    "deployment_frequency": 0,
+    "lead_time_minutes": 45,
+    "change_failure_rate": 0,
+    "mttr_minutes": 0,
+    "dora_tier": "Low"
+  },
+  "output": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/analyses/prod-metrics.json"
+}

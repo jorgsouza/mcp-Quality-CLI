@@ -1,0 +1,11 @@
+--- a/src/__tests__/tools/slo-canary-check.test.ts
++++ b/src/__tests__/tools/slo-canary-check.test.ts
+@@ -1,0 +1,9 @@
++
+describe('sloCanaryCheck', () => {
+  it('deve lidar com edge cases (null/undefined/empty)', () => {
+    expect(() => sloCanaryCheck(null)).toThrow();
+    expect(() => sloCanaryCheck(undefined)).toThrow();
+    expect(() => sloCanaryCheck('')).toThrow();
+  });
+});

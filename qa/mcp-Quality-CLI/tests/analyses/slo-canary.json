@@ -1,0 +1,100 @@
+{
+  "ok": false,
+  "period": {
+    "start": "2025-10-06T12:07:06.852Z",
+    "end": "2025-11-05T12:07:06.852Z"
+  },
+  "summary": {
+    "total_cujs": 2,
+    "cujs_met": 0,
+    "cujs_violated": 2,
+    "total_violations": 6,
+    "critical_violations": 0
+  },
+  "slos": [
+    {
+      "cuj_id": "api-api",
+      "latency_p99_ms": 5000,
+      "error_rate_max": 0.05,
+      "availability_min": 0.99
+    },
+    {
+      "cuj_id": "api-users",
+      "latency_p99_ms": 5000,
+      "error_rate_max": 0.05,
+      "availability_min": 0.99
+    }
+  ],
+  "violations": [
+    {
+      "cuj_id": "api-api",
+      "cuj_name": "API (api)",
+      "metric": "latency_p99",
+      "expected": 5000,
+      "actual": 5893.90633006862,
+      "severity": "medium",
+      "message": "Latency P99 5893.90633006862ms > SLO 5000ms"
+    },
+    {
+      "cuj_id": "api-api",
+      "cuj_name": "API (api)",
+      "metric": "error_rate",
+      "expected": 0.05,
+      "actual": 0.058939063300686205,
+      "severity": "medium",
+      "message": "Error rate 5.89% > SLO 5.00%"
+    },
+    {
+      "cuj_id": "api-api",
+      "cuj_name": "API (api)",
+      "metric": "availability",
+      "expected": 0.99,
+      "actual": 0.9,
+      "severity": "medium",
+      "message": "Availability 90.000% < SLO 99.00%"
+    },
+    {
+      "cuj_id": "api-users",
+      "cuj_name": "API (users)",
+      "metric": "latency_p99",
+      "expected": 5000,
+      "actual": 5374.524179268095,
+      "severity": "medium",
+      "message": "Latency P99 5374.524179268095ms > SLO 5000ms"
+    },
+    {
+      "cuj_id": "api-users",
+      "cuj_name": "API (users)",
+      "metric": "error_rate",
+      "expected": 0.05,
+      "actual": 0.053745241792680955,
+      "severity": "medium",
+      "message": "Error rate 5.37% > SLO 5.00%"
+    },
+    {
+      "cuj_id": "api-users",
+      "cuj_name": "API (users)",
+      "metric": "availability",
+      "expected": 0.99,
+      "actual": 0.9158442125049171,
+      "severity": "medium",
+      "message": "Availability 91.584% < SLO 99.00%"
+    }
+  ],
+  "recommendations": [
+    "🔧 Otimizar performance para 2 CUJ(s) com latência alta",
+    "   • Revisar queries de banco de dados lentas",
+    "   • Implementar caching para endpoints críticos",
+    "   • Considerar CDN para assets estáticos",
+    "🐛 Investigar erros em 2 CUJ(s)",
+    "   • Analisar logs de erros no Sentry/Datadog",
+    "   • Adicionar monitoring e alertas",
+    "   • Aumentar cobertura de testes de integração",
+    "⚠️  Melhorar disponibilidade de 2 CUJ(s)",
+    "   • Implementar circuit breaker",
+    "   • Adicionar retry logic com backoff",
+    "   • Configurar health checks e auto-scaling"
+  ],
+  "output_path": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/analyses/slo-canary.json",
+  "report_path": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/qa/mcp-Quality-CLI/tests/reports/SLO-CANARY.md"
+}

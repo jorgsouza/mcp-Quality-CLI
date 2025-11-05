@@ -8089,10 +8089,10 @@
   },
   {
     "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/__tests__/mcp-tools.test.ts",
-    "name": "MCP Tools Manifest > deve ter exatamente 9 tools consolidados (5 originais + 4 Quality Gates)",
+    "name": "MCP Tools Manifest > deve ter exatamente 10 tools consolidados (5 originais + 5 Quality Gates)",
     "testType": "unit",
     "functionUnderTest": ".toHaveLength",
-    "whatItTests": "Testa se .toHaveLength ter exatamente 9 tools consolidados (5 originais + 4 Quality Gates)",
+    "whatItTests": "Testa se .toHaveLength ter exatamente 10 tools consolidados (5 originais + 5 Quality Gates)",
     "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
     "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
     "given": [
@@ -8103,13 +8103,13 @@
       {
         "type": "value",
         "matcher": "toHaveLength",
-        "value": 9,
+        "value": 10,
         "path": "MCP_TOOLS"
       },
       {
         "type": "value",
         "matcher": "toHaveLength",
-        "value": 9,
+        "value": 10,
         "path": "MCP_TOOLS"
       }
     ],
@@ -8604,10 +8604,10 @@
   },
   {
     "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/__tests__/mcp-tools.test.ts",
-    "name": "deve ter exatamente 9 tools consolidados (5 originais + 4 Quality Gates)",
+    "name": "deve ter exatamente 10 tools consolidados (5 originais + 5 Quality Gates)",
     "testType": "unit",
     "functionUnderTest": ".toHaveLength",
-    "whatItTests": "Testa se .toHaveLength ter exatamente 9 tools consolidados (5 originais + 4 Quality Gates)",
+    "whatItTests": "Testa se .toHaveLength ter exatamente 10 tools consolidados (5 originais + 5 Quality Gates)",
     "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
     "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
     "given": [
@@ -8618,13 +8618,13 @@
       {
         "type": "value",
         "matcher": "toHaveLength",
-        "value": 9,
+        "value": 10,
         "path": "MCP_TOOLS"
       },
       {
         "type": "value",
         "matcher": "toHaveLength",
-        "value": 9,
+        "value": 10,
         "path": "MCP_TOOLS"
       }
     ],
@@ -14539,10 +14539,10 @@
   },
   {
     "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/__tests__/cli-manifest.test.ts",
-    "name": "Estrutura do Manifesto > deve ter exatamente 5 comandos consolidados",
+    "name": "Estrutura do Manifesto > deve ter exatamente 6 comandos consolidados",
     "testType": "unit",
     "functionUnderTest": ".toHaveLength",
-    "whatItTests": "Testa se .toHaveLength ter exatamente 5 comandos consolidados",
+    "whatItTests": "Testa se .toHaveLength ter exatamente 6 comandos consolidados",
     "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
     "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
     "given": [
@@ -14553,13 +14553,13 @@
       {
         "type": "value",
         "matcher": "toHaveLength",
-        "value": 5,
+        "value": 6,
         "path": "COMMANDS"
       },
       {
         "type": "value",
         "matcher": "toHaveLength",
-        "value": 5,
+        "value": 6,
         "path": "COMMANDS"
       }
     ],
@@ -14859,10 +14859,10 @@
   },
   {
     "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/__tests__/cli-manifest.test.ts",
-    "name": "Commands Manifest > deve ter exatamente 5 comandos consolidados",
+    "name": "Commands Manifest > deve ter exatamente 6 comandos consolidados",
     "testType": "unit",
     "functionUnderTest": ".toHaveLength",
-    "whatItTests": "Testa se .toHaveLength ter exatamente 5 comandos consolidados",
+    "whatItTests": "Testa se .toHaveLength ter exatamente 6 comandos consolidados",
     "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
     "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
     "given": [
@@ -14873,13 +14873,13 @@
       {
         "type": "value",
         "matcher": "toHaveLength",
-        "value": 5,
+        "value": 6,
         "path": "COMMANDS"
       },
       {
         "type": "value",
         "matcher": "toHaveLength",
-        "value": 5,
+        "value": 6,
         "path": "COMMANDS"
       }
     ],
@@ -18033,10 +18033,10 @@
   },
   {
     "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/__tests__/cli-manifest.test.ts",
-    "name": "Estrutura do Manifesto > deve ter exatamente 5 comandos consolidados",
+    "name": "Estrutura do Manifesto > deve ter exatamente 6 comandos consolidados",
     "testType": "unit",
     "functionUnderTest": ".toHaveLength",
-    "whatItTests": "Testa se .toHaveLength ter exatamente 5 comandos consolidados",
+    "whatItTests": "Testa se .toHaveLength ter exatamente 6 comandos consolidados",
     "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
     "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
     "given": [
@@ -18047,13 +18047,13 @@
       {
         "type": "value",
         "matcher": "toHaveLength",
-        "value": 5,
+        "value": 6,
         "path": "COMMANDS"
       },
       {
         "type": "value",
         "matcher": "toHaveLength",
-        "value": 5,
+        "value": 6,
         "path": "COMMANDS"
       }
     ],
@@ -18353,10 +18353,10 @@
   },
   {
     "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/__tests__/cli-manifest.test.ts",
-    "name": "deve ter exatamente 5 comandos consolidados",
+    "name": "deve ter exatamente 6 comandos consolidados",
     "testType": "unit",
     "functionUnderTest": ".toHaveLength",
-    "whatItTests": "Testa se .toHaveLength ter exatamente 5 comandos consolidados",
+    "whatItTests": "Testa se .toHaveLength ter exatamente 6 comandos consolidados",
     "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
     "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
     "given": [
@@ -18367,13 +18367,13 @@
       {
         "type": "value",
         "matcher": "toHaveLength",
-        "value": 5,
+        "value": 6,
         "path": "COMMANDS"
       },
       {
         "type": "value",
         "matcher": "toHaveLength",
-        "value": 5,
+        "value": 6,
         "path": "COMMANDS"
       }
     ],
@@ -87056,13 +87056,13 @@
       {
         "type": "value",
         "matcher": "toBe",
-        "value": "utils/math.ts",
+        "value": "src/utils/math.ts",
         "path": "normalizeFilePath()"
       },
       {
         "type": "value",
         "matcher": "toBe",
-        "value": "utils/math.ts",
+        "value": "src/utils/math.ts",
         "path": "normalizeFilePath()"
       }
     ],
@@ -87232,13 +87232,13 @@
       {
         "type": "value",
         "matcher": "toBe",
-        "value": "utils/math.ts",
+        "value": "src/utils/math.ts",
         "path": "normalizeFilePath()"
       },
       {
         "type": "value",
         "matcher": "toBe",
-        "value": "utils/math.ts",
+        "value": "src/utils/math.ts",
         "path": "normalizeFilePath()"
       }
     ],
@@ -89774,13 +89774,13 @@
       {
         "type": "value",
         "matcher": "toBe",
-        "value": "utils/math.ts",
+        "value": "src/utils/math.ts",
         "path": "normalizeFilePath()"
       },
       {
         "type": "value",
         "matcher": "toBe",
-        "value": "utils/math.ts",
+        "value": "src/utils/math.ts",
         "path": "normalizeFilePath()"
       }
     ],
@@ -89950,13 +89950,13 @@
       {
         "type": "value",
         "matcher": "toBe",
-        "value": "utils/math.ts",
+        "value": "src/utils/math.ts",
         "path": "normalizeFilePath()"
       },
       {
         "type": "value",
         "matcher": "toBe",
-        "value": "utils/math.ts",
+        "value": "src/utils/math.ts",
         "path": "normalizeFilePath()"
       }
     ],
@@ -90734,1782 +90734,6 @@
         "matcher": "toBe",
         "value": 100,
         "path": "result.percentage"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "detectLanguage > deve detectar adapter baseado no método detect",
-    "testType": "unit",
-    "functionUnderTest": "detectLanguage",
-    "whatItTests": "Testa se detectLanguage detectar adapter baseado no método detect",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter1 = ...",
-      "mockAdapter2 = ...",
-      "result = ..."
-    ],
-    "when": "detectLanguage",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "mockAdapter2",
-        "path": "result"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "mockAdapter2",
-        "path": "result"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "typescript",
-        "path": "unknown"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "typescript",
-        "path": "unknown"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "detectLanguage > deve retornar null se nenhum adapter detectar",
-    "testType": "unit",
-    "functionUnderTest": "detectLanguage",
-    "whatItTests": "Testa se detectLanguage retornar null se nenhum adapter detectar",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "detectLanguage",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBeNull",
-        "path": "result"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeNull",
-        "path": "result"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "Engine Modular > deve detectar adapter baseado no método detect",
-    "testType": "unit",
-    "functionUnderTest": "detectLanguage",
-    "whatItTests": "Testa se detectLanguage detectar adapter baseado no método detect",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter1 = ...",
-      "mockAdapter2 = ...",
-      "result = ..."
-    ],
-    "when": "detectLanguage",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "mockAdapter2",
-        "path": "result"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "mockAdapter2",
-        "path": "result"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "typescript",
-        "path": "unknown"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "typescript",
-        "path": "unknown"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "Engine Modular > deve retornar null se nenhum adapter detectar",
-    "testType": "unit",
-    "functionUnderTest": "detectLanguage",
-    "whatItTests": "Testa se detectLanguage retornar null se nenhum adapter detectar",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "detectLanguage",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBeNull",
-        "path": "result"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeNull",
-        "path": "result"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "runPipeline > deve lançar erro se linguagem não detectada",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Testa se runPipeline lançar erro se linguagem não detectada",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões em cenários de erro",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": false,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": false,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.errors.length"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.errors.length"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "não detectada",
-        "path": "result.errors.?"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "não detectada",
-        "path": "result.errors.?"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "runPipeline > deve executar pipeline com adapter válido (stub)",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Testa se runPipeline executar pipeline com adapter válido (stub)",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "typescript",
-        "path": "result.language"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "typescript",
-        "path": "result.language"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "vitest",
-        "path": "result.framework"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "vitest",
-        "path": "result.framework"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "functions",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "functions",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "tests",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "tests",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "cases",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "cases",
-        "path": "result.execution.stepsExecuted"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "runPipeline > deve pular mutation em perfil ci-fast",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Testa se runPipeline pular mutation em perfil ci-fast",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "mutation",
-        "path": "result.execution.stepsSkipped"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "mutation",
-        "path": "result.execution.stepsSkipped"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "runPipeline > deve executar mutation em perfil ci-strict",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Testa se runPipeline executar mutation em perfil ci-strict",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "mutation",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "mutation",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "called",
-        "matcher": "toHaveBeenCalled",
-        "path": "mockAdapter.capabilities.mutation"
-      },
-      {
-        "type": "called",
-        "matcher": "toHaveBeenCalled",
-        "path": "mockAdapter.capabilities.mutation"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": 75,
-        "path": "result.report.metrics.mutationScore"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": 75,
-        "path": "result.report.metrics.mutationScore"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "runPipeline > deve calcular quality score corretamente",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Testa se runPipeline calcular quality score corretamente",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.report.metrics.qualityScore"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.report.metrics.qualityScore"
-      },
-      {
-        "type": "value",
-        "matcher": "toMatch",
-        "value": {},
-        "path": "result.report.metrics.grade"
-      },
-      {
-        "type": "value",
-        "matcher": "toMatch",
-        "value": {},
-        "path": "result.report.metrics.grade"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "Engine Modular > deve lançar erro se linguagem não detectada",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Testa se runPipeline lançar erro se linguagem não detectada",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões em cenários de erro",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": false,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": false,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.errors.length"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.errors.length"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "não detectada",
-        "path": "result.errors.?"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "não detectada",
-        "path": "result.errors.?"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "Engine Modular > deve executar pipeline com adapter válido (stub)",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Testa se runPipeline executar pipeline com adapter válido (stub)",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "typescript",
-        "path": "result.language"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "typescript",
-        "path": "result.language"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "vitest",
-        "path": "result.framework"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "vitest",
-        "path": "result.framework"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "functions",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "functions",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "tests",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "tests",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "cases",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "cases",
-        "path": "result.execution.stepsExecuted"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "Engine Modular > deve pular mutation em perfil ci-fast",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Testa se runPipeline pular mutation em perfil ci-fast",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "mutation",
-        "path": "result.execution.stepsSkipped"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "mutation",
-        "path": "result.execution.stepsSkipped"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "Engine Modular > deve executar mutation em perfil ci-strict",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Testa se runPipeline executar mutation em perfil ci-strict",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "mutation",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "mutation",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "called",
-        "matcher": "toHaveBeenCalled",
-        "path": "mockAdapter.capabilities.mutation"
-      },
-      {
-        "type": "called",
-        "matcher": "toHaveBeenCalled",
-        "path": "mockAdapter.capabilities.mutation"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": 75,
-        "path": "result.report.metrics.mutationScore"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": 75,
-        "path": "result.report.metrics.mutationScore"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "Engine Modular > deve calcular quality score corretamente",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Testa se runPipeline calcular quality score corretamente",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.report.metrics.qualityScore"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.report.metrics.qualityScore"
-      },
-      {
-        "type": "value",
-        "matcher": "toMatch",
-        "value": {},
-        "path": "result.report.metrics.grade"
-      },
-      {
-        "type": "value",
-        "matcher": "toMatch",
-        "value": {},
-        "path": "result.report.metrics.grade"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "detectLanguage > deve detectar adapter baseado no método detect",
-    "testType": "unit",
-    "functionUnderTest": "detectLanguage",
-    "whatItTests": "Testa se detectLanguage detectar adapter baseado no método detect",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter1 = ...",
-      "mockAdapter2 = ...",
-      "result = ..."
-    ],
-    "when": "detectLanguage",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "mockAdapter2",
-        "path": "result"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "mockAdapter2",
-        "path": "result"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "typescript",
-        "path": "unknown"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "typescript",
-        "path": "unknown"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "detectLanguage > deve retornar null se nenhum adapter detectar",
-    "testType": "unit",
-    "functionUnderTest": "detectLanguage",
-    "whatItTests": "Testa se detectLanguage retornar null se nenhum adapter detectar",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "detectLanguage",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBeNull",
-        "path": "result"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeNull",
-        "path": "result"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "deve detectar adapter baseado no método detect",
-    "testType": "unit",
-    "functionUnderTest": "detectLanguage",
-    "whatItTests": "Testa se detectLanguage detectar adapter baseado no método detect",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter1 = ...",
-      "mockAdapter2 = ...",
-      "result = ..."
-    ],
-    "when": "detectLanguage",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "mockAdapter2",
-        "path": "result"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "mockAdapter2",
-        "path": "result"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "typescript",
-        "path": "unknown"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "typescript",
-        "path": "unknown"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "deve retornar null se nenhum adapter detectar",
-    "testType": "unit",
-    "functionUnderTest": "detectLanguage",
-    "whatItTests": "Testa se detectLanguage retornar null se nenhum adapter detectar",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "detectLanguage",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBeNull",
-        "path": "result"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeNull",
-        "path": "result"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "runPipeline > deve lançar erro se linguagem não detectada",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Testa se runPipeline lançar erro se linguagem não detectada",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões em cenários de erro",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": false,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": false,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.errors.length"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.errors.length"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "não detectada",
-        "path": "result.errors.?"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "não detectada",
-        "path": "result.errors.?"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "runPipeline > deve executar pipeline com adapter válido (stub)",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Testa se runPipeline executar pipeline com adapter válido (stub)",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "typescript",
-        "path": "result.language"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "typescript",
-        "path": "result.language"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "vitest",
-        "path": "result.framework"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "vitest",
-        "path": "result.framework"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "functions",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "functions",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "tests",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "tests",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "cases",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "cases",
-        "path": "result.execution.stepsExecuted"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "runPipeline > deve pular mutation em perfil ci-fast",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Testa se runPipeline pular mutation em perfil ci-fast",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "mutation",
-        "path": "result.execution.stepsSkipped"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "mutation",
-        "path": "result.execution.stepsSkipped"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "runPipeline > deve executar mutation em perfil ci-strict",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Testa se runPipeline executar mutation em perfil ci-strict",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "mutation",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "mutation",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "called",
-        "matcher": "toHaveBeenCalled",
-        "path": "mockAdapter.capabilities.mutation"
-      },
-      {
-        "type": "called",
-        "matcher": "toHaveBeenCalled",
-        "path": "mockAdapter.capabilities.mutation"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": 75,
-        "path": "result.report.metrics.mutationScore"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": 75,
-        "path": "result.report.metrics.mutationScore"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "runPipeline > deve calcular quality score corretamente",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Testa se runPipeline calcular quality score corretamente",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.report.metrics.qualityScore"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.report.metrics.qualityScore"
-      },
-      {
-        "type": "value",
-        "matcher": "toMatch",
-        "value": {},
-        "path": "result.report.metrics.grade"
-      },
-      {
-        "type": "value",
-        "matcher": "toMatch",
-        "value": {},
-        "path": "result.report.metrics.grade"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "deve lançar erro se linguagem não detectada",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Testa se runPipeline lançar erro se linguagem não detectada",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões em cenários de erro",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": false,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": false,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.errors.length"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.errors.length"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "não detectada",
-        "path": "result.errors.?"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "não detectada",
-        "path": "result.errors.?"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "deve executar pipeline com adapter válido (stub)",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Testa se runPipeline executar pipeline com adapter válido (stub)",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": true,
-        "path": "result.ok"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "typescript",
-        "path": "result.language"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "typescript",
-        "path": "result.language"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "vitest",
-        "path": "result.framework"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": "vitest",
-        "path": "result.framework"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "functions",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "functions",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "tests",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "tests",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "cases",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "cases",
-        "path": "result.execution.stepsExecuted"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "deve pular mutation em perfil ci-fast",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Testa se runPipeline pular mutation em perfil ci-fast",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "mutation",
-        "path": "result.execution.stepsSkipped"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "mutation",
-        "path": "result.execution.stepsSkipped"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "deve executar mutation em perfil ci-strict",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Testa se runPipeline executar mutation em perfil ci-strict",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "mutation",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "value",
-        "matcher": "toContain",
-        "value": "mutation",
-        "path": "result.execution.stepsExecuted"
-      },
-      {
-        "type": "called",
-        "matcher": "toHaveBeenCalled",
-        "path": "mockAdapter.capabilities.mutation"
-      },
-      {
-        "type": "called",
-        "matcher": "toHaveBeenCalled",
-        "path": "mockAdapter.capabilities.mutation"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": 75,
-        "path": "result.report.metrics.mutationScore"
-      },
-      {
-        "type": "value",
-        "matcher": "toBe",
-        "value": 75,
-        "path": "result.report.metrics.mutationScore"
-      }
-    ],
-    "mocks": [],
-    "coverage": {
-      "files": [],
-      "linesCovered": 0,
-      "linesTotal": 0,
-      "coveredInDiffPct": 0
-    },
-    "contracts": {
-      "pact": false,
-      "failed": 0,
-      "interactions": 0
-    },
-    "assertStrength": "médio",
-    "smells": [],
-    "suggestions": [
-      "Adicionar cenário de erro (try-catch)"
-    ]
-  },
-  {
-    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
-    "name": "deve calcular quality score corretamente",
-    "testType": "unit",
-    "functionUnderTest": "runPipeline",
-    "whatItTests": "Testa se runPipeline calcular quality score corretamente",
-    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
-    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
-    "given": [
-      "mockAdapter = ...",
-      "result = ..."
-    ],
-    "when": "runPipeline",
-    "then": [
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.report.metrics.qualityScore"
-      },
-      {
-        "type": "value",
-        "matcher": "toBeGreaterThan",
-        "value": 0,
-        "path": "result.report.metrics.qualityScore"
-      },
-      {
-        "type": "value",
-        "matcher": "toMatch",
-        "value": {},
-        "path": "result.report.metrics.grade"
-      },
-      {
-        "type": "value",
-        "matcher": "toMatch",
-        "value": {},
-        "path": "result.report.metrics.grade"
       }
     ],
     "mocks": [],
@@ -104088,6 +102312,1782 @@
         "matcher": "toContain",
         "value": "event:template-literal",
         "path": "events"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "detectLanguage > deve detectar adapter baseado no método detect",
+    "testType": "unit",
+    "functionUnderTest": "detectLanguage",
+    "whatItTests": "Testa se detectLanguage detectar adapter baseado no método detect",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter1 = ...",
+      "mockAdapter2 = ...",
+      "result = ..."
+    ],
+    "when": "detectLanguage",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "mockAdapter2",
+        "path": "result"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "mockAdapter2",
+        "path": "result"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "typescript",
+        "path": "unknown"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "typescript",
+        "path": "unknown"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "detectLanguage > deve retornar null se nenhum adapter detectar",
+    "testType": "unit",
+    "functionUnderTest": "detectLanguage",
+    "whatItTests": "Testa se detectLanguage retornar null se nenhum adapter detectar",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "detectLanguage",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBeNull",
+        "path": "result"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeNull",
+        "path": "result"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "Engine Modular > deve detectar adapter baseado no método detect",
+    "testType": "unit",
+    "functionUnderTest": "detectLanguage",
+    "whatItTests": "Testa se detectLanguage detectar adapter baseado no método detect",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter1 = ...",
+      "mockAdapter2 = ...",
+      "result = ..."
+    ],
+    "when": "detectLanguage",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "mockAdapter2",
+        "path": "result"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "mockAdapter2",
+        "path": "result"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "typescript",
+        "path": "unknown"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "typescript",
+        "path": "unknown"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "Engine Modular > deve retornar null se nenhum adapter detectar",
+    "testType": "unit",
+    "functionUnderTest": "detectLanguage",
+    "whatItTests": "Testa se detectLanguage retornar null se nenhum adapter detectar",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "detectLanguage",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBeNull",
+        "path": "result"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeNull",
+        "path": "result"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "runPipeline > deve lançar erro se linguagem não detectada",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Testa se runPipeline lançar erro se linguagem não detectada",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões em cenários de erro",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": false,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": false,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.errors.length"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.errors.length"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "não detectada",
+        "path": "result.errors.?"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "não detectada",
+        "path": "result.errors.?"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "runPipeline > deve executar pipeline com adapter válido (stub)",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Testa se runPipeline executar pipeline com adapter válido (stub)",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "typescript",
+        "path": "result.language"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "typescript",
+        "path": "result.language"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "vitest",
+        "path": "result.framework"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "vitest",
+        "path": "result.framework"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "functions",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "functions",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "tests",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "tests",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "cases",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "cases",
+        "path": "result.execution.stepsExecuted"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "runPipeline > deve pular mutation em perfil ci-fast",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Testa se runPipeline pular mutation em perfil ci-fast",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "mutation",
+        "path": "result.execution.stepsSkipped"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "mutation",
+        "path": "result.execution.stepsSkipped"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "runPipeline > deve executar mutation em perfil ci-strict",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Testa se runPipeline executar mutation em perfil ci-strict",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "mutation",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "mutation",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "called",
+        "matcher": "toHaveBeenCalled",
+        "path": "mockAdapter.capabilities.mutation"
+      },
+      {
+        "type": "called",
+        "matcher": "toHaveBeenCalled",
+        "path": "mockAdapter.capabilities.mutation"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": 75,
+        "path": "result.report.metrics.mutationScore"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": 75,
+        "path": "result.report.metrics.mutationScore"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "runPipeline > deve calcular quality score corretamente",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Testa se runPipeline calcular quality score corretamente",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.report.metrics.qualityScore"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.report.metrics.qualityScore"
+      },
+      {
+        "type": "value",
+        "matcher": "toMatch",
+        "value": {},
+        "path": "result.report.metrics.grade"
+      },
+      {
+        "type": "value",
+        "matcher": "toMatch",
+        "value": {},
+        "path": "result.report.metrics.grade"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "Engine Modular > deve lançar erro se linguagem não detectada",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Testa se runPipeline lançar erro se linguagem não detectada",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões em cenários de erro",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": false,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": false,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.errors.length"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.errors.length"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "não detectada",
+        "path": "result.errors.?"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "não detectada",
+        "path": "result.errors.?"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "Engine Modular > deve executar pipeline com adapter válido (stub)",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Testa se runPipeline executar pipeline com adapter válido (stub)",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "typescript",
+        "path": "result.language"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "typescript",
+        "path": "result.language"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "vitest",
+        "path": "result.framework"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "vitest",
+        "path": "result.framework"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "functions",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "functions",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "tests",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "tests",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "cases",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "cases",
+        "path": "result.execution.stepsExecuted"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "Engine Modular > deve pular mutation em perfil ci-fast",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Testa se runPipeline pular mutation em perfil ci-fast",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "mutation",
+        "path": "result.execution.stepsSkipped"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "mutation",
+        "path": "result.execution.stepsSkipped"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "Engine Modular > deve executar mutation em perfil ci-strict",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Testa se runPipeline executar mutation em perfil ci-strict",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "mutation",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "mutation",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "called",
+        "matcher": "toHaveBeenCalled",
+        "path": "mockAdapter.capabilities.mutation"
+      },
+      {
+        "type": "called",
+        "matcher": "toHaveBeenCalled",
+        "path": "mockAdapter.capabilities.mutation"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": 75,
+        "path": "result.report.metrics.mutationScore"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": 75,
+        "path": "result.report.metrics.mutationScore"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "Engine Modular > deve calcular quality score corretamente",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Testa se runPipeline calcular quality score corretamente",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.report.metrics.qualityScore"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.report.metrics.qualityScore"
+      },
+      {
+        "type": "value",
+        "matcher": "toMatch",
+        "value": {},
+        "path": "result.report.metrics.grade"
+      },
+      {
+        "type": "value",
+        "matcher": "toMatch",
+        "value": {},
+        "path": "result.report.metrics.grade"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "detectLanguage > deve detectar adapter baseado no método detect",
+    "testType": "unit",
+    "functionUnderTest": "detectLanguage",
+    "whatItTests": "Testa se detectLanguage detectar adapter baseado no método detect",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter1 = ...",
+      "mockAdapter2 = ...",
+      "result = ..."
+    ],
+    "when": "detectLanguage",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "mockAdapter2",
+        "path": "result"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "mockAdapter2",
+        "path": "result"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "typescript",
+        "path": "unknown"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "typescript",
+        "path": "unknown"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "detectLanguage > deve retornar null se nenhum adapter detectar",
+    "testType": "unit",
+    "functionUnderTest": "detectLanguage",
+    "whatItTests": "Testa se detectLanguage retornar null se nenhum adapter detectar",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "detectLanguage",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBeNull",
+        "path": "result"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeNull",
+        "path": "result"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "deve detectar adapter baseado no método detect",
+    "testType": "unit",
+    "functionUnderTest": "detectLanguage",
+    "whatItTests": "Testa se detectLanguage detectar adapter baseado no método detect",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter1 = ...",
+      "mockAdapter2 = ...",
+      "result = ..."
+    ],
+    "when": "detectLanguage",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "mockAdapter2",
+        "path": "result"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "mockAdapter2",
+        "path": "result"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "typescript",
+        "path": "unknown"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "typescript",
+        "path": "unknown"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "deve retornar null se nenhum adapter detectar",
+    "testType": "unit",
+    "functionUnderTest": "detectLanguage",
+    "whatItTests": "Testa se detectLanguage retornar null se nenhum adapter detectar",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "detectLanguage",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBeNull",
+        "path": "result"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeNull",
+        "path": "result"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "runPipeline > deve lançar erro se linguagem não detectada",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Testa se runPipeline lançar erro se linguagem não detectada",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões em cenários de erro",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": false,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": false,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.errors.length"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.errors.length"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "não detectada",
+        "path": "result.errors.?"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "não detectada",
+        "path": "result.errors.?"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "runPipeline > deve executar pipeline com adapter válido (stub)",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Testa se runPipeline executar pipeline com adapter válido (stub)",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "typescript",
+        "path": "result.language"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "typescript",
+        "path": "result.language"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "vitest",
+        "path": "result.framework"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "vitest",
+        "path": "result.framework"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "functions",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "functions",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "tests",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "tests",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "cases",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "cases",
+        "path": "result.execution.stepsExecuted"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "runPipeline > deve pular mutation em perfil ci-fast",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Testa se runPipeline pular mutation em perfil ci-fast",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "mutation",
+        "path": "result.execution.stepsSkipped"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "mutation",
+        "path": "result.execution.stepsSkipped"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "runPipeline > deve executar mutation em perfil ci-strict",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Testa se runPipeline executar mutation em perfil ci-strict",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "mutation",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "mutation",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "called",
+        "matcher": "toHaveBeenCalled",
+        "path": "mockAdapter.capabilities.mutation"
+      },
+      {
+        "type": "called",
+        "matcher": "toHaveBeenCalled",
+        "path": "mockAdapter.capabilities.mutation"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": 75,
+        "path": "result.report.metrics.mutationScore"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": 75,
+        "path": "result.report.metrics.mutationScore"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "runPipeline > deve calcular quality score corretamente",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Testa se runPipeline calcular quality score corretamente",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.report.metrics.qualityScore"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.report.metrics.qualityScore"
+      },
+      {
+        "type": "value",
+        "matcher": "toMatch",
+        "value": {},
+        "path": "result.report.metrics.grade"
+      },
+      {
+        "type": "value",
+        "matcher": "toMatch",
+        "value": {},
+        "path": "result.report.metrics.grade"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "deve lançar erro se linguagem não detectada",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Testa se runPipeline lançar erro se linguagem não detectada",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões em cenários de erro",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": false,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": false,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.errors.length"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.errors.length"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "não detectada",
+        "path": "result.errors.?"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "não detectada",
+        "path": "result.errors.?"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "deve executar pipeline com adapter válido (stub)",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Testa se runPipeline executar pipeline com adapter válido (stub)",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": true,
+        "path": "result.ok"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "typescript",
+        "path": "result.language"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "typescript",
+        "path": "result.language"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "vitest",
+        "path": "result.framework"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": "vitest",
+        "path": "result.framework"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "functions",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "functions",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "tests",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "tests",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "cases",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "cases",
+        "path": "result.execution.stepsExecuted"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "deve pular mutation em perfil ci-fast",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Testa se runPipeline pular mutation em perfil ci-fast",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "mutation",
+        "path": "result.execution.stepsSkipped"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "mutation",
+        "path": "result.execution.stepsSkipped"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "deve executar mutation em perfil ci-strict",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Testa se runPipeline executar mutation em perfil ci-strict",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "mutation",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "value",
+        "matcher": "toContain",
+        "value": "mutation",
+        "path": "result.execution.stepsExecuted"
+      },
+      {
+        "type": "called",
+        "matcher": "toHaveBeenCalled",
+        "path": "mockAdapter.capabilities.mutation"
+      },
+      {
+        "type": "called",
+        "matcher": "toHaveBeenCalled",
+        "path": "mockAdapter.capabilities.mutation"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": 75,
+        "path": "result.report.metrics.mutationScore"
+      },
+      {
+        "type": "value",
+        "matcher": "toBe",
+        "value": 75,
+        "path": "result.report.metrics.mutationScore"
+      }
+    ],
+    "mocks": [],
+    "coverage": {
+      "files": [],
+      "linesCovered": 0,
+      "linesTotal": 0,
+      "coveredInDiffPct": 0
+    },
+    "contracts": {
+      "pact": false,
+      "failed": 0,
+      "interactions": 0
+    },
+    "assertStrength": "médio",
+    "smells": [],
+    "suggestions": [
+      "Adicionar cenário de erro (try-catch)"
+    ]
+  },
+  {
+    "file": "/home/jorgesouza/Documents/dev/mcp-Quality-CLI/src/engine/__tests__/engine.test.ts",
+    "name": "deve calcular quality score corretamente",
+    "testType": "unit",
+    "functionUnderTest": "runPipeline",
+    "whatItTests": "Testa se runPipeline calcular quality score corretamente",
+    "whyItTests": "Garante comportamento isolado da unidade de código; Previne regressões no comportamento esperado",
+    "purposeForWhat": "Reduzir CFR (Change Failure Rate) identificando bugs antes do deploy; Reduzir MTTR (Mean Time to Recovery) com diagnóstico rápido; Manter confiabilidade e velocidade de entrega (KR3a)",
+    "given": [
+      "mockAdapter = ...",
+      "result = ..."
+    ],
+    "when": "runPipeline",
+    "then": [
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.report.metrics.qualityScore"
+      },
+      {
+        "type": "value",
+        "matcher": "toBeGreaterThan",
+        "value": 0,
+        "path": "result.report.metrics.qualityScore"
+      },
+      {
+        "type": "value",
+        "matcher": "toMatch",
+        "value": {},
+        "path": "result.report.metrics.grade"
+      },
+      {
+        "type": "value",
+        "matcher": "toMatch",
+        "value": {},
+        "path": "result.report.metrics.grade"
       }
     ],
     "mocks": [],

@@ -1,0 +1,17 @@
+--- a/src/__tests__/commands.manifest.test.ts
++++ b/src/__tests__/commands.manifest.test.ts
+@@ -1,0 +1,15 @@
++
+describe('generateCommandHelp', () => {
+  it('deve executar happy path com sucesso', () => {
+    const result = generateCommandHelp(/* parâmetros válidos */);
+    expect(result).toBeDefined();
+    // TODO: adicionar asserts específicos para campos críticos
+  });
+
+  it('deve lidar com edge cases (null/undefined/empty)', () => {
+    expect(() => generateCommandHelp(null)).toThrow();
+    expect(() => generateCommandHelp(undefined)).toThrow();
+    expect(() => generateCommandHelp('')).toThrow();
+  });
+});
