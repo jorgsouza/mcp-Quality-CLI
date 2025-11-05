@@ -195,30 +195,21 @@ function analyzeTestBody(node: any, name: string, line: number, content: string)
         if (spyTarget) spies.push(spyTarget);
       }
       
-      // Expect/Assert (Then)
-      // Detectar expect(...).toBe(...), expect(...).toEqual(...), etc
-      if (calleeName === 'expect' || calleeName === 'assert') {
+      // 🆕 Expect/Assert (Then) - Detecção unificada para evitar duplicatas
+      // Verifica se este nó é um expect/assert em qualquer nível
+      const isExpectCall = isExpectOrAssertNode(bodyNode);
+      if (isExpectCall) {
         const assertInfo = extractAssertInfo(bodyNode);
-        if (assertInfo) then.push(assertInfo);
-      }
-      
-      // 🆕 Detectar também quando expect está no object (ex: expect().toBe())
-      if (bodyNode.callee.type === 'MemberExpression' && 
-          bodyNode.callee.object &&
-          bodyNode.callee.object.type === 'CallExpression') {
-        const objectCalleeName = getCalleeName(bodyNode.callee.object.callee);
-        if (objectCalleeName === 'expect' || objectCalleeName === 'assert') {
-          const assertInfo = extractAssertInfo(bodyNode);
-          if (assertInfo) then.push(assertInfo);
-        }
-        
-        // 🆕 Detectar expect().not.toThrow() recursivamente
-        if (bodyNode.callee.object.callee && 
-            bodyNode.callee.object.callee.type === 'MemberExpression') {
-          const deepCalleeName = getCalleeName(bodyNode.callee.object.callee.object?.callee);
-          if (deepCalleeName === 'expect' || deepCalleeName === 'assert') {
-            const assertInfo = extractAssertInfo(bodyNode);
-            if (assertInfo) then.push(assertInfo);
+        if (assertInfo) {
+          // 🔒 Evitar duplicatas: verificar se já existe
+          const isDuplicate = then.some(existing => 
+            existing.matcher === assertInfo.matcher &&
+            existing.path === assertInfo.path &&
+            JSON.stringify(existing.value) === JSON.stringify(assertInfo.value)
+          );
+          
+          if (!isDuplicate) {
+            then.push(assertInfo);
           }
         }
       }
@@ -301,6 +292,49 @@ function analyzeTestBody(node: any, name: string, line: number, content: string)
     hasErrorHandling,
     lineCount,
   };
+}
+
+/**
+ * 🆕 Verifica se um nó é um expect/assert em qualquer nível
+ * Evita duplicatas detectando todas as formas de expect:
+ * - expect(...).toBe(...) - direto
+ * - expect(...).not.toBe(...) - com .not
+ * - expect(...).resolves.toBe(...) - com .resolves
+ */
+function isExpectOrAssertNode(node: any): boolean {
+  if (!node || node.type !== 'CallExpression' || !node.callee) {
+    return false;
+  }
+  
+  // 1. expect(...) direto
+  const calleeName = getCalleeName(node.callee);
+  if (calleeName === 'expect' || calleeName === 'assert') {
+    return false; // Não é um assert completo, apenas expect()
+  }
+  
+  // 2. expect(...).matcher() - ex: expect().toBe()
+  if (node.callee.type === 'MemberExpression') {
+    // Verificar se o object é um CallExpression com expect/assert
+    if (node.callee.object && node.callee.object.type === 'CallExpression') {
+      const objectCalleeName = getCalleeName(node.callee.object.callee);
+      if (objectCalleeName === 'expect' || objectCalleeName === 'assert') {
+        return true; // expect().toBe()
+      }
+      
+      // 3. expect(...).not.matcher() ou expect(...).resolves.matcher()
+      if (node.callee.object.callee && 
+          node.callee.object.callee.type === 'MemberExpression' &&
+          node.callee.object.callee.object &&
+          node.callee.object.callee.object.type === 'CallExpression') {
+        const deepCalleeName = getCalleeName(node.callee.object.callee.object.callee);
+        if (deepCalleeName === 'expect' || deepCalleeName === 'assert') {
+          return true; // expect().not.toBe() ou expect().resolves.toBe()
+        }
+      }
+    }
+  }
+  
+  return false;
 }
 
 /**
