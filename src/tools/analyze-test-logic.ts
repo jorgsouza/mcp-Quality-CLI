@@ -368,8 +368,8 @@ async function findAndAnalyzeTests(
       // Extrair bloco do teste (aproximação)
       const testBlock = extractTestBlock(content, testStartIdx);
       
-      // Extrair assertions
-      const asserts = extractAssertions(testBlock, framework);
+      // Extrair assertions (agora usa AST!)
+      const asserts = await extractAssertions(testBlock, framework);
       
       // Detectar asserts fracos
       const weakAsserts = detectWeakAsserts(asserts);
@@ -412,12 +412,64 @@ function extractTestBlock(content: string, startIdx: number): string {
 }
 
 /**
- * Extrai assertions do teste
+ * Extrai assertions do teste usando AST (mais preciso que regex)
+ * 🆕 REFATORADO: Usa parseTestFile ao invés de regex frágil
  */
-function extractAssertions(testBlock: string, framework: string): string[] {
-  const asserts: string[] = [];
+async function extractAssertions(testBlock: string, framework: string): Promise<string[]> {
+  // 🆕 Usar parser AST ao invés de regex frágil
+  try {
+    const { parse } = await import('@typescript-eslint/typescript-estree');
+    
+    // Parsear bloco de teste como AST
+    const ast = parse(`(() => {${testBlock}})()`, {
+      loc: true,
+      range: true,
+      ecmaVersion: 2022,
+      sourceType: 'module',
+    });
+    
+    const asserts: string[] = [];
+    
+    // Visitor para encontrar expect() calls
+    function visit(node: any) {
+      if (node.type === 'CallExpression' && node.callee) {
+        // Detectar expect().matcher()
+        if (node.callee.type === 'MemberExpression' && 
+            node.callee.object &&
+            node.callee.object.type === 'CallExpression') {
+          const calleeName = node.callee.object.callee?.name;
+          if (calleeName === 'expect' || calleeName === 'assert') {
+            const matcher = node.callee.property?.name || '?';
+            const target = extractTargetName(node.callee.object.arguments[0]);
+            const value = node.arguments[0] ? extractValue(node.arguments[0]) : '';
+            asserts.push(`expect(${target}).${matcher}${value ? `(${value})` : ''}`);
+          }
+        }
+      }
+      
+      // Recursão
+      for (const key in node) {
+        if (node[key] && typeof node[key] === 'object') {
+          if (Array.isArray(node[key])) {
+            node[key].forEach((child: any) => visit(child));
+          } else {
+            visit(node[key]);
+          }
+        }
+      }
+    }
+    
+    visit(ast);
+    
+    if (asserts.length > 0) {
+      return asserts;
+    }
+  } catch (error) {
+    // Fallback silencioso para regex se AST falhar
+  }
   
-  // Padrões de assert por framework
+  // ⚠️ Fallback: REGEX (menos preciso, mas funciona para casos simples)
+  const asserts: string[] = [];
   const patterns = [
     /expect\([^)]+\)\.[^;]+/g,
     /assert\.[^(]+\([^)]+\)/g,
@@ -433,6 +485,36 @@ function extractAssertions(testBlock: string, framework: string): string[] {
   }
   
   return asserts;
+}
+
+/**
+ * Helper: extrai nome do target de um nó AST
+ */
+function extractTargetName(node: any): string {
+  if (!node) return 'unknown';
+  if (node.type === 'Identifier') return node.name;
+  if (node.type === 'MemberExpression') {
+    const object = extractTargetName(node.object);
+    const property = node.property?.name || '?';
+    return `${object}.${property}`;
+  }
+  if (node.type === 'CallExpression') {
+    const callee = extractTargetName(node.callee);
+    return `${callee}()`;
+  }
+  return 'unknown';
+}
+
+/**
+ * Helper: extrai valor de um nó AST
+ */
+function extractValue(node: any): string {
+  if (!node) return '';
+  if (node.type === 'Literal') return String(node.value);
+  if (node.type === 'Identifier') return node.name;
+  if (node.type === 'ObjectExpression') return '{...}';
+  if (node.type === 'ArrayExpression') return '[...]';
+  return '';
 }
 
 /**
