@@ -15,8 +15,8 @@ import { COMMANDS, findCommand, validateRequiredFlags } from '../commands.manife
 
 describe('Commands Manifest', () => {
   describe('Estrutura do Manifesto', () => {
-    it('deve ter exatamente 5 comandos consolidados', () => {
-      expect(COMMANDS).toHaveLength(5);
+    it('deve ter exatamente 6 comandos consolidados', () => {
+      expect(COMMANDS).toHaveLength(6); // analyze, validate, report, scaffold, explain-tests, self-check
     });
 
     it('todos os comandos devem ter propriedades obrigatórias', () => {

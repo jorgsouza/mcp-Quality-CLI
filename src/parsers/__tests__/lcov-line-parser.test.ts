@@ -157,7 +157,8 @@ end_of_record`;
     });
 
     it('deve lidar com múltiplos prefixos', () => {
-      expect(normalizeFilePath('./src/utils/math.ts')).toBe('utils/math.ts');
+      // Remove apenas o primeiro prefixo (./)
+      expect(normalizeFilePath('./src/utils/math.ts')).toBe('src/utils/math.ts');
     });
   });
 

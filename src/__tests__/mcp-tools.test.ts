@@ -6,8 +6,8 @@ import { describe, it, expect } from 'vitest';
 import { MCP_TOOLS, findTool } from '../mcp-tools.manifest.js';
 
 describe('MCP Tools Manifest', () => {
-  it('deve ter exatamente 9 tools consolidados (5 originais + 4 Quality Gates)', () => {
-    expect(MCP_TOOLS).toHaveLength(9); // 🆕 5 originais + 4 Quality Gates
+  it('deve ter exatamente 10 tools consolidados (5 originais + 5 Quality Gates)', () => {
+    expect(MCP_TOOLS).toHaveLength(10); // 🆕 5 originais + 5 Quality Gates (+ explain-tests)
   });
 
   it('tools devem ter propriedades obrigatórias', () => {
