@@ -622,96 +622,148 @@ function detectTestType(filePath: string): 'unit' | 'integration' | 'e2e' | 'unk
   return 'unknown';
 }
 
-// 🆕 Gera descrição "O que está testando"
+// 🆕 Gera descrição "O que está testando" - ESPECÍFICA por teste
 function generateWhatItTests(testCase: any, filePath: string): string {
   const functionName = testCase.when !== 'NÃO DETERMINADO' ? testCase.when : 'função não identificada';
-  const fileName = filePath.split('/').pop()?.replace(/\.(spec|test)\.(ts|js)$/, '') || 'módulo';
   const testNameLower = testCase.name.toLowerCase();
   
-  // Se tem asserts, descrever o que está sendo validado ESPECIFICAMENTE
-  if (testCase.then.length > 0) {
-    const assertions = testCase.then.map((t: any) => t.matcher || t.type).join(', ');
-    const behavior = extractBehavior(testCase.name);
-    
-    return `Testa **\`${functionName}\`** validando: ${behavior}. ` +
-           `**Evidência**: ${testCase.then.length} assert(s) (${assertions})`;
+  // Analisar VALUES dos asserts para gerar descrição específica
+  const assertDetails = testCase.then.map((t: any) => {
+    if (t.path && t.value !== undefined) {
+      return `\`${t.path}\` = \`${JSON.stringify(t.value)}\``;
+    }
+    return null;
+  }).filter(Boolean);
+  
+  // Extrair contexto do nome do teste
+  let context = '';
+  if (testNameLower.includes('detect') && testNameLower.includes('mode')) {
+    // Testes de detecção de modo
+    const modeMatch = testCase.name.match(/(FULL|PLAN|ANALYZE|RUN|SCAFFOLD)\s+mode/i);
+    const inputMatch = testCase.name.match(/from\s+["']([^"']+)["']/);
+    if (modeMatch && inputMatch) {
+      context = `detectar modo **${modeMatch[1]}** a partir da entrada "${inputMatch[1]}"`;
+    }
+  } else if (testNameLower.includes('execute') && testNameLower.includes('mode')) {
+    // Testes de execução de modo
+    const modeMatch = testCase.name.match(/(FULL|PLAN|ANALYZE|RUN)\s+mode/i);
+    if (modeMatch) {
+      context = `executar corretamente o modo **${modeMatch[1]}** (análise completa do sistema)`;
+    }
+  } else if (testNameLower.includes('should return') || testNameLower.includes('deve retornar')) {
+    context = extractBehavior(testCase.name);
+  } else {
+    context = extractBehavior(testCase.name);
   }
   
-  // Sem asserts - indicar claramente
-  if (testCase.then.length === 0) {
-    return `⚠️ Testa **\`${functionName}\`** mas **sem validações detectadas**. ` +
-           `Teste pode ser falso positivo (sempre passa).`;
+  // Montar descrição final
+  let description = `Valida que **\`${functionName}\`** consegue ${context}`;
+  
+  // Adicionar evidências específicas
+  if (assertDetails.length > 0) {
+    description += `. **Validações**: ${assertDetails.slice(0, 3).join(', ')}`;
+    if (assertDetails.length > 3) {
+      description += ` e mais ${assertDetails.length - 3}`;
+    }
+  } else {
+    description += `. **${testCase.then.length} validações** usando: ${testCase.then.map((t: any) => t.matcher).filter(Boolean).join(', ')}`;
   }
   
-  // Fallback com base no nome
-  if (testNameLower.includes('should') || testNameLower.includes('deve')) {
-    return `Testa se **\`${functionName}\`** ${extractBehavior(testCase.name)}`;
-  }
-  
-  return `Testa a função **\`${functionName}\`** no módulo \`${fileName}\``;
+  return description;
 }
 
-// 🆕 Gera justificativa "Por que está testando"
+// 🆕 Gera justificativa "Por que está testando" - ESPECÍFICA por contexto
 function generateWhyItTests(testCase: any, testType: string, assertStrength: string): string {
   const reasons: string[] = [];
   const testNameLower = testCase.name.toLowerCase();
   
-  // Razão técnica baseada em evidências
-  if (testCase.then.length === 0) {
-    reasons.push('⚠️ **Sem validações** - teste pode não detectar regressões');
-  } else if (testCase.then.length === 1) {
-    reasons.push(`Valida 1 aspecto (${testCase.then[0].matcher || testCase.then[0].type})`);
+  // 1. Razão técnica ESPECÍFICA baseada no que está sendo validado
+  if (testNameLower.includes('detect') && testNameLower.includes('mode')) {
+    // Testes de NLP/detecção de modo
+    const modeMatch = testCase.name.match(/(FULL|PLAN|ANALYZE|RUN|SCAFFOLD)\s+mode/i);
+    const mode = modeMatch ? modeMatch[1] : 'desconhecido';
+    reasons.push(`Garante que o **NLP** (Natural Language Processing) mapeia corretamente comandos em português/inglês para o modo \`${mode}\``);
+    
+    // Analisar valores específicos sendo validados
+    const modeValidations = testCase.then.filter((t: any) => 
+      t.path && (t.path.includes('mode') || t.path.includes('detected'))
+    );
+    if (modeValidations.length > 0) {
+      reasons.push(`Valida ${modeValidations.length} propriedades relacionadas ao modo: ${modeValidations.map((t: any) => `\`${t.path}\``).join(', ')}`);
+    }
+  } else if (testNameLower.includes('execute') && testNameLower.includes('mode')) {
+    // Testes de execução de pipeline
+    const modeMatch = testCase.name.match(/(FULL|PLAN|ANALYZE|RUN)\s+mode/i);
+    const mode = modeMatch ? modeMatch[1] : 'desconhecido';
+    reasons.push(`Valida que o pipeline **\`auto.ts\`** executa todas as fases do modo \`${mode}\` corretamente`);
+    
+    // Analisar propriedades validadas
+    const contextProps = testCase.then.filter((t: any) => t.path && t.path.includes('context'));
+    const outputProps = testCase.then.filter((t: any) => t.path && t.path.includes('output'));
+    if (contextProps.length > 0) {
+      reasons.push(`Confirma que o contexto de execução foi inicializado (\`${contextProps[0].path}\`)`);
+    }
+    if (outputProps.length > 0) {
+      reasons.push(`Confirma que os outputs foram gerados (\`${outputProps[0].path}\`)`);
+    }
   } else {
-    const matchers = testCase.then.map((t: any) => t.matcher || t.type).filter((m: string) => m);
-    reasons.push(`Valida ${testCase.then.length} aspectos: ${matchers.slice(0, 3).join(', ')}${testCase.then.length > 3 ? '...' : ''}`);
+    // Fallback genérico para outros tipos
+    if (testCase.then.length === 0) {
+      reasons.push('⚠️ **Sem validações** - teste pode não detectar regressões');
+    } else {
+      const uniqueMatchers = [...new Set(testCase.then.map((t: any) => t.matcher).filter(Boolean))];
+      reasons.push(`Valida ${testCase.then.length} aspecto(s) usando: ${uniqueMatchers.join(', ')}`);
+    }
   }
   
-  // Razão baseada no cenário de teste
-  if (testNameLower.includes('error') || testNameLower.includes('erro') || testNameLower.includes('fail') || testNameLower.includes('invalid')) {
-    reasons.push('**Cenário de erro** - garante error handling robusto');
-  } else if (testNameLower.includes('edge') || testNameLower.includes('boundary') || testNameLower.includes('limite')) {
-    reasons.push('**Edge case** - protege contra inputs extremos');
-  } else if (testNameLower.includes('success') || testNameLower.includes('valid') || testNameLower.includes('correct')) {
-    reasons.push('**Happy path** - valida comportamento esperado principal');
+  // 2. Cenário específico
+  if (testNameLower.includes('error') || testNameLower.includes('fail') || testNameLower.includes('invalid')) {
+    reasons.push('**Cenário de erro** - garante robustez em casos de falha');
+  } else if (testNameLower.includes('edge') || testNameLower.includes('boundary')) {
+    reasons.push('**Edge case** - protege contra inputs extremos/inesperados');
+  } else if (testNameLower.includes('detect') || testNameLower.includes('parse')) {
+    reasons.push('**Cenário de parsing** - valida interpretação correta de entrada');
   }
   
-  // Razão baseada na força (com evidência)
-  if (assertStrength === 'forte') {
-    reasons.push('✅ Asserts **específicos** (status + corpo + headers/state)');
-  } else if (assertStrength === 'médio') {
-    reasons.push('⚠️ Asserts **genéricos** (toBeTruthy, toBeDefined) - pode deixar bugs passar');
-  } else {
-    reasons.push('🚨 Asserts **fracos/ausentes** - alto risco de falso positivo');
-  }
-  
-  return reasons.join(' | ');
+  return reasons.join('. ');
 }
 
-// 🆕 Gera propósito "Para que está testando"
+// 🆕 Gera propósito "Para que está testando" - ESPECÍFICO por contexto
 function generatePurposeForWhat(testCase: any, testType: string): string {
   const purposes: string[] = [];
+  const testNameLower = testCase.name.toLowerCase();
   
-  // Propósito DORA específico por tipo
-  if (testType === 'unit') {
-    purposes.push('📉 **CFR (Change Failure Rate)**: Detectar bugs em segundos, antes do CI/CD');
-    purposes.push('⚡ **Deploy Frequency**: Feedback rápido permite mais deploys com segurança');
-  } else if (testType === 'integration') {
-    purposes.push('📉 **CFR**: Prevenir breaking changes em APIs/contratos entre serviços');
-    purposes.push('⏱️ **MTTR**: Identificar exatamente qual integração falhou');
-  } else if (testType === 'e2e') {
-    purposes.push('📉 **CFR**: Garantir que usuários reais não encontrem bugs críticos');
-    purposes.push('⏱️ **MTTR**: Simular cenários reais para diagnóstico preciso');
+  // Propósito ESPECÍFICO baseado no tipo de teste
+  if (testNameLower.includes('detect') && testNameLower.includes('mode')) {
+    // Testes de NLP - propósito de UX/experiência
+    purposes.push('🎯 **UX**: Permitir que usuários usem comandos naturais (português/inglês) ao invés de flags CLI complexas');
+    purposes.push('📉 **CFR**: Reduzir erros de uso do CLI (comandos inválidos/confusos) → menos suporte');
+    purposes.push('⚡ **Produtividade**: Usuários expressam intenção diretamente ("criar plano de testes") → onboarding mais rápido');
+  } else if (testNameLower.includes('execute') && testNameLower.includes('mode')) {
+    // Testes de pipeline - propósito de confiabilidade
+    purposes.push('🔒 **Confiabilidade**: Garantir que o pipeline completo funciona ponta-a-ponta sem falhas silenciosas');
+    purposes.push('📉 **CFR**: Prevenir deploys de versões com pipelines quebrados (todos os passos devem executar)');
+    purposes.push('⏱️ **MTTR**: Se algo falhar em produção, testes E2E ajudam a reproduzir o problema rapidamente');
+  } else {
+    // Propósitos genéricos por tipo de teste
+    if (testType === 'unit') {
+      purposes.push('📉 **CFR**: Detectar bugs em segundos (feedback imediato durante desenvolvimento)');
+      purposes.push('⚡ **Deploy Frequency**: Testes rápidos (~0.01s) permitem mais commits/dia sem medo');
+    } else if (testType === 'integration') {
+      purposes.push('📉 **CFR**: Prevenir breaking changes em APIs/contratos (compatibility checks)');
+      purposes.push('⏱️ **MTTR**: Identificar exatamente qual serviço/módulo causou a falha');
+    } else if (testType === 'e2e') {
+      purposes.push('📉 **CFR**: Garantir que usuários finais não encontrem bugs (smoke tests críticos)');
+      purposes.push('⏱️ **MTTR**: Reproduzir cenários reais de produção para diagnóstico');
+    }
   }
   
-  // Propósito baseado em qualidade dos asserts
-  if (testCase.then.length >= 3) {
-    purposes.push('🔍 **Diagnóstico rápido**: Múltiplos asserts indicam exatamente o que falhou');
-  } else if (testCase.then.length === 0) {
-    purposes.push('⚠️ **Risco**: Sem asserts, teste não contribui para redução de CFR/MTTR');
+  // Adicionar alerta se teste não tem valor
+  if (testCase.then.length === 0) {
+    purposes.push('⚠️ **ALERTA**: Teste sem asserts NÃO contribui para redução de CFR/MTTR (falso positivo)');
+  } else if (testCase.then.length >= 3) {
+    purposes.push(`✅ **Valor**: Múltiplos asserts (~${testCase.then.length}) aumentam diagnóstico (sabe EXATAMENTE o que falhou)`);
   }
-  
-  // Propósito de negócio
-  purposes.push('🎯 **KR3a**: Manter confiabilidade das entregas (max 10% falhas)');
   
   return purposes.join('\n- ');
 }
